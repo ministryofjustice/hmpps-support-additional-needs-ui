@@ -46,10 +46,10 @@ generic-service:
       CLIENT_CREDS_CLIENT_SECRET: 'CLIENT_CREDS_CLIENT_SECRET'
     hmpps-support-additional-needs-ui-auth-code:
       AUTH_CODE_CLIENT_ID: 'AUTH_CODE_CLIENT_ID'
-      AUTH_CODE_CLIENT_SECRET: 'AUTH_CODE_CLIENT_SECRET'    
+      AUTH_CODE_CLIENT_SECRET: 'AUTH_CODE_CLIENT_SECRET'
     hmpps-support-additional-needs-ui-session-secret:
       SESSION_SECRET: 'SESSION_SECRET'
-    hmpps-support-additional-needs-ui-elasticache-redis:
+    redis:
       REDIS_HOST: 'primary_endpoint_address'
       REDIS_AUTH_TOKEN: 'auth_token'
     hmpps-support-additional-needs-ui-application-insights:
@@ -62,6 +62,9 @@ generic-service:
   allowlist:
     groups:
       - internal
+      - prisons
+      - private_prisons
+      - prisons-education
 
 generic-prometheus-alerts:
   targetApplication: hmpps-support-additional-needs-ui
