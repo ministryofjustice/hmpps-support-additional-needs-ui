@@ -6,6 +6,10 @@ import fs from 'fs'
 import { initialiseName } from './utils'
 import config from '../config'
 import logger from '../../logger'
+import formatDateFilter from '../filters/formatDateFilter'
+import fallbackMessageFilter from '../filters/fallbackMessageFilter'
+import formatYesNoFilter from '../filters/formatYesNoFilter'
+import findErrorFilter from '../filters/findErrorFilter'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -39,6 +43,11 @@ export default function nunjucksSetup(app: express.Express): void {
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
+
+  njkEnv.addFilter('findError', findErrorFilter)
+  njkEnv.addFilter('formatDate', formatDateFilter)
+  njkEnv.addFilter('fallbackMessage', fallbackMessageFilter)
+  njkEnv.addFilter('formatYesNo', formatYesNoFilter)
 
   njkEnv.addGlobal('featureToggles', config.featureToggles)
 }
