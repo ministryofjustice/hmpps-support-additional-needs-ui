@@ -1,6 +1,7 @@
 import express from 'express'
 
 import createError from 'http-errors'
+import dpsComponents from '@ministryofjustice/hmpps-connect-dps-components'
 
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
@@ -20,6 +21,8 @@ import routes from './routes'
 import type { Services } from './services'
 import errorMessageMiddleware from './middleware/errorMessageMiddleware'
 import successMessageMiddleware from './middleware/successMessageMiddleware'
+import config from './config'
+import logger from '../logger'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -41,6 +44,8 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCurrentUser())
   app.use(successMessageMiddleware)
   app.use(errorMessageMiddleware)
+
+  app.get(/(.*)/, dpsComponents.getPageComponents({ useFallbacksByDefault: true, dpsUrl: config.newDpsUrl, logger }))
 
   app.use(routes(services))
 
