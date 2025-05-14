@@ -16,6 +16,9 @@ export declare global {
       authSource: string
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    interface JourneyData {}
+
     interface Response {
       redirectWithSuccess?(path: string, message: string): void
       redirectWithErrors?(path: string, message: Record<string, string>[]): void
@@ -24,6 +27,7 @@ export declare global {
     interface Request {
       verified?: boolean
       id: string
+      journeyData: JourneyData
       logout(done: (err: unknown) => void): void
     }
 
