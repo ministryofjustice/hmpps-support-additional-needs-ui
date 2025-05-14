@@ -16,6 +16,7 @@ import config from '../config'
 import HmppsAuditClient from './hmppsAuditClient'
 import logger from '../../logger'
 import ExampleApiClient from './exampleApiClient'
+import JourneyDataStore from './journeyDataStore/journeyDataStore'
 
 export const dataAccess = () => {
   const hmppsAuthClient = new AuthenticationClient(
@@ -29,9 +30,10 @@ export const dataAccess = () => {
     hmppsAuthClient,
     exampleApiClient: new ExampleApiClient(hmppsAuthClient),
     hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
+    journeyDataStore: new JourneyDataStore(createRedisClient('journeyData:')),
   }
 }
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { AuthenticationClient, HmppsAuditClient, ExampleApiClient }
+export { AuthenticationClient, HmppsAuditClient, ExampleApiClient, JourneyDataStore }
