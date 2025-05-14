@@ -222,3 +222,10 @@ Or run tests with the cypress UI:
 ## Change log
 
 A changelog for the service is available [here](./CHANGELOG.md)
+
+## Feature Toggles
+Features can be toggled by setting the relevant environment variable.
+
+| Name                       | Default Value | Type     | Description                                                                       |
+|----------------------------|---------------|----------|-----------------------------------------------------------------------------------|
+| SOME_TOGGLE_ENABLED        | false         | Boolean  | Example feature toggle, for demonstration purposes.                               |

@@ -2,6 +2,11 @@ import { AgentConfig } from '@ministryofjustice/hmpps-rest-client'
 
 const production = process.env.NODE_ENV === 'production'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const toBoolean = (value: unknown): boolean => {
+  return value === 'true'
+}
+
 function get<T>(name: string, fallback: T, options = { requireInProduction: false }): T | string {
   if (process.env[name]) {
     return process.env[name]
@@ -87,4 +92,7 @@ export default {
   },
   ingressUrl: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
+  featureToggles: {
+    // someToggleEnabled: toBoolean(get('SOME_TOGGLE_ENABLED', false)),
+  },
 }
