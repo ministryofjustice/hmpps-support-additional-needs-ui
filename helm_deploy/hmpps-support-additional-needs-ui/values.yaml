@@ -35,6 +35,13 @@ generic-service:
     AUDIT_SQS_REGION: 'eu-west-2'
     AUDIT_SERVICE_NAME: 'DPS124' # Your audit service name
 
+    # Comma delimited list of prison IDs that our service is rolled out into (active agencies)
+    # Use spaces to aid readability if necessary; these are trimmed when the environment variable is read and processed.
+    # When the service is fully rolled out to all prisons replace the comma delimited list with the wildcard ***
+    # ACTIVE_AGENCIES: "***"
+    # Ref: https://dsdmoj.atlassian.net/wiki/spaces/NDSS/pages/4616488213/Publishing+the+deployment+scope+of+a+product
+    ACTIVE_AGENCIES: "***"
+
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
   #   [name of kubernetes secret]:
