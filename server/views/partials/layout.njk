@@ -1,18 +1,75 @@
 {% extends "govuk/template.njk" %}
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
 {% block head %}
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet"/>
+
+  {% for css in feComponents.cssIncludes %}
+    <link href="{{ css }}" nonce="{{ cspNonce }}" rel="stylesheet" />
+  {% endfor %}
 {% endblock %}
 
 {% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}
 
 {% block header %}
-  {% include "./header.njk" %}
+  {{ feComponents.header | safe }}
 {% endblock %}
 
 {% block bodyStart %}
+  <span class="govuk-visually-hidden" id="pageId" data-qa="{{ pageId }}"></span>
+{% endblock %}
+
+{% block main %}
+  <div class="govuk-width-container {{ containerClasses }}">
+    {{ govukPhaseBanner({
+      tag: {
+        text: "Beta"
+      },
+      html: 'This is a new service – get help or <a class="govuk-link" href="' + feedbackUrl + '" target="_blank" referrerpolicy="no-referrer" rel="noopener">give your feedback</a> to help us to improve it.',
+      classes: "govuk-!-display-none-print",
+      attributes: {
+        role: "complementary"
+      }
+    }) }}
+
+    {% block beforeContent %}{% endblock %}
+    <main class="govuk-main-wrapper govuk-!-padding-top-0 {{ mainClasses }}" id="main-content" role="main"{% if mainLang %} lang="{{ mainLang }}"{% endif %}>
+      {% if successMessage %}
+        {{ mojBanner({
+          html: successMessage.message | safe,
+          type: 'success',
+          iconFallbackText: 'Success',
+          attributes: {
+            'data-qa': 'overview-success-message'
+          }
+        }) }}
+      {% endif %}
+
+      {% if errors.length > 0 %}
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            {{ govukErrorSummary({
+              titleText: 'There is a problem',
+              errorList: errors,
+              attributes: { 'data-qa-errors': true }
+            }) }}
+          </div>
+        </div>
+      {% endif %}
+
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  {{ feComponents.footer | safe }}
 {% endblock %}
 
 {% block bodyEnd %}
   <script type="module" src="{{ '/assets/js/index.js' | assetMap }}"></script>
+
+  {% for js in feComponents.jsIncludes %}
+    <script src="{{ js }}" nonce="{{ cspNonce }}"></script>
+  {% endfor %}
 {% endblock %}
