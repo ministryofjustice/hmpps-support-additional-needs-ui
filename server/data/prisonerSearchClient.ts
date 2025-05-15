@@ -10,17 +10,22 @@ export default class PrisonerSearchClient extends RestClient {
     super('Prisoner Search API Client', config.apis.prisonerSearch, logger, authenticationClient)
   }
 
-  async getPrisonerByPrisonNumber(prisonNumber: string): Promise<Prisoner> {
+  async getPrisonerByPrisonNumber(prisonNumber: string, username: string): Promise<Prisoner> {
     return this.get<Prisoner>(
       {
         path: `/prisoner/${prisonNumber}`,
         errorHandler: restClientErrorHandler({ ignore404: true }),
       },
-      asSystem(),
+      asSystem(username),
     )
   }
 
-  async getPrisonersByPrisonId(prisonId: string, page: number, pageSize: number): Promise<PagedCollectionOfPrisoners> {
+  async getPrisonersByPrisonId(
+    prisonId: string,
+    page: number,
+    pageSize: number,
+    username: string,
+  ): Promise<PagedCollectionOfPrisoners> {
     return this.get<PagedCollectionOfPrisoners>(
       {
         path: `/prisoner-search/prison/${prisonId}`,
@@ -45,7 +50,7 @@ export default class PrisonerSearchClient extends RestClient {
         },
         errorHandler: restClientErrorHandler({ ignore404: true }),
       },
-      asSystem(),
+      asSystem(username),
     )
   }
 }

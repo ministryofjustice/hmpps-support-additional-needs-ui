@@ -6,17 +6,20 @@ import aValidPagedCollectionOfPrisoners from '../testsupport/pagedCollectionOfPr
 import aValidPrisoner from '../testsupport/prisonerTestDataBuilder'
 
 describe('prisonerSearchClient', () => {
+  const username = 'A-DPS-USER'
+  const systemToken = 'test-system-token'
+
   const mockAuthenticationClient = {
-    getToken: jest.fn().mockResolvedValue('test-system-token'),
+    getToken: jest.fn(),
   } as unknown as jest.Mocked<AuthenticationClient>
   const prisonerSearchClient = new PrisonerSearchClient(mockAuthenticationClient)
 
   config.apis.prisonerSearch.url = 'http://localhost:8200'
-  let prisonerSearchApi: nock.Scope
+  const prisonerSearchApi = nock(config.apis.prisonerSearch.url)
 
   beforeEach(() => {
     jest.resetAllMocks()
-    prisonerSearchApi = nock(config.apis.prisonerSearch.url)
+    mockAuthenticationClient.getToken.mockResolvedValue(systemToken)
   })
 
   afterEach(() => {
@@ -29,13 +32,17 @@ describe('prisonerSearchClient', () => {
       const prisonNumber = 'A1234BC'
 
       const prisoner = aValidPrisoner()
-      prisonerSearchApi.get(`/prisoner/${prisonNumber}`).reply(200, prisoner)
+      prisonerSearchApi
+        .get(`/prisoner/${prisonNumber}`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, prisoner)
 
       // When
-      const actual = await prisonerSearchClient.getPrisonerByPrisonNumber(prisonNumber)
+      const actual = await prisonerSearchClient.getPrisonerByPrisonNumber(prisonNumber, username)
 
       // Then
       expect(actual).toEqual(prisoner)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
       expect(nock.isDone()).toBe(true)
     })
 
@@ -43,10 +50,13 @@ describe('prisonerSearchClient', () => {
       // Given
       const prisonNumber = 'A1234BC'
 
-      prisonerSearchApi.get(`/prisoner/${prisonNumber}`).reply(404)
+      prisonerSearchApi
+        .get(`/prisoner/${prisonNumber}`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(404)
 
       // When
-      const actual = await prisonerSearchClient.getPrisonerByPrisonNumber(prisonNumber)
+      const actual = await prisonerSearchClient.getPrisonerByPrisonNumber(prisonNumber, username)
 
       // Then
       expect(actual).toBeNull()
@@ -73,10 +83,11 @@ describe('prisonerSearchClient', () => {
         .get(
           `/prisoner-search/prison/${prisonId}?page=${page}&size=${pageSize}&responseFields=prisonerNumber&responseFields=prisonId&responseFields=releaseDate&responseFields=firstName&responseFields=lastName&responseFields=receptionDate&responseFields=dateOfBirth&responseFields=cellLocation&responseFields=restrictedPatient&responseFields=supportingPrisonId`,
         )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
         .reply(200, pagedCollectionOfPrisoners)
 
       // When
-      const actual = await prisonerSearchClient.getPrisonersByPrisonId(prisonId, page, pageSize)
+      const actual = await prisonerSearchClient.getPrisonersByPrisonId(prisonId, page, pageSize, username)
 
       // Then
       expect(actual).toEqual(pagedCollectionOfPrisoners)
@@ -98,10 +109,11 @@ describe('prisonerSearchClient', () => {
         .get(
           `/prisoner-search/prison/${prisonId}?page=${page}&size=${pageSize}&responseFields=prisonerNumber&responseFields=prisonId&responseFields=releaseDate&responseFields=firstName&responseFields=lastName&responseFields=receptionDate&responseFields=dateOfBirth&responseFields=cellLocation&responseFields=restrictedPatient&responseFields=supportingPrisonId`,
         )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
         .reply(200, pagedCollectionOfPrisoners)
 
       // When
-      const actual = await prisonerSearchClient.getPrisonersByPrisonId(prisonId, page, pageSize)
+      const actual = await prisonerSearchClient.getPrisonersByPrisonId(prisonId, page, pageSize, username)
 
       // Then
       expect(actual).toEqual(pagedCollectionOfPrisoners)
@@ -124,10 +136,11 @@ describe('prisonerSearchClient', () => {
         .get(
           `/prisoner-search/prison/${prisonId}?page=${page}&size=${pageSize}&responseFields=prisonerNumber&responseFields=prisonId&responseFields=releaseDate&responseFields=firstName&responseFields=lastName&responseFields=receptionDate&responseFields=dateOfBirth&responseFields=cellLocation&responseFields=restrictedPatient&responseFields=supportingPrisonId`,
         )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
         .reply(404, apiErrorResponse)
 
       // When
-      const actual = await prisonerSearchClient.getPrisonersByPrisonId(prisonId, page, pageSize)
+      const actual = await prisonerSearchClient.getPrisonersByPrisonId(prisonId, page, pageSize, username)
 
       // Then
       expect(actual).toBeNull()
