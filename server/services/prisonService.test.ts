@@ -4,20 +4,13 @@ import PrisonRegisterStore from '../data/prisonRegisterStore/prisonRegisterStore
 import PrisonRegisterClient from '../data/prisonRegisterClient'
 import aValidPrisonResponse from '../testsupport/prisonResponseTestDataBuilder'
 
+jest.mock('../data/prisonRegisterStore/prisonRegisterStore')
+jest.mock('../data/prisonRegisterClient')
+
 describe('prisonService', () => {
-  const prisonRegisterStore = {
-    getActivePrisons: jest.fn(),
-    setActivePrisons: jest.fn(),
-  }
-
-  const prisonRegisterClient = {
-    getAllPrisons: jest.fn(),
-  }
-
-  const prisonService = new PrisonService(
-    prisonRegisterStore as unknown as PrisonRegisterStore,
-    prisonRegisterClient as unknown as PrisonRegisterClient,
-  )
+  const prisonRegisterStore = new PrisonRegisterStore(null) as jest.Mocked<PrisonRegisterStore>
+  const prisonRegisterClient = new PrisonRegisterClient(null) as jest.Mocked<PrisonRegisterClient>
+  const prisonService = new PrisonService(prisonRegisterStore, prisonRegisterClient)
 
   const username = 'some-username'
 

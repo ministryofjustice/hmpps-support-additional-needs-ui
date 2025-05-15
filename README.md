@@ -136,7 +136,7 @@ These credentials are configured using the following env variables:
 - CLIENT_CREDS_CLIENT_SECRET
 
 ### Imported Types
-Some types are imported from the Open API docs for prisoner-search-api and prison-register-api.
+Some types are imported from the Open API docs for manage-users-api, prisoner-search-api and prison-register-api.
 You will need to install the node module `openapi-typescript` globally with the following command:
 
 `npm install -g openapi-typescript`
@@ -146,11 +146,12 @@ To update the types from the Open API docs run the following commands:
 ```shell
 npx openapi-typescript https://prisoner-search-dev.prison.service.justice.gov.uk/v3/api-docs -o server/@types/prisonerSearchApi/index.d.ts
 npx openapi-typescript https://prison-register-dev.hmpps.service.justice.gov.uk/v3/api-docs -o server/@types/prisonRegisterApi/index.d.ts
+npx openapi-typescript https://manage-users-api-dev.hmpps.service.justice.gov.uk/v3/api-docs -o server/@types/manageUsersApi/index.d.ts
 ```
 
 Note that you will need to run prettier over the generated files and possibly handle other errors before compiling.
 
-The types are inherited for use in `server/@types/prisonerSearchApiClient/index.d.ts` and `server/@types/prisonerRegisterApiClient/index.d.ts` which may also need tweaking for use.
+The types are inherited for use in `server/@types/manageUsersApiClient/index.d.ts`, `server/@types/prisonerSearchApiClient/index.d.ts` and `server/@types/prisonerRegisterApiClient/index.d.ts` which may also need tweaking for use.
 
 Do not re-import the specs lightly! Reformatting the generated code with prettier is no small task, especially with large specs such as Prisoner Search.
 
