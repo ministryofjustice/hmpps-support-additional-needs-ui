@@ -19,6 +19,8 @@ import ExampleApiClient from './exampleApiClient'
 import JourneyDataStore from './journeyDataStore/journeyDataStore'
 import PrisonRegisterStore from './prisonRegisterStore/prisonRegisterStore'
 import PrisonRegisterClient from './prisonRegisterClient'
+import ManageUsersApiClient from './manageUsersApiClient'
+import UserCaseloadDetailStore from './userCaseloadDetailStore/userCaseloadDetailStore'
 
 export const dataAccess = () => {
   const hmppsAuthClient = new AuthenticationClient(
@@ -35,6 +37,8 @@ export const dataAccess = () => {
     journeyDataStore: new JourneyDataStore(createRedisClient('journeyData:')),
     prisonRegisterClient: new PrisonRegisterClient(hmppsAuthClient),
     prisonRegisterStore: new PrisonRegisterStore(createRedisClient('prisonRegister:')),
+    managedUsersApiClient: new ManageUsersApiClient(hmppsAuthClient),
+    userCaseLoadDetailStore: new UserCaseloadDetailStore(createRedisClient('userCaseloadDetail:')),
   }
 }
 
@@ -47,4 +51,6 @@ export {
   JourneyDataStore,
   PrisonRegisterClient,
   PrisonRegisterStore,
+  ManageUsersApiClient,
+  UserCaseloadDetailStore,
 }
