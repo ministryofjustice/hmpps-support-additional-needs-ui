@@ -1,7 +1,12 @@
 import HmppsAuditClient, { AuditEvent } from '../data/hmppsAuditClient'
 
 export enum Page {
-  EXAMPLE_PAGE = 'EXAMPLE_PAGE',
+  SEARCH = 'SEARCH',
+}
+
+enum AuditableUserAction {
+  PAGE_VIEW_ATTEMPT = 'PAGE_VIEW_ATTEMPT',
+  PAGE_VIEW = 'PAGE_VIEW',
 }
 
 export interface PageViewEventDetails {
@@ -16,14 +21,22 @@ export default class AuditService {
   constructor(private readonly hmppsAuditClient: HmppsAuditClient) {}
 
   async logAuditEvent(event: AuditEvent) {
-    await this.hmppsAuditClient.sendMessage(event)
+    return this.hmppsAuditClient.sendMessage(event, false)
+  }
+
+  async logPageViewAttempt(page: Page, eventDetails: PageViewEventDetails) {
+    const event: AuditEvent = {
+      ...eventDetails,
+      what: `${AuditableUserAction.PAGE_VIEW_ATTEMPT}_${page}`,
+    }
+    return this.logAuditEvent(event)
   }
 
   async logPageView(page: Page, eventDetails: PageViewEventDetails) {
     const event: AuditEvent = {
       ...eventDetails,
-      what: `PAGE_VIEW_${page}`,
+      what: `${AuditableUserAction.PAGE_VIEW}_${page}`,
     }
-    await this.hmppsAuditClient.sendMessage(event)
+    return this.logAuditEvent(event)
   }
 }

@@ -23,6 +23,7 @@ import errorMessageMiddleware from './middleware/errorMessageMiddleware'
 import successMessageMiddleware from './middleware/successMessageMiddleware'
 import config from './config'
 import logger from '../logger'
+import auditMiddleware from './middleware/auditMiddleware'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -47,6 +48,7 @@ export default function createApp(services: Services): express.Application {
 
   app.get(/(.*)/, dpsComponents.getPageComponents({ useFallbacksByDefault: true, dpsUrl: config.newDpsUrl, logger }))
 
+  app.use(auditMiddleware(services))
   app.use(routes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
