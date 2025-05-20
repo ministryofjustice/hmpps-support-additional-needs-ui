@@ -9,5 +9,5 @@ $govuk-page-width: $moj-page-width;
 @import '@ministryofjustice/hmpps-connect-dps-components/dist/assets/footer';
 @import '@ministryofjustice/hmpps-connect-dps-components/dist/assets/header-bar';
 
-@import './components/header-bar';
+@import './components/search';
 @import './overrides/local';

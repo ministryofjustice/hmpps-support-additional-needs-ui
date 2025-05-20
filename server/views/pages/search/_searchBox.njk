@@ -1,0 +1,42 @@
+<section class="search-filter-controls govuk-!-display-none-print">
+  {# Wrap the search / filter controls in a form that contains hidden fields for the current sort order.
+     This ensures that when the Search page is filtered the current sort field and order are maintained.
+  #}
+  <form class="form" method="get">
+    <input type="hidden" name="sortField" value="{{ sortField }}" />
+    <input type="hidden" name="sortDirection" value="{{ sortDirection }}" />
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Search for a prisoner with support for additional needs</legend>
+        <div class="govuk-form-group govuk-form-group--inline govuk-!-margin-bottom-3">
+          <div class="govuk-form-group govuk-form-group__item govuk-!-width-one-half">
+              <label class="govuk-label" for="searchTerm">
+                Prisoner's name or prison number
+              </label>
+              <input class="govuk-input"
+                id="searchTerm"
+                name="searchTerm"
+                type="search"
+                value="{{ searchTerm }}"
+                maxlength="200">
+          </div>
+          <div class="govuk-form-group__button">
+            <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true" data-qa="apply-filters">
+              Apply filters
+            </button>
+          </div>
+        </div>
+      {% if searchTerm %}
+        <p class="govuk-!-margin-bottom-0">
+          {# Reset the Search page filters using an anchor link with blank searchTerm field values.
+              The link also contains the current sort options to ensure the current sort field and direction are maintained after
+              reseting the filter.
+          #}
+          <a class="govuk-link govuk-link--no-visited-state" href="/search?searchTerm=&sortField={{ sortField }}&sortDirection={{ sortDirection }}" data-qa="clear-filters">
+            Clear<span class="govuk-visually-hidden"> filter options</span>
+          </a>
+        </p>
+      {% endif %}
+    </fieldset>
+  </form>
+
+</section>
