@@ -1,0 +1,39 @@
+import { asSystem, RestClient } from '@ministryofjustice/hmpps-rest-client'
+import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
+import type { SearchByPrisonResponse } from 'supportAdditionalNeedsApiClient'
+import config from '../config'
+import logger from '../../logger'
+import restClientErrorHandler from './restClientErrorHandler'
+import SearchSortField from '../enums/searchSortField'
+import SearchSortDirection from '../enums/searchSortDirection'
+
+export default class SupportAdditionalNeedsApiClient extends RestClient {
+  constructor(authenticationClient: AuthenticationClient) {
+    super('Support Additional Needs API Client', config.apis.supportAdditionalNeedsApi, logger, authenticationClient)
+  }
+
+  async getPrisonersByPrisonId(
+    prisonId: string,
+    username: string,
+    prisonerNameOrNumber?: string,
+    page?: number,
+    pageSize?: number,
+    sortBy?: SearchSortField,
+    sortDirection?: SearchSortDirection,
+  ): Promise<SearchByPrisonResponse> {
+    return this.get<SearchByPrisonResponse>(
+      {
+        path: `/search/prisons/${prisonId}/people`,
+        query: {
+          prisonerNameOrNumber,
+          page,
+          pageSize,
+          sortBy,
+          sortDirection,
+        },
+        errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+}

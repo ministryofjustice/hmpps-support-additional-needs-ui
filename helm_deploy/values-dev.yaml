@@ -17,6 +17,7 @@ generic-service:
     PRISONER_SEARCH_API_URL: 'https://prisoner-search-dev.prison.service.justice.gov.uk'
     PRISON_REGISTER_API_URL: 'https://prison-register-dev.hmpps.service.justice.gov.uk'
     MANAGE_USERS_API_URL: 'https://manage-users-api-dev.hmpps.service.justice.gov.uk'
+    SUPPORT_ADDITIONAL_NEEDS_API_URL: 'https://support-for-additional-needs-api-dev.hmpps.service.justice.gov.uk'
     ENVIRONMENT_NAME: DEV
     AUDIT_ENABLED: "false"
     NEW_DPS_URL: 'https://dps-dev.prison.service.justice.gov.uk'
