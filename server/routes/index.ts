@@ -1,21 +1,16 @@
-import { type RequestHandler, Router } from 'express'
-
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
-import { Page } from '../services/auditService'
 import searchRoutes from './search'
+import { checkPageViewAudited } from '../middleware/auditMiddleware'
+import landingPageRoutes from './landingPage'
 
 export default function routes(services: Services): Router {
   const router = Router({ mergeParams: true })
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  get('/', async (req, res, next) => {
-    const { auditService, exampleService } = services
-    await auditService.logPageView(Page.EXAMPLE_PAGE, { who: res.locals.user.username, correlationId: req.id })
+  // Checks page has been audited, if no audit event has been raised router will be skipped
+  checkPageViewAudited(router)
 
-    const currentTime = await exampleService.getCurrentTime()
-    return res.render('pages/index', { currentTime })
-  })
+  router.use('/', landingPageRoutes())
 
   router.use('/search', searchRoutes(services))
   return router
