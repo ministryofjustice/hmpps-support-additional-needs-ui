@@ -11,6 +11,8 @@ export interface BaseUser {
   displayName: string
   userRoles: string[]
   token: string
+  activeCaseLoadId: string
+  caseLoadIds: string[]
 }
 
 /**
