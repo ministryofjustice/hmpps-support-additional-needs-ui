@@ -4,15 +4,18 @@ import { appWithAllRoutes } from '../routes/testutils/appSetup'
 import AuditService, { Page } from '../services/auditService'
 import PrisonService from '../services/prisonService'
 import JourneyDataService from '../services/journeyDataService'
+import SearchService from '../services/searchService'
 
 jest.mock('../services/auditService')
 jest.mock('../services/prisonService')
 jest.mock('../services/journeyDataService')
+jest.mock('../services/searchService')
 
 let app: Express
 const auditService = new AuditService(null) as jest.Mocked<AuditService>
 const prisonService = new PrisonService(null, null) as jest.Mocked<PrisonService>
 const journeyDataService = new JourneyDataService(null) as jest.Mocked<JourneyDataService>
+const searchService = new SearchService(null) as jest.Mocked<SearchService>
 
 beforeEach(() => {
   app = appWithAllRoutes({
@@ -20,6 +23,7 @@ beforeEach(() => {
       auditService,
       prisonService,
       journeyDataService,
+      searchService,
     },
   })
 
