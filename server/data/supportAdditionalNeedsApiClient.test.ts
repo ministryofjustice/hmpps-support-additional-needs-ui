@@ -76,29 +76,6 @@ describe('supportAdditionalNeedsApiClient', () => {
       expect(nock.isDone()).toBe(true)
     })
 
-    it('should get null prisoners by prison id given API returns a 404', async () => {
-      // Given
-      const prisonId = 'some-unknown-prison-id'
-
-      const apiErrorResponse = {
-        status: 404,
-        userMessage: 'Not found',
-        developerMessage: 'Not found',
-      }
-      supportAdditionalNeedsApi
-        .get(`/search/prisons/${prisonId}/people`)
-        .matchHeader('authorization', `Bearer ${systemToken}`)
-        .reply(404, apiErrorResponse)
-
-      // When
-      const actual = await supportAdditionalNeedsApiClient.getPrisonersByPrisonId(prisonId, username)
-
-      // Then
-      expect(actual).toBeNull()
-      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
-      expect(nock.isDone()).toBe(true)
-    })
-
     it('should get prisoners by prison id given filtering, pagination and sorting options are specified', async () => {
       // Given
       const prisonId = 'BXI'
@@ -135,6 +112,57 @@ describe('supportAdditionalNeedsApiClient', () => {
 
       // Then
       expect(actual).toEqual(searchByPrisonResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const prisonId = 'some-unknown-prison-id'
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .get(`/search/prisons/${prisonId}/people`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .thrice()
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getPrisonersByPrisonId(prisonId, username).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns a not found error', async () => {
+      // Given
+      const prisonId = 'some-unknown-prison-id'
+
+      const apiErrorResponse = {
+        status: 404,
+        userMessage: 'Not found',
+        developerMessage: 'Not found',
+      }
+      supportAdditionalNeedsApi
+        .get(`/search/prisons/${prisonId}/people`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(404, apiErrorResponse)
+
+      const expectedError = new Error('Not Found')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getPrisonersByPrisonId(prisonId, username).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
       expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
       expect(nock.isDone()).toBe(true)
     })
