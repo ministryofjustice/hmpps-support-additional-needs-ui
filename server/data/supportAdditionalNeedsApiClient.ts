@@ -3,7 +3,6 @@ import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients
 import type { SearchByPrisonResponse } from 'supportAdditionalNeedsApiClient'
 import config from '../config'
 import logger from '../../logger'
-import restClientErrorHandler from './restClientErrorHandler'
 import SearchSortField from '../enums/searchSortField'
 import SearchSortDirection from '../enums/searchSortDirection'
 
@@ -31,7 +30,6 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
           sortBy,
           sortDirection,
         },
-        errorHandler: restClientErrorHandler({ ignore404: true }),
       },
       asSystem(username),
     )
