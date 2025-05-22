@@ -26,7 +26,12 @@ export default class SearchService {
         sortBy,
         sortDirection,
       ),
-      prisonId,
+      {
+        prisonId,
+        sortBy,
+        sortDirection,
+        searchTerm: prisonerNameOrNumber,
+      },
     )
   }
 }
