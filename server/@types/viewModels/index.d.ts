@@ -20,17 +20,31 @@ declare module 'viewModels' {
     hasSupportNeeds: boolean
   }
 
-  export interface Pagination {
-    totalElements: number
-    totalPages: number
-    page: number
-    last: boolean
-    first: boolean
-    pageSize: number
+  export interface PrisonerSearch {
+    pagination: MojPaginationParams
+    prisoners: PrisonerSearchSummary[]
   }
 
-  export interface PrisonerSearch {
-    pagination: Pagination
-    prisoners: PrisonerSearchSummary[]
+  export interface MojPaginationParams {
+    items: {
+      type?: string
+      text?: string
+      href?: string
+      selected?: boolean
+    }[]
+    results?: {
+      count: number
+      from: number
+      to: number
+      text?: string
+    }
+    previous?: {
+      text: string
+      href: string
+    }
+    next?: {
+      text: string
+      href: string
+    }
   }
 }

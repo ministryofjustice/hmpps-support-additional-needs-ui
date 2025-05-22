@@ -21,3 +21,12 @@
     {% endfor %}
   </tbody>
 </table>
+
+<section data-qa="search-results-pagination">
+  {{ mojPagination({
+    items: pagination.items,
+    results: pagination.results,
+    previous: pagination.previous if pagination.previous.href,
+    next: pagination.next if pagination.next.href
+  }) }}
+</section>

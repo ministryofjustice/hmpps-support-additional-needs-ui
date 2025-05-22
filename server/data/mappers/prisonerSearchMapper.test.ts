@@ -5,6 +5,8 @@ import SentenceType from '../../enums/sentenceType'
 import aValidPrisonerSearchSummary from '../../testsupport/prisonerSearchSummaryTestDataBuilder'
 import aValidSearchByPrisonResponse from '../../testsupport/searchByPrisonResponseTestDataBuiilder'
 import aValidPrisonerSearch from '../../testsupport/prisonerSearchTestDataBuilder'
+import SearchSortField from '../../enums/searchSortField'
+import SearchSortDirection from '../../enums/searchSortDirection'
 
 describe('prisonerSearchMapper', () => {
   const prisonId = 'BXI'
@@ -13,12 +15,12 @@ describe('prisonerSearchMapper', () => {
     it('should map a SearchByPrisonResponse to a PrisonerSearch', () => {
       // Given
       const searchByPrisonResponse = aValidSearchByPrisonResponse({
-        totalElements: 1,
-        totalPages: 1,
-        page: 1,
-        last: true,
-        first: true,
-        pageSize: 50,
+        totalElements: 3,
+        totalPages: 3,
+        page: 2,
+        last: false,
+        first: false,
+        pageSize: 1,
         people: [
           aValidPerson({
             forename: 'IFEREECA',
@@ -34,12 +36,24 @@ describe('prisonerSearchMapper', () => {
       })
 
       const expected = aValidPrisonerSearch({
-        totalElements: 1,
-        totalPages: 1,
-        page: 1,
-        last: true,
-        first: true,
-        pageSize: 50,
+        results: {
+          count: 3,
+          from: 2,
+          to: 2,
+        },
+        items: [
+          { text: '1', href: '?searchTerm=Peigh&sortBy=PRISONER_NAME&sortDirection=ASC&page=1', selected: false },
+          { text: '2', href: '?searchTerm=Peigh&sortBy=PRISONER_NAME&sortDirection=ASC&page=2', selected: true },
+          { text: '3', href: '?searchTerm=Peigh&sortBy=PRISONER_NAME&sortDirection=ASC&page=3', selected: false },
+        ],
+        previous: {
+          text: 'Previous',
+          href: '?searchTerm=Peigh&sortBy=PRISONER_NAME&sortDirection=ASC&page=1',
+        },
+        next: {
+          text: 'Next',
+          href: '?searchTerm=Peigh&sortBy=PRISONER_NAME&sortDirection=ASC&page=3',
+        },
         prisoners: [
           aValidPrisonerSearchSummary({
             prisonNumber: 'A1234BC',
@@ -56,8 +70,15 @@ describe('prisonerSearchMapper', () => {
         ],
       })
 
+      const searchOptions = {
+        prisonId,
+        sortBy: SearchSortField.PRISONER_NAME,
+        sortDirection: SearchSortDirection.ASC,
+        searchTerm: 'Peigh',
+      }
+
       // When
-      const actual = toPrisonerSearch(searchByPrisonResponse, prisonId)
+      const actual = toPrisonerSearch(searchByPrisonResponse, searchOptions)
 
       // Then
       expect(actual).toEqual(expected)

@@ -55,12 +55,10 @@ describe('searchService', () => {
       supportAdditionalNeedsApiClient.getPrisonersByPrisonId.mockResolvedValue(apiResponse)
 
       const expected = aValidPrisonerSearch({
-        totalElements: 1,
-        totalPages: 1,
-        page: 1,
-        last: true,
-        first: true,
-        pageSize: 50,
+        items: [],
+        results: { count: 1, from: 1, to: 1 },
+        next: { text: 'Next', href: '' },
+        previous: { text: 'Previous', href: '' },
         prisoners: [
           aValidPrisonerSearchSummary({
             prisonNumber: 'A1234BC',
