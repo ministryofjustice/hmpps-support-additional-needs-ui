@@ -23,23 +23,24 @@ const searchRoutes = (services: Services): Router => {
     const pageSize = config.searchUiDefaultPaginationPageSize
     const { activeCaseLoadId, username } = res.locals.user
 
-    res.locals = {
-      ...res.locals,
-      searchResults: await Result.wrap(
-        searchService.searchPrisonersInPrison(
-          activeCaseLoadId,
-          username,
-          page,
-          pageSize,
-          sortField,
-          sortDirection,
-          searchTerm,
-        ),
+    const { apiErrorCallback } = res.locals
+
+    res.locals.searchResults = await Result.wrap(
+      searchService.searchPrisonersInPrison(
+        activeCaseLoadId,
+        username,
+        page,
+        pageSize,
+        sortField,
+        sortDirection,
+        searchTerm,
       ),
-      searchTerm,
-      sortField,
-      sortDirection,
-    }
+      apiErrorCallback,
+    )
+    res.locals.searchTerm = searchTerm
+    res.locals.sortField = sortField
+    res.locals.sortDirection = sortDirection
+
     next()
   }
 
