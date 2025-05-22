@@ -19,6 +19,13 @@
     <div class="govuk-grid-column-full">
       <h1 class="govuk-heading-l">Prisoners with support for additional needs</h1>
       {% include './_searchBox.njk' %}
+
+      {% if searchResults.status === 'fulfilled' %}
+        {% include './_searchResults.njk' %}
+      {% else %}
+        <h2 class="govuk-heading-m" data-qa="search-unavailable-message">We cannot show these details right now</h2>
+        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+      {% endif %}
     </div>
   </div>
 
