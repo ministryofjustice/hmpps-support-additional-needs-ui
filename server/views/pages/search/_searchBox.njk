@@ -3,8 +3,7 @@
      This ensures that when the Search page is filtered the current sort field and order are maintained.
   #}
   <form class="form" method="get">
-    <input type="hidden" name="sortField" value="{{ sortField }}" />
-    <input type="hidden" name="sortDirection" value="{{ sortDirection }}" />
+    <input type="hidden" name="sort" value="{{ sortField }},{{ sortDirection }}" />
     <fieldset class="govuk-fieldset">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Search for a prisoner with support for additional needs</legend>
         <div class="govuk-form-group govuk-form-group--inline govuk-!-margin-bottom-3">
@@ -31,7 +30,7 @@
               The link also contains the current sort options to ensure the current sort field and direction are maintained after
               reseting the filter.
           #}
-          <a class="govuk-link govuk-link--no-visited-state" href="/search?searchTerm=&sortField={{ sortField }}&sortDirection={{ sortDirection }}" data-qa="clear-filters">
+          <a class="govuk-link govuk-link--no-visited-state" href="/search?searchTerm=&sort={{ sortField }},{{ sortDirection }}" data-qa="clear-filters">
             Clear<span class="govuk-visually-hidden"> filter options</span>
           </a>
         </p>

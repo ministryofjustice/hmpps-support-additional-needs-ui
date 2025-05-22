@@ -1,32 +1,67 @@
+{% from "../../components/sortable-table-header/macro.njk" import sortableTableHeader %}
+
 {% set prisoners = searchResults.value.prisoners %}
+{% set page = searchResults.value.page %}
 {% set pagination = searchResults.value.pagination %}
 
-<table class="govuk-table" data-qa="search-results-table">
-  <caption><span class="govuk-visually-hidden">column headers with buttons are sortable.</span></caption>
-  <thead class="govuk-table__head">
-    <tr class="govuk-table__row" data-qa="sortable-table-headers">
-      <th scope="col" class="govuk-table__header">Prisoner Name</th>
-      <th scope="col" class="govuk-table__header">Prison Number</th>
-      <th scope="col" class="govuk-table__header">Location</th>
-    </tr>
-  </thead>
+{% if prisoners | length %}
 
-  <tbody class="govuk-table__body">
-    {% for prisoner in prisoners %}
-      <tr class="govuk-table__row">
-        <td class="govuk-table__cell">{{ prisoner.firstName }} {{ prisoner.lastName }}</td>
-        <td class="govuk-table__cell">{{ prisoner.prisonNumber }}</td>
-        <td class="govuk-table__cell">{{ prisoner.location }}</td>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+  {# Wrap the Search Results table in a form that contains hidden fields for the current search term, and page.
+   This ensures that when then Search Results page is sorted via the buttons in the table header the current
+   search term and page are maintained.
+  #}
+  <form class="form" method="get">
+    <input type="hidden" name="searchTerm" value="{{ searchTerm }}" />
+    <input type="hidden" name="page" value="{{ page }}" />
 
-<section data-qa="search-results-pagination">
-  {{ mojPagination({
-    items: pagination.items,
-    results: pagination.results,
-    previous: pagination.previous if pagination.previous.href,
-    next: pagination.next if pagination.next.href
-  }) }}
-</section>
+    <table class="govuk-table" data-qa="search-results-table">
+      <caption><span class="govuk-visually-hidden">column headers with buttons are sortable.</span></caption>
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row" data-qa="sortable-table-headers">
+          {{ sortableTableHeader({
+            sortBy: sortField,
+            sortOrder: sortDirection,
+            fieldName: 'PRISONER_NAME',
+            headerText: 'Prisoner Name'
+          }) }}
+          {{ sortableTableHeader({
+            sortBy: sortField,
+            sortOrder: sortDirection,
+            fieldName: 'PRISON_NUMBER',
+            headerText: 'Prison Number'
+          }) }}
+          {{ sortableTableHeader({
+            sortBy: sortField,
+            sortOrder: sortDirection,
+            fieldName: 'CELL_LOCATION',
+            headerText: 'Location'
+          }) }}
+        </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+        {% for prisoner in prisoners %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">{{ prisoner.firstName }} {{ prisoner.lastName }}</td>
+            <td class="govuk-table__cell">{{ prisoner.prisonNumber }}</td>
+            <td class="govuk-table__cell">{{ prisoner.location }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </form>
+
+  <section data-qa="search-results-pagination">
+    {{ mojPagination({
+      items: pagination.items,
+      results: pagination.results,
+      previous: pagination.previous if pagination.previous.href,
+      next: pagination.next if pagination.next.href
+    }) }}
+  </section>
+
+
+{% else %}
+  <h2 class="govuk-heading-m" data-qa="zero-results-message">0 results for "{{ searchTerm }}"</h2>
+  <p class="govuk-body govuk-!-font-size-19">Check your spelling and search again, or clear the search and browse for the prisoner.</p>
+{% endif %}

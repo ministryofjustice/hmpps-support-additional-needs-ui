@@ -6,7 +6,7 @@ import SearchSortDirection from '../../enums/searchSortDirection'
 
 type SearchOptions = {
   prisonId: string
-  sortBy: SearchSortField
+  sortField: SearchSortField
   sortDirection: SearchSortDirection
   searchTerm?: string
 }
@@ -61,8 +61,7 @@ const toMojPaginationParams = (apiResponse: PaginationMetaData, searchOptions: S
 const buildQueryString = (searchOptions: SearchOptions, page: number): string => {
   const queryStringParams = [
     searchOptions.searchTerm && `searchTerm=${decodeURIComponent(searchOptions.searchTerm)}`,
-    `sortBy=${searchOptions.sortBy}`,
-    `sortDirection=${searchOptions.sortDirection}`,
+    `sort=${searchOptions.sortField},${searchOptions.sortDirection}`,
     `page=${page}`,
   ].filter(val => !!val)
   return `?${queryStringParams.join('&')}`

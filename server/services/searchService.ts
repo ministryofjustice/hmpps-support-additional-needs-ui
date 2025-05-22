@@ -28,7 +28,7 @@ export default class SearchService {
       ),
       {
         prisonId,
-        sortBy,
+        sortField: sortBy,
         sortDirection,
         searchTerm: prisonerNameOrNumber,
       },
