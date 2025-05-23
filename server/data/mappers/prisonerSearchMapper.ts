@@ -32,16 +32,8 @@ const toPrisonerSearchSummary = (apiResponse: Person, prisonId: string): Prisone
 const toMojPaginationParams = (apiResponse: PaginationMetaData, searchOptions: SearchOptions): MojPaginationParams => {
   const from = Math.min(1 + (apiResponse.page - 1) * apiResponse.pageSize, apiResponse.totalElements)
   const to = Math.min(from + apiResponse.pageSize - 1, apiResponse.totalElements)
-  const items =
-    apiResponse.totalPages > 1
-      ? [...Array(apiResponse.totalPages).fill(0)].map((_, idx) => ({
-          text: `${idx + 1}`,
-          href: buildQueryString(searchOptions, idx + 1),
-          selected: idx + 1 === apiResponse.page,
-        }))
-      : []
   return {
-    items,
+    items: buildPageLinks(apiResponse, searchOptions),
     results: {
       count: apiResponse.totalElements,
       from,
@@ -56,6 +48,28 @@ const toMojPaginationParams = (apiResponse: PaginationMetaData, searchOptions: S
       href: apiResponse.page < apiResponse.totalPages ? buildQueryString(searchOptions, apiResponse.page + 1) : '',
     },
   }
+}
+
+const buildPageLinks = (
+  apiResponse: PaginationMetaData,
+  searchOptions: SearchOptions,
+): Array<{ text: string; href: string; selected: boolean }> => {
+  const pageLinks =
+    apiResponse.totalPages > 1
+      ? [...Array(apiResponse.totalPages).fill(0)].map((_, idx) => ({
+          text: `${idx + 1}`,
+          href: buildQueryString(searchOptions, idx + 1),
+          selected: idx + 1 === apiResponse.page,
+        }))
+      : []
+  // Return 10 page links, showing 5 pages before and after the current page
+  const start = Math.max(0, apiResponse.page - 6)
+  const end = Math.min(start + 10, pageLinks.length)
+  // If are less than 5 pages before the current page, show the previous 10 pages
+  if (end - start < 10) {
+    return pageLinks.slice(Math.max(0, end - 10), end)
+  }
+  return pageLinks.slice(start, end)
 }
 
 const buildQueryString = (searchOptions: SearchOptions, page: number): string => {
