@@ -16,9 +16,15 @@ const searchRoutes = (services: Services): Router => {
   const searchController = new SearchController()
 
   const performSearch = async (req: Request, res: Response, next: NextFunction) => {
+    const sortOptions = ((req.query.sort as string) || `${DEFAULT_SORT_FIELD},${DEFAULT_SORT_DIRECTION}`)
+      .trim()
+      .split(',')
+      .map(value => value.trim().toUpperCase())
+    const sortField = Object.values(SearchSortField).find(value => value === sortOptions[0]) || DEFAULT_SORT_FIELD
+    const sortDirection =
+      Object.values(SearchSortDirection).find(value => value === sortOptions[1]) || DEFAULT_SORT_DIRECTION
+
     const searchTerm = (req.query.searchTerm as string) || ''
-    const sortField = (req.query.sortField as SearchSortField) || DEFAULT_SORT_FIELD
-    const sortDirection = (req.query.sortDirection as SearchSortDirection) || DEFAULT_SORT_DIRECTION
     const page = parseInt((req.query.page as string) || '1', 10)
     const pageSize = config.searchUiDefaultPaginationPageSize
     const { activeCaseLoadId, username } = res.locals.user
@@ -40,6 +46,7 @@ const searchRoutes = (services: Services): Router => {
     res.locals.searchTerm = searchTerm
     res.locals.sortField = sortField
     res.locals.sortDirection = sortDirection
+    res.locals.page = page
 
     next()
   }
