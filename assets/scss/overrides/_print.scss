@@ -1,0 +1,38 @@
+.app-print-only {
+  display: none;
+}
+
+@media print {
+
+  @page {
+    size: auto;
+    margin: 8mm;
+  }
+
+  .app-print-only {
+    display: inline;
+  }
+
+  .govuk-hint,
+  .govuk-tag,
+  .govuk-caption-l,
+  .govuk-details__summary {
+    color: $govuk-text-colour;
+  }
+
+  .moj-page-header-actions {
+    margin-bottom: 5mm;
+  }
+
+  .govuk-summary-card__title-wrapper {
+    padding-bottom: 0;
+  }
+
+  .app-u-print-full-width {
+    width: 100%;
+  }
+
+  .connect-dps-common-footer {
+    @include govuk-visually-hidden();
+  }
+}
