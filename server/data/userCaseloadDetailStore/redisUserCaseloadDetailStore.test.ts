@@ -1,5 +1,6 @@
 import type { UserCaseloadDetail } from 'manageUsersApiClient'
 import UserCaseloadDetailStore from './userCaseloadDetailStore'
+import RedisUserCaseloadDetailStore from './redisUserCaseloadDetailStore'
 import { RedisClient } from '../redisClient'
 
 const redisClient = {
@@ -9,10 +10,11 @@ const redisClient = {
   connect: jest.fn(),
 }
 
-describe('userCaseloadDetailStore', () => {
-  const userCaseloadDetailStore = new UserCaseloadDetailStore(redisClient as unknown as RedisClient)
+describe('redisUserCaseloadDetailStore', () => {
+  let userCaseloadDetailStore: UserCaseloadDetailStore
 
   beforeEach(() => {
+    userCaseloadDetailStore = new RedisUserCaseloadDetailStore(redisClient as unknown as RedisClient)
     jest.resetAllMocks()
   })
 

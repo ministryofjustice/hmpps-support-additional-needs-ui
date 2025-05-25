@@ -1,7 +1,7 @@
 import type { PrisonResponse } from 'prisonRegisterApiClient'
-import PrisonRegisterStore from '../data/prisonRegisterStore/prisonRegisterStore'
 import PrisonRegisterClient from '../data/prisonRegisterClient'
 import logger from '../../logger'
+import { PrisonRegisterStore } from '../data'
 
 const PRISON_CACHE_TTL_DAYS = 1
 

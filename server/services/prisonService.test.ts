@@ -1,14 +1,14 @@
 import type { PrisonResponse } from 'prisonRegisterApiClient'
 import PrisonService from './prisonService'
-import PrisonRegisterStore from '../data/prisonRegisterStore/prisonRegisterStore'
+import RedisPrisonRegisterStore from '../data/prisonRegisterStore/redisPrisonRegisterStore'
 import PrisonRegisterClient from '../data/prisonRegisterClient'
 import aValidPrisonResponse from '../testsupport/prisonResponseTestDataBuilder'
 
-jest.mock('../data/prisonRegisterStore/prisonRegisterStore')
+jest.mock('../data/prisonRegisterStore/redisPrisonRegisterStore')
 jest.mock('../data/prisonRegisterClient')
 
 describe('prisonService', () => {
-  const prisonRegisterStore = new PrisonRegisterStore(null) as jest.Mocked<PrisonRegisterStore>
+  const prisonRegisterStore = new RedisPrisonRegisterStore(null) as jest.Mocked<RedisPrisonRegisterStore>
   const prisonRegisterClient = new PrisonRegisterClient(null) as jest.Mocked<PrisonRegisterClient>
   const prisonService = new PrisonService(prisonRegisterStore, prisonRegisterClient)
 

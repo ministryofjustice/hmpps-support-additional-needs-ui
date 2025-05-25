@@ -1,5 +1,6 @@
 import { v4 as uuidV4 } from 'uuid'
 import JourneyDataStore from './journeyDataStore'
+import RedisJourneyDataStore from './redisJourneyDataStore'
 import { RedisClient } from '../redisClient'
 
 const redisClient = {
@@ -15,11 +16,11 @@ const journeyId = uuidV4()
 const expectedCacheKey = `journey.${username}.${journeyId}`
 const journeyData: Express.JourneyData = { someDto: { test: 'test' } }
 
-describe('journeyDataStore', () => {
+describe('redisJourneyDataStore', () => {
   let journeyDataStore: JourneyDataStore
 
   beforeEach(() => {
-    journeyDataStore = new JourneyDataStore(redisClient as unknown as RedisClient)
+    journeyDataStore = new RedisJourneyDataStore(redisClient as unknown as RedisClient)
   })
 
   afterEach(() => {
