@@ -1,4 +1,7 @@
-{% extends "../../partials/layout.njk" %}
+{% extends "../partials/layout.njk" %}
+
+{% set pageId = 'page-not-found' %}
+{% set pageTitle = "Page not found" %}
 
 {% block beforeContent %}
   <nav class="govuk-breadcrumbs govuk-!-display-none-print" aria-label="Breadcrumb">
@@ -11,10 +14,16 @@
       </li>
     </ol>
   </nav>
+{% endblock %}
+
+{% block content %}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">{{ prisonerSummary | formatFirst_name_Last_name }}'s support for additional needs</h1>
+      <h1 class="govuk-heading-l">Page not found</h1>
+      <p class="govuk-body">Check you used the right web address, for example if you copied and pasted it from an email or used a bookmark.</p>
+      <p class="govuk-body"><a href="/" class="govuk-link">Go to the Support for additional needs search page</a></p>
     </div>
   </div>
+
 {% endblock %}

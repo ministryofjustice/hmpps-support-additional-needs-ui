@@ -1,6 +1,8 @@
 import HmppsAuditClient, { AuditEvent } from '../data/hmppsAuditClient'
 
 export enum Page {
+  NOT_FOUND = 'NOT_FOUND',
+  ERROR = 'ERROR',
   SEARCH = 'SEARCH',
   PROFILE_OVERVIEW = 'PROFILE_OVERVIEW',
 }
