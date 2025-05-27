@@ -7,7 +7,9 @@ import ApplicationAction from '../enums/applicationAction'
  * The list of [ApplicationRole]s should be considered an "or" list. Users require any one of the listed roles for each
  * action.
  */
-const rolesForAction = () => ({
+const rolesForAction = (): Record<ApplicationAction, Array<ApplicationRole>> => ({
+  [ApplicationAction.SEARCH]: [],
+  [ApplicationAction.VIEW_PROFILE]: [],
   [ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_MANAGER],
   [ApplicationAction.UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_MANAGER],
 })
@@ -30,7 +32,11 @@ const userHasPermissionTo = (action: ApplicationAction, userRoles: string[]): bo
  */
 const userWithRoleCan = (role: ApplicationRole): Array<ApplicationAction> =>
   Object.keys(ApplicationAction)
-    .filter(action => rolesForAction()[action as ApplicationAction].includes(role))
+    .filter(
+      action =>
+        rolesForAction()[action as ApplicationAction].length === 0 ||
+        rolesForAction()[action as ApplicationAction].includes(role),
+    )
     .map(action => action as ApplicationAction)
 
 export { checkUserHasPermissionTo, userHasPermissionTo, userWithRoleCan }

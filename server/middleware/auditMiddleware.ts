@@ -7,6 +7,8 @@ import logger from '../../logger'
 const pageViewEventMap: Record<string, Page> = {
   '/search': Page.SEARCH,
 
+  '/profile/:prisonNumber/overview': Page.PROFILE_OVERVIEW,
+
   // Non audit routes. These routes do not raise an audit event
   '/': null,
 }
