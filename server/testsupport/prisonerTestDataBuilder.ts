@@ -1,4 +1,5 @@
 import type { Prisoner } from 'prisonerSearchApiClient'
+import SentenceType from '../enums/sentenceType'
 
 export default function aValidPrisoner(options?: {
   prisonNumber?: string
@@ -11,6 +12,7 @@ export default function aValidPrisoner(options?: {
   cellLocation?: string
   restrictedPatient?: boolean
   supportingPrisonId?: string
+  legalStatus?: SentenceType
 }): Prisoner {
   return {
     prisonerNumber: options?.prisonNumber || 'A1234BC',
@@ -26,5 +28,6 @@ export default function aValidPrisoner(options?: {
         ? false
         : options.restrictedPatient,
     supportingPrisonId: options?.supportingPrisonId,
+    legalStatus: options?.legalStatus || SentenceType.SENTENCED,
   }
 }
