@@ -1,4 +1,4 @@
-import IndexPage from '../pages/index'
+import SearchPage from '../pages/search/searchPage'
 import AuthSignInPage from '../pages/authSignIn'
 import Page from '../pages/page'
 
@@ -20,20 +20,20 @@ context('Sign In', () => {
 
   it('User name visible in header', () => {
     cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
-    indexPage.headerUserName().should('contain.text', 'J. Smith')
+    const landingPage = Page.verifyOnPage(SearchPage)
+    landingPage.headerUserName().should('contain.text', 'J. Smith')
   })
 
   it('User can sign out', () => {
     cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
-    indexPage.signOut().click()
+    const landingPage = Page.verifyOnPage(SearchPage)
+    landingPage.signOut().click()
     Page.verifyOnPage(AuthSignInPage)
   })
 
   it('Token verification failure takes user to sign in page', () => {
     cy.signIn()
-    Page.verifyOnPage(IndexPage)
+    Page.verifyOnPage(SearchPage)
     cy.task('stubVerifyToken', false)
 
     cy.visit('/')
@@ -42,7 +42,7 @@ context('Sign In', () => {
 
   it('Token verification failure clears user session', () => {
     cy.signIn()
-    const indexPage = Page.verifyOnPage(IndexPage)
+    const landingPage = Page.verifyOnPage(SearchPage)
     cy.task('stubVerifyToken', false)
 
     cy.visit('/')
@@ -53,6 +53,6 @@ context('Sign In', () => {
 
     cy.signIn()
 
-    indexPage.headerUserName().contains('B. Brown')
+    landingPage.headerUserName().contains('B. Brown')
   })
 })
