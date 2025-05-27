@@ -1,4 +1,4 @@
-import { JourneyDataStore } from '../data'
+import JourneyDataStore from '../data/journeyDataStore/journeyDataStore'
 
 export default class JourneyDataService {
   constructor(private readonly journeyDataStore: JourneyDataStore) {}

@@ -15,12 +15,18 @@ import { createRedisClient } from './redisClient'
 import config from '../config'
 import HmppsAuditClient from './hmppsAuditClient'
 import logger from '../../logger'
-import JourneyDataStore from './journeyDataStore/journeyDataStore'
-import PrisonRegisterStore from './prisonRegisterStore/prisonRegisterStore'
 import PrisonRegisterClient from './prisonRegisterClient'
 import ManageUsersApiClient from './manageUsersApiClient'
-import UserCaseloadDetailStore from './userCaseloadDetailStore/userCaseloadDetailStore'
 import SupportAdditionalNeedsApiClient from './supportAdditionalNeedsApiClient'
+import JourneyDataStore from './journeyDataStore/journeyDataStore'
+import InMemoryJourneyDataStore from './journeyDataStore/inMemoryJourneyDataStore'
+import RedisJourneyDataStore from './journeyDataStore/redisJourneyDataStore'
+import PrisonRegisterStore from './prisonRegisterStore/prisonRegisterStore'
+import InMemoryPrisonRegisterStore from './prisonRegisterStore/inMemoryPrisonRegisterStore'
+import RedisPrisonRegisterStore from './prisonRegisterStore/redisPrisonRegisterStore'
+import UserCaseloadDetailStore from './userCaseloadDetailStore/userCaseloadDetailStore'
+import InMemoryUserCaseloadDetailStore from './userCaseloadDetailStore/inMemoryUserCaseloadDetailStore'
+import RedisUserCaseloadDetailStore from './userCaseloadDetailStore/redisUserCaseloadDetailStore'
 
 export const dataAccess = () => {
   const hmppsAuthClient = new AuthenticationClient(
@@ -33,11 +39,17 @@ export const dataAccess = () => {
     applicationInfo,
     hmppsAuthClient,
     hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
-    journeyDataStore: new JourneyDataStore(createRedisClient('journeyData:')),
+    journeyDataStore: config.redis.enabled
+      ? new RedisJourneyDataStore(createRedisClient('journeyData:'))
+      : new InMemoryJourneyDataStore(),
     prisonRegisterClient: new PrisonRegisterClient(hmppsAuthClient),
-    prisonRegisterStore: new PrisonRegisterStore(createRedisClient('prisonRegister:')),
+    prisonRegisterStore: config.redis.enabled
+      ? new RedisPrisonRegisterStore(createRedisClient('prisonRegister:'))
+      : new InMemoryPrisonRegisterStore(),
     managedUsersApiClient: new ManageUsersApiClient(hmppsAuthClient),
-    userCaseLoadDetailStore: new UserCaseloadDetailStore(createRedisClient('userCaseloadDetail:')),
+    userCaseLoadDetailStore: config.redis.enabled
+      ? new RedisUserCaseloadDetailStore(createRedisClient('userCaseloadDetail:'))
+      : new InMemoryUserCaseloadDetailStore(),
     supportAdditionalNeedsApiClient: new SupportAdditionalNeedsApiClient(hmppsAuthClient),
   }
 }
@@ -47,10 +59,10 @@ export type DataAccess = ReturnType<typeof dataAccess>
 export {
   AuthenticationClient,
   HmppsAuditClient,
-  JourneyDataStore,
+  type JourneyDataStore,
   ManageUsersApiClient,
   PrisonRegisterClient,
-  PrisonRegisterStore,
+  type PrisonRegisterStore,
   SupportAdditionalNeedsApiClient,
-  UserCaseloadDetailStore,
+  type UserCaseloadDetailStore,
 }

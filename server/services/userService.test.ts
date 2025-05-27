@@ -1,14 +1,14 @@
 import type { UserCaseloadDetail } from 'manageUsersApiClient'
 import UserService from './userService'
 import ManageUsersApiClient from '../data/manageUsersApiClient'
-import UserCaseloadDetailStore from '../data/userCaseloadDetailStore/userCaseloadDetailStore'
+import RedisUserCaseloadDetailStore from '../data/userCaseloadDetailStore/redisUserCaseloadDetailStore'
 
 jest.mock('../data/manageUsersApiClient')
-jest.mock('../data/userCaseloadDetailStore/userCaseloadDetailStore')
+jest.mock('../data/userCaseloadDetailStore/redisUserCaseloadDetailStore')
 
 describe('userService', () => {
   const manageUsersApiClient = new ManageUsersApiClient(null) as jest.Mocked<ManageUsersApiClient>
-  const userCaseloadDetailStore = new UserCaseloadDetailStore(null) as jest.Mocked<UserCaseloadDetailStore>
+  const userCaseloadDetailStore = new RedisUserCaseloadDetailStore(null) as jest.Mocked<RedisUserCaseloadDetailStore>
   const userService = new UserService(manageUsersApiClient, userCaseloadDetailStore)
 
   const username = 'some-username'

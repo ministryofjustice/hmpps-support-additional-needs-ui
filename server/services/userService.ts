@@ -1,5 +1,6 @@
 import type { UserCaseloadDetail } from 'manageUsersApiClient'
-import { ManageUsersApiClient, UserCaseloadDetailStore } from '../data'
+import { ManageUsersApiClient } from '../data'
+import UserCaseloadDetailStore from '../data/userCaseloadDetailStore/userCaseloadDetailStore'
 import logger from '../../logger'
 
 const USER_CASELOAD_DETAIL_CACHE_TTL_HOURS = 1
