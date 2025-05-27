@@ -3,6 +3,7 @@ import type { Services } from '../services'
 import searchRoutes from './search'
 import { checkPageViewAudited } from '../middleware/auditMiddleware'
 import landingPageRoutes from './landingPage'
+import profileRoutes from './profile'
 
 export default function routes(services: Services): Router {
   const router = Router({ mergeParams: true })
@@ -13,5 +14,6 @@ export default function routes(services: Services): Router {
   router.use('/', landingPageRoutes())
 
   router.use('/search', searchRoutes(services))
+  router.use('/profile/:prisonNumber', profileRoutes(services))
   return router
 }

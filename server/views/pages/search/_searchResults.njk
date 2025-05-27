@@ -43,7 +43,7 @@
         {% for prisoner in prisoners %}
           <tr class="govuk-table__row">
             <td class="govuk-table__cell">
-              <a href="/{{ prisoner.prisonNumber }}/overview" rel="noopener noreferrer" class="govuk-link govuk-link--no-visited-state govuk-!-display-none-print">
+              <a href="/profile/{{ prisoner.prisonNumber }}/overview" rel="noopener noreferrer" class="govuk-link govuk-link--no-visited-state govuk-!-display-none-print">
                 {{ prisoner | formatLast_name_comma_First_name }}
               </a>
               <span class="app-print-only">{{ prisoner | formatLast_name_comma_First_name }}</span>
