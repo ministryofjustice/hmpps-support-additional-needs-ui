@@ -16,7 +16,6 @@ export const services = () => {
     prisonRegisterClient,
     prisonRegisterStore,
     managedUsersApiClient,
-    userCaseLoadDetailStore,
     supportAdditionalNeedsApiClient,
   } = dataAccess()
 
@@ -26,7 +25,7 @@ export const services = () => {
     journeyDataService: new JourneyDataService(journeyDataStore),
     prisonerService: new PrisonerService(prisonerSearchStore, prisonerSearchClient),
     prisonService: new PrisonService(prisonRegisterStore, prisonRegisterClient),
-    userService: new UserService(managedUsersApiClient, userCaseLoadDetailStore),
+    userService: new UserService(managedUsersApiClient),
     searchService: new SearchService(supportAdditionalNeedsApiClient),
   }
 }

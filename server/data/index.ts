@@ -24,9 +24,6 @@ import RedisJourneyDataStore from './journeyDataStore/redisJourneyDataStore'
 import PrisonRegisterStore from './prisonRegisterStore/prisonRegisterStore'
 import InMemoryPrisonRegisterStore from './prisonRegisterStore/inMemoryPrisonRegisterStore'
 import RedisPrisonRegisterStore from './prisonRegisterStore/redisPrisonRegisterStore'
-import UserCaseloadDetailStore from './userCaseloadDetailStore/userCaseloadDetailStore'
-import InMemoryUserCaseloadDetailStore from './userCaseloadDetailStore/inMemoryUserCaseloadDetailStore'
-import RedisUserCaseloadDetailStore from './userCaseloadDetailStore/redisUserCaseloadDetailStore'
 import PrisonerSearchClient from './prisonerSearchClient'
 import RedisPrisonerSearchStore from './prisonerSearchStore/redisPrisonerSearchStore'
 import InMemoryPrisonerSearchStore from './prisonerSearchStore/inMemoryPrisonerSearchStore'
@@ -54,9 +51,6 @@ export const dataAccess = () => {
       ? new RedisPrisonerSearchStore(createRedisClient('prisonerSearch:'))
       : new InMemoryPrisonerSearchStore(),
     managedUsersApiClient: new ManageUsersApiClient(hmppsAuthClient),
-    userCaseLoadDetailStore: config.redis.enabled
-      ? new RedisUserCaseloadDetailStore(createRedisClient('userCaseloadDetail:'))
-      : new InMemoryUserCaseloadDetailStore(),
     supportAdditionalNeedsApiClient: new SupportAdditionalNeedsApiClient(hmppsAuthClient),
   }
 }
@@ -73,5 +67,4 @@ export {
   PrisonerSearchClient,
   type RedisPrisonRegisterStore,
   SupportAdditionalNeedsApiClient,
-  type UserCaseloadDetailStore,
 }
