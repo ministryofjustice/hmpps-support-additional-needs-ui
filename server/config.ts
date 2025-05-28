@@ -121,6 +121,7 @@ export default {
   },
   ingressUrl: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   environmentName: get('ENVIRONMENT_NAME', ''),
+  dpsHomeUrl: get('DPS_URL', 'http://localhost:3000/', requiredInProduction),
   newDpsUrl: get('NEW_DPS_URL', 'http://localhost:3000/', requiredInProduction),
   searchUiDefaultPaginationPageSize: Number(get('SEARCH_UI_DEFAULT_PAGINATION_PAGE_SIZE', 50, requiredInProduction)),
   featureToggles: {

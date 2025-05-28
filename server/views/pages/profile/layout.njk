@@ -1,4 +1,5 @@
 {% extends "../../partials/layout.njk" %}
+{% from "../../components/prisoner-summary-banner/macro.njk" import prisonerSummaryBanner %}
 
 {% block beforeContent %}
   <nav class="govuk-breadcrumbs govuk-!-display-none-print" aria-label="Breadcrumb">
@@ -17,4 +18,9 @@
       <h1 class="govuk-heading-l">{{ prisonerSummary | formatFirst_name_Last_name }}'s support for additional needs</h1>
     </div>
   </div>
+
+  {{ prisonerSummaryBanner({
+    prisonerSummary: prisonerSummary
+  }) }}
+
 {% endblock %}

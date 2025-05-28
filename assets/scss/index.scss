@@ -11,5 +11,6 @@ $govuk-page-width: $moj-page-width;
 
 @import './components/api-error';
 @import './components/search';
+@import './components/prisoner-summary-banner';
 @import './overrides/local';
 @import './overrides/print';

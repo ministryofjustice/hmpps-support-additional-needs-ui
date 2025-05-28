@@ -1,0 +1,24 @@
+{% set prisonerSummary = params.prisonerSummary %}
+<div class="prisoner-summary-banner govuk-!-margin-bottom-6 govuk-!-display-none-print">
+  <dl>
+    <dt class="govuk-heading-s govuk-!-margin-bottom-0">
+      <a href="{{ dpsUrl }}/prisoner/{{ prisonerSummary.prisonNumber }}" class="govuk-link govuk-!-font-weight-bold"  aria-label="{{ prisonerSummary | formatLast_name_comma_First_name }}'s prisoner profile">
+        {{ prisonerSummary | formatLast_name_comma_First_name }}
+      </a>
+    </dt>
+    <dd class="govuk-body" data-qa="prison-number">{{ prisonerSummary.prisonNumber }}</dd>
+  </dl>
+  <dl>
+    <dt class="govuk-heading-s govuk-!-margin-bottom-0">Entered prison on</dt>
+    <dd class="govuk-body" data-qa="reception-date">{{ prisonerSummary.receptionDate | formatDate('d MMM yyyy') }}
+    </dd>
+  </dl>
+  <dl>
+    <dt class="govuk-heading-s govuk-!-margin-bottom-0">Release date</dt>
+    <dd class="govuk-body" data-qa="release-date">{{ prisonerSummary.releaseDate | formatDate('d MMM yyyy') or 'N/A' }}</dd>
+  </dl>
+  <dl>
+    <dt class="govuk-heading-s govuk-!-margin-bottom-0">DOB</dt>
+    <dd class="govuk-body" data-qa="dob">{{ prisonerSummary.dateOfBirth | formatDate('d MMM yyyy') }}</dd>
+  </dl>
+</div>

@@ -18,7 +18,7 @@ export default function aValidPrisonerSummary(options?: {
   return {
     prisonNumber: options?.prisonNumber || 'A1234BC',
     prisonId: options?.prisonId || 'BXI',
-    releaseDate: options?.releaseDate || startOfDay('2025-12-31'),
+    releaseDate: options?.releaseDate === null ? null : options?.releaseDate || startOfDay('2025-12-31'),
     firstName: options?.firstName || 'IFEREECA',
     lastName: options?.lastName || 'PEIGH',
     receptionDate: options?.receptionDate || startOfDay('1999-08-29'),
