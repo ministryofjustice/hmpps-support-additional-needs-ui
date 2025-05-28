@@ -52,7 +52,7 @@ function appSetup(services: Services, production: boolean, userSupplier: () => H
   app.use(auditMiddleware(services))
   app.use(routes(services))
   app.use((req, res, next) => next(new NotFound()))
-  app.use(errorHandler(production))
+  app.use(errorHandler(services, production))
 
   return app
 }

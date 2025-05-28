@@ -6,6 +6,7 @@ import SearchSortField from '../../enums/searchSortField'
 import SearchSortDirection from '../../enums/searchSortDirection'
 import config from '../../config'
 import { Result } from '../../utils/result/result'
+import { PrisonUser } from '../../interfaces/hmppsUser'
 
 const DEFAULT_SORT_FIELD = SearchSortField.PRISONER_NAME
 const DEFAULT_SORT_DIRECTION = SearchSortDirection.ASC
@@ -27,7 +28,7 @@ const searchRoutes = (services: Services): Router => {
     const searchTerm = (req.query.searchTerm as string) || ''
     const page = parseInt((req.query.page as string) || '1', 10)
     const pageSize = config.searchUiDefaultPaginationPageSize
-    const { activeCaseLoadId, username } = res.locals.user
+    const { activeCaseLoadId, username } = res.locals.user as PrisonUser
 
     const { apiErrorCallback } = res.locals
 
