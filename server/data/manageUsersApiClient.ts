@@ -1,7 +1,6 @@
 import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import { asUser, RestClient } from '@ministryofjustice/hmpps-rest-client'
 import type { UserCaseloadDetail } from 'manageUsersApiClient'
-import restClientErrorHandler from './restClientErrorHandler'
 import logger from '../../logger'
 import config from '../config'
 
@@ -15,7 +14,6 @@ export default class ManageUsersApiClient extends RestClient {
     return this.get<UserCaseloadDetail>(
       {
         path: '/users/me/caseloads',
-        errorHandler: restClientErrorHandler({ ignore404: true }),
       },
       asUser(token),
     )
