@@ -179,4 +179,27 @@ const prisoners = {
   },
 }
 
-export default prisoners
+const defaultPrisoner = (prisonNumber: string) => ({
+  request: {
+    method: 'GET',
+    urlPattern: `/prisoner-search-api/prisoner/${prisonNumber}`,
+  },
+  response: {
+    status: 200,
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    jsonBody: {
+      prisonId: 'BXI',
+      prisonerNumber: prisonNumber,
+      firstName: 'ABBY',
+      lastName: 'KYRIAKOPOULOS',
+      releaseDate: '2030-12-31',
+      nonDtoReleaseDateType: 'HDC',
+      receptionDate: '2001-01-17',
+      dateOfBirth: '1967-12-13',
+      cellLocation: 'A-1-1023',
+      restrictedPatient: false,
+    },
+  },
+})
+
+export { prisoners, defaultPrisoner }

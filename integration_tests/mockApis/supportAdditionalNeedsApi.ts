@@ -4,7 +4,7 @@ import stubPing from './common'
 import { stubFor } from './wiremock'
 import SearchSortField from '../../server/enums/searchSortField'
 import SearchSortDirection from '../../server/enums/searchSortDirection'
-import prisoners from '../mockData/prisonerByIdData'
+import { prisoners } from '../mockData/prisonerByIdData'
 
 const stubSearchByPrison = (options?: {
   prisonId?: string

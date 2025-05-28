@@ -1,4 +1,5 @@
 import Page, { PageElement } from '../page'
+import OverviewPage from '../profile/overview/overviewPage'
 
 export default class SearchPage extends Page {
   constructor() {
@@ -56,21 +57,6 @@ export default class SearchPage extends Page {
     return this
   }
 
-  firstRowNameIs(expected: string): SearchPage {
-    this.searchResultsFirstRow().find('td:nth-of-type(1) a').should('contain', expected)
-    return this
-  }
-
-  firstRowPrisonNumberIs(expected: string): SearchPage {
-    this.searchResultsFirstRow().find('td:nth-of-type(1) span').should('contain', expected)
-    return this
-  }
-
-  firstRowLocationIs(expected: string): SearchPage {
-    this.searchResultsFirstRow().find('td:nth-of-type(2)').should('contain', expected)
-    return this
-  }
-
   gotoPage(value: number): SearchPage {
     this.paginationControls().find(`li:nth-of-type(${value}) a`).click()
     return this
@@ -106,6 +92,15 @@ export default class SearchPage extends Page {
     return this
   }
 
+  gotoOverviewPageForPrisoner(prisonNumber: string): OverviewPage {
+    this.searchResultsTable() //
+      .find(`tr td:contains('${prisonNumber}')`)
+      .parent()
+      .find('td a')
+      .click()
+    return Page.verifyOnPage(OverviewPage)
+  }
+
   private searchTermField = (): PageElement => cy.get('#searchTerm')
 
   private applyFiltersButton = (): PageElement => cy.get('[data-qa=apply-filters]')
@@ -113,8 +108,6 @@ export default class SearchPage extends Page {
   private clearFiltersButton = (): PageElement => cy.get('[data-qa=clear-filters]')
 
   private searchResultsTable = (): PageElement => cy.get('[data-qa=search-results-table]')
-
-  private searchResultsFirstRow = (): PageElement => cy.get('[data-qa=search-results-table] tbody tr:first-of-type')
 
   private zeroResultsMessage = (): PageElement => cy.get('[data-qa=zero-results-message]')
 
