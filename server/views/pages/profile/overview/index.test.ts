@@ -40,5 +40,9 @@ describe('Profile overview page', () => {
     // Then
     expect($('h1').text().trim()).toEqual(`Ifereeca Peigh's support for additional needs`)
     expect($('.prisoner-summary-banner').length).toEqual(1)
+    expect($('[data-qa=additional-needs-summary-card]').length).toEqual(1)
+    expect($('[data-qa=conditions-summary-card]').length).toEqual(1)
+    expect($('[data-qa=strengths-summary-card]').length).toEqual(1)
+    expect($('[data-qa=support-recommendations-summary-card]').length).toEqual(1)
   })
 })
