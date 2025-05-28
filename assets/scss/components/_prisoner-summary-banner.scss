@@ -1,0 +1,35 @@
+.prisoner-summary-banner {
+  align-items: start;
+  background: govuk-colour("light-grey");
+  display: flex;
+  flex-direction: row;
+  padding: 15px;
+
+  dl {
+    margin: 0;
+    margin-right: 60px;
+  }
+  dl:last-child {
+    margin-right: 0;
+  }
+  dd {
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+}
+
+@include govuk-media-query($until: tablet) {
+  .prisoner-summary-banner {
+    display: block;
+
+    dl {
+      margin-right: 0;
+    }
+    dl:last-child {
+      margin-bottom: 0;
+    }
+    dl:last-child dd {
+      margin-bottom: 0;
+    }
+  }
+}
