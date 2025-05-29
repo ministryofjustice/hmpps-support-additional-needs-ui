@@ -46,20 +46,52 @@ describe('prisonerSearchClient', () => {
       expect(nock.isDone()).toBe(true)
     })
 
-    it('should not get prisoner by prison number given prisoner does not exist', async () => {
+    it('should rethrow error given API returns a not found error', async () => {
       // Given
       const prisonNumber = 'A1234BC'
 
+      const apiErrorResponse = {
+        status: 404,
+        userMessage: 'Not found',
+        developerMessage: 'Not found',
+      }
       prisonerSearchApi
         .get(`/prisoner/${prisonNumber}`)
         .matchHeader('authorization', `Bearer ${systemToken}`)
-        .reply(404)
+        .reply(404, apiErrorResponse)
+
+      const expectedError = new Error('Not Found')
 
       // When
-      const actual = await prisonerSearchClient.getPrisonerByPrisonNumber(prisonNumber, username)
+      const actual = await prisonerSearchClient.getPrisonerByPrisonNumber(prisonNumber, username).catch(e => e)
 
       // Then
-      expect(actual).toBeNull()
+      expect(actual).toEqual(expectedError)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const prisonNumber = 'A1234BC'
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      prisonerSearchApi
+        .get(`/prisoner/${prisonNumber}`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .thrice()
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await prisonerSearchClient.getPrisonerByPrisonNumber(prisonNumber, username).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
       expect(nock.isDone()).toBe(true)
     })
   })

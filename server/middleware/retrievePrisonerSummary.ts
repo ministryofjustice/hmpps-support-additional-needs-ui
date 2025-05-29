@@ -14,7 +14,12 @@ const retrievePrisonerSummary = (prisonerService: PrisonerService): RequestHandl
       res.locals.prisonerSummary = await prisonerService.getPrisonerByPrisonNumber(prisonNumber, req.user.username)
       next()
     } catch (error) {
-      next(createError(error.status, `Prisoner ${prisonNumber} not returned by the Prisoner Service`))
+      next(
+        createError(
+          error.responseStatus || error.status,
+          `Prisoner ${prisonNumber} not returned by the Prisoner Service`,
+        ),
+      )
     }
   }
 }

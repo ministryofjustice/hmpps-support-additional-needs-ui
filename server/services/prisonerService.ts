@@ -44,7 +44,7 @@ export default class PrisonerService {
       prisoner = await this.prisonerSearchClient.getPrisonerByPrisonNumber(prisonNumber, username)
     } catch (ex) {
       // Retrieving prisoner from the API failed.
-      logger.error('Error retrieving prisons', ex)
+      logger.error('Error retrieving prisoner', ex)
       throw ex
     }
 

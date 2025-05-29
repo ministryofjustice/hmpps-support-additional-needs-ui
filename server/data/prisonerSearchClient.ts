@@ -14,7 +14,6 @@ export default class PrisonerSearchClient extends RestClient {
     return this.get<Prisoner>(
       {
         path: `/prisoner/${prisonNumber}`,
-        errorHandler: restClientErrorHandler({ ignore404: true }),
       },
       asSystem(username),
     )
