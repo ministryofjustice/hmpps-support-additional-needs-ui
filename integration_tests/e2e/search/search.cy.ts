@@ -1,6 +1,7 @@
 import type { Person } from 'supportAdditionalNeedsApiClient'
 import Page from '../../pages/page'
 import SearchPage from '../../pages/search/searchPage'
+import OverviewPage from '../../pages/profile/overview/overviewPage'
 
 /**
  * Cypress scenarios for the Search page.
@@ -108,5 +109,20 @@ context(`Display the Search screen`, () => {
         .hasPaginationLinkForPage(11)
         .hasNextLinkDisplayed()
     })
+  })
+
+  it('should be able to click a prisoner on the search page to arrive on the Overview page', () => {
+    // Given
+    const firstPersonOnFirstPage: Person = peopleGroupedByPageRequest[0][0]
+    cy.task('getPrisonerById', firstPersonOnFirstPage.prisonNumber)
+
+    cy.visit('/search')
+
+    // Then
+    Page.verifyOnPage(SearchPage) //
+      .gotoOverviewPageForPrisoner(firstPersonOnFirstPage.prisonNumber)
+
+    // When
+    Page.verifyOnPage(OverviewPage)
   })
 })

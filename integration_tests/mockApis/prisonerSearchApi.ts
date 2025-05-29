@@ -1,9 +1,9 @@
 import { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
-import prisoners from '../mockData/prisonerByIdData'
+import { defaultPrisoner, prisoners } from '../mockData/prisonerByIdData'
 import stubPing from './common'
 
-const getPrisonerById = (id = 'G6115VJ'): SuperAgentRequest => stubFor(prisoners[id])
+const getPrisonerById = (id = 'G6115VJ'): SuperAgentRequest => stubFor(prisoners[id] || defaultPrisoner(id))
 
 const stubPrisonerById404Error = (prisonNumber = 'A9999ZZ'): SuperAgentRequest =>
   stubFor({
