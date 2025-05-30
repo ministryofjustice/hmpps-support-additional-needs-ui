@@ -5,6 +5,7 @@ import PrisonerService from './prisonerService'
 import PrisonService from './prisonService'
 import UserService from './userService'
 import SearchService from './searchService'
+import CuriousService from './curiousService'
 
 export const services = () => {
   const {
@@ -17,6 +18,7 @@ export const services = () => {
     prisonRegisterStore,
     managedUsersApiClient,
     supportAdditionalNeedsApiClient,
+    curiousApiClient,
   } = dataAccess()
 
   return {
@@ -27,9 +29,10 @@ export const services = () => {
     prisonService: new PrisonService(prisonRegisterStore, prisonRegisterClient),
     userService: new UserService(managedUsersApiClient),
     searchService: new SearchService(supportAdditionalNeedsApiClient),
+    curiousService: new CuriousService(curiousApiClient),
   }
 }
 
 export type Services = ReturnType<typeof services>
 
-export { AuditService, JourneyDataService, PrisonerService, PrisonService, SearchService, UserService }
+export { AuditService, CuriousService, JourneyDataService, PrisonerService, PrisonService, SearchService, UserService }

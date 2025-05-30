@@ -8,6 +8,7 @@ context('Healthcheck', () => {
       cy.task('stubPrisonRegisterApiPing')
       cy.task('stubManageUsersApiPing')
       cy.task('stubSupportAdditionalNeedsApiPing')
+      cy.task('stubCuriousApiPing')
     })
 
     it('Health check page is visible and UP', () => {
@@ -32,6 +33,7 @@ context('Healthcheck', () => {
       cy.task('stubPrisonRegisterApiPing')
       cy.task('stubManageUsersApiPing')
       cy.task('stubSupportAdditionalNeedsApiPing')
+      cy.task('stubCuriousApiPing')
     })
 
     it('Reports correctly when token verification down', () => {

@@ -54,6 +54,8 @@ generic-service:
     hmpps-support-additional-needs-ui-client-creds:
       CLIENT_CREDS_CLIENT_ID: 'CLIENT_CREDS_CLIENT_ID'
       CLIENT_CREDS_CLIENT_SECRET: 'CLIENT_CREDS_CLIENT_SECRET'
+      CURIOUS_CLIENT_ID: "CURIOUS_CLIENT_ID"
+      CURIOUS_CLIENT_SECRET: "CURIOUS_CLIENT_SECRET"
     hmpps-support-additional-needs-ui-auth-code:
       AUTH_CODE_CLIENT_ID: 'AUTH_CODE_CLIENT_ID'
       AUTH_CODE_CLIENT_SECRET: 'AUTH_CODE_CLIENT_SECRET'

@@ -14,6 +14,7 @@ generic-service:
     PRISON_REGISTER_API_URL: "https://prison-register.hmpps.service.justice.gov.uk"
     MANAGE_USERS_API_URL: "https://manage-users-api.hmpps.service.justice.gov.uk"
     SUPPORT_ADDITIONAL_NEEDS_API_URL: 'https://support-for-additional-needs-api.hmpps.service.justice.gov.uk'
+    CURIOUS_API_URL: "https://liveservices.sequation.com/sequation-virtual-campus2-api"
     AUDIT_ENABLED: "false"
     DPS_URL: 'https://digital.prison.service.justice.gov.uk'
     NEW_DPS_URL: "https://dps.prison.service.justice.gov.uk"
