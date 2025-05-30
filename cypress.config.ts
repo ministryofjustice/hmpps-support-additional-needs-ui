@@ -8,6 +8,7 @@ import prisonRegisterApi from './integration_tests/mockApis/prisonRegisterApi'
 import manageUsersApi from './integration_tests/mockApis/manageUsersApi'
 import supportAdditionalNeedsApi from './integration_tests/mockApis/supportAdditionalNeedsApi'
 import personMockDataGenerator from './integration_tests/mockData/personMockDataGenerator'
+import curiousApi from './integration_tests/mockApis/curiousApi'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -41,6 +42,7 @@ export default defineConfig({
         ...manageUsersApi,
         ...supportAdditionalNeedsApi,
         ...personMockDataGenerator,
+        ...curiousApi,
       })
       on('after:spec', (spec: Cypress.Spec, results: CypressCommandLine.RunResult) => {
         if (results && results.video) {

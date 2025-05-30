@@ -67,6 +67,8 @@ export default {
       authClientSecret: get('AUTH_CODE_CLIENT_SECRET', 'clientsecret', requiredInProduction),
       systemClientId: get('CLIENT_CREDS_CLIENT_ID', 'clientid', requiredInProduction),
       systemClientSecret: get('CLIENT_CREDS_CLIENT_SECRET', 'clientsecret', requiredInProduction),
+      curiousClientId: get('CURIOUS_CLIENT_ID', 'clientid', requiredInProduction),
+      curiousClientSecret: get('CURIOUS_CLIENT_SECRET', 'clientsecret', requiredInProduction),
     },
     tokenVerification: {
       url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
@@ -114,6 +116,15 @@ export default {
         deadline: Number(get('SUPPORT_ADDITIONAL_NEEDS_API_TIMEOUT_DEADLINE', 5000)),
       },
       agent: new AgentConfig(Number(get('SUPPORT_ADDITIONAL_NEEDS_API_TIMEOUT_RESPONSE', 5000))),
+    },
+    curious: {
+      url: get('CURIOUS_API_URL', 'http://localhost:8083', requiredInProduction),
+      healthPath: '/ping',
+      timeout: {
+        response: Number(get('CURIOUS_API_TIMEOUT_RESPONSE', 5000)),
+        deadline: Number(get('CURIOUS_API_TIMEOUT_DEADLINE', 5000)),
+      },
+      agent: new AgentConfig(Number(get('CURIOUS_API_TIMEOUT_RESPONSE', 5000))),
     },
   },
   sqs: {

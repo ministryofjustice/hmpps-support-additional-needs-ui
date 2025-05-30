@@ -27,12 +27,19 @@ import RedisPrisonRegisterStore from './prisonRegisterStore/redisPrisonRegisterS
 import PrisonerSearchClient from './prisonerSearchClient'
 import RedisPrisonerSearchStore from './prisonerSearchStore/redisPrisonerSearchStore'
 import InMemoryPrisonerSearchStore from './prisonerSearchStore/inMemoryPrisonerSearchStore'
+import CuriousApiClient from './curiousApiClient'
 
 export const dataAccess = () => {
-  const hmppsAuthClient = new AuthenticationClient(
-    config.apis.hmppsAuth,
+  const tokenStore = config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore()
+  const hmppsAuthClient = new AuthenticationClient(config.apis.hmppsAuth, logger, tokenStore)
+  const curiousApiAuthClient = new AuthenticationClient(
+    {
+      ...config.apis.hmppsAuth,
+      systemClientId: config.apis.hmppsAuth.curiousClientId,
+      systemClientSecret: config.apis.hmppsAuth.curiousClientSecret,
+    },
     logger,
-    config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore(),
+    tokenStore,
   )
 
   return {
@@ -52,6 +59,7 @@ export const dataAccess = () => {
       : new InMemoryPrisonerSearchStore(),
     managedUsersApiClient: new ManageUsersApiClient(hmppsAuthClient),
     supportAdditionalNeedsApiClient: new SupportAdditionalNeedsApiClient(hmppsAuthClient),
+    curiousApiClient: new CuriousApiClient(curiousApiAuthClient),
   }
 }
 
@@ -67,4 +75,5 @@ export {
   PrisonerSearchClient,
   type RedisPrisonRegisterStore,
   SupportAdditionalNeedsApiClient,
+  CuriousApiClient,
 }
