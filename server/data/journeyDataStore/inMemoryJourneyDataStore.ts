@@ -8,9 +8,9 @@ export default class InMemoryJourneyDataStore implements JourneyDataStore {
     journeyId: string,
     journeyData: Express.JourneyData,
     _durationHours: number,
-  ): Promise<string> {
+  ): Promise<void> {
     this.data.set(`journey.${username}.${journeyId}`, journeyData)
-    return Promise.resolve('OK')
+    return Promise.resolve()
   }
 
   getJourneyData(username: string, journeyId: string): Promise<Express.JourneyData> {

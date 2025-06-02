@@ -4,7 +4,7 @@ export default interface JourneyDataStore {
     journeyId: string,
     journeyData: Express.JourneyData,
     durationHours: number,
-  ): Promise<string>
+  ): Promise<void>
 
   getJourneyData(username: string, journeyId: string): Promise<Express.JourneyData>
 

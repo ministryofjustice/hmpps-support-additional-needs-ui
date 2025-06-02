@@ -4,9 +4,9 @@ import PrisonRegisterStore from './prisonRegisterStore'
 export default class InMemoryPrisonRegisterStore implements PrisonRegisterStore {
   private activePrisons: Array<PrisonResponse> = []
 
-  async setActivePrisons(activePrisons: Array<PrisonResponse>, _durationDays: number): Promise<string> {
+  async setActivePrisons(activePrisons: Array<PrisonResponse>, _durationDays: number): Promise<void> {
     this.activePrisons = activePrisons
-    return Promise.resolve('OK')
+    return Promise.resolve()
   }
 
   async getActivePrisons(): Promise<Array<PrisonResponse>> {
