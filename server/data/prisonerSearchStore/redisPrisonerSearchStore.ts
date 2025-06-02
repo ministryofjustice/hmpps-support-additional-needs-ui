@@ -16,16 +16,14 @@ export default class RedisPrisonerSearchStore implements PrisonerSearchStore {
     }
   }
 
-  async setPrisoner(prisoner: Prisoner, durationHours = 24): Promise<string> {
+  async setPrisoner(prisoner: Prisoner, durationHours = 24): Promise<void> {
     await this.ensureConnected()
-    return this.client.set(`prisoner.${prisoner.prisonerNumber}`, JSON.stringify(prisoner), {
-      EX: durationHours * 60 * 60,
-    })
+    this.client.set(`prisoner.${prisoner.prisonerNumber}`, JSON.stringify(prisoner), { EX: durationHours * 60 * 60 })
   }
 
   async getPrisoner(prisonNumber: string): Promise<Prisoner> {
     await this.ensureConnected()
     const serializedPrisoner = await this.client.get(`prisoner.${prisonNumber}`)
-    return serializedPrisoner ? (JSON.parse(serializedPrisoner) as Prisoner) : undefined
+    return serializedPrisoner ? (JSON.parse(serializedPrisoner.toString()) as Prisoner) : undefined
   }
 }

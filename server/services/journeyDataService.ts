@@ -12,7 +12,7 @@ export default class JourneyDataService {
     journeyId: string,
     journeyData: Express.JourneyData,
     durationHours: number,
-  ): Promise<string> {
+  ): Promise<void> {
     return this.journeyDataStore.setJourneyData(username, journeyId, journeyData, durationHours)
   }
 
