@@ -4,6 +4,7 @@ import searchRoutes from './search'
 import { checkPageViewAudited } from '../middleware/auditMiddleware'
 import landingPageRoutes from './landingPage'
 import profileRoutes from './profile'
+import educationSupportPlanRoutes from './education-support-plan'
 import retrievePrisonerSummary from '../middleware/retrievePrisonerSummary'
 import checkPrisonerInCaseload from '../middleware/checkPrisonerInCaseloadMiddleware'
 
@@ -29,5 +30,6 @@ export default function routes(services: Services): Router {
 
   router.use('/search', searchRoutes(services))
   router.use('/profile/:prisonNumber', profileRoutes(services))
+  router.use('/education-support-plan/:prisonNumber', educationSupportPlanRoutes(services))
   return router
 }

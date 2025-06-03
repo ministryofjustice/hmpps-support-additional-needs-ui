@@ -9,8 +9,26 @@ const pageViewEventMap: Record<string, Page> = {
 
   '/profile/:prisonNumber/overview': Page.PROFILE_OVERVIEW,
 
+  // Create ELSP routes
+  '/education-support-plan/:prisonNumber/create/:journeyId/who-created-the-plan': Page.CREATE_ELSP_WHO_CREATED_PLAN,
+  '/education-support-plan/:prisonNumber/create/:journeyId/other-people-consulted':
+    Page.CREATE_ELSP_OTHER_PEOPLE_CONSULTED,
+  '/education-support-plan/:prisonNumber/create/:journeyId/review-needs-conditions-and-strengths':
+    Page.CREATE_ELSP_REVIEW_NEEDS_CONDITIONS_AND_STRENGTHS,
+  '/education-support-plan/:prisonNumber/create/:journeyId/teaching-adjustments': Page.CREATE_ELSP_TEACHING_ADJUSTMENTS,
+  '/education-support-plan/:prisonNumber/create/:journeyId/learning-environment-adjustments':
+    Page.CREATE_ELSP_LEARNING_ENVIRONMENT_ADJUSTMENTS,
+  '/education-support-plan/:prisonNumber/create/:journeyId/specific-teaching-skills':
+    Page.CREATE_ELSP_SPECIFIC_TEACHING_SKILLS,
+  '/education-support-plan/:prisonNumber/create/:journeyId/exam-arrangements': Page.CREATE_ELSP_EXAM_ARRANGEMENTS,
+  '/education-support-plan/:prisonNumber/create/:journeyId/ehcp': Page.CREATE_ELSP_EHCP,
+  '/education-support-plan/:prisonNumber/create/:journeyId/lnsp-support': Page.CREATE_ELSP_LNSP_SUPPORT,
+  '/education-support-plan/:prisonNumber/create/:journeyId/next-review-date': Page.CREATE_ELSP_SET_REVIEW_DATE,
+  '/education-support-plan/:prisonNumber/create/:journeyId/check-your-answers': Page.CREATE_ELSP_CHECK_YOUR_ANSWERS,
+
   // Non audit routes. These routes do not raise an audit event
   '/': null,
+  '/education-support-plan/:prisonNumber/create/who-created-the-plan': null,
 }
 
 export default function auditMiddleware({ auditService }: Services) {
