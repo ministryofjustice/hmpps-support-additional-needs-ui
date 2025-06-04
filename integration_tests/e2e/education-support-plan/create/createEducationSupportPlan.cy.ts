@@ -1,6 +1,8 @@
 import WhoCreatedThePlanPage from '../../../pages/education-support-plan/whoCreatedThePlanPage'
 import Page from '../../../pages/page'
 import PlanCreatedByValue from '../../../../server/enums/planCreatedByValue'
+import OtherPeopleConsultedPage from '../../../pages/education-support-plan/otherPeopleConsultedPage'
+import ReviewNeedsConditionsStrengthsPage from '../../../pages/education-support-plan/reviewNeedsConditionsStrengthsPage'
 
 context('Create an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -31,7 +33,12 @@ context('Create an Education Support Plan', () => {
       // enter the fields and submit the form to the next page
       .enterFullName('Joe Bloggs')
       .enterJobRole('Peer Mentor')
-    // TODO submit to next page
+      .submitPageTo(OtherPeopleConsultedPage)
+
+    Page.verifyOnPage(OtherPeopleConsultedPage) //
+      .submitPageTo(ReviewNeedsConditionsStrengthsPage)
+
+    Page.verifyOnPage(ReviewNeedsConditionsStrengthsPage) //
 
     // Then
   })
