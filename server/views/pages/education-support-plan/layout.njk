@@ -1,0 +1,11 @@
+{% extends "../../partials/layout.njk" %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "#",
+    classes: "js-back-link"
+  }) }}
+
+  <p class="govuk-body">Create an education support plan</p>
+{% endblock %}

@@ -1,3 +1,12 @@
 .govuk-main-wrapper {
   min-height: 600px;
 }
+
+// Hide the back link
+.js-back-link {
+  display: none;
+}
+// Display the back link when js is enabled by using a more explicit selector
+.js-enabled .js-back-link {
+  display: inline-block;
+}
