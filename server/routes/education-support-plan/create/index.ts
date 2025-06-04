@@ -3,10 +3,15 @@ import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import WhoCreatedThePlanController from './who-created-the-plan/whoCreatedThePlanController'
+import { validate } from '../../../middleware/validationMiddleware'
+import whoCompletedThePlanSchema from '../validationSchemas/whoCompletedThePlanSchema'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const { journeyDataService } = services
   const router = Router({ mergeParams: true })
+
+  const whoCreatedThePlanController = new WhoCreatedThePlanController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -16,9 +21,11 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
 
   router.get('/:journeyId/who-created-the-plan', [
-    asyncMiddleware(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      res.send('Who create the plan page')
-    }),
+    asyncMiddleware(whoCreatedThePlanController.getWhoCreatedThePlanView),
+  ])
+  router.post('/:journeyId/who-created-the-plan', [
+    validate(whoCompletedThePlanSchema),
+    asyncMiddleware(whoCreatedThePlanController.submitWhoCreatedThePlanForm),
   ])
 
   router.get('/:journeyId/other-people-consulted', [

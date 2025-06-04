@@ -1,0 +1,87 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'education-support-plan-who-created-the-plan' %}
+{% set pageTitle = "Create an education support plan" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {% set somebodyElseHtml %}
+            {{ govukInput({
+              id: "completedByOtherFullName",
+              name: "completedByOtherFullName",
+              value: form.completedByOtherFullName,
+              maxlength: 200,
+              label: {
+                text: "Full name of person",
+                classes: "govuk-label--s govuk-!-font-weight-bold",
+                attributes: { "aria-live": "polite", "data-qa": "completed-by-other-full-name" }
+              },
+              attributes: {
+                "aria-label" : "Give details as to who met with " + prisonerSummary | formatFirst_name_Last_name,
+                "data-qa": "completedByOtherFullName"
+              },
+              errorMessage: errors | findError('completedByOtherFullName')
+            }) }}
+            {{ govukInput({
+              id: "completedByOtherJobRole",
+              name: "completedByOtherJobRole",
+              value: form.completedByOtherJobRole,
+              maxlength: 200,
+              label: {
+                text: "Job role of person",
+                classes: "govuk-label--s govuk-!-font-weight-bold",
+                attributes: { "aria-live": "polite", "data-qa": "completed-by-other-job-role" }
+              },
+              attributes: {
+                "aria-label" : "Give details as to who met with " + prisonerSummary | formatFirst_name_Last_name,
+                "data-qa": "completedByOtherJobRole"
+              },
+              errorMessage: errors | findError('completedByOtherJobRole')
+            }) }}
+          {% endset %}
+
+          {{ govukRadios({
+            name: "completedBy",
+            fieldset: {
+              legend: {
+                text: "Are you the person who met with " + prisonerSummary | formatFirst_name_Last_name + "?",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            items: [
+              {
+                value: "MYSELF",
+                text: "Yes",
+                checked: form.completedBy === "MYSELF"
+              },
+              {
+                value: "SOMEBODY_ELSE",
+                text: "No",
+                checked: form.completedBy === "SOMEBODY_ELSE",
+                conditional: {
+                  html: somebodyElseHtml
+                }
+              }
+            ],
+            errorMessage: errors | findError('completedBy')
+          }) }}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

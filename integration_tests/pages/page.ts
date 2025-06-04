@@ -82,6 +82,21 @@ export default abstract class Page {
     this.apiErrorBanner().should('be.visible')
   }
 
+  hasNoErrors() {
+    cy.get('.govuk-error-summary__list').should('not.exist')
+    return this
+  }
+
+  hasErrorCount(expected: number) {
+    cy.get('.govuk-error-summary__list li').should('have.length', expected)
+    return this
+  }
+
+  hasFieldInError(field: string) {
+    cy.get(`#${Cypress.$.escapeSelector(field)}-error`).should('exist')
+    return this
+  }
+
   signOut = (): PageElement => cy.get('[data-qa=signOut]')
 
   manageDetails = (): PageElement => cy.get('[data-qa=manageDetails]')
