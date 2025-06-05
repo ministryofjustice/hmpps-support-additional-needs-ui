@@ -10,6 +10,8 @@ import OtherPeopleConsultedController from './other-people-consulted/otherPeople
 import ReviewNeedsConditionsStrengthsController from './review-needs-conditions-strengths/reviewNeedsConditionsStrengthsController'
 import LearningEnvironmentAdjustmentsController from './learning-environment-adjustments/learningEnvironmentAdjustmentsController'
 import learningEnvironmentAdjustmentsSchema from '../validationSchemas/learningEnvironmentAdjustmentsSchema'
+import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
+import teachingAdjustmentsSchema from '../validationSchemas/teachingAdjustmentsSchema'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const { journeyDataService } = services
@@ -19,6 +21,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const otherPeopleConsultedController = new OtherPeopleConsultedController()
   const reviewNeedsConditionsStrengthsController = new ReviewNeedsConditionsStrengthsController()
   const learningEnvironmentAdjustmentsController = new LearningEnvironmentAdjustmentsController()
+  const teachingAdjustmentsController = new TeachingAdjustmentsController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -58,9 +61,11 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   ])
 
   router.get('/:journeyId/teaching-adjustments', [
-    asyncMiddleware(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      res.send('Teaching adjustments page')
-    }),
+    asyncMiddleware(teachingAdjustmentsController.getTeachingAdjustmentsView),
+  ])
+  router.post('/:journeyId/teaching-adjustments', [
+    validate(teachingAdjustmentsSchema),
+    asyncMiddleware(teachingAdjustmentsController.submitTeachingAdjustmentsForm),
   ])
 
   router.get('/:journeyId/specific-teaching-skills', [
