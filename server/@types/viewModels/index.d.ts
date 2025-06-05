@@ -47,4 +47,9 @@ declare module 'viewModels' {
       href: string
     }
   }
+
+  export interface ActionsCardParams {
+    prisonerSummary: PrisonerSummary
+    userHasPermissionTo: () => boolean
+  }
 }
