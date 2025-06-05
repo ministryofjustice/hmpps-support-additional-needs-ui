@@ -9,6 +9,7 @@ $govuk-page-width: $moj-page-width;
 @import '@ministryofjustice/hmpps-connect-dps-components/dist/assets/footer';
 @import '@ministryofjustice/hmpps-connect-dps-components/dist/assets/header-bar';
 
+@import './components/actions-card';
 @import './components/api-error';
 @import './components/search';
 @import './components/prisoner-summary-banner';

@@ -1,4 +1,5 @@
 import Page, { PageElement } from '../../page'
+import WhoCreatedThePlanPage from '../../education-support-plan/whoCreatedThePlanPage'
 
 export default class OverviewPage extends Page {
   constructor() {
@@ -25,6 +26,26 @@ export default class OverviewPage extends Page {
     return this
   }
 
+  actionsCardIsNotPresent(): OverviewPage {
+    // Technically the action card as a HTML element is always present. If it contains no `li` elements then we use CSS to hide it
+    // but because the runtime on CircleCI does not process/render the css we cannot use `.should('not.be.visible')`
+    // Instead we will ensure there are zero `li` elements within it, and trust that the css hides the element in this case.
+    this.actionsCard().should('exist')
+    this.educationSupportPlanActionItems().should('not.exist')
+    return this
+  }
+
+  actionsCardContainsEducationSupportPlanActions(): OverviewPage {
+    this.actionsCard().should('exist')
+    this.educationSupportPlanActionItems().should('exist')
+    return this
+  }
+
+  clickCreateEducationSupportPlanButton(): WhoCreatedThePlanPage {
+    this.createEducationSupportPlanButton().click()
+    return Page.verifyOnPage(WhoCreatedThePlanPage)
+  }
+
   private prisonerSummaryBanner = (): PageElement => cy.get('.prisoner-summary-banner')
 
   private additionalNeedsSummaryCardContent = (): PageElement =>
@@ -46,4 +67,12 @@ export default class OverviewPage extends Page {
     cy.get('[data-qa=support-recommendations-summary-card] .govuk-summary-card__content')
 
   private addSupportRecommendationButton = (): PageElement => cy.get('[data-qa=add-support-recommendation-button]')
+
+  private actionsCard = (): PageElement => cy.get('[data-qa=actions-card]')
+
+  private educationSupportPlanActionItems = (): PageElement =>
+    cy.get('[data-qa=education-support-plan-action-items] li')
+
+  private createEducationSupportPlanButton = (): PageElement =>
+    this.educationSupportPlanActionItems().find('[data-qa=create-education-support-plan-button]')
 }

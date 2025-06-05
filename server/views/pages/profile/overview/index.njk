@@ -1,4 +1,5 @@
 {% extends "../layout.njk" %}
+{% from "../../../components/actions-card/macro.njk" import actionsCard %}
 
 {% set pageId = 'profile-overview' %}
 {% set pageTitle = "Support for additional needs" %}
@@ -11,6 +12,13 @@
       {% include './_conditionsSummaryCard.njk' %}
       {% include './_strengthsSummaryCard.njk' %}
       {% include './_supportRecommendationsSummaryCard.njk' %}
+    </div>
+
+    <div class="govuk-grid-column-one-third app-u-print-full-width">
+      {{ actionsCard({
+        prisonerSummary: prisonerSummary,
+        userHasPermissionTo: userHasPermissionTo
+      }) }}
     </div>
   </div>
 {% endblock %}
