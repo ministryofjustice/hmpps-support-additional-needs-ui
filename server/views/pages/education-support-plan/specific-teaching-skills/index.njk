@@ -28,7 +28,7 @@
           {% endset %}
 
           {{ govukRadios({
-            name: "adjustmentsNeeded",
+            name: "skillsRequired",
             fieldset: {
               legend: {
                 text: "Do teaching staff need specific knowledge or skills to support " + prisonerSummary | formatFirst_name_Last_name + "'s learning?",
@@ -43,7 +43,7 @@
               {
                 value: "YES",
                 text: "Yes",
-                checked: form.adjustmentsNeeded === "YES",
+                checked: form.skillsRequired === "YES",
                 conditional: {
                   html: detailsHtml
                 }
@@ -51,10 +51,10 @@
               {
                 value: "NO",
                 text: "No",
-                checked: form.adjustmentsNeeded === "NO"
+                checked: form.skillsRequired === "NO"
               }
             ],
-            errorMessage: errors | findError('adjustmentsNeeded')
+            errorMessage: errors | findError('skillsRequired')
           }) }}
         </div>
 

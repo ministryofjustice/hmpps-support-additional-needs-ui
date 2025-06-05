@@ -1,6 +1,6 @@
 {% extends "../layout.njk" %}
 
-{% set pageId = 'education-support-plan-exam-arrangements' %}
+{% set pageId = 'education-support-plan-lnsp-support' %}
 {% set pageTitle = "Create an education support plan" %}
 
 {% block content %}
@@ -23,18 +23,18 @@
                 attributes: { "aria-live": "polite" }
               },
               hint: {
-                text: 'Highlight where there is a need for access arrangements in exams, or where an assessment has not yet taken place where an asseement for access arrangements will be required.'
+                text: 'Add support needs including number of hours needed'
               },
-              attributes: { "aria-label" : "Give details of any required access arrangements for exams" },
+              attributes: { "aria-label" : "Give details of any support an LNSP is expected to provide" },
               errorMessage: errors | findError('details')
             }) }}
           {% endset %}
 
           {{ govukRadios({
-            name: "arrangementsNeeded",
+            name: "supportRequired",
             fieldset: {
               legend: {
-                text: "Does " + prisonerSummary | formatFirst_name_Last_name + " need any access arrangements for exams or assessments?",
+                text: "Does " + prisonerSummary | formatFirst_name_Last_name + " need learning needs support practitioner support in the classroom?",
                 isPageHeading: true,
                 classes: "govuk-fieldset__legend--l"
               }
@@ -43,7 +43,7 @@
               {
                 value: "YES",
                 text: "Yes",
-                checked: form.arrangementsNeeded === "YES",
+                checked: form.supportRequired === "YES",
                 conditional: {
                   html: detailsHtml
                 }
@@ -51,10 +51,10 @@
               {
                 value: "NO",
                 text: "No",
-                checked: form.arrangementsNeeded === "NO"
+                checked: form.supportRequired === "NO"
               }
             ],
-            errorMessage: errors | findError('arrangementsNeeded')
+            errorMessage: errors | findError('supportRequired')
           }) }}
         </div>
 

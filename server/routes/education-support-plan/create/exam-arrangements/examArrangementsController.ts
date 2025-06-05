@@ -11,6 +11,6 @@ export default class ExamArrangementsController {
   }
 
   submitExamArrangementsForm: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    return res.redirect('ehcp')
+    return res.redirect('education-health-care-plan')
   }
 }

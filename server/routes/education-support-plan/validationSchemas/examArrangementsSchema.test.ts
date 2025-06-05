@@ -20,39 +20,42 @@ describe('examArrangementsSchema', () => {
   })
 
   it.each([
-    { adjustmentsNeeded: 'NO', details: '' },
-    { adjustmentsNeeded: 'NO', details: undefined },
-    { adjustmentsNeeded: 'YES', details: 'Escort Chris to the exam hall 10 minutes before other students' },
-  ])('happy path - validation passes - adjustmentsNeeded: $adjustmentsNeeded, details: $details', async requestBody => {
-    // Given
-    req.body = requestBody
+    { arrangementsNeeded: 'NO', details: '' },
+    { arrangementsNeeded: 'NO', details: undefined },
+    { arrangementsNeeded: 'YES', details: 'Escort Chris to the exam hall 10 minutes before other students' },
+  ])(
+    'happy path - validation passes - arrangementsNeeded: $arrangementsNeeded, details: $details',
+    async requestBody => {
+      // Given
+      req.body = requestBody
 
-    // When
-    await validate(examArrangementsSchema)(req, res, next)
+      // When
+      await validate(examArrangementsSchema)(req, res, next)
 
-    // Then
-    expect(req.body).toEqual(requestBody)
-    expect(next).toHaveBeenCalled()
-    expect(req.flash).not.toHaveBeenCalled()
-    expect(res.redirectWithErrors).not.toHaveBeenCalled()
-  })
+      // Then
+      expect(req.body).toEqual(requestBody)
+      expect(next).toHaveBeenCalled()
+      expect(req.flash).not.toHaveBeenCalled()
+      expect(res.redirectWithErrors).not.toHaveBeenCalled()
+    },
+  )
 
   it.each([
-    { adjustmentsNeeded: '', details: undefined },
-    { adjustmentsNeeded: undefined, details: undefined },
-    { adjustmentsNeeded: null, details: undefined },
-    { adjustmentsNeeded: 'a-non-supported-value', details: undefined },
-    { adjustmentsNeeded: 'N', details: undefined },
-    { adjustmentsNeeded: 'Y', details: undefined },
+    { arrangementsNeeded: '', details: undefined },
+    { arrangementsNeeded: undefined, details: undefined },
+    { arrangementsNeeded: null, details: undefined },
+    { arrangementsNeeded: 'a-non-supported-value', details: undefined },
+    { arrangementsNeeded: 'N', details: undefined },
+    { arrangementsNeeded: 'Y', details: undefined },
   ])(
-    'sad path - validation of adjustmentsNeeded field fails - adjustmentsNeeded: $adjustmentsNeeded, details: $details',
+    'sad path - validation of arrangementsNeeded field fails - arrangementsNeeded: $arrangementsNeeded, details: $details',
     async requestBody => {
       // Given
       req.body = requestBody
 
       const expectedErrors: Array<Error> = [
         {
-          href: '#adjustmentsNeeded',
+          href: '#arrangementsNeeded',
           text: 'Select whether any access arrangements are required',
         },
       ]
@@ -73,11 +76,11 @@ describe('examArrangementsSchema', () => {
   )
 
   it.each([
-    { adjustmentsNeeded: 'YES', details: '' },
-    { adjustmentsNeeded: 'YES', details: undefined },
-    { adjustmentsNeeded: 'YES', details: null },
+    { arrangementsNeeded: 'YES', details: '' },
+    { arrangementsNeeded: 'YES', details: undefined },
+    { arrangementsNeeded: 'YES', details: null },
   ])(
-    'sad path - validation of details field fails - adjustmentsNeeded: $adjustmentsNeeded, details: $details',
+    'sad path - validation of details field fails - arrangementsNeeded: $arrangementsNeeded, details: $details',
     async requestBody => {
       // Given
       req.body = requestBody
