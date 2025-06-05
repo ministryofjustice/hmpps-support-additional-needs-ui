@@ -8,6 +8,8 @@ import whoCompletedThePlanSchema from '../validationSchemas/whoCompletedThePlanS
 import WhoCreatedThePlanController from './who-created-the-plan/whoCreatedThePlanController'
 import OtherPeopleConsultedController from './other-people-consulted/otherPeopleConsultedController'
 import ReviewNeedsConditionsStrengthsController from './review-needs-conditions-strengths/reviewNeedsConditionsStrengthsController'
+import LearningEnvironmentAdjustmentsController from './learning-environment-adjustments/learningEnvironmentAdjustmentsController'
+import learningEnvironmentAdjustmentsSchema from '../validationSchemas/learningEnvironmentAdjustmentsSchema'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const { journeyDataService } = services
@@ -16,6 +18,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const whoCreatedThePlanController = new WhoCreatedThePlanController()
   const otherPeopleConsultedController = new OtherPeopleConsultedController()
   const reviewNeedsConditionsStrengthsController = new ReviewNeedsConditionsStrengthsController()
+  const learningEnvironmentAdjustmentsController = new LearningEnvironmentAdjustmentsController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -46,15 +49,17 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
     asyncMiddleware(reviewNeedsConditionsStrengthsController.submitReviewNeedsConditionsStrengthsForm),
   ])
 
+  router.get('/:journeyId/learning-environment-adjustments', [
+    asyncMiddleware(learningEnvironmentAdjustmentsController.getLearningEnvironmentAdjustmentsView),
+  ])
+  router.post('/:journeyId/learning-environment-adjustments', [
+    validate(learningEnvironmentAdjustmentsSchema),
+    asyncMiddleware(learningEnvironmentAdjustmentsController.submitLearningEnvironmentAdjustmentsForm),
+  ])
+
   router.get('/:journeyId/teaching-adjustments', [
     asyncMiddleware(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       res.send('Teaching adjustments page')
-    }),
-  ])
-
-  router.get('/:journeyId/learning-environment-adjustments', [
-    asyncMiddleware(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      res.send('Learning environments adjustments page')
     }),
   ])
 

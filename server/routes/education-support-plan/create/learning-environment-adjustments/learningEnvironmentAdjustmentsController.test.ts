@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import WhoCreatedThePlanController from './whoCreatedThePlanController'
+import LearningEnvironmentAdjustmentsController from './learningEnvironmentAdjustmentsController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 
-describe('whoCreatedThePlanController', () => {
-  const controller = new WhoCreatedThePlanController()
+describe('learningEnvironmentAdjustmentsController', () => {
+  const controller = new LearningEnvironmentAdjustmentsController()
 
   const prisonerSummary = aValidPrisonerSummary()
 
@@ -29,11 +29,11 @@ describe('whoCreatedThePlanController', () => {
     // Given
     res.locals.invalidForm = undefined
 
-    const expectedViewTemplate = 'pages/education-support-plan/who-created-the-plan/index'
+    const expectedViewTemplate = 'pages/education-support-plan/learning-environment-adjustments/index'
     const expectedViewModel = { prisonerSummary }
 
     // When
-    await controller.getWhoCreatedThePlanView(req, res, next)
+    await controller.getLearningEnvironmentAdjustmentsView(req, res, next)
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
@@ -42,15 +42,15 @@ describe('whoCreatedThePlanController', () => {
   it('should render view given previously submitted invalid form', async () => {
     // Given
     const invalidForm = {
-      completedBy: 'not-a-valid-value',
+      adjustmentsNeeded: 'not-a-valid-value',
     }
     res.locals.invalidForm = invalidForm
 
-    const expectedViewTemplate = 'pages/education-support-plan/who-created-the-plan/index'
+    const expectedViewTemplate = 'pages/education-support-plan/learning-environment-adjustments/index'
     const expectedViewModel = { prisonerSummary, form: invalidForm }
 
     // When
-    await controller.getWhoCreatedThePlanView(req, res, next)
+    await controller.getLearningEnvironmentAdjustmentsView(req, res, next)
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
@@ -58,10 +58,10 @@ describe('whoCreatedThePlanController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
-    const expectedNextRoute = 'other-people-consulted'
+    const expectedNextRoute = 'teaching-adjustments'
 
     // When
-    await controller.submitWhoCreatedThePlanForm(req, res, next)
+    await controller.submitLearningEnvironmentAdjustmentsForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
