@@ -1,0 +1,49 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'education-support-plan-ehcp' %}
+{% set pageTitle = "Create an education support plan" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukRadios({
+            name: "currentEhcp",
+            fieldset: {
+              legend: {
+                text: "Does " + prisonerSummary | formatFirst_name_Last_name + " have a current education, health and care plan?",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            items: [
+              {
+                value: "YES",
+                text: "Yes",
+                checked: form.hasEhcp === "YES"
+              },
+              {
+                value: "NO",
+                text: "No",
+                checked: form.hasEhcp === "NO"
+              }
+            ],
+            errorMessage: errors | findError('currentEhcp')
+          }) }}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -3,19 +3,19 @@ import { createSchema } from '../../../middleware/validationMiddleware'
 import YesNoValue from '../../../enums/yesNoValue'
 
 const examArrangementsSchema = async () => {
-  const adjustmentsRequiredMandatoryMessage = 'Select whether any access arrangements are required'
+  const arrangementsRequiredMandatoryMessage = 'Select whether any access arrangements are required'
   const detailsMandatoryMessage = 'Enter details of any access arrangements'
 
   return createSchema({
-    adjustmentsNeeded: z //
-      .nativeEnum(YesNoValue, { message: adjustmentsRequiredMandatoryMessage }),
+    arrangementsNeeded: z //
+      .nativeEnum(YesNoValue, { message: arrangementsRequiredMandatoryMessage }),
     details: z //
       .string()
       .nullable()
       .optional(),
   }).refine(
-    ({ adjustmentsNeeded, details }) => {
-      if (adjustmentsNeeded === YesNoValue.YES) {
+    ({ arrangementsNeeded, details }) => {
+      if (arrangementsNeeded === YesNoValue.YES) {
         return details?.length > 0
       }
       return true

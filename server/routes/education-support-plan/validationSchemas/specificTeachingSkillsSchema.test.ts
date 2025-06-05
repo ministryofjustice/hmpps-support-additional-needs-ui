@@ -21,10 +21,10 @@ describe('specificTeachingSkillsSchema', () => {
   })
 
   it.each([
-    { adjustmentsNeeded: 'NO', details: '' },
-    { adjustmentsNeeded: 'NO', details: undefined },
-    { adjustmentsNeeded: 'YES', details: 'Adopt a more inclusive approach to teaching' },
-  ])('happy path - validation passes - adjustmentsNeeded: $adjustmentsNeeded, details: $details', async requestBody => {
+    { skillsRequired: 'NO', details: '' },
+    { skillsRequired: 'NO', details: undefined },
+    { skillsRequired: 'YES', details: 'Adopt a more inclusive approach to teaching' },
+  ])('happy path - validation passes - skillsRequired: $skillsRequired, details: $details', async requestBody => {
     // Given
     req.body = requestBody
 
@@ -39,21 +39,21 @@ describe('specificTeachingSkillsSchema', () => {
   })
 
   it.each([
-    { adjustmentsNeeded: '', details: undefined },
-    { adjustmentsNeeded: undefined, details: undefined },
-    { adjustmentsNeeded: null, details: undefined },
-    { adjustmentsNeeded: 'a-non-supported-value', details: undefined },
-    { adjustmentsNeeded: 'N', details: undefined },
-    { adjustmentsNeeded: 'Y', details: undefined },
+    { skillsRequired: '', details: undefined },
+    { skillsRequired: undefined, details: undefined },
+    { skillsRequired: null, details: undefined },
+    { skillsRequired: 'a-non-supported-value', details: undefined },
+    { skillsRequired: 'N', details: undefined },
+    { skillsRequired: 'Y', details: undefined },
   ])(
-    'sad path - validation of adjustmentsNeeded field fails - adjustmentsNeeded: $adjustmentsNeeded, details: $details',
+    'sad path - validation of skillsRequired field fails - skillsRequired: $skillsRequired, details: $details',
     async requestBody => {
       // Given
       req.body = requestBody
 
       const expectedErrors: Array<Error> = [
         {
-          href: '#adjustmentsNeeded',
+          href: '#skillsRequired',
           text: 'Select whether any specific teaching skills are required',
         },
       ]
@@ -74,11 +74,11 @@ describe('specificTeachingSkillsSchema', () => {
   )
 
   it.each([
-    { adjustmentsNeeded: 'YES', details: '' },
-    { adjustmentsNeeded: 'YES', details: undefined },
-    { adjustmentsNeeded: 'YES', details: null },
+    { skillsRequired: 'YES', details: '' },
+    { skillsRequired: 'YES', details: undefined },
+    { skillsRequired: 'YES', details: null },
   ])(
-    'sad path - validation of details field fails - adjustmentsNeeded: $adjustmentsNeeded, details: $details',
+    'sad path - validation of details field fails - skillsRequired: $skillsRequired, details: $details',
     async requestBody => {
       // Given
       req.body = requestBody

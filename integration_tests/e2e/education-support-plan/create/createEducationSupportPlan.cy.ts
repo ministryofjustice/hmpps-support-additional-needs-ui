@@ -8,6 +8,8 @@ import LearningEnvironmentAdjustmentsPage from '../../../pages/education-support
 import TeachingAdjustmentsPage from '../../../pages/education-support-plan/teachingAdjustmentsPage'
 import SpecificTeachingSkillsPage from '../../../pages/education-support-plan/specificTeachingSkillsPage'
 import ExamArrangementsPage from '../../../pages/education-support-plan/examArrangementsPage'
+import EducationHealthCarePlanPage from '../../../pages/education-support-plan/educationHealthCarePlanPage'
+import LearningNeedsSupportPractitionerSupportPage from '../../../pages/education-support-plan/learningNeedsSupportPractitionerSupportPage'
 
 context('Create an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -91,7 +93,7 @@ context('Create an Education Support Plan', () => {
       // submit the page without answering the question to trigger a validation error
       .submitPageTo(SpecificTeachingSkillsPage)
       .hasErrorCount(1)
-      .hasFieldInError('adjustmentsNeeded')
+      .hasFieldInError('skillsRequired')
       // submit the page without the details, triggering different validation
       .selectSpecificTeachingSkillsRequired()
       .submitPageTo(SpecificTeachingSkillsPage)
@@ -105,7 +107,7 @@ context('Create an Education Support Plan', () => {
       // submit the page without answering the question to trigger a validation error
       .submitPageTo(ExamArrangementsPage)
       .hasErrorCount(1)
-      .hasFieldInError('adjustmentsNeeded')
+      .hasFieldInError('arrangementsNeeded')
       // submit the page without the details, triggering different validation
       .selectExamArrangementsRequired()
       .submitPageTo(ExamArrangementsPage)
@@ -113,6 +115,29 @@ context('Create an Education Support Plan', () => {
       .hasFieldInError('details')
       // enter the fields and submit the form to the next page
       .enterDetails('Chris needs escorting to the exam room 10 minutes before everyone else')
+      .submitPageTo(EducationHealthCarePlanPage)
+
+    Page.verifyOnPage(EducationHealthCarePlanPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(EducationHealthCarePlanPage)
+      .hasErrorCount(1)
+      .hasFieldInError('currentEhcp')
+      // enter the fields and submit the form to the next page
+      .selectHasCurrentEhcp()
+      .submitPageTo(LearningNeedsSupportPractitionerSupportPage)
+
+    Page.verifyOnPage(LearningNeedsSupportPractitionerSupportPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(LearningNeedsSupportPractitionerSupportPage)
+      .hasErrorCount(1)
+      .hasFieldInError('supportRequired')
+      // submit the page without the details, triggering different validation
+      .selectLnspSupportRequired()
+      .submitPageTo(LearningNeedsSupportPractitionerSupportPage)
+      .hasErrorCount(1)
+      .hasFieldInError('details')
+      // enter the fields and submit the form to the next page
+      .enterDetails('Chris will need the text reading to him as he cannot read himself')
 
     // Then
   })

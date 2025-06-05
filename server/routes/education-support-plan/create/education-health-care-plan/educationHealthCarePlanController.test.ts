@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import ExamArrangementsController from './examArrangementsController'
+import EducationHealthCarePlanController from './educationHealthCarePlanController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 
-describe('examArrangementsController', () => {
-  const controller = new ExamArrangementsController()
+describe('educationHealthCarePlanController', () => {
+  const controller = new EducationHealthCarePlanController()
 
   const prisonerSummary = aValidPrisonerSummary()
 
@@ -29,11 +29,11 @@ describe('examArrangementsController', () => {
     // Given
     res.locals.invalidForm = undefined
 
-    const expectedViewTemplate = 'pages/education-support-plan/exam-arrangements/index'
+    const expectedViewTemplate = 'pages/education-support-plan/education-health-care-plan/index'
     const expectedViewModel = { prisonerSummary }
 
     // When
-    await controller.getExamArrangementsView(req, res, next)
+    await controller.getEhcpView(req, res, next)
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
@@ -46,11 +46,11 @@ describe('examArrangementsController', () => {
     }
     res.locals.invalidForm = invalidForm
 
-    const expectedViewTemplate = 'pages/education-support-plan/exam-arrangements/index'
+    const expectedViewTemplate = 'pages/education-support-plan/education-health-care-plan/index'
     const expectedViewModel = { prisonerSummary, form: invalidForm }
 
     // When
-    await controller.getExamArrangementsView(req, res, next)
+    await controller.getEhcpView(req, res, next)
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
@@ -58,10 +58,10 @@ describe('examArrangementsController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
-    const expectedNextRoute = 'education-health-care-plan'
+    const expectedNextRoute = 'lnsp-support'
 
     // When
-    await controller.submitExamArrangementsForm(req, res, next)
+    await controller.submitEhcpForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
