@@ -1,0 +1,71 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'education-support-plan-exam-arrangements' %}
+{% set pageTitle = "Create an education support plan" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {% set detailsHtml %}
+            {{ govukTextarea({
+              id: "details",
+              name: "details",
+              rows: "4",
+              value: form.details,
+              type: "text",
+              label: {
+                text: "Add details",
+                attributes: { "aria-live": "polite" }
+              },
+              hint: {
+                text: 'Highlight where there is a need for access arrangements in exams, or where an assessment has not yet taken place where an asseement for access arrangements will be required.'
+              },
+              attributes: { "aria-label" : "Give details of any required access arrangements for exams" },
+              errorMessage: errors | findError('details')
+            }) }}
+          {% endset %}
+
+          {{ govukRadios({
+            name: "adjustmentsNeeded",
+            fieldset: {
+              legend: {
+                text: "Does " + prisonerSummary | formatFirst_name_Last_name + " need any access arrangements for exams or assessments?",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            items: [
+              {
+                value: "YES",
+                text: "Yes",
+                checked: form.adjustmentsNeeded === "YES",
+                conditional: {
+                  html: detailsHtml
+                }
+              },
+              {
+                value: "NO",
+                text: "No",
+                checked: form.adjustmentsNeeded === "NO"
+              }
+            ],
+            errorMessage: errors | findError('adjustmentsNeeded')
+          }) }}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

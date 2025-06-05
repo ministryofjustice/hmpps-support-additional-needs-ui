@@ -3,15 +3,19 @@ import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
-import { validate } from '../../../middleware/validationMiddleware'
-import whoCompletedThePlanSchema from '../validationSchemas/whoCompletedThePlanSchema'
 import WhoCreatedThePlanController from './who-created-the-plan/whoCreatedThePlanController'
 import OtherPeopleConsultedController from './other-people-consulted/otherPeopleConsultedController'
 import ReviewNeedsConditionsStrengthsController from './review-needs-conditions-strengths/reviewNeedsConditionsStrengthsController'
 import LearningEnvironmentAdjustmentsController from './learning-environment-adjustments/learningEnvironmentAdjustmentsController'
-import learningEnvironmentAdjustmentsSchema from '../validationSchemas/learningEnvironmentAdjustmentsSchema'
 import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
+import SpecificTeachingSkillsController from './specific-teaching-skills/specificTeachingSkillsController'
+import ExamArrangementsController from './exam-arrangements/examArrangementsController'
+import { validate } from '../../../middleware/validationMiddleware'
+import whoCompletedThePlanSchema from '../validationSchemas/whoCompletedThePlanSchema'
+import learningEnvironmentAdjustmentsSchema from '../validationSchemas/learningEnvironmentAdjustmentsSchema'
 import teachingAdjustmentsSchema from '../validationSchemas/teachingAdjustmentsSchema'
+import specificTeachingSkillsSchema from '../validationSchemas/specificTeachingSkillsSchema'
+import examArrangementsSchema from '../validationSchemas/examArrangementsSchema'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const { journeyDataService } = services
@@ -22,6 +26,8 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const reviewNeedsConditionsStrengthsController = new ReviewNeedsConditionsStrengthsController()
   const learningEnvironmentAdjustmentsController = new LearningEnvironmentAdjustmentsController()
   const teachingAdjustmentsController = new TeachingAdjustmentsController()
+  const specificTeachingSkillsController = new SpecificTeachingSkillsController()
+  const examArrangementsController = new ExamArrangementsController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -69,15 +75,17 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   ])
 
   router.get('/:journeyId/specific-teaching-skills', [
-    asyncMiddleware(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      res.send('Specific teaching skills page')
-    }),
+    asyncMiddleware(specificTeachingSkillsController.getSpecificTeachingSkillsView),
+  ])
+  router.post('/:journeyId/specific-teaching-skills', [
+    validate(specificTeachingSkillsSchema),
+    asyncMiddleware(specificTeachingSkillsController.submitSpecificTeachingSkillsForm),
   ])
 
-  router.get('/:journeyId/exam-arrangements', [
-    asyncMiddleware(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      res.send('Exam arrangements page')
-    }),
+  router.get('/:journeyId/exam-arrangements', [asyncMiddleware(examArrangementsController.getExamArrangementsView)])
+  router.post('/:journeyId/exam-arrangements', [
+    validate(examArrangementsSchema),
+    asyncMiddleware(examArrangementsController.submitExamArrangementsForm),
   ])
 
   router.get('/:journeyId/ehcp', [

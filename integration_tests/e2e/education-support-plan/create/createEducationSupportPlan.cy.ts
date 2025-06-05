@@ -6,6 +6,8 @@ import ReviewNeedsConditionsStrengthsPage from '../../../pages/education-support
 import OverviewPage from '../../../pages/profile/overview/overviewPage'
 import LearningEnvironmentAdjustmentsPage from '../../../pages/education-support-plan/learningEnvironmentAdjustmentsPage'
 import TeachingAdjustmentsPage from '../../../pages/education-support-plan/teachingAdjustmentsPage'
+import SpecificTeachingSkillsPage from '../../../pages/education-support-plan/specificTeachingSkillsPage'
+import ExamArrangementsPage from '../../../pages/education-support-plan/examArrangementsPage'
 
 context('Create an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -83,6 +85,34 @@ context('Create an Education Support Plan', () => {
       .hasFieldInError('details')
       // enter the fields and submit the form to the next page
       .enterDetails('Use simpler examples to help students understand concepts')
+      .submitPageTo(SpecificTeachingSkillsPage)
+
+    Page.verifyOnPage(SpecificTeachingSkillsPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(SpecificTeachingSkillsPage)
+      .hasErrorCount(1)
+      .hasFieldInError('adjustmentsNeeded')
+      // submit the page without the details, triggering different validation
+      .selectSpecificTeachingSkillsRequired()
+      .submitPageTo(SpecificTeachingSkillsPage)
+      .hasErrorCount(1)
+      .hasFieldInError('details')
+      // enter the fields and submit the form to the next page
+      .enterDetails('Adopt a more inclusive approach to teaching')
+      .submitPageTo(ExamArrangementsPage)
+
+    Page.verifyOnPage(ExamArrangementsPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(ExamArrangementsPage)
+      .hasErrorCount(1)
+      .hasFieldInError('adjustmentsNeeded')
+      // submit the page without the details, triggering different validation
+      .selectExamArrangementsRequired()
+      .submitPageTo(ExamArrangementsPage)
+      .hasErrorCount(1)
+      .hasFieldInError('details')
+      // enter the fields and submit the form to the next page
+      .enterDetails('Chris needs escorting to the exam room 10 minutes before everyone else')
 
     // Then
   })
