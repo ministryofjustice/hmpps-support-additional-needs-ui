@@ -1,0 +1,71 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'education-support-plan-teaching-adjustments' %}
+{% set pageTitle = "Create an education support plan" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {% set detailsHtml %}
+            {{ govukTextarea({
+              id: "details",
+              name: "details",
+              rows: "4",
+              value: form.details,
+              type: "text",
+              label: {
+                text: "Add details",
+                attributes: { "aria-live": "polite" }
+              },
+              attributes: { "aria-label" : "Give details of any required teaching adjustments" },
+              errorMessage: errors | findError('details')
+            }) }}
+          {% endset %}
+
+          {{ govukRadios({
+            name: "adjustmentsNeeded",
+            fieldset: {
+              legend: {
+                text: "Does " + prisonerSummary | formatFirst_name_Last_name + " need any adjustments to teaching?",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            hint: {
+              text: 'Things like modifying the curriculum or adapting teaching.'
+            },
+            items: [
+              {
+                value: "YES",
+                text: "Yes",
+                checked: form.adjustmentsNeeded === "YES",
+                conditional: {
+                  html: detailsHtml
+                }
+              },
+              {
+                value: "NO",
+                text: "No",
+                checked: form.adjustmentsNeeded === "NO"
+              }
+            ],
+            errorMessage: errors | findError('adjustmentsNeeded')
+          }) }}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
