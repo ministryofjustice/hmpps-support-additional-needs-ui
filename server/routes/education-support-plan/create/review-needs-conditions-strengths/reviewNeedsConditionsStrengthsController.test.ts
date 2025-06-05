@@ -1,20 +1,16 @@
 import { Request, Response } from 'express'
-import { v4 as uuidV4 } from 'uuid'
 import ReviewNeedsConditionsStrengthsController from './reviewNeedsConditionsStrengthsController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 
 describe('reviewNeedsConditionsStrengthsController', () => {
   const controller = new ReviewNeedsConditionsStrengthsController()
 
-  const journeyId = uuidV4()
-  const prisonNumber = 'A1234BC'
   const prisonerSummary = aValidPrisonerSummary()
 
   const req = {
     session: {},
     journeyData: {},
     body: {},
-    params: { prisonNumber, journeyId },
   } as unknown as Request
   const res = {
     redirect: jest.fn(),
@@ -43,7 +39,7 @@ describe('reviewNeedsConditionsStrengthsController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
-    const expectedNextRoute = 'teaching-adjustments'
+    const expectedNextRoute = 'learning-environment-adjustments'
 
     // When
     await controller.submitReviewNeedsConditionsStrengthsForm(req, res, next)
