@@ -2,6 +2,7 @@ import { v4 as uuidV4 } from 'uuid'
 import JourneyDataStore from './journeyDataStore'
 import RedisJourneyDataStore from './redisJourneyDataStore'
 import { RedisClient } from '../redisClient'
+import aValidEducationSupportPlanDto from '../../testsupport/educationSupportPlanDtoTestDataBuilder'
 
 const redisClient = {
   on: jest.fn(),
@@ -14,7 +15,7 @@ const redisClient = {
 const username = 'AUSER_GEN'
 const journeyId = uuidV4()
 const expectedCacheKey = `journey.${username}.${journeyId}`
-const journeyData: Express.JourneyData = { someDto: { test: 'test' } }
+const journeyData: Express.JourneyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
 
 describe('redisJourneyDataStore', () => {
   let journeyDataStore: JourneyDataStore

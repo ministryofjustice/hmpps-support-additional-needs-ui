@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import JourneyDataService from '../services/journeyDataService'
 import setupJourneyData from './setupJourneyData'
+import aValidEducationSupportPlanDto from '../testsupport/educationSupportPlanDtoTestDataBuilder'
 
 jest.mock('../services/journeyDataService')
 
@@ -30,7 +31,7 @@ describe('setupJourneyData', () => {
 
   it('should retrieve journey data given journeyData is returned by JourneyDataService', async () => {
     // Given
-    const expectedJourneyData = { someDto: { test: 'test' } }
+    const expectedJourneyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
     journeyDataService.getJourneyData.mockResolvedValue(expectedJourneyData)
 
     // When
@@ -57,7 +58,7 @@ describe('setupJourneyData', () => {
 
   it('should add response callback function that sets journey data given the request contains journeyData', async () => {
     // Given
-    req.journeyData = { someDto: { test: 'test' } }
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
 
     await requestHandler(req, res, next)
     const responseCallbackFunction = prependOnceListener.mock.calls[0][1]

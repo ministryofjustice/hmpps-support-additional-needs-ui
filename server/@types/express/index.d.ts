@@ -1,3 +1,4 @@
+import type { EducationSupportPlanDto } from 'dto'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 
 export declare module 'express-session' {
@@ -16,8 +17,9 @@ export declare global {
       authSource: string
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface JourneyData {}
+    interface JourneyData {
+      educationSupportPlanDto?: EducationSupportPlanDto
+    }
 
     interface Response {
       redirectWithSuccess?(path: string, message: string): void

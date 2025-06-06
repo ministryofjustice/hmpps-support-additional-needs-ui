@@ -22,6 +22,8 @@ import examArrangementsSchema from '../validationSchemas/examArrangementsSchema'
 import educationHealthCarePlanSchema from '../validationSchemas/educationHealthCarePlanSchema'
 import learningNeedsSupportPractitionerSupportSchema from '../validationSchemas/learningNeedsSupportPractitionerSupportSchema'
 import reviewSupportPlanSchema from '../validationSchemas/reviewSupportPlanSchema'
+import checkEducationSupportPlanDtoExistsInJourneyData from './middleware/checkEducationSupportPlanDtoExistsInJourneyData'
+import createEmptyEducationSupportPlanDtoIfNotInJourneyData from './middleware/createEmptyEducationSupportPlanDtoIfNotInJourneyData'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const { journeyDataService } = services
@@ -46,76 +48,105 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
 
   router.get('/:journeyId/who-created-the-plan', [
+    createEmptyEducationSupportPlanDtoIfNotInJourneyData,
     asyncMiddleware(whoCreatedThePlanController.getWhoCreatedThePlanView),
   ])
   router.post('/:journeyId/who-created-the-plan', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     validate(whoCompletedThePlanSchema),
     asyncMiddleware(whoCreatedThePlanController.submitWhoCreatedThePlanForm),
   ])
 
   router.get('/:journeyId/other-people-consulted', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(otherPeopleConsultedController.getOtherPeopleConsultedView),
   ])
   router.post('/:journeyId/other-people-consulted', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(otherPeopleConsultedController.submitOtherPeopleConsultedForm),
   ])
 
   router.get('/:journeyId/review-needs-conditions-and-strengths', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(reviewNeedsConditionsStrengthsController.getReviewNeedsConditionsStrengthsView),
   ])
   router.post('/:journeyId/review-needs-conditions-and-strengths', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(reviewNeedsConditionsStrengthsController.submitReviewNeedsConditionsStrengthsForm),
   ])
 
   router.get('/:journeyId/learning-environment-adjustments', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(learningEnvironmentAdjustmentsController.getLearningEnvironmentAdjustmentsView),
   ])
   router.post('/:journeyId/learning-environment-adjustments', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     validate(learningEnvironmentAdjustmentsSchema),
     asyncMiddleware(learningEnvironmentAdjustmentsController.submitLearningEnvironmentAdjustmentsForm),
   ])
 
   router.get('/:journeyId/teaching-adjustments', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(teachingAdjustmentsController.getTeachingAdjustmentsView),
   ])
   router.post('/:journeyId/teaching-adjustments', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     validate(teachingAdjustmentsSchema),
     asyncMiddleware(teachingAdjustmentsController.submitTeachingAdjustmentsForm),
   ])
 
   router.get('/:journeyId/specific-teaching-skills', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(specificTeachingSkillsController.getSpecificTeachingSkillsView),
   ])
   router.post('/:journeyId/specific-teaching-skills', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     validate(specificTeachingSkillsSchema),
     asyncMiddleware(specificTeachingSkillsController.submitSpecificTeachingSkillsForm),
   ])
 
-  router.get('/:journeyId/exam-arrangements', [asyncMiddleware(examArrangementsController.getExamArrangementsView)])
+  router.get('/:journeyId/exam-arrangements', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(examArrangementsController.getExamArrangementsView),
+  ])
   router.post('/:journeyId/exam-arrangements', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     validate(examArrangementsSchema),
     asyncMiddleware(examArrangementsController.submitExamArrangementsForm),
   ])
 
-  router.get('/:journeyId/education-health-care-plan', [asyncMiddleware(educationHealthCarePlanController.getEhcpView)])
+  router.get('/:journeyId/education-health-care-plan', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(educationHealthCarePlanController.getEhcpView),
+  ])
   router.post('/:journeyId/education-health-care-plan', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     validate(educationHealthCarePlanSchema),
     asyncMiddleware(educationHealthCarePlanController.submitEhcpForm),
   ])
 
-  router.get('/:journeyId/lnsp-support', [asyncMiddleware(lnspController.getLnspSupportView)])
+  router.get('/:journeyId/lnsp-support', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(lnspController.getLnspSupportView),
+  ])
   router.post('/:journeyId/lnsp-support', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     validate(learningNeedsSupportPractitionerSupportSchema),
     asyncMiddleware(lnspController.submitLnspSupportForm),
   ])
 
-  router.get('/:journeyId/next-review-date', [asyncMiddleware(reviewSupportPlanController.getReviewSupportPlanView)])
+  router.get('/:journeyId/next-review-date', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(reviewSupportPlanController.getReviewSupportPlanView),
+  ])
   router.post('/:journeyId/next-review-date', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     validate(reviewSupportPlanSchema),
     asyncMiddleware(reviewSupportPlanController.submitReviewSupportPlanForm),
   ])
 
   router.get('/:journeyId/check-your-answers', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       res.send('Check your answers page')
     }),
