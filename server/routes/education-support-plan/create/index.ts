@@ -12,6 +12,7 @@ import SpecificTeachingSkillsController from './specific-teaching-skills/specifi
 import ExamArrangementsController from './exam-arrangements/examArrangementsController'
 import EducationHealthCarePlanController from './education-health-care-plan/educationHealthCarePlanController'
 import LearningNeedsSupportPractitionerSupportController from './learning-needs-support-practitioner-support/learningNeedsSupportPractitionerSupportController'
+import ReviewSupportPlanController from './review-support-plan/reviewSupportPlanController'
 import { validate } from '../../../middleware/validationMiddleware'
 import whoCompletedThePlanSchema from '../validationSchemas/whoCompletedThePlanSchema'
 import learningEnvironmentAdjustmentsSchema from '../validationSchemas/learningEnvironmentAdjustmentsSchema'
@@ -20,6 +21,7 @@ import specificTeachingSkillsSchema from '../validationSchemas/specificTeachingS
 import examArrangementsSchema from '../validationSchemas/examArrangementsSchema'
 import educationHealthCarePlanSchema from '../validationSchemas/educationHealthCarePlanSchema'
 import learningNeedsSupportPractitionerSupportSchema from '../validationSchemas/learningNeedsSupportPractitionerSupportSchema'
+import reviewSupportPlanSchema from '../validationSchemas/reviewSupportPlanSchema'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const { journeyDataService } = services
@@ -34,6 +36,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const examArrangementsController = new ExamArrangementsController()
   const educationHealthCarePlanController = new EducationHealthCarePlanController()
   const lnspController = new LearningNeedsSupportPractitionerSupportController()
+  const reviewSupportPlanController = new ReviewSupportPlanController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -106,10 +109,10 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
     asyncMiddleware(lnspController.submitLnspSupportForm),
   ])
 
-  router.get('/:journeyId/next-review-date', [
-    asyncMiddleware(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      res.send('Next review date page')
-    }),
+  router.get('/:journeyId/next-review-date', [asyncMiddleware(reviewSupportPlanController.getReviewSupportPlanView)])
+  router.post('/:journeyId/next-review-date', [
+    validate(reviewSupportPlanSchema),
+    asyncMiddleware(reviewSupportPlanController.submitReviewSupportPlanForm),
   ])
 
   router.get('/:journeyId/check-your-answers', [
