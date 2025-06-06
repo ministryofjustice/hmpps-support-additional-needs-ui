@@ -1,0 +1,40 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'education-support-plan-review-support-plan' %}
+{% set pageTitle = "Create an education support plan" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          <h1 class="govuk-heading-l">Set a review date for {{ prisonerSummary | formatFirst_name_Last_name }}'s education support plan</h1>
+
+          {{ mojDatePicker({
+            name: "reviewDate",
+            value: form.reviewDate,
+            id: "reviewDate",
+            label: {
+              text: "Review date"
+            },
+            hint: {
+              text: "Must be within 3 months of plan creation"
+            },
+            errorMessage: errors | findError('reviewDate')
+          }) }}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

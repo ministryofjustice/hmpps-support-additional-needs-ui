@@ -42,7 +42,7 @@ describe('examArrangementsController', () => {
   it('should render view given previously submitted invalid form', async () => {
     // Given
     const invalidForm = {
-      adjustmentsNeeded: 'not-a-valid-value',
+      arrangementsNeeded: 'not-a-valid-value',
     }
     res.locals.invalidForm = invalidForm
 

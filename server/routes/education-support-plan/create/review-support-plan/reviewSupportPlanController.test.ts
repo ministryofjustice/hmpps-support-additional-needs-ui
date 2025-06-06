@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import SpecificTeachingSkillsController from './specificTeachingSkillsController'
+import ReviewSupportPlanController from './reviewSupportPlanController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 
-describe('teachingAdjustmentsController', () => {
-  const controller = new SpecificTeachingSkillsController()
+describe('reviewDateController', () => {
+  const controller = new ReviewSupportPlanController()
 
   const prisonerSummary = aValidPrisonerSummary()
 
@@ -29,11 +29,11 @@ describe('teachingAdjustmentsController', () => {
     // Given
     res.locals.invalidForm = undefined
 
-    const expectedViewTemplate = 'pages/education-support-plan/specific-teaching-skills/index'
+    const expectedViewTemplate = 'pages/education-support-plan/review-support-plan/index'
     const expectedViewModel = { prisonerSummary }
 
     // When
-    await controller.getSpecificTeachingSkillsView(req, res, next)
+    await controller.getReviewSupportPlanView(req, res, next)
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
@@ -42,15 +42,15 @@ describe('teachingAdjustmentsController', () => {
   it('should render view given previously submitted invalid form', async () => {
     // Given
     const invalidForm = {
-      skillsRequired: 'not-a-valid-value',
+      reviewDate: 'not-a-valid-value',
     }
     res.locals.invalidForm = invalidForm
 
-    const expectedViewTemplate = 'pages/education-support-plan/specific-teaching-skills/index'
+    const expectedViewTemplate = 'pages/education-support-plan/review-support-plan/index'
     const expectedViewModel = { prisonerSummary, form: invalidForm }
 
     // When
-    await controller.getSpecificTeachingSkillsView(req, res, next)
+    await controller.getReviewSupportPlanView(req, res, next)
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
@@ -58,10 +58,10 @@ describe('teachingAdjustmentsController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
-    const expectedNextRoute = 'exam-arrangements'
+    const expectedNextRoute = 'check-your-answers'
 
     // When
-    await controller.submitSpecificTeachingSkillsForm(req, res, next)
+    await controller.submitReviewSupportPlanForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)

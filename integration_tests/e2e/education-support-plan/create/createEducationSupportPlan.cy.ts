@@ -1,3 +1,4 @@
+import { addWeeks, format, startOfToday } from 'date-fns'
 import WhoCreatedThePlanPage from '../../../pages/education-support-plan/whoCreatedThePlanPage'
 import Page from '../../../pages/page'
 import PlanCreatedByValue from '../../../../server/enums/planCreatedByValue'
@@ -10,6 +11,7 @@ import SpecificTeachingSkillsPage from '../../../pages/education-support-plan/sp
 import ExamArrangementsPage from '../../../pages/education-support-plan/examArrangementsPage'
 import EducationHealthCarePlanPage from '../../../pages/education-support-plan/educationHealthCarePlanPage'
 import LearningNeedsSupportPractitionerSupportPage from '../../../pages/education-support-plan/learningNeedsSupportPractitionerSupportPage'
+import ReviewSupportPlanPage from '../../../pages/education-support-plan/reviewSupportPlanPage'
 
 context('Create an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -138,6 +140,20 @@ context('Create an Education Support Plan', () => {
       .hasFieldInError('details')
       // enter the fields and submit the form to the next page
       .enterDetails('Chris will need the text reading to him as he cannot read himself')
+      .submitPageTo(ReviewSupportPlanPage)
+
+    Page.verifyOnPage(ReviewSupportPlanPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(ReviewSupportPlanPage)
+      .hasErrorCount(1)
+      .hasFieldInError('reviewDate')
+      // submit the page with an invalid format date
+      .setReviewDate('3rd January 2022')
+      .submitPageTo(ReviewSupportPlanPage)
+      .hasErrorCount(1)
+      .hasFieldInError('reviewDate')
+      // enter the fields and submit the form to the next page
+      .setReviewDate(format(addWeeks(startOfToday(), 10), 'd/M/yyyy'))
 
     // Then
   })
