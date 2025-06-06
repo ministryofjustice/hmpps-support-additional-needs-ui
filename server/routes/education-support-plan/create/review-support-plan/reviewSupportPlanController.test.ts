@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
+import { parseISO } from 'date-fns'
 import ReviewSupportPlanController from './reviewSupportPlanController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
+import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
 
 describe('reviewDateController', () => {
   const controller = new ReviewSupportPlanController()
@@ -23,6 +25,12 @@ describe('reviewDateController', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     req.body = {}
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        reviewDate: parseISO('2025-06-10'),
+      },
+    }
   })
 
   it('should render view given no previously submitted invalid form', async () => {
@@ -30,7 +38,12 @@ describe('reviewDateController', () => {
     res.locals.invalidForm = undefined
 
     const expectedViewTemplate = 'pages/education-support-plan/review-support-plan/index'
-    const expectedViewModel = { prisonerSummary }
+    const expectedViewModel = {
+      prisonerSummary,
+      form: {
+        reviewDate: '10/6/2025',
+      },
+    }
 
     // When
     await controller.getReviewSupportPlanView(req, res, next)
@@ -58,12 +71,22 @@ describe('reviewDateController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.body = {
+      reviewDate: '10/6/2025',
+    }
+
     const expectedNextRoute = 'check-your-answers'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      reviewDate: parseISO('2025-06-10'),
+    }
 
     // When
     await controller.submitReviewSupportPlanForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
   })
 })

@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import LearningEnvironmentAdjustmentsController from './learningEnvironmentAdjustmentsController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
+import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
+import YesNoValue from '../../../../enums/yesNoValue'
 
 describe('learningEnvironmentAdjustmentsController', () => {
   const controller = new LearningEnvironmentAdjustmentsController()
@@ -23,6 +25,13 @@ describe('learningEnvironmentAdjustmentsController', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     req.body = {}
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        learningEnvironmentAdjustmentsNeeded: true,
+        learningEnvironmentAdjustments: 'Needs to sit by the door',
+      },
+    }
   })
 
   it('should render view given no previously submitted invalid form', async () => {
@@ -30,7 +39,13 @@ describe('learningEnvironmentAdjustmentsController', () => {
     res.locals.invalidForm = undefined
 
     const expectedViewTemplate = 'pages/education-support-plan/learning-environment-adjustments/index'
-    const expectedViewModel = { prisonerSummary }
+    const expectedViewModel = {
+      prisonerSummary,
+      form: {
+        adjustmentsNeeded: YesNoValue.YES,
+        details: 'Needs to sit by the door',
+      },
+    }
 
     // When
     await controller.getLearningEnvironmentAdjustmentsView(req, res, next)
@@ -58,12 +73,24 @@ describe('learningEnvironmentAdjustmentsController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.body = {
+      adjustmentsNeeded: YesNoValue.YES,
+      details: 'Needs to sit by the door',
+    }
+
     const expectedNextRoute = 'teaching-adjustments'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      learningEnvironmentAdjustmentsNeeded: true,
+      learningEnvironmentAdjustments: 'Needs to sit by the door',
+    }
 
     // When
     await controller.submitLearningEnvironmentAdjustmentsForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
   })
 })

@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import ExamArrangementsController from './examArrangementsController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
+import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
+import YesNoValue from '../../../../enums/yesNoValue'
 
 describe('examArrangementsController', () => {
   const controller = new ExamArrangementsController()
@@ -23,6 +25,13 @@ describe('examArrangementsController', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     req.body = {}
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        examArrangementsNeeded: true,
+        examArrangements: 'Escort Chris to the exam hall 10 minutes before other students.',
+      },
+    }
   })
 
   it('should render view given no previously submitted invalid form', async () => {
@@ -30,7 +39,13 @@ describe('examArrangementsController', () => {
     res.locals.invalidForm = undefined
 
     const expectedViewTemplate = 'pages/education-support-plan/exam-arrangements/index'
-    const expectedViewModel = { prisonerSummary }
+    const expectedViewModel = {
+      prisonerSummary,
+      form: {
+        arrangementsNeeded: YesNoValue.YES,
+        details: 'Escort Chris to the exam hall 10 minutes before other students.',
+      },
+    }
 
     // When
     await controller.getExamArrangementsView(req, res, next)
@@ -58,12 +73,24 @@ describe('examArrangementsController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.body = {
+      arrangementsNeeded: YesNoValue.YES,
+      details: 'Escort Chris to the exam hall 10 minutes before other students.',
+    }
+
     const expectedNextRoute = 'education-health-care-plan'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      examArrangementsNeeded: true,
+      examArrangements: 'Escort Chris to the exam hall 10 minutes before other students.',
+    }
 
     // When
     await controller.submitExamArrangementsForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
   })
 })

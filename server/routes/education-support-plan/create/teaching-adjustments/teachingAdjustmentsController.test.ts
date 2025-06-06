@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import TeachingAdjustmentsController from './teachingAdjustmentsController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
+import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
+import YesNoValue from '../../../../enums/yesNoValue'
 
 describe('teachingAdjustmentsController', () => {
   const controller = new TeachingAdjustmentsController()
@@ -23,6 +25,13 @@ describe('teachingAdjustmentsController', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     req.body = {}
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        teachingAdjustmentsNeeded: true,
+        teachingAdjustments: 'Use simpler language and examples',
+      },
+    }
   })
 
   it('should render view given no previously submitted invalid form', async () => {
@@ -30,7 +39,13 @@ describe('teachingAdjustmentsController', () => {
     res.locals.invalidForm = undefined
 
     const expectedViewTemplate = 'pages/education-support-plan/teaching-adjustments/index'
-    const expectedViewModel = { prisonerSummary }
+    const expectedViewModel = {
+      prisonerSummary,
+      form: {
+        adjustmentsNeeded: YesNoValue.YES,
+        details: 'Use simpler language and examples',
+      },
+    }
 
     // When
     await controller.getTeachingAdjustmentsView(req, res, next)
@@ -58,12 +73,24 @@ describe('teachingAdjustmentsController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.body = {
+      adjustmentsNeeded: YesNoValue.YES,
+      details: 'Use simpler language and examples',
+    }
+
     const expectedNextRoute = 'specific-teaching-skills'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      teachingAdjustmentsNeeded: true,
+      teachingAdjustments: 'Use simpler language and examples',
+    }
 
     // When
     await controller.submitTeachingAdjustmentsForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
   })
 })
