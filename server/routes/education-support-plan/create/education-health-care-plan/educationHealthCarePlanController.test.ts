@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import EducationHealthCarePlanController from './educationHealthCarePlanController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
+import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
+import YesNoValue from '../../../../enums/yesNoValue'
 
 describe('educationHealthCarePlanController', () => {
   const controller = new EducationHealthCarePlanController()
@@ -23,6 +25,12 @@ describe('educationHealthCarePlanController', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     req.body = {}
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        currentEhcp: true,
+      },
+    }
   })
 
   it('should render view given no previously submitted invalid form', async () => {
@@ -30,7 +38,12 @@ describe('educationHealthCarePlanController', () => {
     res.locals.invalidForm = undefined
 
     const expectedViewTemplate = 'pages/education-support-plan/education-health-care-plan/index'
-    const expectedViewModel = { prisonerSummary }
+    const expectedViewModel = {
+      prisonerSummary,
+      form: {
+        currentEhcp: YesNoValue.YES,
+      },
+    }
 
     // When
     await controller.getEhcpView(req, res, next)
@@ -58,12 +71,22 @@ describe('educationHealthCarePlanController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.body = {
+      currentEhcp: YesNoValue.YES,
+    }
+
     const expectedNextRoute = 'lnsp-support'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      currentEhcp: true,
+    }
 
     // When
     await controller.submitEhcpForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
   })
 })

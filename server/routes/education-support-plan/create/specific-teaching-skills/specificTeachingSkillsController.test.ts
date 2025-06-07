@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import SpecificTeachingSkillsController from './specificTeachingSkillsController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
+import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
+import YesNoValue from '../../../../enums/yesNoValue'
 
 describe('teachingAdjustmentsController', () => {
   const controller = new SpecificTeachingSkillsController()
@@ -23,6 +25,13 @@ describe('teachingAdjustmentsController', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     req.body = {}
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        specificTeachingSkillsNeeded: true,
+        specificTeachingSkills: 'Will need to use BSL',
+      },
+    }
   })
 
   it('should render view given no previously submitted invalid form', async () => {
@@ -30,7 +39,13 @@ describe('teachingAdjustmentsController', () => {
     res.locals.invalidForm = undefined
 
     const expectedViewTemplate = 'pages/education-support-plan/specific-teaching-skills/index'
-    const expectedViewModel = { prisonerSummary }
+    const expectedViewModel = {
+      prisonerSummary,
+      form: {
+        skillsRequired: YesNoValue.YES,
+        details: 'Will need to use BSL',
+      },
+    }
 
     // When
     await controller.getSpecificTeachingSkillsView(req, res, next)
@@ -58,12 +73,24 @@ describe('teachingAdjustmentsController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.body = {
+      skillsRequired: YesNoValue.YES,
+      details: 'Will need to use BSL',
+    }
+
     const expectedNextRoute = 'exam-arrangements'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      specificTeachingSkillsNeeded: true,
+      specificTeachingSkills: 'Will need to use BSL',
+    }
 
     // When
     await controller.submitSpecificTeachingSkillsForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
   })
 })

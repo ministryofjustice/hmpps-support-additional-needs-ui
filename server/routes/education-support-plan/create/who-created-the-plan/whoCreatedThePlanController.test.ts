@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import WhoCreatedThePlanController from './whoCreatedThePlanController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
+import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
+import PlanCreatedByValue from '../../../../enums/planCreatedByValue'
 
 describe('whoCreatedThePlanController', () => {
   const controller = new WhoCreatedThePlanController()
@@ -23,6 +25,14 @@ describe('whoCreatedThePlanController', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     req.body = {}
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        planCreatedByLoggedInUser: false,
+        planCreatedByOtherFullName: 'A user',
+        planCreatedByOtherJobRole: 'A job role',
+      },
+    }
   })
 
   it('should render view given no previously submitted invalid form', async () => {
@@ -30,7 +40,14 @@ describe('whoCreatedThePlanController', () => {
     res.locals.invalidForm = undefined
 
     const expectedViewTemplate = 'pages/education-support-plan/who-created-the-plan/index'
-    const expectedViewModel = { prisonerSummary }
+    const expectedViewModel = {
+      prisonerSummary,
+      form: {
+        completedBy: PlanCreatedByValue.SOMEBODY_ELSE,
+        completedByOtherFullName: 'A user',
+        completedByOtherJobRole: 'A job role',
+      },
+    }
 
     // When
     await controller.getWhoCreatedThePlanView(req, res, next)
@@ -58,12 +75,26 @@ describe('whoCreatedThePlanController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.body = {
+      completedBy: PlanCreatedByValue.SOMEBODY_ELSE,
+      completedByOtherFullName: 'A user',
+      completedByOtherJobRole: 'A job role',
+    }
+
     const expectedNextRoute = 'other-people-consulted'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      planCreatedByLoggedInUser: false,
+      planCreatedByOtherFullName: 'A user',
+      planCreatedByOtherJobRole: 'A job role',
+    }
 
     // When
     await controller.submitWhoCreatedThePlanForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
   })
 })

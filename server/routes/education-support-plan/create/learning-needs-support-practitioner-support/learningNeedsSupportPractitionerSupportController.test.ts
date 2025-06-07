@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import LearningNeedsSupportPractitionerSupportController from './learningNeedsSupportPractitionerSupportController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
+import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
+import YesNoValue from '../../../../enums/yesNoValue'
 
 describe('learningNeedsSupportPractitionerSupportController', () => {
   const controller = new LearningNeedsSupportPractitionerSupportController()
@@ -23,6 +25,13 @@ describe('learningNeedsSupportPractitionerSupportController', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     req.body = {}
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        lnspSupportNeeded: true,
+        lnspSupport: 'Will need to read all text to Chris',
+      },
+    }
   })
 
   it('should render view given no previously submitted invalid form', async () => {
@@ -30,7 +39,13 @@ describe('learningNeedsSupportPractitionerSupportController', () => {
     res.locals.invalidForm = undefined
 
     const expectedViewTemplate = 'pages/education-support-plan/learning-needs-support-practitioner-support/index'
-    const expectedViewModel = { prisonerSummary }
+    const expectedViewModel = {
+      prisonerSummary,
+      form: {
+        supportRequired: YesNoValue.YES,
+        details: 'Will need to read all text to Chris',
+      },
+    }
 
     // When
     await controller.getLnspSupportView(req, res, next)
@@ -58,12 +73,24 @@ describe('learningNeedsSupportPractitionerSupportController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.body = {
+      supportRequired: YesNoValue.YES,
+      details: 'Will need to read all text to Chris',
+    }
+
     const expectedNextRoute = 'next-review-date'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      lnspSupportNeeded: true,
+      lnspSupport: 'Will need to read all text to Chris',
+    }
 
     // When
     await controller.submitLnspSupportForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
   })
 })
