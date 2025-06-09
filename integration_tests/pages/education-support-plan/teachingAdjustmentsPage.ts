@@ -6,12 +6,12 @@ export default class TeachingAdjustmentsPage extends Page {
     super('education-support-plan-teaching-adjustments')
   }
 
-  selectLearningAdjustmentsRequired(): TeachingAdjustmentsPage {
+  selectTeachingAdjustmentsRequired(): TeachingAdjustmentsPage {
     this.radio(YesNoValue.YES).click()
     return this
   }
 
-  selectLearningAdjustmentsNotRequired(): TeachingAdjustmentsPage {
+  selectTeachingAdjustmentsNotRequired(): TeachingAdjustmentsPage {
     this.radio(YesNoValue.NO).click()
     return this
   }

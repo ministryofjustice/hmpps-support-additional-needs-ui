@@ -9,5 +9,7 @@ declare namespace Cypress {
     wiremockVerify(requestPatternBuilder: RequestPatternBuilder, expectedCount?: number): Chainable<*>
 
     wiremockVerifyNoInteractions(requestPatternBuilder: RequestPatternBuilder): Chainable<*>
+
+    createEducationSupportPlanToArriveOnCheckYourAnswers(options?: { prisonNumber?: string; reviewDate?: Date })
   }
 }

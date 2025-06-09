@@ -37,9 +37,22 @@ describe('otherPeopleConsultedController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect to next route', async () => {
+  it('should submit form and redirect to next route given previous page was not check your answers', async () => {
     // Given
+    req.query = {}
     const expectedNextRoute = 'review-needs-conditions-and-strengths'
+
+    // When
+    await controller.submitOtherPeopleConsultedForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+  })
+
+  it('should submit form and redirect to next route given previous page was check your answers', async () => {
+    // Given
+    req.query = { submitToCheckAnswers: 'true' }
+    const expectedNextRoute = 'check-your-answers'
 
     // When
     await controller.submitOtherPeopleConsultedForm(req, res, next)

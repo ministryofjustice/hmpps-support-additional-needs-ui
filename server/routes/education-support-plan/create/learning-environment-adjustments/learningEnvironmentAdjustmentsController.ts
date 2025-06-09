@@ -21,7 +21,7 @@ export default class LearningEnvironmentAdjustmentsController {
     const learningEnvironmentAdjustmentsForm = { ...req.body }
     this.updateDtoFromForm(req, learningEnvironmentAdjustmentsForm)
 
-    return res.redirect('teaching-adjustments')
+    return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'teaching-adjustments' : 'check-your-answers')
   }
 
   private populateFormFromDto = (dto: EducationSupportPlanDto) => {

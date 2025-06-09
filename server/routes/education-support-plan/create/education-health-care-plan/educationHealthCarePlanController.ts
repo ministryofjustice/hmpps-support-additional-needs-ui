@@ -17,7 +17,7 @@ export default class EducationHealthCarePlanController {
     const ehcpForm = { ...req.body }
     this.updateDtoFromForm(req, ehcpForm)
 
-    return res.redirect('lnsp-support')
+    return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'lnsp-support' : 'check-your-answers')
   }
 
   private populateFormFromDto = (dto: EducationSupportPlanDto) => {

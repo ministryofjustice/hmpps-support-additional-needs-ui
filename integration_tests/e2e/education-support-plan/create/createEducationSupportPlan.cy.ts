@@ -84,7 +84,7 @@ context('Create an Education Support Plan', () => {
       .hasErrorCount(1)
       .hasFieldInError('adjustmentsNeeded')
       // submit the page without the details, triggering different validation
-      .selectLearningAdjustmentsRequired()
+      .selectTeachingAdjustmentsRequired()
       .submitPageTo(TeachingAdjustmentsPage)
       .hasErrorCount(1)
       .hasFieldInError('details')

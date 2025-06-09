@@ -9,6 +9,8 @@ export default class OtherPeopleConsultedController {
   }
 
   submitOtherPeopleConsultedForm: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    return res.redirect('review-needs-conditions-and-strengths')
+    return res.redirect(
+      req.query?.submitToCheckAnswers !== 'true' ? 'review-needs-conditions-and-strengths' : 'check-your-answers',
+    )
   }
 }

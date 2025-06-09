@@ -17,7 +17,7 @@ export default class TeachingAdjustmentsController {
     const teachingAdjustmentsForm = { ...req.body }
     this.updateDtoFromForm(req, teachingAdjustmentsForm)
 
-    return res.redirect('specific-teaching-skills')
+    return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'specific-teaching-skills' : 'check-your-answers')
   }
 
   private populateFormFromDto = (dto: EducationSupportPlanDto) => {
