@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
@@ -13,6 +13,7 @@ import ExamArrangementsController from './exam-arrangements/examArrangementsCont
 import EducationHealthCarePlanController from './education-health-care-plan/educationHealthCarePlanController'
 import LearningNeedsSupportPractitionerSupportController from './learning-needs-support-practitioner-support/learningNeedsSupportPractitionerSupportController'
 import ReviewSupportPlanController from './review-support-plan/reviewSupportPlanController'
+import CheckYourAnswersController from './check-your-answers/checkYourAnswersController'
 import { validate } from '../../../middleware/validationMiddleware'
 import whoCompletedThePlanSchema from '../validationSchemas/whoCompletedThePlanSchema'
 import learningEnvironmentAdjustmentsSchema from '../validationSchemas/learningEnvironmentAdjustmentsSchema'
@@ -39,6 +40,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const educationHealthCarePlanController = new EducationHealthCarePlanController()
   const lnspController = new LearningNeedsSupportPractitionerSupportController()
   const reviewSupportPlanController = new ReviewSupportPlanController()
+  const checkYourAnswersController = new CheckYourAnswersController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -147,9 +149,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/check-your-answers', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    asyncMiddleware(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      res.send('Check your answers page')
-    }),
+    asyncMiddleware(checkYourAnswersController.getCheckYourAnswersView),
   ])
 
   return router

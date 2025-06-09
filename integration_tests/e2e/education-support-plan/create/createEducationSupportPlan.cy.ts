@@ -12,6 +12,7 @@ import ExamArrangementsPage from '../../../pages/education-support-plan/examArra
 import EducationHealthCarePlanPage from '../../../pages/education-support-plan/educationHealthCarePlanPage'
 import LearningNeedsSupportPractitionerSupportPage from '../../../pages/education-support-plan/learningNeedsSupportPractitionerSupportPage'
 import ReviewSupportPlanPage from '../../../pages/education-support-plan/reviewSupportPlanPage'
+import CheckYourAnswersPage from '../../../pages/education-support-plan/checkYourAnswersPage'
 
 context('Create an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -154,6 +155,9 @@ context('Create an Education Support Plan', () => {
       .hasFieldInError('reviewDate')
       // enter the fields and submit the form to the next page
       .setReviewDate(format(addWeeks(startOfToday(), 10), 'd/M/yyyy'))
+      .submitPageTo(CheckYourAnswersPage)
+
+    Page.verifyOnPage(CheckYourAnswersPage) //
 
     // Then
   })
