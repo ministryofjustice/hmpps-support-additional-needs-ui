@@ -6,6 +6,18 @@ export default class OverviewPage extends Page {
     super('profile-overview')
   }
 
+  hasSuccessMessage(message: string): OverviewPage {
+    this.successMessage() //
+      .should('be.visible')
+      .and('contain.text', message)
+    return this
+  }
+
+  doesNotHaveSuccessMessage(): OverviewPage {
+    this.successMessage().should('not.exist')
+    return this
+  }
+
   hasNoAdditionalNeedsRecorded(): OverviewPage {
     this.additionalNeedsSummaryCardContent().should('contain', 'No additional needs recorded')
     return this
@@ -47,6 +59,8 @@ export default class OverviewPage extends Page {
   }
 
   private prisonerSummaryBanner = (): PageElement => cy.get('.prisoner-summary-banner')
+
+  private successMessage = (): PageElement => cy.get('[data-qa=success-message]')
 
   private additionalNeedsSummaryCardContent = (): PageElement =>
     cy.get('[data-qa=additional-needs-summary-card] .govuk-summary-card__content')

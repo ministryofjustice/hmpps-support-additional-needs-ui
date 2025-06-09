@@ -5,6 +5,7 @@ import { addMonths, format, startOfToday, subDays } from 'date-fns'
 import CheckYourAnswersPage from '../../../pages/education-support-plan/checkYourAnswersPage'
 import Page from '../../../pages/page'
 import PlanCreatedByValue from '../../../../server/enums/planCreatedByValue'
+import OverviewPage from '../../../pages/profile/overview/overviewPage'
 
 context(`Change links on the Check Your Answers page when creating an Education Support Plan`, () => {
   const prisonNumber = 'A00001A'
@@ -92,6 +93,11 @@ context(`Change links on the Check Your Answers page when creating an Education 
       .clickOtherPeopleConsultedChangeLink()
       .submitPageTo(CheckYourAnswersPage)
 
+      // submit Check Your Answers page
+      .submitPageTo(OverviewPage)
+
     // Then
+    Page.verifyOnPage(OverviewPage) //
+      .hasSuccessMessage('Education support plan created')
   })
 })

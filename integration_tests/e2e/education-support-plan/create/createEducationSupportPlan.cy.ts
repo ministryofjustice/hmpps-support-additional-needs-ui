@@ -158,7 +158,11 @@ context('Create an Education Support Plan', () => {
       .submitPageTo(CheckYourAnswersPage)
 
     Page.verifyOnPage(CheckYourAnswersPage) //
+      .submitPageTo(OverviewPage)
 
     // Then
+    // TODO - assert expected data was sent to API to create the ELSP
+    Page.verifyOnPage(OverviewPage) //
+      .hasSuccessMessage('Education support plan created')
   })
 })

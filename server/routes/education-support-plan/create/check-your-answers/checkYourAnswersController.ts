@@ -10,6 +10,12 @@ export default class CheckYourAnswersController {
   }
 
   submitCheckYourAnswersForm: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    return res.redirect('overview')
+    const { educationSupportPlanDto } = req.journeyData
+    const { prisonNumber } = educationSupportPlanDto
+
+    // TODO - call API to save Education Support Plan
+
+    req.journeyData.educationSupportPlanDto = undefined
+    return res.redirectWithSuccess(`/profile/${prisonNumber}/overview`, 'Education support plan created')
   }
 }
