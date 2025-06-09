@@ -17,7 +17,9 @@ export default class ExamArrangementsController {
     const examArrangementsForm = { ...req.body }
     this.updateDtoFromForm(req, examArrangementsForm)
 
-    return res.redirect('education-health-care-plan')
+    return res.redirect(
+      req.query?.submitToCheckAnswers !== 'true' ? 'education-health-care-plan' : 'check-your-answers',
+    )
   }
 
   private populateFormFromDto = (dto: EducationSupportPlanDto) => {

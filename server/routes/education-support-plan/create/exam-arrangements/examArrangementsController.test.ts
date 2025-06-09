@@ -71,8 +71,9 @@ describe('examArrangementsController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect to next route', async () => {
+  it('should submit form and redirect to next route given previous page was not check your answers', async () => {
     // Given
+    req.query = {}
     req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
     req.body = {
       arrangementsNeeded: YesNoValue.YES,
@@ -80,6 +81,36 @@ describe('examArrangementsController', () => {
     }
 
     const expectedNextRoute = 'education-health-care-plan'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      examArrangementsNeeded: true,
+      examArrangements: 'Escort Chris to the exam hall 10 minutes before other students.',
+    }
+
+    // When
+    await controller.submitExamArrangementsForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+  })
+
+  it('should submit form and redirect to next route given previous page was check your answers', async () => {
+    // Given
+    req.query = { submitToCheckAnswers: 'true' }
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        examArrangementsNeeded: false,
+        examArrangements: undefined,
+      },
+    }
+    req.body = {
+      arrangementsNeeded: YesNoValue.YES,
+      details: 'Escort Chris to the exam hall 10 minutes before other students.',
+    }
+
+    const expectedNextRoute = 'check-your-answers'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       examArrangementsNeeded: true,

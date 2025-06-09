@@ -69,9 +69,34 @@ describe('reviewDateController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect to next route', async () => {
+  it('should submit form and redirect to next route given previous page was not check your answers', async () => {
     // Given
+    req.query = {}
     req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.body = {
+      reviewDate: '10/6/2025',
+    }
+
+    const expectedNextRoute = 'check-your-answers'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      reviewDate: parseISO('2025-06-10'),
+    }
+
+    // When
+    await controller.submitReviewSupportPlanForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+  })
+
+  it('should submit form and redirect to next route given previous page was check your answers', async () => {
+    // Given
+    req.query = { submitToCheckAnswers: 'true' }
+    req.journeyData = {
+      educationSupportPlanDto: { ...aValidEducationSupportPlanDto(), reviewDate: parseISO('2025-06-09') },
+    }
     req.body = {
       reviewDate: '10/6/2025',
     }

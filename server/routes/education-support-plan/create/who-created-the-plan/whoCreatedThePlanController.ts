@@ -17,7 +17,7 @@ export default class WhoCreatedThePlanController {
     const whoCreatedThePlanForm = { ...req.body }
     this.updateDtoFromForm(req, whoCreatedThePlanForm)
 
-    return res.redirect('other-people-consulted')
+    return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'other-people-consulted' : 'check-your-answers')
   }
 
   private populateFormFromDto = (dto: EducationSupportPlanDto) => {

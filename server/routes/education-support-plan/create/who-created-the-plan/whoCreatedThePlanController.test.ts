@@ -73,8 +73,9 @@ describe('whoCreatedThePlanController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect to next route', async () => {
+  it('should submit form and redirect to next route given previous page was not check your answers', async () => {
     // Given
+    req.query = {}
     req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
     req.body = {
       completedBy: PlanCreatedByValue.SOMEBODY_ELSE,
@@ -83,6 +84,39 @@ describe('whoCreatedThePlanController', () => {
     }
 
     const expectedNextRoute = 'other-people-consulted'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      planCreatedByLoggedInUser: false,
+      planCreatedByOtherFullName: 'A user',
+      planCreatedByOtherJobRole: 'A job role',
+    }
+
+    // When
+    await controller.submitWhoCreatedThePlanForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+  })
+
+  it('should submit form and redirect to next route given previous page was check your answers', async () => {
+    // Given
+    req.query = { submitToCheckAnswers: 'true' }
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        planCreatedByLoggedInUser: true,
+        planCreatedByOtherFullName: undefined,
+        planCreatedByOtherJobRole: undefined,
+      },
+    }
+    req.body = {
+      completedBy: PlanCreatedByValue.SOMEBODY_ELSE,
+      completedByOtherFullName: 'A user',
+      completedByOtherJobRole: 'A job role',
+    }
+
+    const expectedNextRoute = 'check-your-answers'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       planCreatedByLoggedInUser: false,

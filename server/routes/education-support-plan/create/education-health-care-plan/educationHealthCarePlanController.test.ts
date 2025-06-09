@@ -69,14 +69,42 @@ describe('educationHealthCarePlanController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect to next route', async () => {
+  it('should submit form and redirect to next route given previous page was not check your answers', async () => {
     // Given
+    req.query = {}
     req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
     req.body = {
       currentEhcp: YesNoValue.YES,
     }
 
     const expectedNextRoute = 'lnsp-support'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      currentEhcp: true,
+    }
+
+    // When
+    await controller.submitEhcpForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+  })
+
+  it('should submit form and redirect to next route given previous page was check your answers', async () => {
+    // Given
+    req.query = { submitToCheckAnswers: 'true' }
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        currentEhcp: false,
+      },
+    }
+    req.body = {
+      currentEhcp: YesNoValue.YES,
+    }
+
+    const expectedNextRoute = 'check-your-answers'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       currentEhcp: true,

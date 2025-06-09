@@ -33,7 +33,7 @@
                 {% endif %}
               </dd>
               <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="who-created-the-plan" data-qa="who-created-the-plan-change-link">
+                <a class="govuk-link" href="who-created-the-plan?submitToCheckAnswers=true" data-qa="who-created-the-plan-change-link">
                   Change<span class="govuk-visually-hidden"> who met with the prisoner to create their education support plan</span>
                 </a>
               </dd>
@@ -47,7 +47,7 @@
                 {# TODO #}
               </dd>
               <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="other-people-consulted" data-qa="other-people-consulted-change-link">
+                <a class="govuk-link" href="other-people-consulted?submitToCheckAnswers=true" data-qa="other-people-consulted-change-link">
                   Change<span class="govuk-visually-hidden"> who else was consulted or involved to create the education support plan</span>
                 </a>
               </dd>
@@ -64,7 +64,7 @@
                 {% endif %}
               </dd>
               <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="teaching-adjustments" data-qa="teaching-adjustments-change-link">
+                <a class="govuk-link" href="teaching-adjustments?submitToCheckAnswers=true" data-qa="teaching-adjustments-change-link">
                   Change<span class="govuk-visually-hidden"> details of any required teaching adjustments</span>
                 </a>
               </dd>
@@ -81,7 +81,7 @@
                 {% endif %}
               </dd>
               <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="learning-environment-adjustments" data-qa="learning-environment-adjustments-change-link">
+                <a class="govuk-link" href="learning-environment-adjustments?submitToCheckAnswers=true" data-qa="learning-environment-adjustments-change-link">
                   Change<span class="govuk-visually-hidden"> details of any required adjustments to the learning environment or materials</span>
                 </a>
               </dd>
@@ -98,7 +98,7 @@
                 {% endif %}
               </dd>
               <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="specific-teaching-skills" data-qa="specific-teaching-skills-change-link">
+                <a class="govuk-link" href="specific-teaching-skills?submitToCheckAnswers=true" data-qa="specific-teaching-skills-change-link">
                   Change<span class="govuk-visually-hidden"> details of any required teaching skills</span>
                 </a>
               </dd>
@@ -115,7 +115,7 @@
                 {% endif %}
               </dd>
               <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="exam-arrangements" data-qa="exam-arrangements-change-link">
+                <a class="govuk-link" href="exam-arrangements?submitToCheckAnswers=true" data-qa="exam-arrangements-change-link">
                   Change<span class="govuk-visually-hidden"> details of any required access arrangements for exams</span>
                 </a>
               </dd>
@@ -129,7 +129,7 @@
                 {{ dto.currentEhcp | formatYesNo }}
               </dd>
               <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="education-health-care-plan" data-qa="education-health-care-plan-change-link">
+                <a class="govuk-link" href="education-health-care-plan?submitToCheckAnswers=true" data-qa="education-health-care-plan-change-link">
                   Change<span class="govuk-visually-hidden"> whether there is a current education health care plan</span>
                 </a>
               </dd>
@@ -146,7 +146,7 @@
                 {% endif %}
               </dd>
               <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="lnsp-support" data-qa="lnsp-support-change-link">
+                <a class="govuk-link" href="lnsp-support?submitToCheckAnswers=true" data-qa="lnsp-support-change-link">
                   Change<span class="govuk-visually-hidden"> details of any required access arrangements for exams</span>
                 </a>
               </dd>
@@ -156,11 +156,11 @@
               <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
                 Review date
               </dt>
-              <dd class="govuk-summary-list__value" data-qa="review-data">
+              <dd class="govuk-summary-list__value" data-qa="review-date">
                 {{ dto.reviewDate | formatDate('d MMMM yyyy') }}
               </dd>
               <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="next-review-date" data-qa="review-data-change-link">
+                <a class="govuk-link" href="next-review-date?submitToCheckAnswers=true" data-qa="review-date-change-link">
                   Change<span class="govuk-visually-hidden"> the review date of the education support plan</span>
                 </a>
               </dd>

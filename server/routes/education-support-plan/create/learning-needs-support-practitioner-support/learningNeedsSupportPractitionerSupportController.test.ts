@@ -71,8 +71,9 @@ describe('learningNeedsSupportPractitionerSupportController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect to next route', async () => {
+  it('should submit form and redirect to next route given previous page was not check your answers', async () => {
     // Given
+    req.query = {}
     req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
     req.body = {
       supportRequired: YesNoValue.YES,
@@ -80,6 +81,32 @@ describe('learningNeedsSupportPractitionerSupportController', () => {
     }
 
     const expectedNextRoute = 'next-review-date'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      lnspSupportNeeded: true,
+      lnspSupport: 'Will need to read all text to Chris',
+    }
+
+    // When
+    await controller.submitLnspSupportForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+  })
+
+  it('should submit form and redirect to next route given previous page was check your answers', async () => {
+    // Given
+    req.query = { submitToCheckAnswers: 'true' }
+    req.journeyData = {
+      educationSupportPlanDto: { ...aValidEducationSupportPlanDto(), lnspSupportNeeded: false, lnspSupport: undefined },
+    }
+    req.body = {
+      supportRequired: YesNoValue.YES,
+      details: 'Will need to read all text to Chris',
+    }
+
+    const expectedNextRoute = 'check-your-answers'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       lnspSupportNeeded: true,

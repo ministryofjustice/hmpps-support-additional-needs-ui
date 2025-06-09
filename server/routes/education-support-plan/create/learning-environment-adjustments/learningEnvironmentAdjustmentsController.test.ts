@@ -71,8 +71,9 @@ describe('learningEnvironmentAdjustmentsController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect to next route', async () => {
+  it('should submit form and redirect to next route given previous page was not check your answers', async () => {
     // Given
+    req.query = {}
     req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
     req.body = {
       adjustmentsNeeded: YesNoValue.YES,
@@ -80,6 +81,36 @@ describe('learningEnvironmentAdjustmentsController', () => {
     }
 
     const expectedNextRoute = 'teaching-adjustments'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      learningEnvironmentAdjustmentsNeeded: true,
+      learningEnvironmentAdjustments: 'Needs to sit by the door',
+    }
+
+    // When
+    await controller.submitLearningEnvironmentAdjustmentsForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+  })
+
+  it('should submit form and redirect to next route given previous page was check your answers', async () => {
+    // Given
+    req.query = { submitToCheckAnswers: 'true' }
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        learningEnvironmentAdjustmentsNeeded: false,
+        learningEnvironmentAdjustments: undefined,
+      },
+    }
+    req.body = {
+      adjustmentsNeeded: YesNoValue.YES,
+      details: 'Needs to sit by the door',
+    }
+
+    const expectedNextRoute = 'check-your-answers'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       learningEnvironmentAdjustmentsNeeded: true,

@@ -17,7 +17,7 @@ export default class SpecificTeachingSkillsController {
     const specificTeachingSkillsForm = { ...req.body }
     this.updateDtoFromForm(req, specificTeachingSkillsForm)
 
-    return res.redirect('exam-arrangements')
+    return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'exam-arrangements' : 'check-your-answers')
   }
 
   private populateFormFromDto = (dto: EducationSupportPlanDto) => {
