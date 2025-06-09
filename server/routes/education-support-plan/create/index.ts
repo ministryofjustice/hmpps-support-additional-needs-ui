@@ -151,6 +151,10 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
     checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(checkYourAnswersController.getCheckYourAnswersView),
   ])
+  router.post('/:journeyId/check-your-answers', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(checkYourAnswersController.submitCheckYourAnswersForm),
+  ])
 
   return router
 }

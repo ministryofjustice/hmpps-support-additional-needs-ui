@@ -13,6 +13,17 @@
     </ol>
   </nav>
 
+  {% if successMessage %}
+    {{ mojBanner({
+      html: successMessage.message | safe,
+      type: 'success',
+      iconFallbackText: 'Success',
+      attributes: {
+        'data-qa': 'success-message'
+      }
+    }) }}
+  {% endif %}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{ prisonerSummary | formatFirst_name_Last_name }}'s support for additional needs</h1>
