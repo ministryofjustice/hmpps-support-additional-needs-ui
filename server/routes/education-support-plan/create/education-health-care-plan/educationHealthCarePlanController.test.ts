@@ -28,7 +28,7 @@ describe('educationHealthCarePlanController', () => {
     req.journeyData = {
       educationSupportPlanDto: {
         ...aValidEducationSupportPlanDto(),
-        currentEhcp: true,
+        hasCurrentEhcp: true,
       },
     }
   })
@@ -41,7 +41,7 @@ describe('educationHealthCarePlanController', () => {
     const expectedViewModel = {
       prisonerSummary,
       form: {
-        currentEhcp: YesNoValue.YES,
+        hasCurrentEhcp: YesNoValue.YES,
       },
     }
 
@@ -55,7 +55,7 @@ describe('educationHealthCarePlanController', () => {
   it('should render view given previously submitted invalid form', async () => {
     // Given
     const invalidForm = {
-      currentEhcp: 'not-a-valid-value',
+      hasCurrentEhcp: 'not-a-valid-value',
     }
     res.locals.invalidForm = invalidForm
 
@@ -74,13 +74,13 @@ describe('educationHealthCarePlanController', () => {
     req.query = {}
     req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
     req.body = {
-      currentEhcp: YesNoValue.YES,
+      hasCurrentEhcp: YesNoValue.YES,
     }
 
     const expectedNextRoute = 'lnsp-support'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
-      currentEhcp: true,
+      hasCurrentEhcp: true,
     }
 
     // When
@@ -97,17 +97,17 @@ describe('educationHealthCarePlanController', () => {
     req.journeyData = {
       educationSupportPlanDto: {
         ...aValidEducationSupportPlanDto(),
-        currentEhcp: false,
+        hasCurrentEhcp: false,
       },
     }
     req.body = {
-      currentEhcp: YesNoValue.YES,
+      hasCurrentEhcp: YesNoValue.YES,
     }
 
     const expectedNextRoute = 'check-your-answers'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
-      currentEhcp: true,
+      hasCurrentEhcp: true,
     }
 
     // When

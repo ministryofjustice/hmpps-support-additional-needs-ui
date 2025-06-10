@@ -12,7 +12,7 @@
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
           {{ govukRadios({
-            name: "currentEhcp",
+            name: "hasCurrentEhcp",
             fieldset: {
               legend: {
                 text: "Does " + prisonerSummary | formatFirst_name_Last_name + " have a current education, health and care plan?",
@@ -24,15 +24,15 @@
               {
                 value: "YES",
                 text: "Yes",
-                checked: form.hasEhcp === "YES"
+                checked: form.hasCurrentEhcp === "YES"
               },
               {
                 value: "NO",
                 text: "No",
-                checked: form.hasEhcp === "NO"
+                checked: form.hasCurrentEhcp === "NO"
               }
             ],
-            errorMessage: errors | findError('currentEhcp')
+            errorMessage: errors | findError('hasCurrentEhcp')
           }) }}
         </div>
 

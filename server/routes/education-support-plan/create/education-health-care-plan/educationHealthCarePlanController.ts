@@ -21,15 +21,15 @@ export default class EducationHealthCarePlanController {
   }
 
   private populateFormFromDto = (dto: EducationSupportPlanDto) => {
-    if (dto.currentEhcp == null) {
+    if (dto.hasCurrentEhcp == null) {
       return {}
     }
-    return { currentEhcp: dto.currentEhcp ? YesNoValue.YES : YesNoValue.NO }
+    return { hasCurrentEhcp: dto.hasCurrentEhcp ? YesNoValue.YES : YesNoValue.NO }
   }
 
-  private updateDtoFromForm = (req: Request, form: { currentEhcp: YesNoValue }) => {
+  private updateDtoFromForm = (req: Request, form: { hasCurrentEhcp: YesNoValue }) => {
     const { educationSupportPlanDto } = req.journeyData
-    educationSupportPlanDto.currentEhcp = form.currentEhcp === YesNoValue.YES
+    educationSupportPlanDto.hasCurrentEhcp = form.hasCurrentEhcp === YesNoValue.YES
     req.journeyData.educationSupportPlanDto = educationSupportPlanDto
   }
 }
