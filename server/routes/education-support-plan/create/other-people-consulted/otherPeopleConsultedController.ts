@@ -17,8 +17,14 @@ export default class OtherPeopleConsultedController {
     const wereOtherPeopleConsultedForm = { ...req.body }
     this.updateDtoFromForm(req, wereOtherPeopleConsultedForm)
 
+    if (req.query?.submitToCheckAnswers === 'true') {
+      return res.redirect('check-your-answers')
+    }
+
     return res.redirect(
-      req.query?.submitToCheckAnswers !== 'true' ? 'review-needs-conditions-and-strengths' : 'check-your-answers',
+      wereOtherPeopleConsultedForm.wereOtherPeopleConsulted === YesNoValue.NO
+        ? 'review-needs-conditions-and-strengths'
+        : 'other-people-consulted/add-person',
     )
   }
 
@@ -32,6 +38,11 @@ export default class OtherPeopleConsultedController {
   private updateDtoFromForm = (req: Request, form: { wereOtherPeopleConsulted: YesNoValue }) => {
     const { educationSupportPlanDto } = req.journeyData
     educationSupportPlanDto.wereOtherPeopleConsulted = form.wereOtherPeopleConsulted === YesNoValue.YES
+    // If wereOtherPeopleConsulted is No, remove the list of people from the DTO. Ensures a consistent view of the data
+    // and allows for the user initially saying Yes and adding people, and then changing their mind to No
+    if (form.wereOtherPeopleConsulted === YesNoValue.NO) {
+      educationSupportPlanDto.otherPeopleConsulted = undefined
+    }
     req.journeyData.educationSupportPlanDto = educationSupportPlanDto
   }
 }
