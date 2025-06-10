@@ -7,11 +7,33 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      <h1 class="govuk-heading-l">Other people consulted (placeholder page)</h1>
-
       <form class="form" method="post" novalidate="">
         <div class="govuk-form-group">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukRadios({
+            name: "wereOtherPeopleConsulted",
+            fieldset: {
+              legend: {
+                text: "Were any other people consulted or involved?",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            items: [
+              {
+                value: "YES",
+                text: "Yes",
+                checked: form.wereOtherPeopleConsulted === "YES"
+              },
+              {
+                value: "NO",
+                text: "No",
+                checked: form.wereOtherPeopleConsulted === "NO"
+              }
+            ],
+            errorMessage: errors | findError('wereOtherPeopleConsulted')
+          }) }}
         </div>
 
         {{ govukButton({

@@ -25,6 +25,7 @@ import learningNeedsSupportPractitionerSupportSchema from '../validationSchemas/
 import reviewSupportPlanSchema from '../validationSchemas/reviewSupportPlanSchema'
 import checkEducationSupportPlanDtoExistsInJourneyData from './middleware/checkEducationSupportPlanDtoExistsInJourneyData'
 import createEmptyEducationSupportPlanDtoIfNotInJourneyData from './middleware/createEmptyEducationSupportPlanDtoIfNotInJourneyData'
+import wereOtherPeopleConsultedSchema from '../validationSchemas/wereOtherPeopleConsultedSchema'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const { journeyDataService } = services
@@ -65,6 +66,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.post('/:journeyId/other-people-consulted', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    validate(wereOtherPeopleConsultedSchema),
     asyncMiddleware(otherPeopleConsultedController.submitOtherPeopleConsultedForm),
   ])
 

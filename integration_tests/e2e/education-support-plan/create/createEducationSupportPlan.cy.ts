@@ -59,6 +59,12 @@ context('Create an Education Support Plan', () => {
       .submitPageTo(OtherPeopleConsultedPage)
 
     Page.verifyOnPage(OtherPeopleConsultedPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(OtherPeopleConsultedPage)
+      .hasErrorCount(1)
+      .hasFieldInError('wereOtherPeopleConsulted')
+      // enter the fields and submit the form to the next page
+      .selectOtherPeopleWereNotConsulted()
       .submitPageTo(ReviewNeedsConditionsStrengthsPage)
 
     Page.verifyOnPage(ReviewNeedsConditionsStrengthsPage) //

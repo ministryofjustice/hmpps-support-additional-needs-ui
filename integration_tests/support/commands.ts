@@ -39,6 +39,7 @@ Cypress.Commands.add(
       .selectWhoCreatedThePlan(PlanCreatedByValue.MYSELF)
       .submitPageTo(OtherPeopleConsultedPage)
       //
+      .selectOtherPeopleWereNotConsulted()
       .submitPageTo(ReviewNeedsConditionsStrengthsPage)
       //
       .submitPageTo(LearningEnvironmentAdjustmentsPage)

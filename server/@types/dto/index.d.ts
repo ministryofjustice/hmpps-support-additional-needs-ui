@@ -5,6 +5,7 @@ declare module 'dto' {
     planCreatedByLoggedInUser?: boolean
     planCreatedByOtherFullName?: string
     planCreatedByOtherJobRole?: string
+    wereOtherPeopleConsulted?: boolean
     learningEnvironmentAdjustmentsNeeded?: boolean
     learningEnvironmentAdjustments?: string
     teachingAdjustmentsNeeded?: boolean
