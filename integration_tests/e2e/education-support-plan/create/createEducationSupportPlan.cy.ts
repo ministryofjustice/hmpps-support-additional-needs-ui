@@ -124,7 +124,7 @@ context('Create an Education Support Plan', () => {
       // submit the page without answering the question to trigger a validation error
       .submitPageTo(EducationHealthCarePlanPage)
       .hasErrorCount(1)
-      .hasFieldInError('currentEhcp')
+      .hasFieldInError('hasCurrentEhcp')
       // enter the fields and submit the form to the next page
       .selectHasCurrentEhcp()
       .submitPageTo(LearningNeedsSupportPractitionerSupportPage)

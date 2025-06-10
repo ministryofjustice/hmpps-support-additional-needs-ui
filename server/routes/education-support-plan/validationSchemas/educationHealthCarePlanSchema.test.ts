@@ -20,8 +20,8 @@ describe('educationHealthCarePlanSchema', () => {
       '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/education-health-care-plan'
   })
 
-  it.each([{ currentEhcp: 'NO' }, { currentEhcp: 'NO' }, { currentEhcp: 'YES' }])(
-    'happy path - validation passes - currentEhcp: $currentEhcp',
+  it.each([{ hasCurrentEhcp: 'NO' }, { hasCurrentEhcp: 'NO' }, { hasCurrentEhcp: 'YES' }])(
+    'happy path - validation passes - hasCurrentEhcp: $hasCurrentEhcp',
     async requestBody => {
       // Given
       req.body = requestBody
@@ -38,19 +38,19 @@ describe('educationHealthCarePlanSchema', () => {
   )
 
   it.each([
-    { currentEhcp: '' },
-    { currentEhcp: undefined },
-    { currentEhcp: null },
-    { currentEhcp: 'a-non-supported-value' },
-    { currentEhcp: 'N' },
-    { currentEhcp: 'Y' },
-  ])('sad path - validation of currentEhcp field fails - currentEhcp: $currentEhcp', async requestBody => {
+    { hasCurrentEhcp: '' },
+    { hasCurrentEhcp: undefined },
+    { hasCurrentEhcp: null },
+    { hasCurrentEhcp: 'a-non-supported-value' },
+    { hasCurrentEhcp: 'N' },
+    { hasCurrentEhcp: 'Y' },
+  ])('sad path - validation of hasCurrentEhcp field fails - hasCurrentEhcp: $hasCurrentEhcp', async requestBody => {
     // Given
     req.body = requestBody
 
     const expectedErrors: Array<Error> = [
       {
-        href: '#currentEhcp',
+        href: '#hasCurrentEhcp',
         text: 'Select whether there is a current EHCP in place',
       },
     ]

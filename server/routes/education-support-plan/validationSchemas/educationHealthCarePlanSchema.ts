@@ -6,7 +6,7 @@ const educationHealthCarePlanSchema = async () => {
   const ehcpMandatoryMessage = 'Select whether there is a current EHCP in place'
 
   return createSchema({
-    currentEhcp: z //
+    hasCurrentEhcp: z //
       .nativeEnum(YesNoValue, { message: ehcpMandatoryMessage }),
   })
 }

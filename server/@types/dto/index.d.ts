@@ -13,7 +13,7 @@ declare module 'dto' {
     specificTeachingSkills?: string
     examArrangementsNeeded?: boolean
     examArrangements?: string
-    currentEhcp?: boolean
+    hasCurrentEhcp?: boolean
     lnspSupportNeeded?: boolean
     lnspSupport?: string
     reviewDate?: Date
