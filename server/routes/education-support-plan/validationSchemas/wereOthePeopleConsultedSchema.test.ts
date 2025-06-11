@@ -17,7 +17,7 @@ describe('wereOtherPeopleConsultedSchema', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     req.originalUrl =
-      '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/education-health-care-plan'
+      '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/other-people-consulted'
   })
 
   it.each([
@@ -67,7 +67,7 @@ describe('wereOtherPeopleConsultedSchema', () => {
       expect(next).not.toHaveBeenCalled()
       expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
       expect(res.redirectWithErrors).toHaveBeenCalledWith(
-        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/education-health-care-plan',
+        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/other-people-consulted',
         expectedErrors,
       )
     },

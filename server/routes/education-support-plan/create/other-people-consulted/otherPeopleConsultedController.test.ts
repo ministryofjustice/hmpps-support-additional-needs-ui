@@ -69,7 +69,7 @@ describe('otherPeopleConsultedController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect to next route given previous page was not check your answers', async () => {
+  it('should submit form and redirect to next route given user answers Yes and previous page was not check your answers', async () => {
     // Given
     req.query = {}
     req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
@@ -77,10 +77,32 @@ describe('otherPeopleConsultedController', () => {
       wereOtherPeopleConsulted: YesNoValue.YES,
     }
 
-    const expectedNextRoute = 'review-needs-conditions-and-strengths'
+    const expectedNextRoute = 'other-people-consulted/add-person'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       wereOtherPeopleConsulted: true,
+    }
+
+    // When
+    await controller.submitOtherPeopleConsultedForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+  })
+
+  it('should submit form and redirect to next route given user answers No and previous page was not check your answers', async () => {
+    // Given
+    req.query = {}
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.body = {
+      wereOtherPeopleConsulted: YesNoValue.NO,
+    }
+
+    const expectedNextRoute = 'review-needs-conditions-and-strengths'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      wereOtherPeopleConsulted: false,
     }
 
     // When
@@ -97,17 +119,19 @@ describe('otherPeopleConsultedController', () => {
     req.journeyData = {
       educationSupportPlanDto: {
         ...aValidEducationSupportPlanDto(),
-        wereOtherPeopleConsulted: false,
+        wereOtherPeopleConsulted: true,
+        otherPeopleConsulted: [{ name: 'A Teacher', jobRole: 'Education Instructor' }],
       },
     }
     req.body = {
-      wereOtherPeopleConsulted: YesNoValue.YES,
+      wereOtherPeopleConsulted: YesNoValue.NO,
     }
 
     const expectedNextRoute = 'check-your-answers'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
-      wereOtherPeopleConsulted: true,
+      wereOtherPeopleConsulted: false,
+      otherPeopleConsulted: undefined as Array<{ name: string; jobRole: string }>,
     }
 
     // When

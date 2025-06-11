@@ -5,6 +5,8 @@ import setupJourneyData from '../../../middleware/setupJourneyData'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import WhoCreatedThePlanController from './who-created-the-plan/whoCreatedThePlanController'
 import OtherPeopleConsultedController from './other-people-consulted/otherPeopleConsultedController'
+import AddPersonConsultedController from './other-people-consulted/addPersonConsultedController'
+import OtherPeopleConsultedListController from './other-people-consulted/otherPeopleConsultedListController'
 import ReviewNeedsConditionsStrengthsController from './review-needs-conditions-strengths/reviewNeedsConditionsStrengthsController'
 import LearningEnvironmentAdjustmentsController from './learning-environment-adjustments/learningEnvironmentAdjustmentsController'
 import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
@@ -26,6 +28,7 @@ import reviewSupportPlanSchema from '../validationSchemas/reviewSupportPlanSchem
 import checkEducationSupportPlanDtoExistsInJourneyData from './middleware/checkEducationSupportPlanDtoExistsInJourneyData'
 import createEmptyEducationSupportPlanDtoIfNotInJourneyData from './middleware/createEmptyEducationSupportPlanDtoIfNotInJourneyData'
 import wereOtherPeopleConsultedSchema from '../validationSchemas/wereOtherPeopleConsultedSchema'
+import addPersonConsultedSchema from '../validationSchemas/addPersonConsultedSchema'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const { journeyDataService } = services
@@ -33,6 +36,8 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
 
   const whoCreatedThePlanController = new WhoCreatedThePlanController()
   const otherPeopleConsultedController = new OtherPeopleConsultedController()
+  const addPersonConsultedController = new AddPersonConsultedController()
+  const otherPeopleConsultedListController = new OtherPeopleConsultedListController()
   const reviewNeedsConditionsStrengthsController = new ReviewNeedsConditionsStrengthsController()
   const learningEnvironmentAdjustmentsController = new LearningEnvironmentAdjustmentsController()
   const teachingAdjustmentsController = new TeachingAdjustmentsController()
@@ -68,6 +73,23 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
     checkEducationSupportPlanDtoExistsInJourneyData,
     validate(wereOtherPeopleConsultedSchema),
     asyncMiddleware(otherPeopleConsultedController.submitOtherPeopleConsultedForm),
+  ])
+  router.get('/:journeyId/other-people-consulted/add-person', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(addPersonConsultedController.getAddPersonConsultedView),
+  ])
+  router.post('/:journeyId/other-people-consulted/add-person', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    validate(addPersonConsultedSchema),
+    asyncMiddleware(addPersonConsultedController.submitAddPersonConsultedForm),
+  ])
+  router.get('/:journeyId/other-people-consulted/list', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(otherPeopleConsultedListController.getOtherPeopleConsultedListView),
+  ])
+  router.post('/:journeyId/other-people-consulted/list', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(otherPeopleConsultedListController.submitOtherPeopleConsultedListForm),
   ])
 
   router.get('/:journeyId/review-needs-conditions-and-strengths', [
