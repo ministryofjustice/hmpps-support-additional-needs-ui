@@ -10,6 +10,10 @@ export default class OtherPeopleConsultedListController {
   }
 
   submitOtherPeopleConsultedListForm: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    if (req.userClickedOnButton('addPerson')) {
+      return res.redirect('add-person')
+    }
+
     return res.redirect('../review-needs-conditions-and-strengths')
   }
 }

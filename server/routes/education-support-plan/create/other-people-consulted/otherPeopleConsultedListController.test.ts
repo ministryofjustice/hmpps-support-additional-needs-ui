@@ -14,6 +14,7 @@ describe('otherPeopleConsultedListController', () => {
     session: {},
     journeyData: {},
     body: {},
+    userClickedOnButton: (buttonName: string) => Object.prototype.hasOwnProperty.call(req.body, buttonName),
   } as unknown as Request
   const res = {
     redirect: jest.fn(),
@@ -44,11 +45,26 @@ describe('otherPeopleConsultedListController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect to next route', async () => {
+  it('should submit form and redirect to next route given Continue button was pressed', async () => {
     // Given
+    req.body = {}
     req.journeyData = { educationSupportPlanDto }
 
     const expectedNextRoute = '../review-needs-conditions-and-strengths'
+
+    // When
+    await controller.submitOtherPeopleConsultedListForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+  })
+
+  it('should submit form and redirect to next route given Add Person button was pressed', async () => {
+    // Given
+    req.body = { addPerson: '' }
+    req.journeyData = { educationSupportPlanDto }
+
+    const expectedNextRoute = 'add-person'
 
     // When
     await controller.submitOtherPeopleConsultedListForm(req, res, next)
