@@ -5,6 +5,11 @@ declare module 'dto' {
     planCreatedByLoggedInUser?: boolean
     planCreatedByOtherFullName?: string
     planCreatedByOtherJobRole?: string
+    wereOtherPeopleConsulted?: boolean
+    otherPeopleConsulted?: Array<{
+      name: string
+      jobRole: string
+    }>
     learningEnvironmentAdjustmentsNeeded?: boolean
     learningEnvironmentAdjustments?: string
     teachingAdjustmentsNeeded?: boolean

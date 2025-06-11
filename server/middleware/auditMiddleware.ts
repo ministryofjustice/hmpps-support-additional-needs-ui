@@ -13,6 +13,10 @@ const pageViewEventMap: Record<string, Page> = {
   '/education-support-plan/:prisonNumber/create/:journeyId/who-created-the-plan': Page.CREATE_ELSP_WHO_CREATED_PLAN,
   '/education-support-plan/:prisonNumber/create/:journeyId/other-people-consulted':
     Page.CREATE_ELSP_OTHER_PEOPLE_CONSULTED,
+  '/education-support-plan/:prisonNumber/create/:journeyId/other-people-consulted/add-person':
+    Page.CREATE_ELSP_OTHER_PEOPLE_CONSULTED_ADD_PERSON,
+  '/education-support-plan/:prisonNumber/create/:journeyId/other-people-consulted/list':
+    Page.CREATE_ELSP_OTHER_PEOPLE_CONSULTED_LIST,
   '/education-support-plan/:prisonNumber/create/:journeyId/review-needs-conditions-and-strengths':
     Page.CREATE_ELSP_REVIEW_NEEDS_CONDITIONS_AND_STRENGTHS,
   '/education-support-plan/:prisonNumber/create/:journeyId/teaching-adjustments': Page.CREATE_ELSP_TEACHING_ADJUSTMENTS,

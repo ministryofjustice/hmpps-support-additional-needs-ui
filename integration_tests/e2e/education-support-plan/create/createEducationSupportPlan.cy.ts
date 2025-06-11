@@ -3,6 +3,8 @@ import WhoCreatedThePlanPage from '../../../pages/education-support-plan/whoCrea
 import Page from '../../../pages/page'
 import PlanCreatedByValue from '../../../../server/enums/planCreatedByValue'
 import OtherPeopleConsultedPage from '../../../pages/education-support-plan/otherPeopleConsultedPage'
+import OtherPeopleConsultedAddPersonPage from '../../../pages/education-support-plan/otherPeopleConsultedAddPersonPage'
+import OtherPeopleConsultedListPage from '../../../pages/education-support-plan/otherPeopleConsultedListPage'
 import ReviewNeedsConditionsStrengthsPage from '../../../pages/education-support-plan/reviewNeedsConditionsStrengthsPage'
 import OverviewPage from '../../../pages/profile/overview/overviewPage'
 import LearningEnvironmentAdjustmentsPage from '../../../pages/education-support-plan/learningEnvironmentAdjustmentsPage'
@@ -59,6 +61,36 @@ context('Create an Education Support Plan', () => {
       .submitPageTo(OtherPeopleConsultedPage)
 
     Page.verifyOnPage(OtherPeopleConsultedPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(OtherPeopleConsultedPage)
+      .hasErrorCount(1)
+      .hasFieldInError('wereOtherPeopleConsulted')
+      // enter the fields and submit the form to the next page
+      .selectOtherPeopleWereConsulted()
+      .submitPageTo(OtherPeopleConsultedAddPersonPage)
+
+    Page.verifyOnPage(OtherPeopleConsultedAddPersonPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(OtherPeopleConsultedAddPersonPage)
+      .hasErrorCount(1)
+      .hasFieldInError('fullName')
+      // enter the fields and submit the form to the next page
+      .enterFullName('A Teacher')
+      .submitPageTo(OtherPeopleConsultedListPage)
+      .numberOfPeopleConsultedIs(1)
+      .personAtRowIs(1, 'A Teacher')
+      .clickToAddAnotherPerson()
+      .submitPageTo(OtherPeopleConsultedAddPersonPage)
+      .hasErrorCount(1)
+      .hasFieldInError('fullName')
+      // enter the fields and submit the form to the next page
+      .enterFullName('Another Teacher')
+      .submitPageTo(OtherPeopleConsultedListPage)
+      .numberOfPeopleConsultedIs(2)
+      .personAtRowIs(1, 'A Teacher')
+      .personAtRowIs(2, 'Another Teacher')
+
+    Page.verifyOnPage(OtherPeopleConsultedListPage) //
       .submitPageTo(ReviewNeedsConditionsStrengthsPage)
 
     Page.verifyOnPage(ReviewNeedsConditionsStrengthsPage) //

@@ -1,0 +1,45 @@
+{% extends "../../layout.njk" %}
+
+{% set pageId = 'education-support-plan-other-people-consulted-add-person' %}
+{% set pageTitle = "Create an education support plan" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">Add details of person consulted or involved</h1>
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukInput({
+            id: "fullName",
+            name: "fullName",
+            value: form.fullName,
+            maxlength: 200,
+            label: {
+              text: "Full name",
+              classes: "govuk-label--s govuk-!-font-weight-bold",
+              attributes: { "aria-live": "polite", "data-qa": "full-name" }
+            },
+            attributes: {
+              "aria-label" : "Give details as to who met with " + prisonerSummary | formatFirst_name_Last_name,
+              "data-qa": "fullName"
+            },
+            errorMessage: errors | findError('fullName')
+          }) }}
+
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Add person",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
