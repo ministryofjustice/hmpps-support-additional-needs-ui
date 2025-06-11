@@ -31,6 +31,7 @@ export declare global {
       id: string
       journeyData: JourneyData
       logout(done: (err: unknown) => void): void
+      userClickedOnButton(buttonName: string): boolean
     }
 
     interface Locals {

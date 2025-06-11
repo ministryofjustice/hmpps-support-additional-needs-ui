@@ -40,9 +40,7 @@ describe('addPersonConsultedController', () => {
     const expectedViewTemplate = 'pages/education-support-plan/other-people-consulted/add-person-consulted/index'
     const expectedViewModel = {
       prisonerSummary,
-      form: {
-        fullName: 'A Teacher',
-      },
+      form: {},
     }
 
     // When
@@ -69,7 +67,7 @@ describe('addPersonConsultedController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect to next route', async () => {
+  it('should submit form and redirect to next route given no people defined on the DTO yet', async () => {
     // Given
     req.query = {}
     req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
@@ -81,6 +79,40 @@ describe('addPersonConsultedController', () => {
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       otherPeopleConsulted: [{ name: 'A Teacher', jobRole: 'N/A' }],
+    }
+
+    // When
+    await controller.submitAddPersonConsultedForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+  })
+
+  it('should submit form and redirect to next route given some people already defined on the DTO', async () => {
+    // Given
+    req.query = {}
+    req.journeyData = {
+      educationSupportPlanDto: {
+        ...aValidEducationSupportPlanDto(),
+        otherPeopleConsulted: [
+          { name: 'Person 1', jobRole: 'N/A' },
+          { name: 'Person 2', jobRole: 'N/A' },
+        ],
+      },
+    }
+    req.body = {
+      fullName: 'Person 3',
+    }
+
+    const expectedNextRoute = 'list'
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      otherPeopleConsulted: [
+        { name: 'Person 1', jobRole: 'N/A' },
+        { name: 'Person 2', jobRole: 'N/A' },
+        { name: 'Person 3', jobRole: 'N/A' },
+      ],
     }
 
     // When

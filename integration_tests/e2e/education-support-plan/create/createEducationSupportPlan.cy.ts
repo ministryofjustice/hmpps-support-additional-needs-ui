@@ -77,6 +77,18 @@ context('Create an Education Support Plan', () => {
       // enter the fields and submit the form to the next page
       .enterFullName('A Teacher')
       .submitPageTo(OtherPeopleConsultedListPage)
+      .numberOfPeopleConsultedIs(1)
+      .personAtRowIs(1, 'A Teacher')
+      .clickToAddAnotherPerson()
+      .submitPageTo(OtherPeopleConsultedAddPersonPage)
+      .hasErrorCount(1)
+      .hasFieldInError('fullName')
+      // enter the fields and submit the form to the next page
+      .enterFullName('Another Teacher')
+      .submitPageTo(OtherPeopleConsultedListPage)
+      .numberOfPeopleConsultedIs(2)
+      .personAtRowIs(1, 'A Teacher')
+      .personAtRowIs(2, 'Another Teacher')
 
     Page.verifyOnPage(OtherPeopleConsultedListPage) //
       .submitPageTo(ReviewNeedsConditionsStrengthsPage)
