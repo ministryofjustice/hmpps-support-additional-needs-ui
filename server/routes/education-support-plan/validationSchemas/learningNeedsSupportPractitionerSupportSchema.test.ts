@@ -98,4 +98,27 @@ describe('learningNeedsSupportPractitionerSupportSchema', () => {
       )
     },
   )
+
+  it('sad path - validation of details field length validation fails', async () => {
+    // Given
+    const requestBody = { supportRequired: 'YES', details: 'a'.repeat(4001) }
+    req.body = requestBody
+
+    const expectedErrors: Array<Error> = [
+      { href: '#details', text: 'Details of required support must be 4000 characters or less' },
+    ]
+    const expectedInvalidForm = JSON.stringify(requestBody)
+
+    // When
+    await validate(learningNeedsSupportPractitionerSupportSchema)(req, res, next)
+
+    // Then
+    expect(req.body).toEqual(requestBody)
+    expect(next).not.toHaveBeenCalled()
+    expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+    expect(res.redirectWithErrors).toHaveBeenCalledWith(
+      '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
+      expectedErrors,
+    )
+  })
 })
