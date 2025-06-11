@@ -25,6 +25,13 @@ export default class OtherPeopleConsultedListPage extends Page {
     return Page.verifyOnPage(OtherPeopleConsultedAddPersonPage)
   }
 
+  removePerson<T extends Page>(row: number, expected: new () => T): T {
+    this.peopleConsultedListTable()
+      .find(`button[name=removePerson][value=${zeroIndexed(row)}]`)
+      .click()
+    return Page.verifyOnPage(expected)
+  }
+
   private peopleConsultedListTable = (): PageElement => cy.get('[data-qa=people-consulted-table')
 
   private addAnotherPersonButton = (): PageElement => cy.get('#addPerson')
