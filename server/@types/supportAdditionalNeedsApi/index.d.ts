@@ -4,6 +4,86 @@
  */
 
 export interface paths {
+  '/profile/{prisonNumber}/conditions/{conditionReference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['updateCondition']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/challenges/{challengeReference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['updateChallenge']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/education-support-plan': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getEducationSupportPlan']
+    put?: never
+    post: operations['createEducationSupportPlan']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/conditions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getConditions']
+    put?: never
+    post: operations['createConditions']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/challenges': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getChallenges']
+    put?: never
+    post: operations['createChallenges']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/search/prisons/{prisonId}/people': {
     parameters: {
       query?: never
@@ -20,10 +100,485 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/reference-data/{domain}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getReferenceData']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/reviews/review-schedules': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getReviewSchedules']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/plan-creation-schedule': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getPlanCreationSchedules']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
+    UpdateConditionRequest: {
+      /**
+       * @description Whether or not the condition is active
+       * @example null
+       */
+      active: boolean
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+    }
+    ConditionResponse: {
+      /**
+       * Format: uuid
+       * @description The unique reference of this condition
+       * @example c88a6c48-97e2-4c04-93b5-98619966447b
+       */
+      reference: string
+      /**
+       * @example null
+       * @enum {string}
+       */
+      source: 'SELF_DECLARED' | 'CONFIRMED_DIAGNOSIS'
+      /** @example null */
+      conditionType: components['schemas']['ReferenceData']
+      /**
+       * @description Whether or not this condition is active
+       * @example null
+       */
+      active: boolean
+      /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
+      /**
+       * @description additional detail about the condition
+       * @example null
+       */
+      detail?: string
+    }
+    ReferenceData: {
+      /**
+       * @description The short code of a reference data
+       * @example null
+       */
+      code: string
+      /**
+       * @description The description of the reference data code
+       * @example null
+       */
+      description?: string
+      /**
+       * @description The short code of a reference data category
+       * @example null
+       */
+      categoryCode?: string
+      /**
+       * @description The description of the reference data category
+       * @example null
+       */
+      categoryDescription?: string
+      /**
+       * @description The short code of a reference data area
+       * @example null
+       */
+      areaCode?: string
+      /**
+       * @description The description of the reference data area
+       * @example null
+       */
+      areaDescription?: string
+      /**
+       * Format: int32
+       * @description The sequence number of the code. Used for ordering codes correctly in lists and drop downs.
+       * @example 3
+       */
+      listSequence?: number
+      /**
+       * @description whether or not this ref data is active
+       * @example null
+       */
+      active?: boolean
+    }
+    UpdateChallengeRequest: {
+      /**
+       * @description Whether or not the challenge is active
+       * @example null
+       */
+      active: boolean
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+    }
+    ChallengeResponse: {
+      /**
+       * Format: uuid
+       * @description The unique reference of this challenge
+       * @example c88a6c48-97e2-4c04-93b5-98619966447b
+       */
+      reference: string
+      /**
+       * @description Whether or not this challenge is from the ALN screener
+       * @example null
+       */
+      fromALNScreener: boolean
+      /** @example null */
+      challengeType: components['schemas']['ReferenceData']
+      /**
+       * @description Whether or not this challenge is active
+       * @example null
+       */
+      active: boolean
+      /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
+      /**
+       * @description Optional details about the symptoms of this challenge
+       * @example John struggles to read text on white background.
+       */
+      symptoms?: string
+      /**
+       * @description Details about how this challenge was identified
+       * @example The trainer noticed that John could read better on a cream background.
+       */
+      howIdentified?: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the screening was carried out.
+       * @example 2023-11-19
+       */
+      screeningDate?: string
+    }
+    CreateEducationSupportPlanRequest: {
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+      /**
+       * @description Whether there is a current Education Health Care Plan in place for the person.
+       * @example true
+       */
+      hasCurrentEhcp: boolean
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the Education Support Plan should be reviewed.
+       * @example 2023-11-19
+       */
+      reviewDate: string
+      /**
+       * @description Optional details of who created the Education Support Plan. If not specified the authenticated user is assumed to have created it.
+       * @example null
+       */
+      planCreatedBy?: components['schemas']['PlanContributor']
+      /**
+       * @description Optional list of other people involved in the creation of the Education Support Plan.  If provided, the list must contain at least 1 contributor. The list must not be empty.
+       * @example null
+       */
+      otherContributors?: components['schemas']['PlanContributor'][]
+      /**
+       * @description Optional details of any adjustments that are required for the person's learning environment or materials.
+       * @example Needs to sit near the front of the class and used coloured overlays for reading text.
+       */
+      learningEnvironmentAdjustments?: string
+      /**
+       * @description Optional details of any adjustments that need to be made to the teaching or curriculum.
+       * @example Ensure simple, clear and relevant examples of used when explaining concepts.
+       */
+      teachingAdjustments?: string
+      /**
+       * @description Optional details of any specific teaching skills or knowledge that are required.
+       * @example British Sign Language.
+       */
+      specificTeachingSkills?: string
+      /**
+       * @description Optional details of any exam access arrangements that need to be made.
+       * @example Escort Chris to the exam hall 10 minutes before other students to allow him time to settle and collect his thoughts before the exam.
+       */
+      examAccessArrangements?: string
+      /**
+       * @description Optional details of any support that a Learning Needs Support Practitioner needs to provide.
+       * @example An LNSP is required for approx 1 hour per week to read and explain passages of text to Chris.
+       */
+      lnspSupport?: string
+    }
+    PlanContributor: {
+      /** @example Joe Bloggs */
+      name: string
+      /** @example Education Instructor */
+      jobRole: string
+    }
+    EducationSupportPlanResponse: {
+      /**
+       * @description Whether there is a current Education Health Care Plan in place for the person.
+       * @example true
+       */
+      hasCurrentEhcp: boolean
+      /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
+      /**
+       * @description Optional details of who created the Education Support Plan. If not present the plan was created by the createdBy/createdByDisplayName fields.
+       * @example null
+       */
+      planCreatedBy?: components['schemas']['PlanContributor']
+      /**
+       * @description Optional list of other people involved in the creation of the Education Support Plan.
+       * @example null
+       */
+      otherContributors?: components['schemas']['PlanContributor'][]
+      /**
+       * @description Optional details of any adjustments that are required for the person's learning environment or materials.
+       * @example Needs to sit near the front of the class and used coloured overlays for reading text.
+       */
+      learningEnvironmentAdjustments?: string
+      /**
+       * @description Optional details of any adjustments that need to be made to the teaching or curriculum.
+       * @example Ensure simple, clear and relevant examples of used when explaining concepts.
+       */
+      teachingAdjustments?: string
+      /**
+       * @description Optional details of any specific teaching skills or knowledge that are required.
+       * @example British Sign Language.
+       */
+      specificTeachingSkills?: string
+      /**
+       * @description Optional details of any exam access arrangements that need to be made.
+       * @example Escort Chris to the exam hall 10 minutes before other students to allow him time to settle and collect his thoughts before the exam.
+       */
+      examAccessArrangements?: string
+      /**
+       * @description Optional details of any support that a Learning Needs Support Practitioner needs to provide.
+       * @example An LNSP is required for approx 1 hour per week to read and explain passages of text to Chris.
+       */
+      lnspSupport?: string
+    }
+    ConditionRequest: {
+      /**
+       * @example null
+       * @enum {string}
+       */
+      source: 'SELF_DECLARED' | 'CONFIRMED_DIAGNOSIS'
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+      /**
+       * @description the reference data type code of the condition
+       * @example null
+       */
+      conditionTypeCode?: string
+      /**
+       * @description additional detail about the condition
+       * @example null
+       */
+      detail?: string
+    }
+    CreateConditionsRequest: {
+      /**
+       * @description A List containing zero or more Conditions.
+       * @example null
+       */
+      conditions: components['schemas']['ConditionRequest'][]
+    }
+    ConditionListResponse: {
+      /**
+       * @description A List containing zero or more Conditions.
+       * @example null
+       */
+      conditions: components['schemas']['ConditionResponse'][]
+    }
+    ChallengeRequest: {
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+      /**
+       * @description the reference data type code of the challenge
+       * @example null
+       */
+      challengeTypeCode?: string
+      /**
+       * @description Optional details about the symptoms of this challenge
+       * @example John struggles to read text on white background.
+       */
+      symptoms?: string
+      /**
+       * @description Details about how this challenge was identified
+       * @example The trainer noticed that John could read better on a cream background.
+       */
+      howIdentified?: string
+    }
+    CreateChallengesRequest: {
+      /**
+       * @description A List containing zero or more Challenges.
+       * @example null
+       */
+      challenges: components['schemas']['ChallengeRequest'][]
+    }
+    ChallengeListResponse: {
+      /**
+       * @description A List containing zero or more Challenges.
+       * @example null
+       */
+      challenges: components['schemas']['ChallengeResponse'][]
+    }
     AdditionalNeedsSummary: {
       /**
        * @description Whether this person has any Conditions recorded in the service.
@@ -146,6 +701,191 @@ export interface components {
        */
       people: components['schemas']['Person'][]
     }
+    ReferenceDataListResponse: {
+      /**
+       * @description A List containing zero or more ReferenceDataItem.
+       * @example null
+       */
+      referenceDataList: components['schemas']['ReferenceData'][]
+    }
+    ReviewScheduleResponse: {
+      /**
+       * Format: uuid
+       * @description The unique reference of this Review
+       * @example c88a6c48-97e2-4c04-93b5-98619966447b
+       */
+      reference: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the Review is due.
+       * @example 2023-11-19
+       */
+      deadlineDate: string
+      /**
+       * @example null
+       * @enum {string}
+       */
+      status:
+        | 'SCHEDULED'
+        | 'EXEMPT_SYSTEM_TECHNICAL_ISSUE'
+        | 'EXEMPT_PRISONER_TRANSFER'
+        | 'EXEMPT_PRISONER_RELEASE'
+        | 'EXEMPT_PRISONER_DEATH'
+        | 'EXEMPT_PRISONER_MERGE'
+        | 'EXEMPT_PRISONER_NOT_COMPLY'
+        | 'EXEMPT_NOT_IN_EDUCATION'
+        | 'EXEMPT_UNKNOWN'
+        | 'COMPLETED'
+      /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
+      /**
+       * @description An optional reason as to why the Review Schedule is exempted.  Only present when the `status` field is one of the `EXEMPTION_` statuses and the user entered an exemption  reason when marking the Review as Exempted.
+       * @example null
+       */
+      exemptionReason?: string
+      /**
+       * Format: int32
+       * @description the version number of this schedule (the highest number is the most recent version of this review schedule)
+       * @example null
+       */
+      version?: number
+    }
+    ReviewSchedulesResponse: {
+      /**
+       * @description A List containing zero or more ReviewSchedules.
+       * @example null
+       */
+      reviewSchedules: components['schemas']['ReviewScheduleResponse'][]
+    }
+    PlanCreationScheduleResponse: {
+      /**
+       * Format: uuid
+       * @description The unique reference of this plan creation schedule
+       * @example c88a6c48-97e2-4c04-93b5-98619966447b
+       */
+      reference: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the plan creation is due.
+       * @example 2023-11-19
+       */
+      deadlineDate: string
+      /**
+       * @example null
+       * @enum {string}
+       */
+      status:
+        | 'SCHEDULED'
+        | 'EXEMPT_SYSTEM_TECHNICAL_ISSUE'
+        | 'EXEMPT_PRISONER_TRANSFER'
+        | 'EXEMPT_PRISONER_RELEASE'
+        | 'EXEMPT_PRISONER_DEATH'
+        | 'EXEMPT_PRISONER_MERGE'
+        | 'EXEMPT_PRISONER_NOT_COMPLY'
+        | 'EXEMPT_NOT_IN_EDUCATION'
+        | 'EXEMPT_UNKNOWN'
+        | 'COMPLETED'
+      /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
+      /**
+       * @description An optional reason as to why the plan creation Schedule is exempted.  Only present when the `status` field is one of the `EXEMPTION_` statuses and the user entered an exemption  reason when marking the Review as Exempted.
+       * @example null
+       */
+      exemptionReason?: string
+      /**
+       * Format: int32
+       * @description the version number of this schedule (the highest number is the most recent version of this plan creation schedule)
+       * @example null
+       */
+      version?: number
+    }
+    PlanCreationSchedulesResponse: {
+      /**
+       * @description A List containing zero or more PlanCreationSchedules.
+       * @example null
+       */
+      planCreationSchedules: components['schemas']['PlanCreationScheduleResponse'][]
+    }
   }
   responses: never
   parameters: never
@@ -155,12 +895,210 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  updateCondition: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+        conditionReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateConditionRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ConditionResponse']
+        }
+      }
+    }
+  }
+  updateChallenge: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+        challengeReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateChallengeRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ChallengeResponse']
+        }
+      }
+    }
+  }
+  getEducationSupportPlan: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['EducationSupportPlanResponse']
+        }
+      }
+    }
+  }
+  createEducationSupportPlan: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateEducationSupportPlanRequest']
+      }
+    }
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['EducationSupportPlanResponse']
+        }
+      }
+    }
+  }
+  getConditions: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ConditionListResponse']
+        }
+      }
+    }
+  }
+  createConditions: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateConditionsRequest']
+      }
+    }
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ConditionListResponse']
+        }
+      }
+    }
+  }
+  getChallenges: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ChallengeListResponse']
+        }
+      }
+    }
+  }
+  createChallenges: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateChallengesRequest']
+      }
+    }
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ChallengeListResponse']
+        }
+      }
+    }
+  }
   searchByPrison: {
     parameters: {
-      query?: {
+      query: {
         prisonerNameOrNumber?: string
-        sortBy?: 'PRISONER_NAME' | 'PRISON_NUMBER' | 'CELL_LOCATION' | 'RELEASE_DATE'
-        sortDirection?: 'ASC' | 'DESC'
+        sortBy: 'PRISONER_NAME' | 'PRISON_NUMBER' | 'CELL_LOCATION' | 'RELEASE_DATE'
+        sortDirection: 'ASC' | 'DESC'
         page?: number
         pageSize?: number
       }
@@ -179,6 +1117,76 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['SearchByPrisonResponse']
+        }
+      }
+    }
+  }
+  getReferenceData: {
+    parameters: {
+      query?: {
+        /** @description Include inactive reference data. Defaults to false */
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        /** @description Reference data domain. */
+        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ReferenceDataListResponse']
+        }
+      }
+    }
+  }
+  getReviewSchedules: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ReviewSchedulesResponse']
+        }
+      }
+    }
+  }
+  getPlanCreationSchedules: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PlanCreationSchedulesResponse']
         }
       }
     }

@@ -1,6 +1,10 @@
 import { asSystem, RestClient } from '@ministryofjustice/hmpps-rest-client'
 import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
-import type { SearchByPrisonResponse } from 'supportAdditionalNeedsApiClient'
+import type {
+  CreateEducationSupportPlanRequest,
+  EducationSupportPlanResponse,
+  SearchByPrisonResponse,
+} from 'supportAdditionalNeedsApiClient'
 import config from '../config'
 import logger from '../../logger'
 import SearchSortField from '../enums/searchSortField'
@@ -30,6 +34,20 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
           sortBy,
           sortDirection,
         },
+      },
+      asSystem(username),
+    )
+  }
+
+  async createEducationSupportPlan(
+    prisonNumber: string,
+    username: string,
+    createEducationSupportPlanRequest: CreateEducationSupportPlanRequest,
+  ): Promise<EducationSupportPlanResponse> {
+    return this.post<EducationSupportPlanResponse>(
+      {
+        path: `/profile/${prisonNumber}/education-support-plan`,
+        data: createEducationSupportPlanRequest,
       },
       asSystem(username),
     )
