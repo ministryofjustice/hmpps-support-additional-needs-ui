@@ -5,4 +5,7 @@ declare module 'supportAdditionalNeedsApiClient' {
   export type PaginationMetaData = components['schemas']['PaginationMetaData']
   export type Person = components['schemas']['Person']
   export type SearchByPrisonResponse = components['schemas']['SearchByPrisonResponse']
+  export type CreateEducationSupportPlanRequest = components['schemas']['CreateEducationSupportPlanRequest']
+  export type EducationSupportPlanResponse = components['schemas']['EducationSupportPlanResponse']
+  export type PlanContributor = components['schemas']['PlanContributor']
 }

@@ -1,11 +1,14 @@
 import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import nock from 'nock'
+import { isEqual } from 'lodash'
 import SupportAdditionalNeedsApiClient from './supportAdditionalNeedsApiClient'
 import aValidSearchByPrisonResponse from '../testsupport/searchByPrisonResponseTestDataBuiilder'
 import aValidPerson from '../testsupport/personTestDataBuilder'
 import config from '../config'
 import SearchSortField from '../enums/searchSortField'
 import SearchSortDirection from '../enums/searchSortDirection'
+import aValidCreateEducationSupportPlanRequest from '../testsupport/createEducationSupportPlanRequestTestDataBuilder'
+import aValidEducationSupportPlanResponse from '../testsupport/educationSupportPlanResponseTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -160,6 +163,64 @@ describe('supportAdditionalNeedsApiClient', () => {
 
       // When
       const actual = await supportAdditionalNeedsApiClient.getPrisonersByPrisonId(prisonId, username).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('createEducationSupportPlan', () => {
+    it('should create a prisoners education support plan', async () => {
+      // Given
+      const prisonNumber = 'A1234BC'
+      const createEducationSupportPlanRequest = aValidCreateEducationSupportPlanRequest()
+
+      const expectedResponse = aValidEducationSupportPlanResponse()
+      supportAdditionalNeedsApi
+        .post(`/profile/${prisonNumber}/education-support-plan`, requestBody =>
+          isEqual(requestBody, createEducationSupportPlanRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(201, expectedResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.createEducationSupportPlan(
+        prisonNumber,
+        username,
+        createEducationSupportPlanRequest,
+      )
+
+      // Then
+      expect(actual).toEqual(expectedResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const prisonNumber = 'A1234BC'
+      const createEducationSupportPlanRequest = aValidCreateEducationSupportPlanRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .post(`/profile/${prisonNumber}/education-support-plan`, requestBody =>
+          isEqual(requestBody, createEducationSupportPlanRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .createEducationSupportPlan(prisonNumber, username, createEducationSupportPlanRequest)
+        .catch(e => e)
 
       // Then
       expect(actual).toEqual(expectedError)
