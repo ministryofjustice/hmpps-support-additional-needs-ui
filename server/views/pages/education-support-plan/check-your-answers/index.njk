@@ -5,6 +5,13 @@
 
 {% block beforeContent %}
   <p class="govuk-body">Create an education support plan</p>
+
+  {% if errorSavingEducationSupportPlan %}
+    <div class="hmpps-api-error-banner govuk-!-margin-bottom-4" data-qa="api-error-banner">
+      <p>Sorry, there is a problem with the service</p>
+      <p>There was a problem saving the education support plan. Try again later.</p>
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
