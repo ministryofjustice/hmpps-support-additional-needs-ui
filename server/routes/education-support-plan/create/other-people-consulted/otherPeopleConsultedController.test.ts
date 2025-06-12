@@ -94,7 +94,7 @@ describe('otherPeopleConsultedController', () => {
   it('should submit form and redirect to next route given user answers No and previous page was not check your answers', async () => {
     // Given
     req.query = {}
-    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto({ otherPeopleConsulted: null }) }
     req.body = {
       wereOtherPeopleConsulted: YesNoValue.NO,
     }
@@ -103,6 +103,7 @@ describe('otherPeopleConsultedController', () => {
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       wereOtherPeopleConsulted: false,
+      otherPeopleConsulted: undefined as Array<{ name: string; jobRole: string }>,
     }
 
     // When

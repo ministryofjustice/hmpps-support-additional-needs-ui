@@ -1,9 +1,9 @@
-import { isValid, parseISO } from 'date-fns'
 import { RedisClient } from '../redisClient'
 import logger from '../../../logger'
 import JourneyDataStore from './journeyDataStore'
+import dataParsingReviver from './dataParsingReviver'
 
-const DATE_FIELDS = ['createdAt', 'updatedAt']
+const DATE_FIELDS = ['createdAt', 'updatedAt', 'reviewDate']
 
 export default class RedisJourneyDataStore implements JourneyDataStore {
   constructor(private readonly client: RedisClient) {
@@ -37,20 +37,5 @@ export default class RedisJourneyDataStore implements JourneyDataStore {
   async deleteJourneyData(username: string, journeyId: string): Promise<void> {
     await this.ensureConnected()
     await this.client.del(`journey.${username}.${journeyId}`)
-  }
-}
-
-/**
- * JSON Parse reviver function that identifies fields that should be parsed as real Date objects rather than string
- * values. (The JSON parse function does not natively parse values into Date objects, so it needs help via a function
- * such as this)
- */
-const dataParsingReviver = (dateFields: Array<string>) => {
-  return (key: string, value: never) => {
-    if (typeof value !== 'string') {
-      return value
-    }
-    const dateObj = parseISO(value)
-    return dateFields.includes(key) && isValid(dateObj) ? dateObj : value
   }
 }
