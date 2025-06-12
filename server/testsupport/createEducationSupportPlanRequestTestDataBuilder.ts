@@ -19,14 +19,29 @@ const aValidCreateEducationSupportPlanRequest = (options?: {
   reviewDate: format(options?.reviewDate || addMonths(startOfToday(), 2), 'yyyy-MM-dd'),
   planCreatedBy: options?.planCreatedBy === null ? null : options?.planCreatedBy || aValidPlanContributor(),
   otherContributors:
-    options?.otherContributors === null || options?.otherContributors.length === 0
+    options?.otherContributors == null || options?.otherContributors.length === 0
       ? null
       : options?.otherContributors || [aValidPlanContributor()],
-  learningEnvironmentAdjustments: options?.learningEnvironmentAdjustments || 'Needs to sit at the front of the class',
-  teachingAdjustments: options?.teachingAdjustments || 'Use simpler examples to help students understand concepts',
-  specificTeachingSkills: options?.specificTeachingSkills || 'Teacher with BSL proficiency required',
-  examAccessArrangements: options?.examAccessArrangements || 'Escort to the exam room 10 minutes before everyone else',
-  lnspSupport: options?.lnspSupport || 'Chris will need text reading to him as he cannot read himself',
+  learningEnvironmentAdjustments:
+    options?.learningEnvironmentAdjustments === null
+      ? null
+      : options?.learningEnvironmentAdjustments || 'Needs to sit at the front of the class',
+  teachingAdjustments:
+    options?.teachingAdjustments === null
+      ? null
+      : options?.teachingAdjustments || 'Use simpler examples to help students understand concepts',
+  specificTeachingSkills:
+    options?.specificTeachingSkills === null
+      ? null
+      : options?.specificTeachingSkills || 'Teacher with BSL proficiency required',
+  examAccessArrangements:
+    options?.examAccessArrangements === null
+      ? null
+      : options?.examAccessArrangements || 'Escort to the exam room 10 minutes before everyone else',
+  lnspSupport:
+    options?.lnspSupport === null
+      ? null
+      : options?.lnspSupport || 'Chris will need text reading to him as he cannot read himself',
 })
 
 export default aValidCreateEducationSupportPlanRequest

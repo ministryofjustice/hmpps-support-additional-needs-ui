@@ -23,6 +23,7 @@ export default class AddPersonConsultedController {
       educationSupportPlanDto.otherPeopleConsulted = []
     }
     educationSupportPlanDto.otherPeopleConsulted.push({ name: form.fullName, jobRole: 'N/A' })
+    educationSupportPlanDto.wereOtherPeopleConsulted = true
     req.journeyData.educationSupportPlanDto = educationSupportPlanDto
   }
 }

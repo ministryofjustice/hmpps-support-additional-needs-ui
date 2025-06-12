@@ -6,6 +6,7 @@ import PrisonService from './prisonService'
 import UserService from './userService'
 import SearchService from './searchService'
 import CuriousService from './curiousService'
+import EducationSupportPlanService from './educationSupportPlanService'
 
 export const services = () => {
   const {
@@ -30,9 +31,19 @@ export const services = () => {
     userService: new UserService(managedUsersApiClient),
     searchService: new SearchService(supportAdditionalNeedsApiClient),
     curiousService: new CuriousService(curiousApiClient),
+    educationSupportPlanService: new EducationSupportPlanService(supportAdditionalNeedsApiClient),
   }
 }
 
 export type Services = ReturnType<typeof services>
 
-export { AuditService, CuriousService, JourneyDataService, PrisonerService, PrisonService, SearchService, UserService }
+export {
+  AuditService,
+  CuriousService,
+  EducationSupportPlanService,
+  JourneyDataService,
+  PrisonerService,
+  PrisonService,
+  SearchService,
+  UserService,
+}

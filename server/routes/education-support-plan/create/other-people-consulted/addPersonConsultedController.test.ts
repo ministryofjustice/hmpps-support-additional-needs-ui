@@ -70,7 +70,7 @@ describe('addPersonConsultedController', () => {
   it('should submit form and redirect to next route given no people defined on the DTO yet', async () => {
     // Given
     req.query = {}
-    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto({ otherPeopleConsulted: null }) }
     req.body = {
       fullName: 'A Teacher',
     }
