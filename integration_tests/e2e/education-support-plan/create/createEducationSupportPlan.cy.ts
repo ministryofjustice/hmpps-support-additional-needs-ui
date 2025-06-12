@@ -15,6 +15,9 @@ import EducationHealthCarePlanPage from '../../../pages/education-support-plan/e
 import LearningNeedsSupportPractitionerSupportPage from '../../../pages/education-support-plan/learningNeedsSupportPractitionerSupportPage'
 import ReviewSupportPlanPage from '../../../pages/education-support-plan/reviewSupportPlanPage'
 import CheckYourAnswersPage from '../../../pages/education-support-plan/checkYourAnswersPage'
+import { postRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
+import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
+import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
 
 context('Create an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -24,6 +27,7 @@ context('Create an Education Support Plan', () => {
     cy.task('stubSignIn')
     cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
+    cy.task('stubCreateEducationSupportPlan', prisonNumber)
   })
 
   it('should be able to navigate directly to the create Education Support Plan page', () => {
@@ -38,6 +42,8 @@ context('Create an Education Support Plan', () => {
 
   it('should create a prisoners Education Support Plan, triggering validation on every screen', () => {
     // Given
+    const reviewDate = addWeeks(startOfToday(), 10)
+
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
       .actionsCardContainsEducationSupportPlanActions()
@@ -186,15 +192,55 @@ context('Create an Education Support Plan', () => {
       .hasErrorCount(1)
       .hasFieldInError('reviewDate')
       // enter the fields and submit the form to the next page
-      .setReviewDate(format(addWeeks(startOfToday(), 10), 'd/M/yyyy'))
+      .setReviewDate(format(reviewDate, 'd/M/yyyy'))
       .submitPageTo(CheckYourAnswersPage)
 
     Page.verifyOnPage(CheckYourAnswersPage) //
       .submitPageTo(OverviewPage)
 
     // Then
-    // TODO - assert expected data was sent to API to create the ELSP
     Page.verifyOnPage(OverviewPage) //
       .hasSuccessMessage('Education support plan created')
+    cy.wiremockVerify(
+      postRequestedFor(urlEqualTo(`/support-additional-needs-api/profile/${prisonNumber}/education-support-plan`)) //
+        .withRequestBody(
+          matchingJsonPath(
+            '$[?(' +
+              "@.prisonId == 'BXI' && " +
+              "@.planCreatedBy.name == 'Joe Bloggs' && " +
+              "@.planCreatedBy.jobRole == 'Peer Mentor' && " +
+              '@.otherContributors.size() == 2 && ' +
+              "@.otherContributors[0].name == 'A Teacher' && " +
+              "@.otherContributors[0].jobRole == 'N/A' && " +
+              "@.otherContributors[1].name == 'Another Teacher' && " +
+              "@.otherContributors[1].jobRole == 'N/A' && " +
+              '@.hasCurrentEhcp == true && ' +
+              "@.learningEnvironmentAdjustments == 'Needs to sit at the front of the class' && " +
+              "@.teachingAdjustments == 'Use simpler examples to help students understand concepts' && " +
+              "@.specificTeachingSkills == 'Adopt a more inclusive approach to teaching' && " +
+              "@.examAccessArrangements == 'Chris needs escorting to the exam room 10 minutes before everyone else' && " +
+              "@.lnspSupport == 'Chris will need the text reading to him as he cannot read himself' && " +
+              `@.reviewDate == '${format(reviewDate, 'yyyy-MM-dd')}'` +
+              ')]',
+          ),
+        ),
+    )
+  })
+
+  it('should not create a prisoners Education Support Plan given API returns an error response', () => {
+    // Given
+    cy.task('stubCreateEducationSupportPlan500Error', prisonNumber)
+
+    cy.createEducationSupportPlanToArriveOnCheckYourAnswers({ prisonNumber })
+
+    // When
+    Page.verifyOnPage(CheckYourAnswersPage) //
+      .apiErrorBannerIsNotDisplayed()
+    Page.verifyOnPage(CheckYourAnswersPage) //
+      .submitPageTo(CheckYourAnswersPage) // Submit the page but expect to stay on the Check Your Answers page due to API error
+
+    // Then
+    Page.verifyOnPage(CheckYourAnswersPage) //
+      .apiErrorBannerIsDisplayed()
   })
 })

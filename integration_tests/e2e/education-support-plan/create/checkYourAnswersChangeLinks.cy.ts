@@ -6,6 +6,9 @@ import CheckYourAnswersPage from '../../../pages/education-support-plan/checkYou
 import Page from '../../../pages/page'
 import PlanCreatedByValue from '../../../../server/enums/planCreatedByValue'
 import OverviewPage from '../../../pages/profile/overview/overviewPage'
+import { postRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
+import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
+import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
 
 context(`Change links on the Check Your Answers page when creating an Education Support Plan`, () => {
   const prisonNumber = 'A00001A'
@@ -15,6 +18,7 @@ context(`Change links on the Check Your Answers page when creating an Education 
     cy.task('stubSignIn')
     cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
+    cy.task('stubCreateEducationSupportPlan', prisonNumber)
   })
 
   it('should support all Change links on the Check Your Answers page when creating an Education Support Plan', () => {
@@ -99,5 +103,25 @@ context(`Change links on the Check Your Answers page when creating an Education 
     // Then
     Page.verifyOnPage(OverviewPage) //
       .hasSuccessMessage('Education support plan created')
+    cy.wiremockVerify(
+      postRequestedFor(urlEqualTo(`/support-additional-needs-api/profile/${prisonNumber}/education-support-plan`)) //
+        .withRequestBody(
+          matchingJsonPath(
+            '$[?(' +
+              "@.prisonId == 'BXI' && " +
+              "@.planCreatedBy.name == 'Joe Bloggs' && " +
+              "@.planCreatedBy.jobRole == 'Peer Mentor' && " +
+              '@.otherContributors == null && ' +
+              '@.hasCurrentEhcp == true && ' +
+              "@.learningEnvironmentAdjustments == 'Needs to sit at the front of the class' && " +
+              "@.teachingAdjustments == 'Use simpler examples to help students understand concepts' && " +
+              "@.specificTeachingSkills == 'Teacher with BSL proficiency required' && " +
+              "@.examAccessArrangements == 'Escorting to the exam room 10 minutes before everyone else' && " +
+              "@.lnspSupport == 'Chris will need text reading to him as he cannot read himself' && " +
+              `@.reviewDate == '${format(updatedReviewDate, 'yyyy-MM-dd')}'` +
+              ')]',
+          ),
+        ),
+    )
   })
 })

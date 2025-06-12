@@ -31,7 +31,7 @@ import wereOtherPeopleConsultedSchema from '../validationSchemas/wereOtherPeople
 import addPersonConsultedSchema from '../validationSchemas/addPersonConsultedSchema'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
-  const { journeyDataService } = services
+  const { educationSupportPlanService, journeyDataService } = services
   const router = Router({ mergeParams: true })
 
   const whoCreatedThePlanController = new WhoCreatedThePlanController()
@@ -46,7 +46,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const educationHealthCarePlanController = new EducationHealthCarePlanController()
   const lnspController = new LearningNeedsSupportPractitionerSupportController()
   const reviewSupportPlanController = new ReviewSupportPlanController()
-  const checkYourAnswersController = new CheckYourAnswersController()
+  const checkYourAnswersController = new CheckYourAnswersController(educationSupportPlanService)
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
