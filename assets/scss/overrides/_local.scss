@@ -29,3 +29,21 @@
   font-size: inherit;
   line-height: inherit;
 }
+
+dl.app-u-description-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  dt {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 25%;
+  }
+  dd {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 75%;
+    margin: 0;
+  }
+}

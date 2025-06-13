@@ -51,7 +51,7 @@
                 Other people consulted or involved
               </dt>
               <dd class="govuk-summary-list__value" data-qa="other-people-consulted">
-                {# TODO #}
+                {{ dto.wereOtherPeopleConsulted | formatYesNo }}
               </dd>
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="other-people-consulted?submitToCheckAnswers=true" data-qa="other-people-consulted-change-link">
@@ -59,6 +59,31 @@
                 </a>
               </dd>
             </div>
+
+            {% if dto.wereOtherPeopleConsulted %}
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                  Details of people consulted or involved
+                </dt>
+                <dd class="govuk-summary-list__value" data-qa="other-people-consulted-list">
+                  <dl class="app-u-description-list">
+                    {% for person in dto.otherPeopleConsulted %}
+                      <dt>Name: </dt>
+                      <dd>{{ person.name }}</dd>
+                      {# TODO - enable job role when the designs call for it
+                      <dt>Job role: </dt>
+                      <dd>{{ person.jobRole }}</dd>
+                      #}
+                    {% endfor %}
+                  </dl>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                  <a class="govuk-link" href="other-people-consulted/list?submitToCheckAnswers=true" data-qa="other-people-consulted-list-change-link">
+                    Change<span class="govuk-visually-hidden"> who else was consulted or involved to create the education support plan</span>
+                  </a>
+                </dd>
+              </div>
+            {% endif %}
 
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key govuk-!-width-one-quarter">

@@ -45,74 +45,167 @@ describe('otherPeopleConsultedListController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect to next route given Continue button was pressed', async () => {
-    // Given
-    req.body = {}
-    req.journeyData = { educationSupportPlanDto }
+  describe('previous page was not check your answers', () => {
+    it('should submit form and redirect to next route given Continue button was pressed and previous page was not check your answers', async () => {
+      // Given
+      req.query = {}
+      req.body = {}
+      req.journeyData = { educationSupportPlanDto }
 
-    const expectedNextRoute = '../review-needs-conditions-and-strengths'
+      const expectedNextRoute = '../review-needs-conditions-and-strengths'
 
-    // When
-    await controller.submitOtherPeopleConsultedListForm(req, res, next)
+      // When
+      await controller.submitOtherPeopleConsultedListForm(req, res, next)
 
-    // Then
-    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    })
+
+    it('should submit form and redirect to next route given Add Person button was pressed and previous page was not check your answers', async () => {
+      // Given
+      req.query = {}
+      req.body = { addPerson: '' }
+      req.journeyData = { educationSupportPlanDto }
+
+      const expectedNextRoute = 'add-person'
+
+      // When
+      await controller.submitOtherPeopleConsultedListForm(req, res, next)
+
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    })
+
+    it('should submit form and redirect to next route given Remove button was pressed and there are 1 or more people left on the DTO and previous page was not check your answers', async () => {
+      // Given
+      req.query = {}
+      req.journeyData = {
+        educationSupportPlanDto: {
+          ...educationSupportPlanDto,
+          otherPeopleConsulted: [
+            { name: 'Person 1', jobRole: 'N/A' },
+            { name: 'Person 2', jobRole: 'N/A' },
+          ],
+        },
+      }
+      req.body = { removePerson: '0' } // remove Person 1 (zero indexed), expect just Person 2 to be left
+
+      const expectedNextRoute = 'list'
+
+      // When
+      await controller.submitOtherPeopleConsultedListForm(req, res, next)
+
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+      expect(req.journeyData.educationSupportPlanDto.otherPeopleConsulted).toEqual([
+        {
+          name: 'Person 2',
+          jobRole: 'N/A',
+        },
+      ])
+    })
+
+    it('should submit form and redirect to next route given Remove button was pressed and there are 0 people left on the DTO and previous page was not check your answers', async () => {
+      // Given
+      req.query = {}
+      req.journeyData = {
+        educationSupportPlanDto: {
+          ...educationSupportPlanDto,
+          otherPeopleConsulted: [{ name: 'Person 1', jobRole: 'N/A' }],
+        },
+      }
+      req.body = { removePerson: '0' } // remove Person 1 (zero indexed)
+
+      const expectedNextRoute = '../other-people-consulted'
+
+      // When
+      await controller.submitOtherPeopleConsultedListForm(req, res, next)
+
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+      expect(req.journeyData.educationSupportPlanDto.otherPeopleConsulted).toEqual([])
+    })
   })
 
-  it('should submit form and redirect to next route given Add Person button was pressed', async () => {
-    // Given
-    req.body = { addPerson: '' }
-    req.journeyData = { educationSupportPlanDto }
+  describe('previous page was check your answers', () => {
+    it('should submit form and redirect to next route given Continue button was pressed and previous page was check your answers', async () => {
+      // Given
+      req.query = { submitToCheckAnswers: 'true' }
+      req.body = {}
+      req.journeyData = { educationSupportPlanDto }
 
-    const expectedNextRoute = 'add-person'
+      const expectedNextRoute = '../check-your-answers'
 
-    // When
-    await controller.submitOtherPeopleConsultedListForm(req, res, next)
+      // When
+      await controller.submitOtherPeopleConsultedListForm(req, res, next)
 
-    // Then
-    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
-  })
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    })
 
-  it('should submit form and redirect to next route given Remove button was pressed and there are 1 or more people left on the DTO', async () => {
-    // Given
-    req.journeyData = {
-      educationSupportPlanDto: {
-        ...educationSupportPlanDto,
-        otherPeopleConsulted: [
-          { name: 'Person 1', jobRole: 'N/A' },
-          { name: 'Person 2', jobRole: 'N/A' },
-        ],
-      },
-    }
-    req.body = { removePerson: '0' } // remove Person 1 (zero indexed), expect just Person 2 to be left
+    it('should submit form and redirect to next route given Add Person button was pressed and previous page was check your answers', async () => {
+      // Given
+      req.query = { submitToCheckAnswers: 'true' }
+      req.body = { addPerson: '' }
+      req.journeyData = { educationSupportPlanDto }
 
-    const expectedNextRoute = 'list'
+      const expectedNextRoute = 'add-person?submitToCheckAnswers=true' // expect the submitToCheckAnswers flag to be passed to the next route
 
-    // When
-    await controller.submitOtherPeopleConsultedListForm(req, res, next)
+      // When
+      await controller.submitOtherPeopleConsultedListForm(req, res, next)
 
-    // Then
-    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
-    expect(req.journeyData.educationSupportPlanDto.otherPeopleConsulted).toEqual([{ name: 'Person 2', jobRole: 'N/A' }])
-  })
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    })
 
-  it('should submit form and redirect to next route given Remove button was pressed and there are 0 people left on the DTO', async () => {
-    // Given
-    req.journeyData = {
-      educationSupportPlanDto: {
-        ...educationSupportPlanDto,
-        otherPeopleConsulted: [{ name: 'Person 1', jobRole: 'N/A' }],
-      },
-    }
-    req.body = { removePerson: '0' } // remove Person 1 (zero indexed)
+    it('should submit form and redirect to next route given Remove button was pressed and there are 1 or more people left on the DTO and previous page was check your answers', async () => {
+      // Given
+      req.query = { submitToCheckAnswers: 'true' }
+      req.journeyData = {
+        educationSupportPlanDto: {
+          ...educationSupportPlanDto,
+          otherPeopleConsulted: [
+            { name: 'Person 1', jobRole: 'N/A' },
+            { name: 'Person 2', jobRole: 'N/A' },
+          ],
+        },
+      }
+      req.body = { removePerson: '0' } // remove Person 1 (zero indexed), expect just Person 2 to be left
 
-    const expectedNextRoute = '../other-people-consulted'
+      const expectedNextRoute = 'list?submitToCheckAnswers=true' // expect the submitToCheckAnswers flag to be passed to the next route
 
-    // When
-    await controller.submitOtherPeopleConsultedListForm(req, res, next)
+      // When
+      await controller.submitOtherPeopleConsultedListForm(req, res, next)
 
-    // Then
-    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
-    expect(req.journeyData.educationSupportPlanDto.otherPeopleConsulted).toEqual([])
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+      expect(req.journeyData.educationSupportPlanDto.otherPeopleConsulted).toEqual([
+        {
+          name: 'Person 2',
+          jobRole: 'N/A',
+        },
+      ])
+    })
+
+    it('should submit form and redirect to next route given Remove button was pressed and there are 0 people left on the DTO and previous page was check your answers', async () => {
+      // Given
+      req.query = { submitToCheckAnswers: 'true' }
+      req.journeyData = {
+        educationSupportPlanDto: {
+          ...educationSupportPlanDto,
+          otherPeopleConsulted: [{ name: 'Person 1', jobRole: 'N/A' }],
+        },
+      }
+      req.body = { removePerson: '0' } // remove Person 1 (zero indexed)
+
+      const expectedNextRoute = '../other-people-consulted?submitToCheckAnswers=true' // expect the submitToCheckAnswers flag to be passed to the next route
+
+      // When
+      await controller.submitOtherPeopleConsultedListForm(req, res, next)
+
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+      expect(req.journeyData.educationSupportPlanDto.otherPeopleConsulted).toEqual([])
+    })
   })
 })

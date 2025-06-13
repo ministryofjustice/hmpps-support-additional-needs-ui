@@ -10,17 +10,26 @@ export default class OtherPeopleConsultedListController {
   }
 
   submitOtherPeopleConsultedListForm: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    const submitToCheckYourAnswersQueryString =
+      req.query?.submitToCheckAnswers === 'true' ? '?submitToCheckAnswers=true' : ''
+
     if (req.userClickedOnButton('addPerson')) {
-      return res.redirect('add-person')
+      return res.redirect(`add-person${submitToCheckYourAnswersQueryString}`)
     }
 
     if (req.userClickedOnButton('removePerson')) {
       const personIndexToRemove = req.body.removePerson as number
       const numberOfPeopleOnDto = this.updateDtoWithRemovedPerson(req, personIndexToRemove)
-      return res.redirect(numberOfPeopleOnDto >= 1 ? 'list' : '../other-people-consulted')
+      return res.redirect(
+        numberOfPeopleOnDto >= 1
+          ? `list${submitToCheckYourAnswersQueryString}`
+          : `../other-people-consulted${submitToCheckYourAnswersQueryString}`,
+      )
     }
 
-    return res.redirect('../review-needs-conditions-and-strengths')
+    return res.redirect(
+      req.query?.submitToCheckAnswers !== 'true' ? '../review-needs-conditions-and-strengths' : '../check-your-answers',
+    )
   }
 
   private updateDtoWithRemovedPerson = (req: Request, personIndexToRemove: number): number => {

@@ -69,77 +69,168 @@ describe('otherPeopleConsultedController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect to next route given user answers Yes and previous page was not check your answers', async () => {
-    // Given
-    req.query = {}
-    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
-    req.body = {
-      wereOtherPeopleConsulted: YesNoValue.YES,
-    }
+  describe('previous page was not check your answers', () => {
+    it('should submit form and redirect to next route given user answers Yes and previous page was not check your answers', async () => {
+      // Given
+      req.query = {}
+      req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+      req.body = {
+        wereOtherPeopleConsulted: YesNoValue.YES,
+      }
 
-    const expectedNextRoute = 'other-people-consulted/add-person'
-    const expectedEducationSupportPlanDto = {
-      ...aValidEducationSupportPlanDto(),
-      wereOtherPeopleConsulted: true,
-    }
+      const expectedNextRoute = 'other-people-consulted/add-person'
+      const expectedEducationSupportPlanDto = {
+        ...aValidEducationSupportPlanDto(),
+        wereOtherPeopleConsulted: true,
+      }
 
-    // When
-    await controller.submitOtherPeopleConsultedForm(req, res, next)
+      // When
+      await controller.submitOtherPeopleConsultedForm(req, res, next)
 
-    // Then
-    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
-    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+      expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+    })
+
+    it('should submit form and redirect to next route given user answers No and previous page was not check your answers', async () => {
+      // Given
+      req.query = {}
+      req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto({ otherPeopleConsulted: null }) }
+      req.body = {
+        wereOtherPeopleConsulted: YesNoValue.NO,
+      }
+
+      const expectedNextRoute = 'review-needs-conditions-and-strengths'
+      const expectedEducationSupportPlanDto = {
+        ...aValidEducationSupportPlanDto(),
+        wereOtherPeopleConsulted: false,
+        otherPeopleConsulted: undefined as Array<{ name: string; jobRole: string }>,
+      }
+
+      // When
+      await controller.submitOtherPeopleConsultedForm(req, res, next)
+
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+      expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+    })
   })
 
-  it('should submit form and redirect to next route given user answers No and previous page was not check your answers', async () => {
-    // Given
-    req.query = {}
-    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto({ otherPeopleConsulted: null }) }
-    req.body = {
-      wereOtherPeopleConsulted: YesNoValue.NO,
-    }
+  describe('previous page was check your answers', () => {
+    it('should submit form and redirect to next route given previous page was check your answers and user is changing the answer from Yes to No', async () => {
+      // Given
+      req.query = { submitToCheckAnswers: 'true' }
+      req.journeyData = {
+        educationSupportPlanDto: {
+          ...aValidEducationSupportPlanDto(),
+          wereOtherPeopleConsulted: true,
+          otherPeopleConsulted: [{ name: 'A Teacher', jobRole: 'Education Instructor' }],
+        },
+      }
+      req.body = {
+        wereOtherPeopleConsulted: YesNoValue.NO,
+      }
 
-    const expectedNextRoute = 'review-needs-conditions-and-strengths'
-    const expectedEducationSupportPlanDto = {
-      ...aValidEducationSupportPlanDto(),
-      wereOtherPeopleConsulted: false,
-      otherPeopleConsulted: undefined as Array<{ name: string; jobRole: string }>,
-    }
+      const expectedNextRoute = 'check-your-answers' // expect Check Your Answers as the next page because the user has changed from Yes to No and so we do not need to collect additional information
+      const expectedEducationSupportPlanDto = {
+        ...aValidEducationSupportPlanDto(),
+        wereOtherPeopleConsulted: false,
+        otherPeopleConsulted: undefined as Array<{ name: string; jobRole: string }>,
+      }
 
-    // When
-    await controller.submitOtherPeopleConsultedForm(req, res, next)
+      // When
+      await controller.submitOtherPeopleConsultedForm(req, res, next)
 
-    // Then
-    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
-    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
-  })
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+      expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+    })
 
-  it('should submit form and redirect to next route given previous page was check your answers', async () => {
-    // Given
-    req.query = { submitToCheckAnswers: 'true' }
-    req.journeyData = {
-      educationSupportPlanDto: {
+    it('should submit form and redirect to next route given previous page was check your answers and user is changing the answer from No to Yes', async () => {
+      // Given
+      req.query = { submitToCheckAnswers: 'true' }
+      req.journeyData = {
+        educationSupportPlanDto: {
+          ...aValidEducationSupportPlanDto(),
+          wereOtherPeopleConsulted: false,
+          otherPeopleConsulted: undefined,
+        },
+      }
+      req.body = {
+        wereOtherPeopleConsulted: YesNoValue.YES,
+      }
+
+      const expectedNextRoute = 'other-people-consulted/add-person?submitToCheckAnswers=true' // expect Add Person as the next page because the user has changed from No to Yes, so we need to collect additional information
+      const expectedEducationSupportPlanDto = {
+        ...aValidEducationSupportPlanDto(),
+        wereOtherPeopleConsulted: true,
+        otherPeopleConsulted: undefined as Array<{ name: string; jobRole: string }>,
+      }
+
+      // When
+      await controller.submitOtherPeopleConsultedForm(req, res, next)
+
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+      expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+    })
+
+    it('should submit form and redirect to next route given previous page was check your answers and user does not change their answer from Yes', async () => {
+      // Given
+      req.query = { submitToCheckAnswers: 'true' }
+      req.journeyData = {
+        educationSupportPlanDto: {
+          ...aValidEducationSupportPlanDto(),
+          wereOtherPeopleConsulted: true,
+          otherPeopleConsulted: [{ name: 'A Teacher', jobRole: 'Education Instructor' }],
+        },
+      }
+      req.body = {
+        wereOtherPeopleConsulted: YesNoValue.YES,
+      }
+
+      const expectedNextRoute = 'check-your-answers' // expect Check Your Answers as the next page because the user has not changed their answer
+      const expectedEducationSupportPlanDto = {
         ...aValidEducationSupportPlanDto(),
         wereOtherPeopleConsulted: true,
         otherPeopleConsulted: [{ name: 'A Teacher', jobRole: 'Education Instructor' }],
-      },
-    }
-    req.body = {
-      wereOtherPeopleConsulted: YesNoValue.NO,
-    }
+      }
 
-    const expectedNextRoute = 'check-your-answers'
-    const expectedEducationSupportPlanDto = {
-      ...aValidEducationSupportPlanDto(),
-      wereOtherPeopleConsulted: false,
-      otherPeopleConsulted: undefined as Array<{ name: string; jobRole: string }>,
-    }
+      // When
+      await controller.submitOtherPeopleConsultedForm(req, res, next)
 
-    // When
-    await controller.submitOtherPeopleConsultedForm(req, res, next)
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+      expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+    })
 
-    // Then
-    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
-    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+    it('should submit form and redirect to next route given previous page was check your answers and user does not change their answer from No', async () => {
+      // Given
+      req.query = { submitToCheckAnswers: 'true' }
+      req.journeyData = {
+        educationSupportPlanDto: {
+          ...aValidEducationSupportPlanDto(),
+          wereOtherPeopleConsulted: false,
+          otherPeopleConsulted: undefined,
+        },
+      }
+      req.body = {
+        wereOtherPeopleConsulted: YesNoValue.NO,
+      }
+
+      const expectedNextRoute = 'check-your-answers' // expect Check Your Answers as the next page because the user has not changed their answer
+      const expectedEducationSupportPlanDto = {
+        ...aValidEducationSupportPlanDto(),
+        wereOtherPeopleConsulted: false,
+        otherPeopleConsulted: undefined as Array<{ name: string; jobRole: string }>,
+      }
+
+      // When
+      await controller.submitOtherPeopleConsultedForm(req, res, next)
+
+      // Then
+      expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+      expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+    })
   })
 })

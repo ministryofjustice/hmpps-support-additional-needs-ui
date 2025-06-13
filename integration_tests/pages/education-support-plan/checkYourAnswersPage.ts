@@ -8,6 +8,8 @@ import ExamArrangementsPage from './examArrangementsPage'
 import EducationHealthCarePlanPage from './educationHealthCarePlanPage'
 import LearningNeedsSupportPractitionerSupportPage from './learningNeedsSupportPractitionerSupportPage'
 import ReviewSupportPlanPage from './reviewSupportPlanPage'
+import OtherPeopleConsultedListPage from './otherPeopleConsultedListPage'
+import zeroIndexed from '../../utils/zeroIndexed'
 
 export default class CheckYourAnswersPage extends Page {
   constructor() {
@@ -38,6 +40,40 @@ export default class CheckYourAnswersPage extends Page {
   clickOtherPeopleConsultedChangeLink(): OtherPeopleConsultedPage {
     this.otherPeopleConsultedChangeLink().click()
     return Page.verifyOnPage(OtherPeopleConsultedPage)
+  }
+
+  otherPeopleWereConsulted(): CheckYourAnswersPage {
+    this.otherPeopleConsultedValue().should('contain.text', 'Yes')
+    this.otherPeopleConsultedListValue().should('be.visible')
+    return this
+  }
+
+  otherPeopleWereNotConsulted(): CheckYourAnswersPage {
+    this.otherPeopleConsultedValue().should('contain.text', 'No')
+    this.otherPeopleConsultedListValue().should('not.exist')
+    return this
+  }
+
+  clickOtherPeopleConsultedListChangeLink(): OtherPeopleConsultedListPage {
+    this.otherPeopleConsultedListChangeLink().click()
+    return Page.verifyOnPage(OtherPeopleConsultedListPage)
+  }
+
+  hasNumberOfPeopleConsulted(expected: number): CheckYourAnswersPage {
+    this.otherPeopleConsultedListValue() //
+      .should('be.visible')
+      .find('dd')
+      .should('have.length', expected)
+    return this
+  }
+
+  otherPersonConsultedWas(row: number, expectedName: string): CheckYourAnswersPage {
+    this.otherPeopleConsultedListValue()
+      .should('be.visible')
+      .find('dd')
+      .eq(zeroIndexed(row))
+      .should('contain.text', expectedName)
+    return this
   }
 
   clickTeachingAdjustmentsChangeLink(): TeachingAdjustmentsPage {
@@ -157,6 +193,11 @@ export default class CheckYourAnswersPage extends Page {
   private otherPeopleConsultedValue = (): PageElement => cy.get('[data-qa=other-people-consulted]')
 
   private otherPeopleConsultedChangeLink = (): PageElement => cy.get('[data-qa=other-people-consulted-change-link]')
+
+  private otherPeopleConsultedListValue = (): PageElement => cy.get('[data-qa=other-people-consulted-list]')
+
+  private otherPeopleConsultedListChangeLink = (): PageElement =>
+    cy.get('[data-qa=other-people-consulted-list-change-link]')
 
   private teachingAdjustmentsValue = (): PageElement => cy.get('[data-qa=teaching-adjustments]')
 
