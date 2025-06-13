@@ -9,6 +9,8 @@ import OverviewPage from '../../../pages/profile/overview/overviewPage'
 import { postRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
+import OtherPeopleConsultedAddPersonPage from '../../../pages/education-support-plan/otherPeopleConsultedAddPersonPage'
+import OtherPeopleConsultedListPage from '../../../pages/education-support-plan/otherPeopleConsultedListPage'
 
 context(`Change links on the Check Your Answers page when creating an Education Support Plan`, () => {
   const prisonNumber = 'A00001A'
@@ -94,8 +96,30 @@ context(`Change links on the Check Your Answers page when creating an Education 
       .thePlanWasCreatedBy('Joe Bloggs', 'Peer Mentor')
 
       // check and update other people consulted
+      .otherPeopleWereNotConsulted()
       .clickOtherPeopleConsultedChangeLink()
+      .selectOtherPeopleWereConsulted()
+      .submitPageTo(OtherPeopleConsultedAddPersonPage)
+      .enterFullName('Person 1')
+      .submitPageTo(OtherPeopleConsultedListPage)
+      .clickToAddAnotherPerson()
+      .enterFullName('Person 2')
+      .submitPageTo(OtherPeopleConsultedListPage)
+      .clickToAddAnotherPerson()
+      .enterFullName('Person 3')
+      .submitPageTo(OtherPeopleConsultedListPage)
       .submitPageTo(CheckYourAnswersPage)
+      // check all added people are listed
+      .hasNumberOfPeopleConsulted(3)
+      .otherPersonConsultedWas(1, 'Person 1')
+      .otherPersonConsultedWas(2, 'Person 2')
+      .otherPersonConsultedWas(3, 'Person 3')
+      .clickOtherPeopleConsultedListChangeLink()
+      .removePerson(3, OtherPeopleConsultedListPage)
+      .submitPageTo(CheckYourAnswersPage)
+      .hasNumberOfPeopleConsulted(2)
+      .otherPersonConsultedWas(1, 'Person 1')
+      .otherPersonConsultedWas(2, 'Person 2')
 
       // submit Check Your Answers page
       .submitPageTo(OverviewPage)
@@ -111,7 +135,11 @@ context(`Change links on the Check Your Answers page when creating an Education 
               "@.prisonId == 'BXI' && " +
               "@.planCreatedBy.name == 'Joe Bloggs' && " +
               "@.planCreatedBy.jobRole == 'Peer Mentor' && " +
-              '@.otherContributors == null && ' +
+              '@.otherContributors.size() == 2 && ' +
+              "@.otherContributors[0].name == 'Person 1' && " +
+              "@.otherContributors[0].jobRole == 'N/A' && " +
+              "@.otherContributors[1].name == 'Person 2' && " +
+              "@.otherContributors[1].jobRole == 'N/A' && " +
               '@.hasCurrentEhcp == true && ' +
               "@.learningEnvironmentAdjustments == 'Needs to sit at the front of the class' && " +
               "@.teachingAdjustments == 'Use simpler examples to help students understand concepts' && " +

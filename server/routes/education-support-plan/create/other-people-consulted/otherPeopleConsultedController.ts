@@ -15,10 +15,18 @@ export default class OtherPeopleConsultedController {
 
   submitOtherPeopleConsultedForm: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const wereOtherPeopleConsultedForm = { ...req.body }
+
+    const currentAnswer = req.journeyData.educationSupportPlanDto.wereOtherPeopleConsulted
     this.updateDtoFromForm(req, wereOtherPeopleConsultedForm)
+    const updatedAnswer = req.journeyData.educationSupportPlanDto.wereOtherPeopleConsulted
 
     if (req.query?.submitToCheckAnswers === 'true') {
-      return res.redirect('check-your-answers')
+      // If the answer has not been changed, or it has been changed to No/false, redirect back to Check Your Answers
+      if (currentAnswer === updatedAnswer || updatedAnswer === false) {
+        return res.redirect('check-your-answers')
+      }
+      // The answer has been changed to Yes/true, so we need to redirect the user to the screens allowing them to add people
+      return res.redirect('other-people-consulted/add-person?submitToCheckAnswers=true')
     }
 
     return res.redirect(

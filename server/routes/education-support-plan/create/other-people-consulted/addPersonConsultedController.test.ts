@@ -122,4 +122,26 @@ describe('addPersonConsultedController', () => {
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
     expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
   })
+
+  it('should submit form and redirect to next route given the check your answers flag was passed on the query string', async () => {
+    // Given
+    req.query = { submitToCheckAnswers: 'true' }
+    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto({ otherPeopleConsulted: null }) }
+    req.body = {
+      fullName: 'A Teacher',
+    }
+
+    const expectedNextRoute = 'list?submitToCheckAnswers=true' // expect the submitToCheckAnswers flag to be passed to the next route
+    const expectedEducationSupportPlanDto = {
+      ...aValidEducationSupportPlanDto(),
+      otherPeopleConsulted: [{ name: 'A Teacher', jobRole: 'N/A' }],
+    }
+
+    // When
+    await controller.submitAddPersonConsultedForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+  })
 })

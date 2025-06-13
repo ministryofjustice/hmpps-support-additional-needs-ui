@@ -14,7 +14,9 @@ export default class AddPersonConsultedController {
     const addPersonConsultedForm = { ...req.body }
     this.updateDtoFromForm(req, addPersonConsultedForm)
 
-    return res.redirect('list')
+    const submitToCheckYourAnswersQueryString =
+      req.query?.submitToCheckAnswers === 'true' ? '?submitToCheckAnswers=true' : ''
+    return res.redirect(`list${submitToCheckYourAnswersQueryString}`)
   }
 
   private updateDtoFromForm = (req: Request, form: { fullName: string }) => {
