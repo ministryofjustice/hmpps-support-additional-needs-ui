@@ -51,6 +51,7 @@ describe('educationSupportPlanDtoMapper', () => {
         specificTeachingSkills: null,
         examAccessArrangements: null,
         lnspSupport: null,
+        detail: null,
       })
 
       const expected = aValidEducationSupportPlanDto({
@@ -63,6 +64,7 @@ describe('educationSupportPlanDtoMapper', () => {
         specificTeachingSkills: null,
         examArrangements: null,
         lnspSupport: null,
+        additionalInformation: null,
         prisonId: null,
         reviewDate: null,
       })

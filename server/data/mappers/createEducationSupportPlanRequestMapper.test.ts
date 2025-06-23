@@ -55,6 +55,7 @@ describe('createEducationSupportPlanRequestMapper', () => {
         examArrangements: null,
         lnspSupport: null,
         reviewDate: addMonths(startOfToday(), 2),
+        additionalInformation: null,
       })
 
       const expected = aValidCreateEducationSupportPlanRequest({
@@ -68,6 +69,7 @@ describe('createEducationSupportPlanRequestMapper', () => {
         examAccessArrangements: null,
         lnspSupport: null,
         reviewDate: addMonths(startOfToday(), 2),
+        detail: null,
       })
 
       // When

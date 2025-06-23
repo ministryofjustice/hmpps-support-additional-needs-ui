@@ -148,6 +148,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/reference-data/{domain}/categories': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getReferenceDataCategories']
+    put: operations['getReferenceDataCategories_2']
+    post: operations['getReferenceDataCategories_1']
+    delete: operations['getReferenceDataCategories_3']
+    options: operations['getReferenceDataCategories_6']
+    head: operations['getReferenceDataCategories_5']
+    patch: operations['getReferenceDataCategories_4']
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -416,6 +432,11 @@ export interface components {
        * @example An LNSP is required for approx 1 hour per week to read and explain passages of text to Chris.
        */
       lnspSupport?: string
+      /**
+       * @description Optional Additional information about the plan that is not covered in the other questions.
+       * @example Chris is very open about his issues and is a pleasure to talk to.
+       */
+      detail?: string
     }
     PlanContributor: {
       /** @example Joe Bloggs */
@@ -506,6 +527,11 @@ export interface components {
        * @example An LNSP is required for approx 1 hour per week to read and explain passages of text to Chris.
        */
       lnspSupport?: string
+      /**
+       * @description Optional Additional information about the plan that is not covered in the other questions.
+       * @example Chris is very open about his issues and is a pleasure to talk to.
+       */
+      detail?: string
     }
     ConditionRequest: {
       /**
@@ -1095,10 +1121,10 @@ export interface operations {
   }
   searchByPrison: {
     parameters: {
-      query: {
+      query?: {
         prisonerNameOrNumber?: string
-        sortBy: 'PRISONER_NAME' | 'PRISON_NUMBER' | 'CELL_LOCATION' | 'RELEASE_DATE'
-        sortDirection: 'ASC' | 'DESC'
+        sortBy?: 'PRISONER_NAME' | 'PRISON_NUMBER' | 'CELL_LOCATION' | 'RELEASE_DATE'
+        sortDirection?: 'ASC' | 'DESC'
         page?: number
         pageSize?: number
       }
@@ -1187,6 +1213,188 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['PlanCreationSchedulesResponse']
+        }
+      }
+    }
+  }
+  getReferenceDataCategories: {
+    parameters: {
+      query?: {
+        /** @description Include inactive reference data. Defaults to false */
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        /** @description Reference data domain. */
+        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ReferenceDataListResponse']
+        }
+      }
+    }
+  }
+  getReferenceDataCategories_2: {
+    parameters: {
+      query?: {
+        /** @description Include inactive reference data. Defaults to false */
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        /** @description Reference data domain. */
+        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ReferenceDataListResponse']
+        }
+      }
+    }
+  }
+  getReferenceDataCategories_1: {
+    parameters: {
+      query?: {
+        /** @description Include inactive reference data. Defaults to false */
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        /** @description Reference data domain. */
+        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ReferenceDataListResponse']
+        }
+      }
+    }
+  }
+  getReferenceDataCategories_3: {
+    parameters: {
+      query?: {
+        /** @description Include inactive reference data. Defaults to false */
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        /** @description Reference data domain. */
+        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ReferenceDataListResponse']
+        }
+      }
+    }
+  }
+  getReferenceDataCategories_6: {
+    parameters: {
+      query?: {
+        /** @description Include inactive reference data. Defaults to false */
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        /** @description Reference data domain. */
+        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ReferenceDataListResponse']
+        }
+      }
+    }
+  }
+  getReferenceDataCategories_5: {
+    parameters: {
+      query?: {
+        /** @description Include inactive reference data. Defaults to false */
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        /** @description Reference data domain. */
+        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ReferenceDataListResponse']
+        }
+      }
+    }
+  }
+  getReferenceDataCategories_4: {
+    parameters: {
+      query?: {
+        /** @description Include inactive reference data. Defaults to false */
+        includeInactive?: boolean
+      }
+      header?: never
+      path: {
+        /** @description Reference data domain. */
+        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ReferenceDataListResponse']
         }
       }
     }
