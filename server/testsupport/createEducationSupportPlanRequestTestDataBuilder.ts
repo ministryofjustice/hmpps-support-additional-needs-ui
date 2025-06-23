@@ -13,6 +13,7 @@ const aValidCreateEducationSupportPlanRequest = (options?: {
   specificTeachingSkills?: string
   examAccessArrangements?: string
   lnspSupport?: string
+  detail?: string
 }): CreateEducationSupportPlanRequest => ({
   prisonId: options?.prisonId || 'BXI',
   hasCurrentEhcp: options?.hasCurrentEhcp ?? false,
@@ -42,6 +43,10 @@ const aValidCreateEducationSupportPlanRequest = (options?: {
     options?.lnspSupport === null
       ? null
       : options?.lnspSupport || 'Chris will need text reading to him as he cannot read himself',
+  detail:
+    options?.detail === null
+      ? null
+      : options?.detail || 'Chris is very open about his issues and is a pleasure to talk to.',
 })
 
 export default aValidCreateEducationSupportPlanRequest

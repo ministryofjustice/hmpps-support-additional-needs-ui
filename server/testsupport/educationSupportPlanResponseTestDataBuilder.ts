@@ -19,6 +19,7 @@ const aValidEducationSupportPlanResponse = (options?: {
   specificTeachingSkills?: string
   examAccessArrangements?: string
   lnspSupport?: string
+  detail?: string
 }): EducationSupportPlanResponse => ({
   hasCurrentEhcp: options?.hasCurrentEhcp ?? false,
   planCreatedBy: options?.planCreatedBy === null ? null : options?.planCreatedBy || aValidPlanContributor(),
@@ -46,6 +47,10 @@ const aValidEducationSupportPlanResponse = (options?: {
     options?.lnspSupport === null
       ? null
       : options?.lnspSupport || 'Chris will need text reading to him as he cannot read himself',
+  detail:
+    options?.detail === null
+      ? null
+      : options?.detail || 'Chris is very open about his issues and is a pleasure to talk to.',
   ...validAuditFields(options),
 })
 

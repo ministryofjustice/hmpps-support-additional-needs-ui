@@ -22,5 +22,6 @@ declare module 'dto' {
     lnspSupportNeeded?: boolean
     lnspSupport?: string
     reviewDate?: Date
+    additionalInformation?: string
   }
 }
