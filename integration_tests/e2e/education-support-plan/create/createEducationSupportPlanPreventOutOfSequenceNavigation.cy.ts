@@ -22,6 +22,7 @@ context('Prevent out of sequence navigation to pages in the Create Education Sup
     'exam-arrangements',
     'education-health-care-plan',
     'lnsp-support',
+    'additional-information',
     'next-review-date',
     'check-your-answers',
   ].forEach(page => {
