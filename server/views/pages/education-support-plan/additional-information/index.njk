@@ -1,0 +1,40 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'education-support-plan-additional-information' %}
+{% set pageTitle = "Create an education support plan" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukTextarea({
+            id: "additionalInformation",
+            name: "additionalInformation",
+            rows: "4",
+            value: form.additionalInformation,
+            type: "text",
+            label: {
+              text: "Are there any other details you would like to include? (optional)",
+              classes: "govuk-label--l",
+              isPageHeading: true
+            },
+            attributes: { "aria-label" : "Enter any additional information that you would like to include" },
+            errorMessage: errors | findError('additionalInformation')
+          }) }}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

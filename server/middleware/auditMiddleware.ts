@@ -28,6 +28,8 @@ const pageViewEventMap: Record<string, Page> = {
   '/education-support-plan/:prisonNumber/create/:journeyId/education-health-care-plan':
     Page.CREATE_ELSP_EDUCATION_HEALTH_CARE_PLAN,
   '/education-support-plan/:prisonNumber/create/:journeyId/lnsp-support': Page.CREATE_ELSP_LNSP_SUPPORT,
+  '/education-support-plan/:prisonNumber/create/:journeyId/additional-information':
+    Page.CREATE_ELSP_ADDITIONAL_INFORMATION,
   '/education-support-plan/:prisonNumber/create/:journeyId/next-review-date': Page.CREATE_ELSP_SET_REVIEW_DATE,
   '/education-support-plan/:prisonNumber/create/:journeyId/check-your-answers': Page.CREATE_ELSP_CHECK_YOUR_ANSWERS,
 

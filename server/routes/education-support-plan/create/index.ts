@@ -14,6 +14,7 @@ import SpecificTeachingSkillsController from './specific-teaching-skills/specifi
 import ExamArrangementsController from './exam-arrangements/examArrangementsController'
 import EducationHealthCarePlanController from './education-health-care-plan/educationHealthCarePlanController'
 import LearningNeedsSupportPractitionerSupportController from './learning-needs-support-practitioner-support/learningNeedsSupportPractitionerSupportController'
+import AdditionalInformationController from './additional-information/additionalInformationController'
 import ReviewSupportPlanController from './review-support-plan/reviewSupportPlanController'
 import CheckYourAnswersController from './check-your-answers/checkYourAnswersController'
 import { validate } from '../../../middleware/validationMiddleware'
@@ -29,6 +30,7 @@ import checkEducationSupportPlanDtoExistsInJourneyData from './middleware/checkE
 import createEmptyEducationSupportPlanDtoIfNotInJourneyData from './middleware/createEmptyEducationSupportPlanDtoIfNotInJourneyData'
 import wereOtherPeopleConsultedSchema from '../validationSchemas/wereOtherPeopleConsultedSchema'
 import addPersonConsultedSchema from '../validationSchemas/addPersonConsultedSchema'
+import additionalInformationSchema from '../validationSchemas/additionalInformationSchema'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const { educationSupportPlanService, journeyDataService } = services
@@ -45,6 +47,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const examArrangementsController = new ExamArrangementsController()
   const educationHealthCarePlanController = new EducationHealthCarePlanController()
   const lnspController = new LearningNeedsSupportPractitionerSupportController()
+  const additionalInformationController = new AdditionalInformationController()
   const reviewSupportPlanController = new ReviewSupportPlanController()
   const checkYourAnswersController = new CheckYourAnswersController(educationSupportPlanService)
 
@@ -159,6 +162,16 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
     checkEducationSupportPlanDtoExistsInJourneyData,
     validate(learningNeedsSupportPractitionerSupportSchema),
     asyncMiddleware(lnspController.submitLnspSupportForm),
+  ])
+
+  router.get('/:journeyId/additional-information', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(additionalInformationController.getAdditionalInformationView),
+  ])
+  router.post('/:journeyId/additional-information', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    validate(additionalInformationSchema),
+    asyncMiddleware(additionalInformationController.submitAdditionalInformationForm),
   ])
 
   router.get('/:journeyId/next-review-date', [
