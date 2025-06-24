@@ -6,7 +6,7 @@ export default class ReviewSupportPlanPage extends Page {
   }
 
   setReviewDate(reviewDate: string): ReviewSupportPlanPage {
-    this.reviewDateField().clear().type(reviewDate)
+    this.reviewDateField().clear().type(reviewDate, { delay: 0 })
     return this
   }
 

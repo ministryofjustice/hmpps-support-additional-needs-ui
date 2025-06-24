@@ -80,7 +80,7 @@ describe('learningNeedsSupportPractitionerSupportController', () => {
       details: 'Will need to read all text to Chris',
     }
 
-    const expectedNextRoute = 'next-review-date'
+    const expectedNextRoute = 'additional-information'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       lnspSupportNeeded: true,

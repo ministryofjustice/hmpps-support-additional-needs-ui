@@ -17,7 +17,7 @@ export default class LearningNeedsSupportPractitionerSupportPage extends Page {
   }
 
   enterDetails(value: string): LearningNeedsSupportPractitionerSupportPage {
-    this.detailsField().clear().type(value)
+    this.detailsField().clear().type(value, { delay: 0 })
     return this
   }
 

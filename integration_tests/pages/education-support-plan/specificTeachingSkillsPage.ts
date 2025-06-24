@@ -17,7 +17,7 @@ export default class SpecificTeachingSkillsPage extends Page {
   }
 
   enterDetails(value: string): SpecificTeachingSkillsPage {
-    this.detailsField().clear().type(value)
+    this.detailsField().clear().type(value, { delay: 0 })
     return this
   }
 

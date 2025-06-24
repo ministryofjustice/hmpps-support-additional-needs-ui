@@ -6,7 +6,7 @@ export default class OtherPeopleConsultedAddPersonPage extends Page {
   }
 
   enterFullName(value: string): OtherPeopleConsultedAddPersonPage {
-    this.fullNameField().clear().type(value)
+    this.fullNameField().clear().type(value, { delay: 0 })
     return this
   }
 

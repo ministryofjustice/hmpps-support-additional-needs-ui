@@ -121,6 +121,13 @@ context(`Change links on the Check Your Answers page when creating an Education 
       .otherPersonConsultedWas(1, 'Person 1')
       .otherPersonConsultedWas(2, 'Person 2')
 
+      // check and update additional information
+      .hasAdditionalInformation('None entered')
+      .clickAdditionalInformationChangeLink()
+      .enterAdditionalInformation('Chris is feeling positive and is looking forward to starting education')
+      .submitPageTo(CheckYourAnswersPage)
+      .hasAdditionalInformation('Chris is feeling positive and is looking forward to starting education')
+
       // submit Check Your Answers page
       .submitPageTo(OverviewPage)
 
@@ -146,6 +153,7 @@ context(`Change links on the Check Your Answers page when creating an Education 
               "@.specificTeachingSkills == 'Teacher with BSL proficiency required' && " +
               "@.examAccessArrangements == 'Escorting to the exam room 10 minutes before everyone else' && " +
               "@.lnspSupport == 'Chris will need text reading to him as he cannot read himself' && " +
+              "@.detail == 'Chris is feeling positive and is looking forward to starting education' && " +
               `@.reviewDate == '${format(updatedReviewDate, 'yyyy-MM-dd')}'` +
               ')]',
           ),

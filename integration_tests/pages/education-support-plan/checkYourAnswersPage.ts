@@ -10,6 +10,7 @@ import LearningNeedsSupportPractitionerSupportPage from './learningNeedsSupportP
 import ReviewSupportPlanPage from './reviewSupportPlanPage'
 import OtherPeopleConsultedListPage from './otherPeopleConsultedListPage'
 import zeroIndexed from '../../utils/zeroIndexed'
+import AdditionalInformationPage from './additionalInformationPage'
 
 export default class CheckYourAnswersPage extends Page {
   constructor() {
@@ -176,6 +177,16 @@ export default class CheckYourAnswersPage extends Page {
     return this
   }
 
+  clickAdditionalInformationChangeLink(): AdditionalInformationPage {
+    this.additionalInformationChangeLink().click()
+    return Page.verifyOnPage(AdditionalInformationPage)
+  }
+
+  hasAdditionalInformation(expected: string): CheckYourAnswersPage {
+    this.additionalInformationValue().should('contain.text', expected)
+    return this
+  }
+
   clickReviewDateChangeLink(): ReviewSupportPlanPage {
     this.reviewDateChangeLink().click()
     return Page.verifyOnPage(ReviewSupportPlanPage)
@@ -224,6 +235,10 @@ export default class CheckYourAnswersPage extends Page {
   private lnspSupportValue = (): PageElement => cy.get('[data-qa=lnsp-support]')
 
   private lnspSupportChangeLink = (): PageElement => cy.get('[data-qa=lnsp-support-change-link]')
+
+  private additionalInformationValue = (): PageElement => cy.get('[data-qa=additional-information]')
+
+  private additionalInformationChangeLink = (): PageElement => cy.get('[data-qa=additional-information-change-link]')
 
   private reviewDateValue = (): PageElement => cy.get('[data-qa=review-date]')
 

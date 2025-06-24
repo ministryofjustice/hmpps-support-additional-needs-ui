@@ -17,7 +17,7 @@ export default class LearningNeedsSupportPractitionerSupportController {
     const lnspSupportForm = { ...req.body }
     this.updateDtoFromForm(req, lnspSupportForm)
 
-    return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'next-review-date' : 'check-your-answers')
+    return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'additional-information' : 'check-your-answers')
   }
 
   private populateFormFromDto = (dto: EducationSupportPlanDto) => {

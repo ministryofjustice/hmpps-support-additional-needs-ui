@@ -30,7 +30,7 @@ export default class SearchPage extends Page {
   }
 
   setNameFilter(value: string): SearchPage {
-    this.searchTermField().clear().type(value)
+    this.searchTermField().clear().type(value, { delay: 0 })
     return this
   }
 
