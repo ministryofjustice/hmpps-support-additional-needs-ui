@@ -18,6 +18,7 @@ import CheckYourAnswersPage from '../../../pages/education-support-plan/checkYou
 import { postRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
+import AdditionalInformationPage from '../../../pages/education-support-plan/additionalInformationPage'
 
 context('Create an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -179,6 +180,25 @@ context('Create an Education Support Plan', () => {
       .hasFieldInError('details')
       // enter the fields and submit the form to the next page
       .enterDetails('Chris will need the text reading to him as he cannot read himself')
+      .submitPageTo(AdditionalInformationPage)
+
+    Page.verifyOnPage(AdditionalInformationPage) //
+      // submit the page with invalid content to trigger a validation error
+      .enterAdditionalInformation(
+        // Enter additional information that is just over 4000 characters
+        `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vitae ipsum suscipit, interdum mauris non, posuere lacus. Cras laoreet lectus eget ligula auctor, vitae pulvinar lectus convallis. Duis aliquam nulla eros, eget eleifend tortor tempus id. Maecenas mollis sollicitudin nulla tempus pellentesque. Vestibulum nec mattis orci, ut condimentum turpis. Curabitur sed urna ut sem ullamcorper varius. Sed nec interdum neque. Proin tristique arcu vel tortor mollis consequat at vel lacus.
+Fusce quis semper nisl. Integer ullamcorper tortor a porta vehicula. Proin sit amet finibus ipsum. In mattis sit amet sapien et hendrerit. Nunc placerat faucibus erat, ac luctus lorem tincidunt sodales. Praesent ut egestas ligula. Aliquam in aliquet dolor, vitae laoreet quam. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Quisque lacinia ante nec rhoncus egestas. In orci nisi, elementum nec varius sed, aliquet nec nibh. Donec lacus magna, lobortis nec nisl vitae, interdum viverra erat. Donec semper fringilla leo ut cursus. Etiam et lacinia mauris, vitae laoreet sapien. Aliquam pulvinar tristique tortor, in tristique lorem consectetur vitae.
+Phasellus feugiat purus justo, id auctor arcu bibendum in. Proin urna turpis, accumsan sed commodo nec, posuere sed nisl. Integer facilisis quis urna malesuada bibendum. Etiam vitae mi aliquet, tincidunt augue ut, finibus justo. Morbi at placerat sem. Sed ultricies tristique luctus. Proin sed vulputate justo. Interdum et malesuada fames ac ante ipsum primis in faucibus. Donec eu ornare eros. Donec id erat eros. Aliquam lorem magna, varius sed odio interdum, interdum semper elit. Suspendisse potenti. Maecenas fermentum rutrum lorem, ac efficitur sapien convallis ac. Mauris elementum, nisl sed laoreet tincidunt, ipsum turpis ornare dolor, in pretium augue mi at eros. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;
+Sed viverra, urna et vehicula lobortis, nunc mi elementum mauris, ac rutrum lorem orci nec lorem. Cras condimentum dictum facilisis. Maecenas eget euismod mi, vitae rhoncus velit. Aliquam erat volutpat. Nunc gravida mollis nisl, quis sagittis risus pharetra eget. Suspendisse potenti. In fermentum finibus eros sit amet faucibus. Aenean et ultricies eros.
+Suspendisse eros urna, blandit at erat sit amet, cursus dictum tellus. Pellentesque ut interdum lorem. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aliquam varius, orci eget molestie molestie, ex est condimentum tortor, sit amet pharetra nisl nunc ac risus. Sed lectus nunc, ornare aliquam nulla vel, egestas pretium velit. Nunc feugiat risus a luctus porttitor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec efficitur purus lectus, eu feugiat sapien iaculis eget. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Curabitur vel lorem eu neque malesuada sollicitudin. Nullam euismod mauris in lacinia varius. Integer id tempor leo.
+Vestibulum ut fermentum lacus, sed finibus ipsum. Nullam lacinia velit at pharetra bibendum. Duis a velit ac eros vulputate consequat. Cras dui arcu, laoreet in molestie in, ultrices et leo. Maecenas eleifend molestie turpis. Cras varius nibh ut accumsan pretium. Donec ut velit venenatis, venenatis velit id, egestas sapien. Integer hendrerit quam vitae nibh blandit, quis bibendum sapien sagittis. Etiam maximus nisl eget placerat pretium.
+Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. Morbi commodo purus consectetur leo molestie, et congue lorem blandit. Sed nec enim sit amet dolor gravida vulputate in quis urna. Curabitur tristique neque nec tortor lobortis, at ullamcorper urna vestibulum. Suspendisse porttitor scelerisque fringilla. Aenean sit amet erat sit amet sapien feugiat hendrerit at in lacus. Sed nec bibendum dolor. Aenean accumsan, purus sit amet pellentesque bibendum, ex dui vehicula urna, fringilla semper justo.`,
+      )
+      .submitPageTo(AdditionalInformationPage)
+      .hasErrorCount(1)
+      .hasFieldInError('additionalInformation')
+      // enter the fields and submit the form to the next page
+      .enterAdditionalInformation('Chris was a pleasure to meet with today')
       .submitPageTo(ReviewSupportPlanPage)
 
     Page.verifyOnPage(ReviewSupportPlanPage) //
@@ -220,6 +240,7 @@ context('Create an Education Support Plan', () => {
               "@.specificTeachingSkills == 'Adopt a more inclusive approach to teaching' && " +
               "@.examAccessArrangements == 'Chris needs escorting to the exam room 10 minutes before everyone else' && " +
               "@.lnspSupport == 'Chris will need the text reading to him as he cannot read himself' && " +
+              "@.detail == 'Chris was a pleasure to meet with today' && " +
               `@.reviewDate == '${format(reviewDate, 'yyyy-MM-dd')}'` +
               ')]',
           ),

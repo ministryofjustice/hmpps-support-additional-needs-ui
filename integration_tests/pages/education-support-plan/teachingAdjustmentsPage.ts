@@ -17,7 +17,7 @@ export default class TeachingAdjustmentsPage extends Page {
   }
 
   enterDetails(value: string): TeachingAdjustmentsPage {
-    this.detailsField().clear().type(value)
+    this.detailsField().clear().type(value, { delay: 0 })
     return this
   }
 

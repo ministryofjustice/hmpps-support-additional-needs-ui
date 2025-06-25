@@ -12,12 +12,12 @@ export default class WhoCreatedThePlanPage extends Page {
   }
 
   enterFullName(value: string): WhoCreatedThePlanPage {
-    this.fullNameField().clear().type(value)
+    this.fullNameField().clear().type(value, { delay: 0 })
     return this
   }
 
   enterJobRole(value: string): WhoCreatedThePlanPage {
-    this.jobRoleField().clear().type(value)
+    this.jobRoleField().clear().type(value, { delay: 0 })
     return this
   }
 

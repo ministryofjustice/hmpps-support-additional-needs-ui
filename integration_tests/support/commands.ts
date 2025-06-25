@@ -14,6 +14,7 @@ import EducationHealthCarePlanPage from '../pages/education-support-plan/educati
 import LearningNeedsSupportPractitionerSupportPage from '../pages/education-support-plan/learningNeedsSupportPractitionerSupportPage'
 import ReviewSupportPlanPage from '../pages/education-support-plan/reviewSupportPlanPage'
 import CheckYourAnswersPage from '../pages/education-support-plan/checkYourAnswersPage'
+import AdditionalInformationPage from '../pages/education-support-plan/additionalInformationPage'
 
 Cypress.Commands.add('signIn', (options = { failOnStatusCode: true }) => {
   cy.request('/')
@@ -60,6 +61,9 @@ Cypress.Commands.add(
       .submitPageTo(LearningNeedsSupportPractitionerSupportPage)
       //
       .selectLnspSupportNotRequired()
+      .submitPageTo(AdditionalInformationPage)
+      //
+      .clearAdditionalInformation()
       .submitPageTo(ReviewSupportPlanPage)
       //
       .setReviewDate(format(reviewDate, 'd/M/yyyy'))

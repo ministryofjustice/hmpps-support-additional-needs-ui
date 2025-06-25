@@ -186,6 +186,20 @@
 
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                Any other details
+              </dt>
+              <dd class="govuk-summary-list__value" data-qa="additional-information">
+                <span class="app-u-multiline-text">{{ dto.additionalInformation | default("None entered", true) }}</span>
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="additional-information?submitToCheckAnswers=true" data-qa="additional-information-change-link">
+                  Change<span class="govuk-visually-hidden"> any additional information</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
                 Review date
               </dt>
               <dd class="govuk-summary-list__value" data-qa="review-date">

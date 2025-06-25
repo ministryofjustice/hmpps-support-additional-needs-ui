@@ -17,7 +17,7 @@ export default class ExamArrangementsPage extends Page {
   }
 
   enterDetails(value: string): ExamArrangementsPage {
-    this.detailsField().clear().type(value)
+    this.detailsField().clear().type(value, { delay: 0 })
     return this
   }
 

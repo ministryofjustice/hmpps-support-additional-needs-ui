@@ -17,7 +17,7 @@ export default class LearningEnvironmentAdjustmentsPage extends Page {
   }
 
   enterDetails(value: string): LearningEnvironmentAdjustmentsPage {
-    this.detailsField().clear().type(value)
+    this.detailsField().clear().type(value, { delay: 0 })
     return this
   }
 
