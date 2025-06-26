@@ -1,8 +1,12 @@
+import { startOfToday, subDays } from 'date-fns'
 import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiClient'
 import EducationSupportPlanService from './educationSupportPlanService'
+import PlanCreationScheduleStatus from '../enums/planCreationScheduleStatus'
 import aValidEducationSupportPlanDto from '../testsupport/educationSupportPlanDtoTestDataBuilder'
 import aValidCreateEducationSupportPlanRequest from '../testsupport/createEducationSupportPlanRequestTestDataBuilder'
 import aValidEducationSupportPlanResponse from '../testsupport/educationSupportPlanResponseTestDataBuilder'
+import { aValidPlanCreationScheduleResponse } from '../testsupport/planCreationScheduleResponseTestDataBuilder'
+import aValidPlanCreationScheduleDto from '../testsupport/planCreationScheduleDtoTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -92,6 +96,95 @@ describe('educationSupportPlanService', () => {
         prisonNumber,
         username,
         expectedCreateEducationSupportPlanRequest,
+      )
+    })
+  })
+
+  describe('getCurrentEducationSupportPlanCreationSchedule', () => {
+    it('should return the current education support plan creation schedule', async () => {
+      // Given
+      const firstSchedule = aValidPlanCreationScheduleResponse({
+        version: 0,
+        status: PlanCreationScheduleStatus.SCHEDULED,
+      })
+      const secondSchedule = aValidPlanCreationScheduleResponse({
+        version: 1,
+        status: PlanCreationScheduleStatus.EXEMPT_SYSTEM_TECHNICAL_ISSUE,
+      })
+      const thirdSchedule = aValidPlanCreationScheduleResponse({
+        version: 2,
+        status: PlanCreationScheduleStatus.SCHEDULED,
+      })
+      const scheduleDate = subDays(startOfToday(), 5)
+      const currentSchedule = aValidPlanCreationScheduleResponse({
+        version: 4,
+        status: PlanCreationScheduleStatus.COMPLETED,
+        deadlineDate: scheduleDate,
+      })
+
+      const apiResponse = {
+        planCreationSchedules: [firstSchedule, secondSchedule, thirdSchedule, currentSchedule],
+      }
+      supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules.mockResolvedValue(apiResponse)
+
+      const expected = aValidPlanCreationScheduleDto({
+        prisonNumber,
+        status: PlanCreationScheduleStatus.COMPLETED,
+        deadlineDate: scheduleDate,
+      })
+
+      // When
+      const actual = await educationSupportPlanService.getCurrentEducationSupportPlanCreationSchedule(
+        prisonNumber,
+        username,
+      )
+
+      // Then
+      expect(actual).toEqual(expected)
+      expect(supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules).toHaveBeenCalledWith(
+        prisonNumber,
+        username,
+      )
+    })
+
+    it.each([
+      null,
+      { planCreationSchedules: null },
+      { planCreationSchedules: undefined },
+      { planCreationSchedules: [] },
+    ])('should return null given API returns %s ', async apiResponse => {
+      // Given
+      supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules.mockResolvedValue(apiResponse)
+
+      // When
+      const actual = await educationSupportPlanService.getCurrentEducationSupportPlanCreationSchedule(
+        prisonNumber,
+        username,
+      )
+
+      // Then
+      expect(actual).toBeNull()
+      expect(supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules).toHaveBeenCalledWith(
+        prisonNumber,
+        username,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules.mockRejectedValue(expectedError)
+
+      // When
+      const actual = await educationSupportPlanService
+        .getCurrentEducationSupportPlanCreationSchedule(prisonNumber, username)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules).toHaveBeenCalledWith(
+        prisonNumber,
+        username,
       )
     })
   })

@@ -9,10 +9,13 @@ import SearchSortField from '../enums/searchSortField'
 import SearchSortDirection from '../enums/searchSortDirection'
 import aValidCreateEducationSupportPlanRequest from '../testsupport/createEducationSupportPlanRequestTestDataBuilder'
 import aValidEducationSupportPlanResponse from '../testsupport/educationSupportPlanResponseTestDataBuilder'
+import { aValidPlanCreationSchedulesResponse } from '../testsupport/planCreationScheduleResponseTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
   const systemToken = 'test-system-token'
+  const prisonNumber = 'A1234BC'
+  const prisonId = 'BXI'
 
   const mockAuthenticationClient = {
     getToken: jest.fn(),
@@ -34,8 +37,6 @@ describe('supportAdditionalNeedsApiClient', () => {
   describe('getPrisonersByPrisonId', () => {
     it('should get prisoners by prison id given prison ID exists', async () => {
       // Given
-      const prisonId = 'BXI'
-
       const searchByPrisonResponse = aValidSearchByPrisonResponse({
         totalElements: 2,
         people: [
@@ -59,19 +60,19 @@ describe('supportAdditionalNeedsApiClient', () => {
 
     it('should get zero prisoners by prison id given prison ID does not exist', async () => {
       // Given
-      const prisonId = 'some-unknown-prison-id'
+      const unknownPrisonId = 'some-unknown-prison-id'
 
       const searchByPrisonResponse = aValidSearchByPrisonResponse({
         totalElements: 0,
         people: [],
       })
       supportAdditionalNeedsApi
-        .get(`/search/prisons/${prisonId}/people`)
+        .get(`/search/prisons/${unknownPrisonId}/people`)
         .matchHeader('authorization', `Bearer ${systemToken}`)
         .reply(200, searchByPrisonResponse)
 
       // When
-      const actual = await supportAdditionalNeedsApiClient.getPrisonersByPrisonId(prisonId, username)
+      const actual = await supportAdditionalNeedsApiClient.getPrisonersByPrisonId(unknownPrisonId, username)
 
       // Then
       expect(actual).toEqual(searchByPrisonResponse)
@@ -81,7 +82,6 @@ describe('supportAdditionalNeedsApiClient', () => {
 
     it('should get prisoners by prison id given filtering, pagination and sorting options are specified', async () => {
       // Given
-      const prisonId = 'BXI'
       const prisonerNameOrNumber = 'YMYNNEUMAR'
       const page = 2
       const pageSize = 20
@@ -121,8 +121,6 @@ describe('supportAdditionalNeedsApiClient', () => {
 
     it('should rethrow error given API returns an error', async () => {
       // Given
-      const prisonId = 'some-unknown-prison-id'
-
       const apiErrorResponse = {
         status: 500,
         userMessage: 'Service unavailable',
@@ -147,8 +145,6 @@ describe('supportAdditionalNeedsApiClient', () => {
 
     it('should rethrow error given API returns a not found error', async () => {
       // Given
-      const prisonId = 'some-unknown-prison-id'
-
       const apiErrorResponse = {
         status: 404,
         userMessage: 'Not found',
@@ -174,7 +170,6 @@ describe('supportAdditionalNeedsApiClient', () => {
   describe('createEducationSupportPlan', () => {
     it('should create a prisoners education support plan', async () => {
       // Given
-      const prisonNumber = 'A1234BC'
       const createEducationSupportPlanRequest = aValidCreateEducationSupportPlanRequest()
 
       const expectedResponse = aValidEducationSupportPlanResponse()
@@ -200,7 +195,6 @@ describe('supportAdditionalNeedsApiClient', () => {
 
     it('should rethrow error given API returns an error', async () => {
       // Given
-      const prisonNumber = 'A1234BC'
       const createEducationSupportPlanRequest = aValidCreateEducationSupportPlanRequest()
 
       const apiErrorResponse = {
@@ -220,6 +214,77 @@ describe('supportAdditionalNeedsApiClient', () => {
       // When
       const actual = await supportAdditionalNeedsApiClient
         .createEducationSupportPlan(prisonNumber, username, createEducationSupportPlanRequest)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('getEducationSupportPlanCreationSchedules', () => {
+    it('should get a prisoners education support plan creation schedules', async () => {
+      // Given
+      const planCreationSchedulesResponse = aValidPlanCreationSchedulesResponse()
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/plan-creation-schedule`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, planCreationSchedulesResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules(
+        prisonNumber,
+        username,
+      )
+
+      // Then
+      expect(actual).toEqual(planCreationSchedulesResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should return null given API returns a not found error', async () => {
+      // Given
+      const apiErrorResponse = {
+        status: 404,
+        userMessage: 'Not found',
+        developerMessage: 'Not found',
+      }
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/plan-creation-schedule`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(404, apiErrorResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .getEducationSupportPlanCreationSchedules(prisonNumber, username)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toBeNull()
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/plan-creation-schedule`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .thrice()
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .getEducationSupportPlanCreationSchedules(prisonNumber, username)
         .catch(e => e)
 
       // Then
