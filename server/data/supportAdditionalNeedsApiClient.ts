@@ -3,12 +3,14 @@ import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients
 import type {
   CreateEducationSupportPlanRequest,
   EducationSupportPlanResponse,
+  PlanCreationSchedulesResponse,
   SearchByPrisonResponse,
 } from 'supportAdditionalNeedsApiClient'
 import config from '../config'
 import logger from '../../logger'
 import SearchSortField from '../enums/searchSortField'
 import SearchSortDirection from '../enums/searchSortDirection'
+import restClientErrorHandler from './restClientErrorHandler'
 
 export default class SupportAdditionalNeedsApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
@@ -48,6 +50,19 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/education-support-plan`,
         data: createEducationSupportPlanRequest,
+      },
+      asSystem(username),
+    )
+  }
+
+  async getEducationSupportPlanCreationSchedules(
+    prisonNumber: string,
+    username: string,
+  ): Promise<PlanCreationSchedulesResponse> {
+    return this.get<PlanCreationSchedulesResponse>(
+      {
+        path: `/profile/${prisonNumber}/plan-creation-schedule`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
       },
       asSystem(username),
     )

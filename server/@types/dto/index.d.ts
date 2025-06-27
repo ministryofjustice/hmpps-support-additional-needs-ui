@@ -1,4 +1,6 @@
 declare module 'dto' {
+  import PlanCreationScheduleStatus from '../../enums/planCreationScheduleStatus'
+
   export interface EducationSupportPlanDto {
     prisonNumber: string
     prisonId: string
@@ -23,5 +25,11 @@ declare module 'dto' {
     lnspSupport?: string
     reviewDate?: Date
     additionalInformation?: string
+  }
+
+  export interface PlanCreationScheduleDto {
+    prisonNumber: string
+    status: PlanCreationScheduleStatus
+    deadlineDate?: Date
   }
 }
