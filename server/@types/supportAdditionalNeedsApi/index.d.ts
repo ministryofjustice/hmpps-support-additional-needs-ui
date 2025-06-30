@@ -4,6 +4,54 @@
  */
 
 export interface paths {
+  '/queue-admin/retry-dlq/{dlqName}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['retryDlq']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/queue-admin/retry-all-dlqs': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['retryAllDlqs']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/queue-admin/purge-queue/{queueName}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['purgeQueue']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/profile/{prisonNumber}/conditions/{conditionReference}': {
     parameters: {
       query?: never
@@ -84,6 +132,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/profile/{prisonNumber}/plan-creation-schedule/status': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch: operations['updatePlanCreationScheduleStatus']
+    trace?: never
+  }
   '/search/prisons/{prisonId}/people': {
     parameters: {
       query?: never
@@ -108,6 +172,38 @@ export interface paths {
       cookie?: never
     }
     get: operations['getReferenceData']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/reference-data/{domain}/categories': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getReferenceDataCategories']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/queue-admin/get-dlq-messages/{dlqName}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getDlqMessages']
     put?: never
     post?: never
     delete?: never
@@ -148,26 +244,18 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/reference-data/{domain}/categories': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['getReferenceDataCategories']
-    put: operations['getReferenceDataCategories_2']
-    post: operations['getReferenceDataCategories_1']
-    delete: operations['getReferenceDataCategories_3']
-    options: operations['getReferenceDataCategories_6']
-    head: operations['getReferenceDataCategories_5']
-    patch: operations['getReferenceDataCategories_4']
-    trace?: never
-  }
 }
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
+    RetryDlqResult: {
+      /** Format: int32 */
+      messagesFoundCount: number
+    }
+    PurgeQueueResult: {
+      /** Format: int32 */
+      messagesFoundCount: number
+    }
     UpdateConditionRequest: {
       /**
        * @description Whether or not the condition is active
@@ -605,6 +693,122 @@ export interface components {
        */
       challenges: components['schemas']['ChallengeResponse'][]
     }
+    UpdatePlanCreationStatusRequest: {
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+      /**
+       * @example null
+       * @enum {string}
+       */
+      status: 'EXEMPT_PRISONER_NOT_COMPLY'
+      /**
+       * @example null
+       * @enum {string}
+       */
+      exemptionReason?: 'EXEMPT_REFUSED_TO_ENGAGE' | 'EXEMPT_NOT_REQUIRED' | 'EXEMPT_INACCURATE_IDENTIFICATION'
+      /**
+       * @description More Detail about the reason for the exemption
+       * @example null
+       */
+      exemptionDetail?: string
+    }
+    PlanCreationScheduleResponse: {
+      /**
+       * Format: uuid
+       * @description The unique reference of this plan creation schedule
+       * @example c88a6c48-97e2-4c04-93b5-98619966447b
+       */
+      reference: string
+      /**
+       * @example null
+       * @enum {string}
+       */
+      status:
+        | 'SCHEDULED'
+        | 'EXEMPT_SYSTEM_TECHNICAL_ISSUE'
+        | 'EXEMPT_PRISONER_TRANSFER'
+        | 'EXEMPT_PRISONER_RELEASE'
+        | 'EXEMPT_PRISONER_DEATH'
+        | 'EXEMPT_PRISONER_MERGE'
+        | 'EXEMPT_PRISONER_NOT_COMPLY'
+        | 'EXEMPT_NOT_IN_EDUCATION'
+        | 'EXEMPT_UNKNOWN'
+        | 'COMPLETED'
+      /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the plan creation is due.
+       * @example 2023-11-19
+       */
+      deadlineDate?: string
+      /**
+       * @example null
+       * @enum {string}
+       */
+      exemptionReason?: 'EXEMPT_REFUSED_TO_ENGAGE' | 'EXEMPT_NOT_REQUIRED' | 'EXEMPT_INACCURATE_IDENTIFICATION'
+      /**
+       * @description More detail about the reason for this exemption. This is mainly used for EXEMPT_PRISONER_NOT_COMPLY.
+       * @example null
+       */
+      exemptionDetail?: string
+      /**
+       * Format: int32
+       * @description the version number of this schedule (the highest number is the most recent version of this plan creation schedule)
+       * @example null
+       */
+      version?: number
+    }
+    PlanCreationSchedulesResponse: {
+      /**
+       * @description A List containing zero or more PlanCreationSchedules.
+       * @example null
+       */
+      planCreationSchedules: components['schemas']['PlanCreationScheduleResponse'][]
+    }
     AdditionalNeedsSummary: {
       /**
        * @description Whether this person has any Conditions recorded in the service.
@@ -734,6 +938,19 @@ export interface components {
        */
       referenceDataList: components['schemas']['ReferenceData'][]
     }
+    DlqMessage: {
+      body: {
+        [key: string]: unknown
+      }
+      messageId: string
+    }
+    GetDlqResult: {
+      /** Format: int32 */
+      messagesFoundCount: number
+      /** Format: int32 */
+      messagesReturnedCount: number
+      messages: components['schemas']['DlqMessage'][]
+    }
     ReviewScheduleResponse: {
       /**
        * Format: uuid
@@ -823,95 +1040,6 @@ export interface components {
        */
       reviewSchedules: components['schemas']['ReviewScheduleResponse'][]
     }
-    PlanCreationScheduleResponse: {
-      /**
-       * Format: uuid
-       * @description The unique reference of this plan creation schedule
-       * @example c88a6c48-97e2-4c04-93b5-98619966447b
-       */
-      reference: string
-      /**
-       * Format: date
-       * @description An ISO-8601 date representing date that the plan creation is due.
-       * @example 2023-11-19
-       */
-      deadlineDate: string
-      /**
-       * @example null
-       * @enum {string}
-       */
-      status:
-        | 'SCHEDULED'
-        | 'EXEMPT_SYSTEM_TECHNICAL_ISSUE'
-        | 'EXEMPT_PRISONER_TRANSFER'
-        | 'EXEMPT_PRISONER_RELEASE'
-        | 'EXEMPT_PRISONER_DEATH'
-        | 'EXEMPT_PRISONER_MERGE'
-        | 'EXEMPT_PRISONER_NOT_COMPLY'
-        | 'EXEMPT_NOT_IN_EDUCATION'
-        | 'EXEMPT_UNKNOWN'
-        | 'COMPLETED'
-      /**
-       * @description The DPS username of the person who created this resource.
-       * @example asmith_gen
-       */
-      createdBy: string
-      /**
-       * @description The display name of the person who created this resource.
-       * @example Alex Smith
-       */
-      createdByDisplayName: string
-      /**
-       * Format: date-time
-       * @description An ISO-8601 timestamp representing when this resource was created.
-       * @example 2023-06-19T09:39:44Z
-       */
-      createdAt: string
-      /**
-       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
-       * @example BXI
-       */
-      createdAtPrison: string
-      /**
-       * @description The DPS username of the person who last updated this resource.
-       * @example asmith_gen
-       */
-      updatedBy: string
-      /**
-       * @description The display name of the person who last updated this resource.
-       * @example Alex Smith
-       */
-      updatedByDisplayName: string
-      /**
-       * Format: date-time
-       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
-       * @example 2023-06-19T09:39:44Z
-       */
-      updatedAt: string
-      /**
-       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
-       * @example BXI
-       */
-      updatedAtPrison: string
-      /**
-       * @description An optional reason as to why the plan creation Schedule is exempted.  Only present when the `status` field is one of the `EXEMPTION_` statuses and the user entered an exemption  reason when marking the Review as Exempted.
-       * @example null
-       */
-      exemptionReason?: string
-      /**
-       * Format: int32
-       * @description the version number of this schedule (the highest number is the most recent version of this plan creation schedule)
-       * @example null
-       */
-      version?: number
-    }
-    PlanCreationSchedulesResponse: {
-      /**
-       * @description A List containing zero or more PlanCreationSchedules.
-       * @example null
-       */
-      planCreationSchedules: components['schemas']['PlanCreationScheduleResponse'][]
-    }
   }
   responses: never
   parameters: never
@@ -921,6 +1049,70 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  retryDlq: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        dlqName: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['RetryDlqResult']
+        }
+      }
+    }
+  }
+  retryAllDlqs: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['RetryDlqResult'][]
+        }
+      }
+    }
+  }
+  purgeQueue: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        queueName: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PurgeQueueResult']
+        }
+      }
+    }
+  }
   updateCondition: {
     parameters: {
       query?: never
@@ -1119,6 +1311,32 @@ export interface operations {
       }
     }
   }
+  updatePlanCreationScheduleStatus: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdatePlanCreationStatusRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PlanCreationSchedulesResponse']
+        }
+      }
+    }
+  }
   searchByPrison: {
     parameters: {
       query?: {
@@ -1173,50 +1391,6 @@ export interface operations {
       }
     }
   }
-  getReviewSchedules: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        prisonNumber: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['ReviewSchedulesResponse']
-        }
-      }
-    }
-  }
-  getPlanCreationSchedules: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        prisonNumber: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['PlanCreationSchedulesResponse']
-        }
-      }
-    }
-  }
   getReferenceDataCategories: {
     parameters: {
       query?: {
@@ -1243,16 +1417,14 @@ export interface operations {
       }
     }
   }
-  getReferenceDataCategories_2: {
+  getDlqMessages: {
     parameters: {
       query?: {
-        /** @description Include inactive reference data. Defaults to false */
-        includeInactive?: boolean
+        maxMessages?: number
       }
       header?: never
       path: {
-        /** @description Reference data domain. */
-        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+        dlqName: string
       }
       cookie?: never
     }
@@ -1264,21 +1436,17 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['ReferenceDataListResponse']
+          '*/*': components['schemas']['GetDlqResult']
         }
       }
     }
   }
-  getReferenceDataCategories_1: {
+  getReviewSchedules: {
     parameters: {
-      query?: {
-        /** @description Include inactive reference data. Defaults to false */
-        includeInactive?: boolean
-      }
+      query?: never
       header?: never
       path: {
-        /** @description Reference data domain. */
-        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+        prisonNumber: string
       }
       cookie?: never
     }
@@ -1290,21 +1458,19 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['ReferenceDataListResponse']
+          '*/*': components['schemas']['ReviewSchedulesResponse']
         }
       }
     }
   }
-  getReferenceDataCategories_3: {
+  getPlanCreationSchedules: {
     parameters: {
       query?: {
-        /** @description Include inactive reference data. Defaults to false */
-        includeInactive?: boolean
+        includeAllHistory?: boolean
       }
       header?: never
       path: {
-        /** @description Reference data domain. */
-        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+        prisonNumber: string
       }
       cookie?: never
     }
@@ -1316,85 +1482,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['ReferenceDataListResponse']
-        }
-      }
-    }
-  }
-  getReferenceDataCategories_6: {
-    parameters: {
-      query?: {
-        /** @description Include inactive reference data. Defaults to false */
-        includeInactive?: boolean
-      }
-      header?: never
-      path: {
-        /** @description Reference data domain. */
-        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['ReferenceDataListResponse']
-        }
-      }
-    }
-  }
-  getReferenceDataCategories_5: {
-    parameters: {
-      query?: {
-        /** @description Include inactive reference data. Defaults to false */
-        includeInactive?: boolean
-      }
-      header?: never
-      path: {
-        /** @description Reference data domain. */
-        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['ReferenceDataListResponse']
-        }
-      }
-    }
-  }
-  getReferenceDataCategories_4: {
-    parameters: {
-      query?: {
-        /** @description Include inactive reference data. Defaults to false */
-        includeInactive?: boolean
-      }
-      header?: never
-      path: {
-        /** @description Reference data domain. */
-        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['ReferenceDataListResponse']
+          '*/*': components['schemas']['PlanCreationSchedulesResponse']
         }
       }
     }

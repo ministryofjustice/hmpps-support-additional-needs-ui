@@ -1,10 +1,16 @@
-import type { PlanCreationScheduleResponse } from 'supportAdditionalNeedsApiClient'
+import type {
+  PlanCreationScheduleResponse,
+  PlanCreationSchedulesResponse,
+  UpdatePlanCreationStatusRequest,
+} from 'supportAdditionalNeedsApiClient'
 import type { EducationSupportPlanDto, PlanCreationScheduleDto } from 'dto'
 import { SupportAdditionalNeedsApiClient } from '../data'
 import toCreateEducationSupportPlanRequest from '../data/mappers/createEducationSupportPlanRequestMapper'
 import logger from '../../logger'
 import toEducationSupportPlanDto from '../data/mappers/educationSupportPlanDtoMapper'
 import toPlanCreationScheduleDto from '../data/mappers/planCreationScheduleDtoMapper'
+import PlanCreationScheduleStatus from '../enums/planCreationScheduleStatus'
+import PlanCreationScheduleExemptionReason from '../enums/planCreationScheduleExemptionReason'
 
 export default class EducationSupportPlanService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -49,17 +55,52 @@ export default class EducationSupportPlanService {
         return null
       }
 
-      const currentSchedule =
-        planCreationSchedules.length === 1
-          ? planCreationSchedules.at(0)
-          : planCreationSchedules //
-              .toSorted((left, right) => left.version - right.version)
-              .toReversed()
-              .at(0)
-      return toPlanCreationScheduleDto(prisonNumber, currentSchedule)
+      return this.currentPlanCreationSchedule(prisonNumber, apiResponse)
     } catch (e) {
       logger.error('Error retrieving education support plan creation schedule', e)
       throw e
     }
+  }
+
+  async updateEducationSupportPlanCreationScheduleAsRefused(
+    username: string,
+    prisonNumber: string,
+    prisonId: string,
+    reason: PlanCreationScheduleExemptionReason,
+    detail?: string,
+  ): Promise<PlanCreationScheduleDto> {
+    try {
+      const request: UpdatePlanCreationStatusRequest = {
+        prisonId,
+        status: PlanCreationScheduleStatus.EXEMPT_PRISONER_NOT_COMPLY,
+        exemptionReason: reason,
+        exemptionDetail: detail,
+      }
+      const apiResponse = await this.supportAdditionalNeedsApiClient.updateEducationSupportPlanCreationScheduleStatus(
+        prisonNumber,
+        username,
+        request,
+      )
+
+      return this.currentPlanCreationSchedule(prisonNumber, apiResponse)
+    } catch (e) {
+      logger.error('Error updating education support plan creation schedule as Refused', e)
+      throw e
+    }
+  }
+
+  private currentPlanCreationSchedule = (
+    prisonNumber: string,
+    apiResponse: PlanCreationSchedulesResponse,
+  ): PlanCreationScheduleDto => {
+    const { planCreationSchedules }: { planCreationSchedules: Array<PlanCreationScheduleResponse> } = apiResponse
+    const currentSchedule =
+      planCreationSchedules.length === 1
+        ? planCreationSchedules.at(0)
+        : planCreationSchedules //
+            .toSorted((left, right) => left.version - right.version)
+            .toReversed()
+            .at(0)
+    return toPlanCreationScheduleDto(prisonNumber, currentSchedule)
   }
 }

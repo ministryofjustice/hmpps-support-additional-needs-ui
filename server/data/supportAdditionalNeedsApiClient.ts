@@ -5,6 +5,7 @@ import type {
   EducationSupportPlanResponse,
   PlanCreationSchedulesResponse,
   SearchByPrisonResponse,
+  UpdatePlanCreationStatusRequest,
 } from 'supportAdditionalNeedsApiClient'
 import config from '../config'
 import logger from '../../logger'
@@ -67,6 +68,20 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
           includeAllHistory,
         },
         errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async updateEducationSupportPlanCreationScheduleStatus(
+    prisonNumber: string,
+    username: string,
+    updatePlanCreationStatusRequest: UpdatePlanCreationStatusRequest,
+  ): Promise<PlanCreationSchedulesResponse> {
+    return this.patch<PlanCreationSchedulesResponse>(
+      {
+        path: `/profile/${prisonNumber}/plan-creation-schedule/status`,
+        data: updatePlanCreationStatusRequest,
       },
       asSystem(username),
     )
