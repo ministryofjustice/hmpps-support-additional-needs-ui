@@ -58,5 +58,8 @@ export default function createApp(services: Services): express.Application {
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(services, config.production))
 
+  app.locals.applicationInsightsConnectionString = config.applicationInsights.connectionString
+  app.locals.applicationInsightsRoleName = services.applicationInfo.applicationName
+
   return app
 }

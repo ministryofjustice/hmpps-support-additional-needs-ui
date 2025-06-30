@@ -74,6 +74,12 @@
 {% block bodyEnd %}
   <script type="module" src="{{ '/assets/js/index.js' | assetMap }}"></script>
 
+  <script nonce="{{ cspNonce }}">
+    document.addEventListener('DOMContentLoaded', () => {
+      window.initApplicationInsights('{{ applicationInsightsConnectionString }}', '{{ applicationInsightsRoleName }}', '{{ user.username }}')
+    })
+  </script>
+
   {% for js in feComponents.jsIncludes %}
     <script src="{{ js }}" nonce="{{ cspNonce }}"></script>
   {% endfor %}
