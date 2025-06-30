@@ -20,7 +20,7 @@ describe('educationHealthCarePlanSchema', () => {
       '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/education-health-care-plan'
   })
 
-  it.each([{ hasCurrentEhcp: 'NO' }, { hasCurrentEhcp: 'NO' }, { hasCurrentEhcp: 'YES' }])(
+  it.each([{ hasCurrentEhcp: 'NO' }, { hasCurrentEhcp: 'YES' }])(
     'happy path - validation passes - hasCurrentEhcp: $hasCurrentEhcp',
     async requestBody => {
       // Given

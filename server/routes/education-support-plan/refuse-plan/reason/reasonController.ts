@@ -2,13 +2,11 @@ import { NextFunction, Request, RequestHandler, Response } from 'express'
 
 export default class ReasonController {
   getRefusePlanReasonView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    const { prisonerSummary } = res.locals
+    const { prisonerSummary, invalidForm } = res.locals
 
-    const viewRenderArgs = {
-      prisonerSummary,
-      // dto: educationSupportPlanDto,
-      // errorSavingEducationSupportPlan: req.flash('pageHasApiErrors')[0] != null,
-    }
+    const refusePlanReasonForm = invalidForm ?? undefined
+
+    const viewRenderArgs = { prisonerSummary, form: refusePlanReasonForm }
     return res.render('pages/education-support-plan/refuse-plan/reason/index', viewRenderArgs)
   }
 
