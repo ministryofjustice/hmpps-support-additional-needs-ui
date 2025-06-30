@@ -9,6 +9,11 @@ generic-service:
       - support-for-additional-needs-dev.hmpps.service.justice.gov.uk
       - san-dev.hmpps.service.justice.gov.uk
 
+  scheduledDowntime:
+    enabled: true
+    startup: '30 6 * * 1-5' # Start at 6.30am UTC Monday-Friday
+    shutdown: '00 21 * * 1-5' # Stop at 9.00pm UTC Monday-Friday
+
   env:
     INGRESS_URL: "https://support-for-additional-needs-dev.hmpps.service.justice.gov.uk"
     HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
@@ -23,6 +28,17 @@ generic-service:
     DPS_URL: 'https://digital-dev.prison.service.justice.gov.uk'
     NEW_DPS_URL: 'https://dps-dev.prison.service.justice.gov.uk'
     COMPONENT_API_URL: 'https://frontend-components-dev.hmpps.service.justice.gov.uk'
+
+  allowlist:
+    uservision-accessibility-testers: 5.181.59.114/32
+    cymulate-1: 54.217.50.18/32
+    cymulate-2: 52.208.202.111/32
+    cymulate-3: 52.49.144.209/32
+    groups:
+      - internal
+      - prisons
+      - private_prisons
+      - prisons-education
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
