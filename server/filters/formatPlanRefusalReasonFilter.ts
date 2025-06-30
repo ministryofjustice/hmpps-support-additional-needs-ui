@@ -8,5 +8,5 @@ export default function formatPlanRefusalReasonFilter(value: PlanCreationSchedul
 enum PlanRefusalReasonValues {
   EXEMPT_REFUSED_TO_ENGAGE = 'Has refused to engage or cooperate',
   EXEMPT_NOT_REQUIRED = 'No support plan currently required',
-  EXEMPT_INACCURATE_IDENTIFICATION = 'Declined to inaccurate identification of need',
+  EXEMPT_INACCURATE_IDENTIFICATION = 'Declined due to inaccurate identification of need',
 }

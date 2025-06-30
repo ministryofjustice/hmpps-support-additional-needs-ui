@@ -13,7 +13,7 @@ describe('formatPlanRefusalReasonFilter', () => {
     },
     {
       source: PlanCreationScheduleExemptionReason.EXEMPT_INACCURATE_IDENTIFICATION,
-      expected: 'Declined to inaccurate identification of need',
+      expected: 'Declined due to inaccurate identification of need',
     },
   ])('should format $source as $expected', ({ source, expected }) => {
     expect(formatPlanRefusalReasonFilter(source)).toEqual(expected)
