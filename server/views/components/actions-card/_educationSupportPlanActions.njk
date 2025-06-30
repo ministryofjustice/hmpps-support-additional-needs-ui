@@ -16,5 +16,16 @@
       </li>
     {# endif #}
 
+    {# if params.userHasPermissionTo('EXEMPT_EDUCATION_LEARNER_SUPPORT_PLAN') #}
+      <li class="govuk-!-margin-0 govuk-!-padding-bottom-3 govuk-!-padding-top-3">
+        <a class="govuk-link" data-qa="refuse-education-support-plan-button" href="/education-support-plan/{{ params.prisonerSummary.prisonNumber }}/refuse-plan/reason">
+            <span>
+              <img src="/assets/images/icon-document.svg" role="presentation" alt="" class="action-icon" />
+              Refuse education support plan
+            </span>
+        </a>
+      </li>
+    {# endif #}
+
   </ul>
 </div>

@@ -33,9 +33,13 @@ const pageViewEventMap: Record<string, Page> = {
   '/education-support-plan/:prisonNumber/create/:journeyId/next-review-date': Page.CREATE_ELSP_SET_REVIEW_DATE,
   '/education-support-plan/:prisonNumber/create/:journeyId/check-your-answers': Page.CREATE_ELSP_CHECK_YOUR_ANSWERS,
 
+  // Prisoner refuses creation of ELSP routes
+  '/education-support-plan/:prisonNumber/refuse-plan/:journeyId/reason': Page.REFUSE_ELSP_REASON,
+
   // Non audit routes. These routes do not raise an audit event
   '/': null,
   '/education-support-plan/:prisonNumber/create/who-created-the-plan': null,
+  '/education-support-plan/:prisonNumber/refuse-plan/reason': null,
 }
 
 export default function auditMiddleware({ auditService }: Services) {
