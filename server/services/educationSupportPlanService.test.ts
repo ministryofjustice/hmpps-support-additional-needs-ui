@@ -101,6 +101,8 @@ describe('educationSupportPlanService', () => {
   })
 
   describe('getCurrentEducationSupportPlanCreationSchedule', () => {
+    const expectedIncludeAllHistory = false
+
     it('should return the current education support plan creation schedule', async () => {
       // Given
       const firstSchedule = aValidPlanCreationScheduleResponse({
@@ -144,6 +146,7 @@ describe('educationSupportPlanService', () => {
       expect(supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules).toHaveBeenCalledWith(
         prisonNumber,
         username,
+        expectedIncludeAllHistory,
       )
     })
 
@@ -167,6 +170,7 @@ describe('educationSupportPlanService', () => {
       expect(supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules).toHaveBeenCalledWith(
         prisonNumber,
         username,
+        expectedIncludeAllHistory,
       )
     })
 
@@ -185,6 +189,7 @@ describe('educationSupportPlanService', () => {
       expect(supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules).toHaveBeenCalledWith(
         prisonNumber,
         username,
+        expectedIncludeAllHistory,
       )
     })
   })

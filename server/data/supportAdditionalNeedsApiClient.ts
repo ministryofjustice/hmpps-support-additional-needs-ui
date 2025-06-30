@@ -58,10 +58,14 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
   async getEducationSupportPlanCreationSchedules(
     prisonNumber: string,
     username: string,
+    includeAllHistory: boolean = true,
   ): Promise<PlanCreationSchedulesResponse> {
     return this.get<PlanCreationSchedulesResponse>(
       {
         path: `/profile/${prisonNumber}/plan-creation-schedule`,
+        query: {
+          includeAllHistory,
+        },
         errorHandler: restClientErrorHandler({ ignore404: true }),
       },
       asSystem(username),

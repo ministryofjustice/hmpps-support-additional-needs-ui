@@ -224,11 +224,12 @@ describe('supportAdditionalNeedsApiClient', () => {
   })
 
   describe('getEducationSupportPlanCreationSchedules', () => {
-    it('should get a prisoners education support plan creation schedules', async () => {
+    it('should get a prisoners full history of education support plan creation schedules', async () => {
       // Given
       const planCreationSchedulesResponse = aValidPlanCreationSchedulesResponse()
       supportAdditionalNeedsApi
         .get(`/profile/${prisonNumber}/plan-creation-schedule`)
+        .query(queryParams => queryParams.includeAllHistory === 'true')
         .matchHeader('authorization', `Bearer ${systemToken}`)
         .reply(200, planCreationSchedulesResponse)
 
@@ -236,6 +237,28 @@ describe('supportAdditionalNeedsApiClient', () => {
       const actual = await supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules(
         prisonNumber,
         username,
+      )
+
+      // Then
+      expect(actual).toEqual(planCreationSchedulesResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should get a prisoners latest education support plan creation schedule', async () => {
+      // Given
+      const planCreationSchedulesResponse = aValidPlanCreationSchedulesResponse()
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/plan-creation-schedule`)
+        .query(queryParams => queryParams.includeAllHistory === 'false')
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, planCreationSchedulesResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules(
+        prisonNumber,
+        username,
+        false,
       )
 
       // Then
@@ -253,6 +276,7 @@ describe('supportAdditionalNeedsApiClient', () => {
       }
       supportAdditionalNeedsApi
         .get(`/profile/${prisonNumber}/plan-creation-schedule`)
+        .query(queryParams => queryParams.includeAllHistory === 'true')
         .matchHeader('authorization', `Bearer ${systemToken}`)
         .reply(404, apiErrorResponse)
 
@@ -276,6 +300,7 @@ describe('supportAdditionalNeedsApiClient', () => {
       }
       supportAdditionalNeedsApi
         .get(`/profile/${prisonNumber}/plan-creation-schedule`)
+        .query(queryParams => queryParams.includeAllHistory === 'true')
         .matchHeader('authorization', `Bearer ${systemToken}`)
         .thrice()
         .reply(500, apiErrorResponse)
