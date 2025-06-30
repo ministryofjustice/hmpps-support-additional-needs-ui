@@ -11,6 +11,7 @@ import fallbackMessageFilter from '../filters/fallbackMessageFilter'
 import formatYesNoFilter from '../filters/formatYesNoFilter'
 import findErrorFilter from '../filters/findErrorFilter'
 import formatPrisonerNameFilter, { NameFormat } from '../filters/formatPrisonerNameFilter'
+import formatPlanRefusalReasonFilter from '../filters/formatPlanRefusalReasonFilter'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -50,6 +51,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatDate', formatDateFilter)
   njkEnv.addFilter('fallbackMessage', fallbackMessageFilter)
   njkEnv.addFilter('formatYesNo', formatYesNoFilter)
+  njkEnv.addFilter('formatPlanRefusalReason', formatPlanRefusalReasonFilter)
   // Name format filters
   njkEnv.addFilter('formatFIRST_NAME_ONLY', formatPrisonerNameFilter(NameFormat.FIRST_NAME_ONLY))
   njkEnv.addFilter('formatLAST_NAME_ONLY', formatPrisonerNameFilter(NameFormat.LAST_NAME_ONLY))
