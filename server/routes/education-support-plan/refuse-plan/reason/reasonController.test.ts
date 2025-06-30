@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
+import aValidRefuseEducationSupportPlanDto from '../../../../testsupport/refuseEducationSupportPlanDtoTestDataBuilder'
 import ReasonController from './reasonController'
 import PlanCreationScheduleExemptionReason from '../../../../enums/planCreationScheduleExemptionReason'
 
@@ -25,7 +26,14 @@ describe('reasonController', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     req.body = {}
-    req.journeyData = {}
+    req.journeyData = {
+      refuseEducationSupportPlanDto: {
+        ...aValidRefuseEducationSupportPlanDto({
+          reason: PlanCreationScheduleExemptionReason.EXEMPT_REFUSED_TO_ENGAGE,
+          details: 'Chris failed to engage and would not cooperate to setup a plan',
+        }),
+      },
+    }
   })
 
   it('should render view given no previously submitted invalid form', async () => {
@@ -35,7 +43,10 @@ describe('reasonController', () => {
     const expectedViewTemplate = 'pages/education-support-plan/refuse-plan/reason/index'
     const expectedViewModel = {
       prisonerSummary,
-      form: undefined as unknown,
+      form: {
+        refusalReason: 'EXEMPT_REFUSED_TO_ENGAGE',
+        refusalReasonDetails: 'Chris failed to engage and would not cooperate to setup a plan',
+      },
     }
 
     // When
