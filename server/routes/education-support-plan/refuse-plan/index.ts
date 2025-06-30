@@ -3,6 +3,8 @@ import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import { validate } from '../../../middleware/validationMiddleware'
+import reasonSchema from '../validationSchemas/refuse-plan/reasonSchema'
 import ReasonController from './reason/reasonController'
 
 const refuseEducationSupportPlanRoutes = (services: Services): Router => {
@@ -24,7 +26,7 @@ const refuseEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.post('/:journeyId/reason', [
     // checkEducationSupportPlanDtoExistsInJourneyData,
-    // validate(whoCompletedThePlanSchema),
+    validate(reasonSchema),
     asyncMiddleware(reasonController.submitRefusePlanReasonView),
   ])
 

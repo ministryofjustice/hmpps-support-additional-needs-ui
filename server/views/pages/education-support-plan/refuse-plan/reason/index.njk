@@ -21,7 +21,7 @@
 
           {% macro refusalReasonDetailsInput(reason, value) %}
             {{ govukTextarea({
-              id: reason,
+              id: reason + "_refusalDetails",
               name: "refusalReasonDetails[" + reason + "]",
               value: value,
               rows: "3",
@@ -30,7 +30,7 @@
                 text: "More details (optional)",
                 classes: "govuk-label--s govuk-!-font-weight-bold"
               },
-              errorMessage: errors | findError(reason)
+              errorMessage: errors | findError(reason + "_refusalDetails")
             }) }}
           {% endmacro %}
 
