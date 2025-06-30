@@ -37,9 +37,11 @@ export default class EducationSupportPlanService {
     username: string,
   ): Promise<PlanCreationScheduleDto> {
     try {
+      const includeAllHistory = false
       const apiResponse = await this.supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules(
         prisonNumber,
         username,
+        includeAllHistory,
       )
 
       const planCreationSchedules: Array<PlanCreationScheduleResponse> = apiResponse?.planCreationSchedules || []
@@ -47,10 +49,13 @@ export default class EducationSupportPlanService {
         return null
       }
 
-      const currentSchedule = planCreationSchedules //
-        .toSorted((left, right) => left.version - right.version)
-        .toReversed()
-        .at(0)
+      const currentSchedule =
+        planCreationSchedules.length === 1
+          ? planCreationSchedules.at(0)
+          : planCreationSchedules //
+              .toSorted((left, right) => left.version - right.version)
+              .toReversed()
+              .at(0)
       return toPlanCreationScheduleDto(prisonNumber, currentSchedule)
     } catch (e) {
       logger.error('Error retrieving education support plan creation schedule', e)
