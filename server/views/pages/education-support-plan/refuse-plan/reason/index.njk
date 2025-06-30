@@ -19,7 +19,68 @@
         <div class="govuk-form-group">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
+          {% macro refusalReasonDetailsInput(reason, value) %}
+            {{ govukTextarea({
+              id: reason,
+              name: "refusalReasonDetails[" + reason + "]",
+              value: value,
+              rows: "3",
+              maxlength: 200,
+              label: {
+                text: "More details (optional)",
+                classes: "govuk-label--s govuk-!-font-weight-bold"
+              },
+              errorMessage: errors | findError(reason)
+            }) }}
+          {% endmacro %}
 
+          {{ govukRadios({
+            name: "refusalReason",
+            id: "refusalReason",
+            fieldset: {
+              legend: {
+                text: "Select the reason " + prisonerSummary | formatFirst_name_Last_name + " declined an education support plan",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            items: [
+              {
+                value: "EXEMPT_REFUSED_TO_ENGAGE",
+                text: "EXEMPT_REFUSED_TO_ENGAGE" | formatPlanRefusalReason,
+                checked: form.refusalReason === "EXEMPT_REFUSED_TO_ENGAGE",
+                conditional: {
+                  html: refusalReasonDetailsInput(
+                    "EXEMPT_REFUSED_TO_ENGAGE",
+                    form.refusalReasonDetails["EXEMPT_REFUSED_TO_ENGAGE"]
+                  )
+                }
+              },
+              {
+                value: "EXEMPT_NOT_REQUIRED",
+                text: "EXEMPT_NOT_REQUIRED" | formatPlanRefusalReason,
+                checked: form.refusalReason === "EXEMPT_NOT_REQUIRED",
+                conditional: {
+                  html: refusalReasonDetailsInput(
+                    "EXEMPT_NOT_REQUIRED",
+                    form.refusalReasonDetails["EXEMPT_NOT_REQUIRED"]
+                  )
+                }
+              },
+              {
+                value: "EXEMPT_INACCURATE_IDENTIFICATION",
+                text: "EXEMPT_INACCURATE_IDENTIFICATION" | formatPlanRefusalReason,
+                checked: form.refusalReason === "EXEMPT_INACCURATE_IDENTIFICATION",
+                conditional: {
+                  html: refusalReasonDetailsInput(
+                    "EXEMPT_INACCURATE_IDENTIFICATION",
+                    form.refusalReasonDetails["EXEMPT_INACCURATE_IDENTIFICATION"]
+                  )
+                }
+              }
+            ],
+            errorMessage: errors | findError("refusalReason")
+          }) }}
         </div>
 
         {{ govukButton({
