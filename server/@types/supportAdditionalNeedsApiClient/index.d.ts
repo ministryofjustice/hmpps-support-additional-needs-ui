@@ -11,4 +11,5 @@ declare module 'supportAdditionalNeedsApiClient' {
 
   export type PlanCreationSchedulesResponse = components['schemas']['PlanCreationSchedulesResponse']
   export type PlanCreationScheduleResponse = components['schemas']['PlanCreationScheduleResponse']
+  export type UpdatePlanCreationStatusRequest = components['schemas']['UpdatePlanCreationStatusRequest']
 }

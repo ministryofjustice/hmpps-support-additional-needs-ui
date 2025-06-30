@@ -1,6 +1,6 @@
 import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import nock from 'nock'
-import { isEqual } from 'lodash'
+import { isEqual, isMatch } from 'lodash'
 import SupportAdditionalNeedsApiClient from './supportAdditionalNeedsApiClient'
 import aValidSearchByPrisonResponse from '../testsupport/searchByPrisonResponseTestDataBuiilder'
 import aValidPerson from '../testsupport/personTestDataBuilder'
@@ -10,6 +10,7 @@ import SearchSortDirection from '../enums/searchSortDirection'
 import aValidCreateEducationSupportPlanRequest from '../testsupport/createEducationSupportPlanRequestTestDataBuilder'
 import aValidEducationSupportPlanResponse from '../testsupport/educationSupportPlanResponseTestDataBuilder'
 import { aValidPlanCreationSchedulesResponse } from '../testsupport/planCreationScheduleResponseTestDataBuilder'
+import aValidUpdatePlanCreationStatusRequest from '../testsupport/updatePlanCreationStatusRequestTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -310,6 +311,62 @@ describe('supportAdditionalNeedsApiClient', () => {
       // When
       const actual = await supportAdditionalNeedsApiClient
         .getEducationSupportPlanCreationSchedules(prisonNumber, username)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('updateEducationSupportPlanCreationScheduleStatus', () => {
+    it('should update a prisoners education support plan creation schedule status', async () => {
+      // Given
+      const updatePlanCreationStatusRequest = aValidUpdatePlanCreationStatusRequest()
+
+      const expectedResponse = aValidEducationSupportPlanResponse()
+      supportAdditionalNeedsApi
+        .patch(`/profile/${prisonNumber}/plan-creation-schedule/status`, requestBody =>
+          isMatch(requestBody, updatePlanCreationStatusRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, expectedResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.updateEducationSupportPlanCreationScheduleStatus(
+        prisonNumber,
+        username,
+        updatePlanCreationStatusRequest,
+      )
+
+      // Then
+      expect(actual).toEqual(expectedResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const updatePlanCreationStatusRequest = aValidUpdatePlanCreationStatusRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .patch(`/profile/${prisonNumber}/plan-creation-schedule/status`, requestBody =>
+          isMatch(requestBody, updatePlanCreationStatusRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .updateEducationSupportPlanCreationScheduleStatus(prisonNumber, username, updatePlanCreationStatusRequest)
         .catch(e => e)
 
       // Then

@@ -7,6 +7,8 @@ import aValidCreateEducationSupportPlanRequest from '../testsupport/createEducat
 import aValidEducationSupportPlanResponse from '../testsupport/educationSupportPlanResponseTestDataBuilder'
 import { aValidPlanCreationScheduleResponse } from '../testsupport/planCreationScheduleResponseTestDataBuilder'
 import aValidPlanCreationScheduleDto from '../testsupport/planCreationScheduleDtoTestDataBuilder'
+import PlanCreationScheduleExemptionReason from '../enums/planCreationScheduleExemptionReason'
+import aValidUpdatePlanCreationStatusRequest from '../testsupport/updatePlanCreationStatusRequestTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -105,18 +107,6 @@ describe('educationSupportPlanService', () => {
 
     it('should return the current education support plan creation schedule', async () => {
       // Given
-      const firstSchedule = aValidPlanCreationScheduleResponse({
-        version: 0,
-        status: PlanCreationScheduleStatus.SCHEDULED,
-      })
-      const secondSchedule = aValidPlanCreationScheduleResponse({
-        version: 1,
-        status: PlanCreationScheduleStatus.EXEMPT_SYSTEM_TECHNICAL_ISSUE,
-      })
-      const thirdSchedule = aValidPlanCreationScheduleResponse({
-        version: 2,
-        status: PlanCreationScheduleStatus.SCHEDULED,
-      })
       const scheduleDate = subDays(startOfToday(), 5)
       const currentSchedule = aValidPlanCreationScheduleResponse({
         version: 4,
@@ -125,7 +115,7 @@ describe('educationSupportPlanService', () => {
       })
 
       const apiResponse = {
-        planCreationSchedules: [firstSchedule, secondSchedule, thirdSchedule, currentSchedule],
+        planCreationSchedules: [currentSchedule],
       }
       supportAdditionalNeedsApiClient.getEducationSupportPlanCreationSchedules.mockResolvedValue(apiResponse)
 
@@ -190,6 +180,85 @@ describe('educationSupportPlanService', () => {
         prisonNumber,
         username,
         expectedIncludeAllHistory,
+      )
+    })
+  })
+
+  describe('updateEducationSupportPlanCreationScheduleAsRefused', () => {
+    it('should update education support plan creation schedule as refused', async () => {
+      // Given
+      const scheduleDate = subDays(startOfToday(), 5)
+      const currentSchedule = aValidPlanCreationScheduleResponse({
+        version: 4,
+        status: PlanCreationScheduleStatus.COMPLETED,
+        deadlineDate: scheduleDate,
+      })
+
+      const apiResponse = {
+        planCreationSchedules: [currentSchedule],
+      }
+      supportAdditionalNeedsApiClient.updateEducationSupportPlanCreationScheduleStatus.mockResolvedValue(apiResponse)
+
+      const expectedUpdateStatusRequest = aValidUpdatePlanCreationStatusRequest({
+        prisonId,
+        status: PlanCreationScheduleStatus.EXEMPT_PRISONER_NOT_COMPLY,
+        exemptionReason: PlanCreationScheduleExemptionReason.EXEMPT_REFUSED_TO_ENGAGE,
+        exemptionDetail: 'Chris does not feel he needs a plan',
+      })
+
+      const expected = aValidPlanCreationScheduleDto({
+        prisonNumber,
+        status: PlanCreationScheduleStatus.COMPLETED,
+        deadlineDate: scheduleDate,
+      })
+
+      // When
+      const actual = await educationSupportPlanService.updateEducationSupportPlanCreationScheduleAsRefused(
+        username,
+        prisonNumber,
+        prisonId,
+        PlanCreationScheduleExemptionReason.EXEMPT_REFUSED_TO_ENGAGE,
+        'Chris does not feel he needs a plan',
+      )
+
+      // Then
+      expect(actual).toEqual(expected)
+      expect(supportAdditionalNeedsApiClient.updateEducationSupportPlanCreationScheduleStatus).toHaveBeenCalledWith(
+        prisonNumber,
+        username,
+        expectedUpdateStatusRequest,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.updateEducationSupportPlanCreationScheduleStatus.mockRejectedValue(expectedError)
+
+      const expectedUpdateStatusRequest = aValidUpdatePlanCreationStatusRequest({
+        prisonId,
+        status: PlanCreationScheduleStatus.EXEMPT_PRISONER_NOT_COMPLY,
+        exemptionReason: PlanCreationScheduleExemptionReason.EXEMPT_REFUSED_TO_ENGAGE,
+        exemptionDetail: 'Chris does not feel he needs a plan',
+      })
+
+      // When
+      const actual = await educationSupportPlanService
+        .updateEducationSupportPlanCreationScheduleAsRefused(
+          username,
+          prisonNumber,
+          prisonId,
+          PlanCreationScheduleExemptionReason.EXEMPT_REFUSED_TO_ENGAGE,
+          'Chris does not feel he needs a plan',
+        )
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.updateEducationSupportPlanCreationScheduleStatus).toHaveBeenCalledWith(
+        prisonNumber,
+        username,
+        expectedUpdateStatusRequest,
       )
     })
   })
