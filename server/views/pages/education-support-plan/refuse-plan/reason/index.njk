@@ -1,0 +1,35 @@
+{% extends "../../../../partials/layout.njk" %}
+
+{% set pageId = 'refuse-education-support-plan-reason' %}
+{% set pageTitle = "Refuse an education support plan" %}
+
+{% block beforeContent %}
+  {{ govukBackLink({
+    text: "Back",
+    href: "#",
+    classes: "js-back-link"
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Record reason",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
