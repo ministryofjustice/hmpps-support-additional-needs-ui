@@ -58,7 +58,9 @@ describe('reasonController', () => {
       prisonerSummary,
       form: {
         refusalReason: 'EXEMPT_REFUSED_TO_ENGAGE',
-        refusalReasonDetails: 'Chris failed to engage and would not cooperate to setup a plan',
+        refusalReasonDetails: {
+          EXEMPT_REFUSED_TO_ENGAGE: 'Chris failed to engage and would not cooperate to setup a plan',
+        },
       },
       errorRecordingEducationSupportPlanRefusal: false,
     }
@@ -74,8 +76,8 @@ describe('reasonController', () => {
     // Given
     flash.mockReturnValue([])
     const invalidForm = {
-      refusalReason: PlanCreationScheduleExemptionReason.EXEMPT_NOT_REQUIRED,
-      refusalReasonDetails: 'a'.repeat(201),
+      refusalReason: 'EXEMPT_NOT_REQUIRED',
+      refusalReasonDetails: { EXEMPT_NOT_REQUIRED: 'a'.repeat(201) },
     }
     res.locals.invalidForm = invalidForm
 
@@ -99,7 +101,9 @@ describe('reasonController', () => {
       prisonerSummary,
       form: {
         refusalReason: 'EXEMPT_REFUSED_TO_ENGAGE',
-        refusalReasonDetails: 'Chris failed to engage and would not cooperate to setup a plan',
+        refusalReasonDetails: {
+          EXEMPT_REFUSED_TO_ENGAGE: 'Chris failed to engage and would not cooperate to setup a plan',
+        },
       },
       errorRecordingEducationSupportPlanRefusal: true,
     }
@@ -121,8 +125,8 @@ describe('reasonController', () => {
     })
     req.journeyData = { refuseEducationSupportPlanDto }
     req.body = {
-      refusalReason: PlanCreationScheduleExemptionReason.EXEMPT_NOT_REQUIRED,
-      refusalReasonDetails: 'Chris does not want a plan',
+      refusalReason: 'EXEMPT_NOT_REQUIRED',
+      refusalReasonDetails: { EXEMPT_NOT_REQUIRED: 'Chris does not want a plan' },
     }
 
     educationSupportPlanService.updateEducationSupportPlanCreationScheduleAsRefused.mockResolvedValue(
@@ -163,8 +167,8 @@ describe('reasonController', () => {
     })
     req.journeyData = { refuseEducationSupportPlanDto }
     req.body = {
-      refusalReason: PlanCreationScheduleExemptionReason.EXEMPT_NOT_REQUIRED,
-      refusalReasonDetails: 'Chris does not want a plan',
+      refusalReason: 'EXEMPT_NOT_REQUIRED',
+      refusalReasonDetails: { EXEMPT_NOT_REQUIRED: 'Chris does not want a plan' },
     }
 
     educationSupportPlanService.updateEducationSupportPlanCreationScheduleAsRefused.mockRejectedValue(
