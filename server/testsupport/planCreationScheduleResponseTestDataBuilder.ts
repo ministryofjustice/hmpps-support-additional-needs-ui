@@ -14,6 +14,7 @@ const aValidPlanCreationScheduleResponse = (options?: {
   deadlineDate?: Date
   status?: PlanCreationScheduleStatus
   exemptionReason?: string
+  exemptionDetail?: string
   version?: number
   createdBy?: string
   createdByDisplayName?: string
@@ -29,6 +30,7 @@ const aValidPlanCreationScheduleResponse = (options?: {
     options?.deadlineDate === null ? null : format(options?.deadlineDate || addMonths(startOfToday(), 2), 'yyyy-MM-dd'),
   status: options?.status || PlanCreationScheduleStatus.SCHEDULED,
   exemptionReason: options?.exemptionReason,
+  exemptionDetail: options?.exemptionDetail,
   version: options?.version || 0,
   ...validAuditFields(options),
 })
