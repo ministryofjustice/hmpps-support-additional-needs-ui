@@ -1,16 +1,11 @@
-import type {
-  PlanCreationScheduleResponse,
-  PlanCreationSchedulesResponse,
-  UpdatePlanCreationStatusRequest,
-} from 'supportAdditionalNeedsApiClient'
-import type { EducationSupportPlanDto, PlanCreationScheduleDto } from 'dto'
+import type { PlanCreationScheduleResponse, PlanCreationSchedulesResponse } from 'supportAdditionalNeedsApiClient'
+import type { EducationSupportPlanDto, PlanCreationScheduleDto, RefuseEducationSupportPlanDto } from 'dto'
 import { SupportAdditionalNeedsApiClient } from '../data'
 import toCreateEducationSupportPlanRequest from '../data/mappers/createEducationSupportPlanRequestMapper'
 import logger from '../../logger'
 import toEducationSupportPlanDto from '../data/mappers/educationSupportPlanDtoMapper'
 import toPlanCreationScheduleDto from '../data/mappers/planCreationScheduleDtoMapper'
-import PlanCreationScheduleStatus from '../enums/planCreationScheduleStatus'
-import PlanCreationScheduleExemptionReason from '../enums/planCreationScheduleExemptionReason'
+import toUpdatePlanCreationStatusRequest from '../data/mappers/updatePlanCreationStatusRequestMapper'
 
 export default class EducationSupportPlanService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -64,25 +59,17 @@ export default class EducationSupportPlanService {
 
   async updateEducationSupportPlanCreationScheduleAsRefused(
     username: string,
-    prisonNumber: string,
-    prisonId: string,
-    reason: PlanCreationScheduleExemptionReason,
-    detail?: string,
+    dto: RefuseEducationSupportPlanDto,
   ): Promise<PlanCreationScheduleDto> {
     try {
-      const request: UpdatePlanCreationStatusRequest = {
-        prisonId,
-        status: PlanCreationScheduleStatus.EXEMPT_PRISONER_NOT_COMPLY,
-        exemptionReason: reason,
-        exemptionDetail: detail,
-      }
+      const updatePlanCreationStatusRequest = toUpdatePlanCreationStatusRequest(dto)
       const apiResponse = await this.supportAdditionalNeedsApiClient.updateEducationSupportPlanCreationScheduleStatus(
-        prisonNumber,
+        dto.prisonNumber,
         username,
-        request,
+        updatePlanCreationStatusRequest,
       )
 
-      return this.currentPlanCreationSchedule(prisonNumber, apiResponse)
+      return this.currentPlanCreationSchedule(dto.prisonNumber, apiResponse)
     } catch (e) {
       logger.error('Error updating education support plan creation schedule as Refused', e)
       throw e

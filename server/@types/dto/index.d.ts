@@ -36,6 +36,7 @@ declare module 'dto' {
 
   export interface RefuseEducationSupportPlanDto {
     prisonNumber: string
+    prisonId: string
     reason: PlanCreationScheduleExemptionReason
     details?: string
   }

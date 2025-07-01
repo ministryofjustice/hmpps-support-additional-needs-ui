@@ -9,6 +9,13 @@
     href: "#",
     classes: "js-back-link"
   }) }}
+
+  {% if errorRecordingEducationSupportPlanRefusal %}
+    <div class="hmpps-api-error-banner govuk-!-margin-bottom-4" data-qa="api-error-banner">
+      <p>Sorry, there is a problem with the service</p>
+      <p>There was a problem recording the refusal of the education support plan. Try again later.</p>
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
