@@ -46,16 +46,19 @@ export default class ReasonController {
 
   private populateFormFromDto = (dto: RefuseEducationSupportPlanDto) => ({
     refusalReason: dto.reason,
-    refusalReasonDetails: dto.details,
+    refusalReasonDetails: { [dto.reason]: dto.details },
   })
 
   private updateDtoFromForm = (
     req: Request,
-    form: { refusalReason: PlanCreationScheduleExemptionReason; refusalReasonDetails?: string },
+    form: {
+      refusalReason: PlanCreationScheduleExemptionReason
+      refusalReasonDetails?: Record<PlanCreationScheduleExemptionReason, string>
+    },
   ) => {
     const { refuseEducationSupportPlanDto } = req.journeyData
     refuseEducationSupportPlanDto.reason = form.refusalReason
-    refuseEducationSupportPlanDto.details = form.refusalReasonDetails
+    refuseEducationSupportPlanDto.details = form.refusalReasonDetails[form.refusalReason]
     req.journeyData.refuseEducationSupportPlanDto = refuseEducationSupportPlanDto
   }
 }
