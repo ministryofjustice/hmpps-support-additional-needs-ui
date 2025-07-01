@@ -4,11 +4,16 @@ import createEmptyRefuseEducationSupportPlanDtoIfNotInJourneyData from './create
 
 describe('createEmptyRefuseEducationSupportPlanDtoIfNotInJourneyData', () => {
   const prisonNumber = 'A1234BC'
+  const prisonId = 'MDI'
 
   const req = {
     params: { prisonNumber },
   } as unknown as Request
-  const res = {} as unknown as Response
+  const res = {
+    locals: {
+      user: { activeCaseLoadId: prisonId },
+    },
+  } as unknown as Response
   const next = jest.fn()
 
   beforeEach(() => {
@@ -22,6 +27,7 @@ describe('createEmptyRefuseEducationSupportPlanDtoIfNotInJourneyData', () => {
 
     const expectedRefuseEducationSupportPlanDto = {
       prisonNumber,
+      prisonId,
     } as RefuseEducationSupportPlanDto
 
     // When
@@ -38,6 +44,7 @@ describe('createEmptyRefuseEducationSupportPlanDtoIfNotInJourneyData', () => {
 
     const expectedRefuseEducationSupportPlanDto = {
       prisonNumber,
+      prisonId,
     } as RefuseEducationSupportPlanDto
 
     // When

@@ -9,6 +9,7 @@ import { aValidPlanCreationScheduleResponse } from '../testsupport/planCreationS
 import aValidPlanCreationScheduleDto from '../testsupport/planCreationScheduleDtoTestDataBuilder'
 import PlanCreationScheduleExemptionReason from '../enums/planCreationScheduleExemptionReason'
 import aValidUpdatePlanCreationStatusRequest from '../testsupport/updatePlanCreationStatusRequestTestDataBuilder'
+import aValidRefuseEducationSupportPlanDto from '../testsupport/refuseEducationSupportPlanDtoTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -212,13 +213,17 @@ describe('educationSupportPlanService', () => {
         deadlineDate: scheduleDate,
       })
 
+      const refuseEducationSupportPlanDto = aValidRefuseEducationSupportPlanDto({
+        prisonNumber,
+        prisonId,
+        reason: PlanCreationScheduleExemptionReason.EXEMPT_REFUSED_TO_ENGAGE,
+        details: 'Chris does not feel he needs a plan',
+      })
+
       // When
       const actual = await educationSupportPlanService.updateEducationSupportPlanCreationScheduleAsRefused(
         username,
-        prisonNumber,
-        prisonId,
-        PlanCreationScheduleExemptionReason.EXEMPT_REFUSED_TO_ENGAGE,
-        'Chris does not feel he needs a plan',
+        refuseEducationSupportPlanDto,
       )
 
       // Then
@@ -242,15 +247,16 @@ describe('educationSupportPlanService', () => {
         exemptionDetail: 'Chris does not feel he needs a plan',
       })
 
+      const refuseEducationSupportPlanDto = aValidRefuseEducationSupportPlanDto({
+        prisonNumber,
+        prisonId,
+        reason: PlanCreationScheduleExemptionReason.EXEMPT_REFUSED_TO_ENGAGE,
+        details: 'Chris does not feel he needs a plan',
+      })
+
       // When
       const actual = await educationSupportPlanService
-        .updateEducationSupportPlanCreationScheduleAsRefused(
-          username,
-          prisonNumber,
-          prisonId,
-          PlanCreationScheduleExemptionReason.EXEMPT_REFUSED_TO_ENGAGE,
-          'Chris does not feel he needs a plan',
-        )
+        .updateEducationSupportPlanCreationScheduleAsRefused(username, refuseEducationSupportPlanDto)
         .catch(e => e)
 
       // Then

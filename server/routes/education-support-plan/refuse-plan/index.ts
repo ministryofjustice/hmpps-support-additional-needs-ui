@@ -10,10 +10,10 @@ import reasonSchema from './validationSchemas/reasonSchema'
 import ReasonController from './reason/reasonController'
 
 const refuseEducationSupportPlanRoutes = (services: Services): Router => {
-  const { journeyDataService } = services
+  const { educationSupportPlanService, journeyDataService } = services
   const router = Router({ mergeParams: true })
 
-  const reasonController = new ReasonController()
+  const reasonController = new ReasonController(educationSupportPlanService)
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
