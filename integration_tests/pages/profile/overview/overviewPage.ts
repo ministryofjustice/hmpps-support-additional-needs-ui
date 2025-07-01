@@ -1,5 +1,6 @@
 import Page, { PageElement } from '../../page'
 import WhoCreatedThePlanPage from '../../education-support-plan/whoCreatedThePlanPage'
+import ReasonPage from '../../education-support-plan/refuse-plan/reasonPage'
 
 export default class OverviewPage extends Page {
   constructor() {
@@ -58,6 +59,11 @@ export default class OverviewPage extends Page {
     return Page.verifyOnPage(WhoCreatedThePlanPage)
   }
 
+  clickRefuseEducationSupportPlanButton(): ReasonPage {
+    this.refuseEducationSupportPlanButton().click()
+    return Page.verifyOnPage(ReasonPage)
+  }
+
   private prisonerSummaryBanner = (): PageElement => cy.get('.prisoner-summary-banner')
 
   private successMessage = (): PageElement => cy.get('[data-qa=success-message]')
@@ -89,4 +95,7 @@ export default class OverviewPage extends Page {
 
   private createEducationSupportPlanButton = (): PageElement =>
     this.educationSupportPlanActionItems().find('[data-qa=create-education-support-plan-button]')
+
+  private refuseEducationSupportPlanButton = (): PageElement =>
+    this.educationSupportPlanActionItems().find('[data-qa=refuse-education-support-plan-button]')
 }

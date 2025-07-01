@@ -1,3 +1,4 @@
+import { addMonths, format, startOfToday } from 'date-fns'
 import type { Person } from 'supportAdditionalNeedsApiClient'
 import { SuperAgentRequest } from 'superagent'
 import stubPing from './common'
@@ -5,6 +6,7 @@ import { stubFor } from './wiremock'
 import SearchSortField from '../../server/enums/searchSortField'
 import SearchSortDirection from '../../server/enums/searchSortDirection'
 import { prisoners } from '../mockData/prisonerByIdData'
+import PlanCreationScheduleStatus from '../../server/enums/planCreationScheduleStatus'
 
 const stubSearchByPrison = (options?: {
   prisonId?: string
@@ -159,10 +161,63 @@ const stubCreateEducationSupportPlan500Error = (prisonNumber = 'G6115VJ'): Super
     },
   })
 
+const stubUpdateEducationSupportPlanCreationStatus = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'PATCH',
+      urlPattern: `/support-additional-needs-api/profile/${prisonNumber}/plan-creation-schedule/status`,
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        planCreationSchedules: [
+          {
+            reference: 'c88a6c48-97e2-4c04-93b5-98619966447b',
+            deadlineDate: format(addMonths(startOfToday(), 2), 'yyyy-MM-dd'),
+            status: PlanCreationScheduleStatus.EXEMPT_PRISONER_NOT_COMPLY,
+            exemptionReason: 'EXEMPT_REFUSED_TO_ENGAGE',
+            exemptionDetail: 'Chris would not engage or cooperate with me today',
+            version: 1,
+            createdBy: 'asmith_gen',
+            createdByDisplayName: 'Alex Smith',
+            createdAt: '2023-06-19T09:39:44Z',
+            createdAtPrison: 'MDI',
+            updatedBy: 'asmith_gen',
+            updatedByDisplayName: 'Alex Smith',
+            updatedAt: '2023-06-19T09:39:44Z',
+            updatedAtPrison: 'MDI',
+          },
+        ],
+      },
+    },
+  })
+
+const stubUpdateEducationSupportPlanCreationStatus500Error = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'PATCH',
+      urlPattern: `/support-additional-needs-api/profile/${prisonNumber}/plan-creation-schedule/status`,
+    },
+    response: {
+      status: 500,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        status: 500,
+        errorCode: null,
+        userMessage: 'An unexpected error occurred',
+        developerMessage: 'An unexpected error occurred',
+        moreInfo: null,
+      },
+    },
+  })
+
 export default {
   stubSearchByPrison,
   stubSearchByPrison500Error,
   stubCreateEducationSupportPlan,
   stubCreateEducationSupportPlan500Error,
+  stubUpdateEducationSupportPlanCreationStatus,
+  stubUpdateEducationSupportPlanCreationStatus500Error,
   stubSupportAdditionalNeedsApiPing: stubPing('support-additional-needs-api'),
 }
