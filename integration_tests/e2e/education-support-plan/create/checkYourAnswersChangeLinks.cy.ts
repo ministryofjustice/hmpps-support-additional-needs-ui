@@ -20,6 +20,7 @@ context(`Change links on the Check Your Answers page when creating an Education 
     cy.task('stubSignIn')
     cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
+    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
     cy.task('stubCreateEducationSupportPlan', prisonNumber)
   })
 

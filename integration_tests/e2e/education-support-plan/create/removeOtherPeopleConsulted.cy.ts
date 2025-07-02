@@ -13,6 +13,7 @@ context('Add and remove Other People Consulted during creation of Education Supp
     cy.task('stubSignIn')
     cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
+    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
   })
 
   it('should be able to add and remove other people consulted', () => {

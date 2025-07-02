@@ -29,6 +29,7 @@ export default class EducationSupportPlanScheduleService {
 
       const planCreationSchedules: Array<PlanCreationScheduleResponse> = apiResponse?.planCreationSchedules || []
       if (planCreationSchedules.length === 0) {
+        logger.debug(`Prisoner ${prisonNumber} has no Education Support Plan Creation Schedule. Returning null.`)
         return null
       }
 
