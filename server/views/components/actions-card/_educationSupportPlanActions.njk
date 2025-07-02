@@ -1,4 +1,6 @@
 {# Education Support Plan based actions #}
+{% set planCreationScheduleStatus = params.educationSupportPlanCreationSchedule.status %}
+
 <div class="govuk-summary-card__content govuk-!-padding-bottom-0 govuk-!-padding-top-2" data-qa="education-support-plan-actions">
   <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Education support plan</h3>
 
@@ -6,25 +8,29 @@
 
     {# TODO - enable this if logic when RBAC is implemented #}
     {# if params.userHasPermissionTo('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN') #}
-      <li class="govuk-!-margin-0 govuk-!-padding-bottom-3 govuk-!-padding-top-3">
-        <a class="govuk-link" data-qa="create-education-support-plan-button" href="/education-support-plan/{{ params.prisonerSummary.prisonNumber }}/create/who-created-the-plan">
-            <span>
-              <img src="/assets/images/icon-document.svg" role="presentation" alt="" class="action-icon" />
-              Create education support plan
-            </span>
-        </a>
-      </li>
+      {% if planCreationScheduleStatus === 'SCHEDULED' %}
+        <li class="govuk-!-margin-0 govuk-!-padding-bottom-3 govuk-!-padding-top-3">
+          <a class="govuk-link" data-qa="create-education-support-plan-button" href="/education-support-plan/{{ params.prisonerSummary.prisonNumber }}/create/who-created-the-plan">
+              <span>
+                <img src="/assets/images/icon-document.svg" role="presentation" alt="" class="action-icon" />
+                Create education support plan
+              </span>
+          </a>
+        </li>
+      {% endif %}
     {# endif #}
 
     {# if params.userHasPermissionTo('EXEMPT_EDUCATION_LEARNER_SUPPORT_PLAN') #}
-      <li class="govuk-!-margin-0 govuk-!-padding-bottom-3 govuk-!-padding-top-3">
-        <a class="govuk-link" data-qa="refuse-education-support-plan-button" href="/education-support-plan/{{ params.prisonerSummary.prisonNumber }}/refuse-plan/reason">
-            <span>
-              <img src="/assets/images/icon-document.svg" role="presentation" alt="" class="action-icon" />
-              Record refusal of education support plan
-            </span>
-        </a>
-      </li>
+      {% if planCreationScheduleStatus === 'SCHEDULED' %}
+        <li class="govuk-!-margin-0 govuk-!-padding-bottom-3 govuk-!-padding-top-3">
+          <a class="govuk-link" data-qa="refuse-education-support-plan-button" href="/education-support-plan/{{ params.prisonerSummary.prisonNumber }}/refuse-plan/reason">
+              <span>
+                <img src="/assets/images/icon-document.svg" role="presentation" alt="" class="action-icon" />
+                Record refusal of education support plan
+              </span>
+          </a>
+        </li>
+      {% endif %}
     {# endif #}
 
   </ul>

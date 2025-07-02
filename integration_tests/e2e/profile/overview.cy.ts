@@ -5,6 +5,7 @@
 import OverviewPage from '../../pages/profile/overview/overviewPage'
 import Page from '../../pages/page'
 import Error404Page from '../../pages/error404'
+import PlanCreationScheduleStatus from '../../../server/enums/planCreationScheduleStatus'
 
 context('Profile Overview Page', () => {
   beforeEach(() => {
@@ -28,6 +29,41 @@ context('Profile Overview Page', () => {
       .hasNoConditionsRecorded()
       .hasNoStrengthsRecorded()
       .hasNoSupportRecommendationsRecorded()
+      .actionsCardContainsEducationSupportPlanActions()
+      .apiErrorBannerIsNotDisplayed()
+  })
+
+  it('should display overview page given prisoner already has an Education Support Plan', () => {
+    // Given
+    const prisonNumber = 'H4115SD'
+    cy.task('getPrisonerById', prisonNumber)
+    cy.task('stubGetEducationSupportPlanCreationSchedules', {
+      prisonNumber,
+      status: PlanCreationScheduleStatus.COMPLETED,
+    })
+
+    // When
+    cy.visit(`/profile/${prisonNumber}/overview`)
+
+    // Then
+    Page.verifyOnPage(OverviewPage) //
+      .actionsCardIsNotPresent()
+      .apiErrorBannerIsNotDisplayed()
+  })
+
+  it('should display overview page given retrieving the prisoners plan creation schedule returns an error', () => {
+    // Given
+    const prisonNumber = 'H4115SD'
+    cy.task('getPrisonerById', prisonNumber)
+    cy.task('stubGetEducationSupportPlanCreationSchedules500Error', { prisonNumber })
+
+    // When
+    cy.visit(`/profile/${prisonNumber}/overview`)
+
+    // Then
+    Page.verifyOnPage(OverviewPage) //
+      .actionsCardIsNotPresent()
+      .apiErrorBannerIsDisplayed()
   })
 
   it('should display 404 page given requesting the overview page for a prisoner that does not exist', () => {
