@@ -7,6 +7,7 @@ import UserService from './userService'
 import SearchService from './searchService'
 import CuriousService from './curiousService'
 import EducationSupportPlanService from './educationSupportPlanService'
+import EducationSupportPlanScheduleService from './educationSupportPlanScheduleService'
 
 export const services = () => {
   const {
@@ -32,6 +33,7 @@ export const services = () => {
     searchService: new SearchService(supportAdditionalNeedsApiClient),
     curiousService: new CuriousService(curiousApiClient),
     educationSupportPlanService: new EducationSupportPlanService(supportAdditionalNeedsApiClient),
+    educationSupportPlanScheduleService: new EducationSupportPlanScheduleService(supportAdditionalNeedsApiClient),
   }
 }
 
@@ -41,6 +43,7 @@ export {
   AuditService,
   CuriousService,
   EducationSupportPlanService,
+  EducationSupportPlanScheduleService,
   JourneyDataService,
   PrisonerService,
   PrisonService,
