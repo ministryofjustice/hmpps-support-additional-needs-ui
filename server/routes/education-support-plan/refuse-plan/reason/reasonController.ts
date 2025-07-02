@@ -1,11 +1,11 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import type { RefuseEducationSupportPlanDto } from 'dto'
-import { EducationSupportPlanService } from '../../../../services'
+import { EducationSupportPlanScheduleService } from '../../../../services'
 import PlanCreationScheduleExemptionReason from '../../../../enums/planCreationScheduleExemptionReason'
 import { Result } from '../../../../utils/result/result'
 
 export default class ReasonController {
-  constructor(private readonly educationSupportPlanService: EducationSupportPlanService) {}
+  constructor(private readonly educationSupportPlanScheduleService: EducationSupportPlanScheduleService) {}
 
   getRefusePlanReasonView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { prisonerSummary, invalidForm } = res.locals
@@ -28,7 +28,7 @@ export default class ReasonController {
     const { refuseEducationSupportPlanDto } = req.journeyData
     const { apiErrorCallback } = res.locals
     const apiResult = await Result.wrap(
-      this.educationSupportPlanService.updateEducationSupportPlanCreationScheduleAsRefused(
+      this.educationSupportPlanScheduleService.updateEducationSupportPlanCreationScheduleAsRefused(
         req.user.username,
         refuseEducationSupportPlanDto,
       ),

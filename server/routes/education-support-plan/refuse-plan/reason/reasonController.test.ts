@@ -3,14 +3,16 @@ import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDa
 import aValidRefuseEducationSupportPlanDto from '../../../../testsupport/refuseEducationSupportPlanDtoTestDataBuilder'
 import ReasonController from './reasonController'
 import PlanCreationScheduleExemptionReason from '../../../../enums/planCreationScheduleExemptionReason'
-import EducationSupportPlanService from '../../../../services/educationSupportPlanService'
+import EducationSupportPlanScheduleService from '../../../../services/educationSupportPlanScheduleService'
 import aValidPlanCreationScheduleDto from '../../../../testsupport/planCreationScheduleDtoTestDataBuilder'
 
-jest.mock('../../../../services/educationSupportPlanService')
+jest.mock('../../../../services/educationSupportPlanScheduleService')
 
 describe('reasonController', () => {
-  const educationSupportPlanService = new EducationSupportPlanService(null) as jest.Mocked<EducationSupportPlanService>
-  const controller = new ReasonController(educationSupportPlanService)
+  const educationSupportPlanScheduleService = new EducationSupportPlanScheduleService(
+    null,
+  ) as jest.Mocked<EducationSupportPlanScheduleService>
+  const controller = new ReasonController(educationSupportPlanScheduleService)
 
   const username = 'A_USER'
   const prisonId = 'MDI'
@@ -129,7 +131,7 @@ describe('reasonController', () => {
       refusalReasonDetails: { EXEMPT_NOT_REQUIRED: 'Chris does not want a plan' },
     }
 
-    educationSupportPlanService.updateEducationSupportPlanCreationScheduleAsRefused.mockResolvedValue(
+    educationSupportPlanScheduleService.updateEducationSupportPlanCreationScheduleAsRefused.mockResolvedValue(
       aValidPlanCreationScheduleDto({ prisonNumber }),
     )
 
@@ -151,10 +153,9 @@ describe('reasonController', () => {
     )
     expect(req.journeyData.refuseEducationSupportPlanDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
-    expect(educationSupportPlanService.updateEducationSupportPlanCreationScheduleAsRefused).toHaveBeenCalledWith(
-      username,
-      expectedRefuseEducationSupportPlanDto,
-    )
+    expect(
+      educationSupportPlanScheduleService.updateEducationSupportPlanCreationScheduleAsRefused,
+    ).toHaveBeenCalledWith(username, expectedRefuseEducationSupportPlanDto)
   })
 
   it('should submit form and redirect to next route given calling API is not successful', async () => {
@@ -171,7 +172,7 @@ describe('reasonController', () => {
       refusalReasonDetails: { EXEMPT_NOT_REQUIRED: 'Chris does not want a plan' },
     }
 
-    educationSupportPlanService.updateEducationSupportPlanCreationScheduleAsRefused.mockRejectedValue(
+    educationSupportPlanScheduleService.updateEducationSupportPlanCreationScheduleAsRefused.mockRejectedValue(
       new Error('Internal Server Error'),
     )
 
@@ -190,9 +191,8 @@ describe('reasonController', () => {
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
     expect(req.journeyData.refuseEducationSupportPlanDto).toEqual(refuseEducationSupportPlanDto)
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
-    expect(educationSupportPlanService.updateEducationSupportPlanCreationScheduleAsRefused).toHaveBeenCalledWith(
-      username,
-      expectedRefuseEducationSupportPlanDto,
-    )
+    expect(
+      educationSupportPlanScheduleService.updateEducationSupportPlanCreationScheduleAsRefused,
+    ).toHaveBeenCalledWith(username, expectedRefuseEducationSupportPlanDto)
   })
 })
