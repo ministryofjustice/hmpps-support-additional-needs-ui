@@ -17,7 +17,8 @@
     <div class="govuk-grid-column-one-third app-u-print-full-width">
       {{ actionsCard({
         prisonerSummary: prisonerSummary,
-        userHasPermissionTo: userHasPermissionTo
+        userHasPermissionTo: userHasPermissionTo,
+        educationSupportPlanCreationSchedule: educationSupportPlanCreationSchedule.value if educationSupportPlanCreationSchedule.isFulfilled()
       }) }}
     </div>
   </div>

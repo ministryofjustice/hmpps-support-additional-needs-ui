@@ -20,7 +20,7 @@
       <h1 class="govuk-heading-l">Prisoners with support for additional needs</h1>
       {% include './_searchBox.njk' %}
 
-      {% if searchResults.status === 'fulfilled' %}
+      {% if searchResults.isFulfilled() %}
         {% include './_searchResults.njk' %}
       {% else %}
         <h2 class="govuk-heading-m" data-qa="search-unavailable-message">We cannot show these details right now</h2>

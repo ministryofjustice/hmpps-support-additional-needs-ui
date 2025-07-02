@@ -14,6 +14,7 @@ describe('retrieveCurrentEducationSupportPlanCreationSchedule', () => {
   const prisonNumber = 'A1234BC'
   const username = 'a-dps-user'
 
+  const apiErrorCallback = jest.fn()
   const req = {
     user: { username },
     params: { prisonNumber },
@@ -26,7 +27,7 @@ describe('retrieveCurrentEducationSupportPlanCreationSchedule', () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
-    res.locals = { user: undefined }
+    res.locals = { user: undefined, apiErrorCallback }
   })
 
   it('should retrieve current ELSP creation schedule and store on res.locals', async () => {
@@ -40,15 +41,17 @@ describe('retrieveCurrentEducationSupportPlanCreationSchedule', () => {
     await requestHandler(req, res, next)
 
     // Then
-    expect(res.locals.educationSupportPlanCreationSchedule).toEqual(expectedPlanCreationSchedule)
+    expect(res.locals.educationSupportPlanCreationSchedule.isFulfilled()).toEqual(true)
+    expect(res.locals.educationSupportPlanCreationSchedule.value).toEqual(expectedPlanCreationSchedule)
     expect(educationSupportPlanScheduleService.getCurrentEducationSupportPlanCreationSchedule).toHaveBeenCalledWith(
       prisonNumber,
       username,
     )
     expect(next).toHaveBeenCalled()
+    expect(apiErrorCallback).not.toHaveBeenCalled()
   })
 
-  it('should store on res.locals given service returns no current ELSP creation schedule for the prisoner', async () => {
+  it('should null store on res.locals given service returns no current ELSP creation schedule for the prisoner', async () => {
     // Given
     educationSupportPlanScheduleService.getCurrentEducationSupportPlanCreationSchedule.mockResolvedValue(null)
 
@@ -56,11 +59,31 @@ describe('retrieveCurrentEducationSupportPlanCreationSchedule', () => {
     await requestHandler(req, res, next)
 
     // Then
-    expect(res.locals.educationSupportPlanCreationSchedule).toBeNull()
+    expect(res.locals.educationSupportPlanCreationSchedule.isFulfilled()).toEqual(true)
+    expect(res.locals.educationSupportPlanCreationSchedule.value).toBeNull()
     expect(educationSupportPlanScheduleService.getCurrentEducationSupportPlanCreationSchedule).toHaveBeenCalledWith(
       prisonNumber,
       username,
     )
     expect(next).toHaveBeenCalled()
+    expect(apiErrorCallback).not.toHaveBeenCalled()
+  })
+
+  it('should store null on res.locals given service returns an error', async () => {
+    // Given
+    const error = new Error('An error occurred')
+    educationSupportPlanScheduleService.getCurrentEducationSupportPlanCreationSchedule.mockRejectedValue(error)
+
+    // When
+    await requestHandler(req, res, next)
+
+    // Then
+    expect(res.locals.educationSupportPlanCreationSchedule.isFulfilled()).toEqual(false)
+    expect(educationSupportPlanScheduleService.getCurrentEducationSupportPlanCreationSchedule).toHaveBeenCalledWith(
+      prisonNumber,
+      username,
+    )
+    expect(next).toHaveBeenCalled()
+    expect(apiErrorCallback).toHaveBeenCalledWith(error)
   })
 })

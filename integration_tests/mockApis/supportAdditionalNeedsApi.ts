@@ -215,9 +215,11 @@ const stubUpdateEducationSupportPlanCreationStatus500Error = (prisonNumber = 'G6
 const stubGetEducationSupportPlanCreationSchedules = (options?: {
   prisonNumber?: string
   includeAllHistory?: boolean
+  status?: PlanCreationScheduleStatus
 }): SuperAgentRequest => {
   const prisonNumber = options?.prisonNumber || 'G6115VJ'
   const includeAllHistory = options?.includeAllHistory || false
+  const status = options?.status || PlanCreationScheduleStatus.SCHEDULED
 
   return stubFor({
     request: {
@@ -235,9 +237,13 @@ const stubGetEducationSupportPlanCreationSchedules = (options?: {
           {
             reference: 'c88a6c48-97e2-4c04-93b5-98619966447b',
             deadlineDate: format(addMonths(startOfToday(), 2), 'yyyy-MM-dd'),
-            status: PlanCreationScheduleStatus.EXEMPT_PRISONER_NOT_COMPLY,
-            exemptionReason: 'EXEMPT_REFUSED_TO_ENGAGE',
-            exemptionDetail: 'Chris would not engage or cooperate with me today',
+            status,
+            exemptionReason:
+              status === PlanCreationScheduleStatus.EXEMPT_PRISONER_NOT_COMPLY ? 'EXEMPT_REFUSED_TO_ENGAGE' : undefined,
+            exemptionDetail:
+              status === PlanCreationScheduleStatus.EXEMPT_PRISONER_NOT_COMPLY
+                ? 'Chris would not engage or cooperate with me today'
+                : undefined,
             version: 1,
             createdBy: 'asmith_gen',
             createdByDisplayName: 'Alex Smith',

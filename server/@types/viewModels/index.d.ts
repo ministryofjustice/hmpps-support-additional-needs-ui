@@ -1,4 +1,5 @@
 declare module 'viewModels' {
+  import type { PlanCreationScheduleDto } from 'dto'
   import SentenceType from '../../enums/sentenceType'
 
   export interface PrisonerSummary {
@@ -51,5 +52,6 @@ declare module 'viewModels' {
   export interface ActionsCardParams {
     prisonerSummary: PrisonerSummary
     userHasPermissionTo: () => boolean
+    educationSupportPlanCreationSchedule?: PlanCreationScheduleDto
   }
 }
