@@ -2,11 +2,17 @@ import { Router } from 'express'
 import { Services } from '../../../services'
 import OverviewController from './overviewController'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import retrieveCurrentEducationSupportPlanCreationSchedule from '../middleware/retrieveCurrentEducationSupportPlanCreationSchedule'
 
-const overviewRoute = (_services: Services): Router => {
+const overviewRoute = (services: Services): Router => {
+  const { educationSupportPlanScheduleService } = services
   const controller = new OverviewController()
+
   return Router({ mergeParams: true }) //
-    .get('/', [asyncMiddleware(controller.getOverviewView)])
+    .get('/', [
+      retrieveCurrentEducationSupportPlanCreationSchedule(educationSupportPlanScheduleService),
+      asyncMiddleware(controller.getOverviewView),
+    ])
 }
 
 export default overviewRoute

@@ -28,6 +28,7 @@ context('Create an Education Support Plan', () => {
     cy.task('stubSignIn')
     cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
+    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
     cy.task('stubCreateEducationSupportPlan', prisonNumber)
   })
 
