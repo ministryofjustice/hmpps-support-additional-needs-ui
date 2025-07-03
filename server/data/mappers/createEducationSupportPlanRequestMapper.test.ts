@@ -18,6 +18,7 @@ describe('createEducationSupportPlanRequestMapper', () => {
         specificTeachingSkills: 'Teacher with BSL proficiency required',
         examArrangements: 'Escort to the exam room 10 minutes before everyone else',
         lnspSupport: 'Chris will need text reading to him as he cannot read himself',
+        individualSupport: 'Chris has asked that he is not sat with disruptive people as he is keen to learn',
         reviewDate: addMonths(startOfToday(), 2),
       })
 
@@ -31,6 +32,7 @@ describe('createEducationSupportPlanRequestMapper', () => {
         specificTeachingSkills: 'Teacher with BSL proficiency required',
         examAccessArrangements: 'Escort to the exam room 10 minutes before everyone else',
         lnspSupport: 'Chris will need text reading to him as he cannot read himself',
+        individualSupport: 'Chris has asked that he is not sat with disruptive people as he is keen to learn',
         reviewDate: addMonths(startOfToday(), 2),
       })
 
@@ -55,6 +57,7 @@ describe('createEducationSupportPlanRequestMapper', () => {
         examArrangements: null,
         lnspSupport: null,
         reviewDate: addMonths(startOfToday(), 2),
+        individualSupport: 'Chris has asked that he is not sat with disruptive people as he is keen to learn',
         additionalInformation: null,
       })
 
@@ -69,6 +72,7 @@ describe('createEducationSupportPlanRequestMapper', () => {
         examAccessArrangements: null,
         lnspSupport: null,
         reviewDate: addMonths(startOfToday(), 2),
+        individualSupport: 'Chris has asked that he is not sat with disruptive people as he is keen to learn',
         detail: null,
       })
 
