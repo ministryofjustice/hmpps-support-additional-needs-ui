@@ -13,6 +13,6 @@ export default class ReviewNeedsConditionsStrengthsController {
     res: Response,
     next: NextFunction,
   ) => {
-    return res.redirect('learning-environment-adjustments')
+    return res.redirect('individual-support-requirements')
   }
 }

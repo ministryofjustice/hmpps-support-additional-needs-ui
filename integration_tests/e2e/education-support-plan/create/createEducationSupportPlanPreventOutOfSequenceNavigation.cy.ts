@@ -17,6 +17,7 @@ context('Prevent out of sequence navigation to pages in the Create Education Sup
     'other-people-consulted/add-person',
     'other-people-consulted/list',
     'review-needs-conditions-and-strengths',
+    'individual-support-requirements',
     'learning-environment-adjustments',
     'teaching-adjustments',
     'specific-teaching-skills',

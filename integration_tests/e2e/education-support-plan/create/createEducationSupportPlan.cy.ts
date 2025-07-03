@@ -19,6 +19,7 @@ import { postRequestedFor } from '../../../mockApis/wiremock/requestPatternBuild
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
 import AdditionalInformationPage from '../../../pages/education-support-plan/additionalInformationPage'
+import IndividualSupportRequirementsPage from '../../../pages/education-support-plan/individualSupportRequirementsPage'
 
 context('Create an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -102,6 +103,15 @@ context('Create an Education Support Plan', () => {
       .submitPageTo(ReviewNeedsConditionsStrengthsPage)
 
     Page.verifyOnPage(ReviewNeedsConditionsStrengthsPage) //
+      .submitPageTo(IndividualSupportRequirementsPage)
+
+    Page.verifyOnPage(IndividualSupportRequirementsPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(IndividualSupportRequirementsPage)
+      .hasErrorCount(1)
+      .hasFieldInError('supportRequirements')
+      // enter the fields and submit the form to the next page
+      .enterSupportRequirements('Chris has asked that he is sat at the front of the class')
       .submitPageTo(LearningEnvironmentAdjustmentsPage)
 
     Page.verifyOnPage(LearningEnvironmentAdjustmentsPage) //
@@ -241,6 +251,7 @@ Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. M
               "@.specificTeachingSkills == 'Adopt a more inclusive approach to teaching' && " +
               "@.examAccessArrangements == 'Chris needs escorting to the exam room 10 minutes before everyone else' && " +
               "@.lnspSupport == 'Chris will need the text reading to him as he cannot read himself' && " +
+              "@.individualSupport == 'Chris has asked that he is sat at the front of the class' && " +
               "@.detail == 'Chris was a pleasure to meet with today' && " +
               `@.reviewDate == '${format(reviewDate, 'yyyy-MM-dd')}'` +
               ')]',
