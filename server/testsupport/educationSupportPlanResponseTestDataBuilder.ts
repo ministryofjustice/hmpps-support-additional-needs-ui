@@ -19,6 +19,7 @@ const aValidEducationSupportPlanResponse = (options?: {
   specificTeachingSkills?: string
   examAccessArrangements?: string
   lnspSupport?: string
+  individualSupport?: string
   detail?: string
 }): EducationSupportPlanResponse => ({
   hasCurrentEhcp: options?.hasCurrentEhcp ?? false,
@@ -47,6 +48,8 @@ const aValidEducationSupportPlanResponse = (options?: {
     options?.lnspSupport === null
       ? null
       : options?.lnspSupport || 'Chris will need text reading to him as he cannot read himself',
+  individualSupport:
+    options?.individualSupport || 'Chris has asked that he is not sat with disruptive people as he is keen to learn',
   detail:
     options?.detail === null
       ? null

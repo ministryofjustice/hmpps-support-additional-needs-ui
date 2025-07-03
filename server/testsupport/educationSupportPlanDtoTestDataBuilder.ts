@@ -20,6 +20,7 @@ const aValidEducationSupportPlanDto = (options?: {
   examArrangements?: string
   lnspSupport?: string
   reviewDate?: Date
+  individualSupport?: string
   additionalInformation?: string
 }): EducationSupportPlanDto => ({
   prisonNumber: options?.prisonNumber ?? 'A1234BC',
@@ -58,6 +59,8 @@ const aValidEducationSupportPlanDto = (options?: {
       ? null
       : options?.lnspSupport || 'Chris will need text reading to him as he cannot read himself',
   reviewDate: options?.reviewDate === null ? null : options?.reviewDate || addMonths(startOfToday(), 2),
+  individualSupport:
+    options?.individualSupport || 'Chris has asked that he is not sat with disruptive people as he is keen to learn',
   additionalInformation:
     options?.additionalInformation === null
       ? null
