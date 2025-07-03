@@ -1,0 +1,40 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'education-support-plan-individual-support-requirements' %}
+{% set pageTitle = "Create an education support plan" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukTextarea({
+            id: "supportRequirements",
+            name: "supportRequirements",
+            rows: "4",
+            value: form.supportRequirements,
+            type: "text",
+            label: {
+              text: "What support in education does " + prisonerSummary | formatFirst_name_Last_name + " feel they need?",
+              classes: "govuk-label--l",
+              isPageHeading: true
+            },
+            attributes: { "aria-label" : "Enter any educational support that the person feels they need" },
+            errorMessage: errors | findError('supportRequirements')
+          }) }}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
