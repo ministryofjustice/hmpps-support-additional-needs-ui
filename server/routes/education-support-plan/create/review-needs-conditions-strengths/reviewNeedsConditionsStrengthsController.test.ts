@@ -39,7 +39,7 @@ describe('reviewNeedsConditionsStrengthsController', () => {
 
   it('should submit form and redirect to next route', async () => {
     // Given
-    const expectedNextRoute = 'learning-environment-adjustments'
+    const expectedNextRoute = 'individual-support-requirements'
 
     // When
     await controller.submitReviewNeedsConditionsStrengthsForm(req, res, next)

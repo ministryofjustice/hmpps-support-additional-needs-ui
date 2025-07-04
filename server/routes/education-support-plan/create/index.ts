@@ -114,7 +114,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   router.post('/:journeyId/individual-support-requirements', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     validate(individualSupportRequirementsSchema),
-    asyncMiddleware(individualSupportRequirementsController.getIndividualSupportRequirementsView),
+    asyncMiddleware(individualSupportRequirementsController.submitIndividualSupportRequirementsForm),
   ])
 
   router.get('/:journeyId/learning-environment-adjustments', [

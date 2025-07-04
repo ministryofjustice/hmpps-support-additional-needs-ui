@@ -15,6 +15,7 @@ import LearningNeedsSupportPractitionerSupportPage from '../pages/education-supp
 import ReviewSupportPlanPage from '../pages/education-support-plan/reviewSupportPlanPage'
 import CheckYourAnswersPage from '../pages/education-support-plan/checkYourAnswersPage'
 import AdditionalInformationPage from '../pages/education-support-plan/additionalInformationPage'
+import IndividualSupportRequirementsPage from '../pages/education-support-plan/individualSupportRequirementsPage'
 
 Cypress.Commands.add('signIn', (options = { failOnStatusCode: true }) => {
   cy.request('/')
@@ -43,6 +44,9 @@ Cypress.Commands.add(
       .selectOtherPeopleWereNotConsulted()
       .submitPageTo(ReviewNeedsConditionsStrengthsPage)
       //
+      .submitPageTo(IndividualSupportRequirementsPage)
+      //
+      .enterSupportRequirements('Prisoner has requested large print books to help with reading')
       .submitPageTo(LearningEnvironmentAdjustmentsPage)
       //
       .selectLearningAdjustmentsNotRequired()
