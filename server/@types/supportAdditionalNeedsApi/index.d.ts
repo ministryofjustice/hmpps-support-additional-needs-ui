@@ -84,6 +84,38 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/profile/{prisonNumber}/set-up-data': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['createPersonInEducationWithNeeds']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/plan-creation-schedule': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getPlanCreationSchedules']
+    put?: never
+    post: operations['createPlanCreationSchedule']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/profile/{prisonNumber}/education-support-plan': {
     parameters: {
       query?: never
@@ -220,22 +252,6 @@ export interface paths {
       cookie?: never
     }
     get: operations['getReviewSchedules']
-    put?: never
-    post?: never
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/profile/{prisonNumber}/plan-creation-schedule': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['getPlanCreationSchedules']
     put?: never
     post?: never
     delete?: never
@@ -468,6 +484,60 @@ export interface components {
        */
       screeningDate?: string
     }
+    EducationNeedRequest: {
+      prisonId: string
+      alnNeed: boolean
+      lddNeed: boolean
+      conditionSelfDeclared: boolean
+      conditionConfirmed: boolean
+      challengeNotALN: boolean
+      inEducation: boolean
+    }
+    PlanCreationScheduleEntity: {
+      prisonNumber: string
+      /** Format: date */
+      deadlineDate?: string
+      /** @enum {string} */
+      status:
+        | 'SCHEDULED'
+        | 'EXEMPT_SYSTEM_TECHNICAL_ISSUE'
+        | 'EXEMPT_PRISONER_TRANSFER'
+        | 'EXEMPT_PRISONER_RELEASE'
+        | 'EXEMPT_PRISONER_DEATH'
+        | 'EXEMPT_PRISONER_MERGE'
+        | 'EXEMPT_PRISONER_NOT_COMPLY'
+        | 'EXEMPT_NOT_IN_EDUCATION'
+        | 'EXEMPT_UNKNOWN'
+        | 'COMPLETED'
+      exemptionReason?: string
+      exemptionDetail?: string
+      needSources: (
+        | 'LDD_SCREENER'
+        | 'ALN_SCREENER'
+        | 'CONDITION_SELF_DECLARED'
+        | 'CONDITION_CONFIRMED_DIAGNOSIS'
+        | 'CHALLENGE_NOT_ALN_SCREENER'
+      )[]
+      createdAtPrison: string
+      updatedAtPrison: string
+      /** Format: int32 */
+      version?: number
+      /** Format: uuid */
+      id: string
+      /** Format: uuid */
+      reference: string
+      createdBy?: string
+      /** Format: date-time */
+      createdAt?: string
+      updatedBy?: string
+      /** Format: date-time */
+      updatedAt?: string
+    }
+    Request: {
+      /** Format: date */
+      deadlineDate: string
+      prisonId: string
+    }
     CreateEducationSupportPlanRequest: {
       /**
        * @description The Prison identifier.
@@ -525,6 +595,11 @@ export interface components {
        * @example Chris is very open about his issues and is a pleasure to talk to.
        */
       detail?: string
+      /**
+       * @description Details of education support that the person feels they need or would benefit from.
+       * @example Chris is sensitive to loud noises and has asked for a quieter position in a calm classroom.
+       */
+      individualSupport?: string
     }
     PlanContributor: {
       /** @example Joe Bloggs */
@@ -620,6 +695,11 @@ export interface components {
        * @example Chris is very open about his issues and is a pleasure to talk to.
        */
       detail?: string
+      /**
+       * @description Details of education support that the person feels they need or would benefit from.
+       * @example Chris is sensitive to loud noises and has asked for a quieter position in a calm classroom.
+       */
+      individualSupport?: string
     }
     ConditionRequest: {
       /**
@@ -795,6 +875,17 @@ export interface components {
        * @example null
        */
       exemptionDetail?: string
+      /**
+       * @description The source(s) for why this plan creation schedule is needed. Multiple reasons may apply.
+       * @example null
+       */
+      needSources?: (
+        | 'LDD_SCREENER'
+        | 'ALN_SCREENER'
+        | 'CONDITION_SELF_DECLARED'
+        | 'CONDITION_CONFIRMED_DIAGNOSIS'
+        | 'CHALLENGE_NOT_ALN_SCREENER'
+      )[]
       /**
        * Format: int32
        * @description the version number of this schedule (the highest number is the most recent version of this plan creation schedule)
@@ -1167,6 +1258,82 @@ export interface operations {
       }
     }
   }
+  createPersonInEducationWithNeeds: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['EducationNeedRequest']
+      }
+    }
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PlanCreationScheduleEntity']
+        }
+      }
+    }
+  }
+  getPlanCreationSchedules: {
+    parameters: {
+      query?: {
+        includeAllHistory?: boolean
+      }
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PlanCreationSchedulesResponse']
+        }
+      }
+    }
+  }
+  createPlanCreationSchedule: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['Request']
+      }
+    }
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PlanCreationScheduleEntity']
+        }
+      }
+    }
+  }
   getEducationSupportPlan: {
     parameters: {
       query?: never
@@ -1459,30 +1626,6 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['ReviewSchedulesResponse']
-        }
-      }
-    }
-  }
-  getPlanCreationSchedules: {
-    parameters: {
-      query?: {
-        includeAllHistory?: boolean
-      }
-      header?: never
-      path: {
-        prisonNumber: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['PlanCreationSchedulesResponse']
         }
       }
     }
