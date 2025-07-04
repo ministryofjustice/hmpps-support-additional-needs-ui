@@ -129,6 +129,17 @@ context(`Change links on the Check Your Answers page when creating an Education 
       .submitPageTo(CheckYourAnswersPage)
       .hasAdditionalInformation('Chris is feeling positive and is looking forward to starting education')
 
+      // check and update individual support requirements
+      .hasIndividualSupportRequirements('Prisoner has requested large print books to help with reading')
+      .clickIndividualSupportRequirementsChangeLink()
+      .enterSupportRequirements(
+        'Chris has requested that he is sat at the front of the class, and for large print books to help with reading. He is keen to learn and does not want to be distracted by other disruptive people in the classroom environment.',
+      )
+      .submitPageTo(CheckYourAnswersPage)
+      .hasIndividualSupportRequirements(
+        'Chris has requested that he is sat at the front of the class, and for large print books to help with reading. He is keen to learn and does not want to be distracted by other disruptive people in the classroom environment.',
+      )
+
       // submit Check Your Answers page
       .submitPageTo(OverviewPage)
 
@@ -154,6 +165,7 @@ context(`Change links on the Check Your Answers page when creating an Education 
               "@.specificTeachingSkills == 'Teacher with BSL proficiency required' && " +
               "@.examAccessArrangements == 'Escorting to the exam room 10 minutes before everyone else' && " +
               "@.lnspSupport == 'Chris will need text reading to him as he cannot read himself' && " +
+              "@.individualSupport == 'Chris has requested that he is sat at the front of the class, and for large print books to help with reading. He is keen to learn and does not want to be distracted by other disruptive people in the classroom environment.' && " +
               "@.detail == 'Chris is feeling positive and is looking forward to starting education' && " +
               `@.reviewDate == '${format(updatedReviewDate, 'yyyy-MM-dd')}'` +
               ')]',
