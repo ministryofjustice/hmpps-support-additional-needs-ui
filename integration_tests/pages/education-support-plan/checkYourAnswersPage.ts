@@ -11,6 +11,7 @@ import ReviewSupportPlanPage from './reviewSupportPlanPage'
 import OtherPeopleConsultedListPage from './otherPeopleConsultedListPage'
 import zeroIndexed from '../../utils/zeroIndexed'
 import AdditionalInformationPage from './additionalInformationPage'
+import IndividualSupportRequirementsPage from './individualSupportRequirementsPage'
 
 export default class CheckYourAnswersPage extends Page {
   constructor() {
@@ -187,6 +188,16 @@ export default class CheckYourAnswersPage extends Page {
     return this
   }
 
+  clickIndividualSupportRequirementsChangeLink(): IndividualSupportRequirementsPage {
+    this.individualSupportRequirementsChangeLink().click()
+    return Page.verifyOnPage(IndividualSupportRequirementsPage)
+  }
+
+  hasIndividualSupportRequirements(expected: string): CheckYourAnswersPage {
+    this.individualSupportRequirementsValue().should('contain.text', expected)
+    return this
+  }
+
   clickReviewDateChangeLink(): ReviewSupportPlanPage {
     this.reviewDateChangeLink().click()
     return Page.verifyOnPage(ReviewSupportPlanPage)
@@ -243,4 +254,9 @@ export default class CheckYourAnswersPage extends Page {
   private reviewDateValue = (): PageElement => cy.get('[data-qa=review-date]')
 
   private reviewDateChangeLink = (): PageElement => cy.get('[data-qa=review-date-change-link]')
+
+  private individualSupportRequirementsValue = (): PageElement => cy.get('[data-qa=individual-support-requirements]')
+
+  private individualSupportRequirementsChangeLink = (): PageElement =>
+    cy.get('[data-qa=individual-support-requirements-change-link]')
 }
