@@ -8,6 +8,7 @@ import OtherPeopleConsultedController from './other-people-consulted/otherPeople
 import AddPersonConsultedController from './other-people-consulted/addPersonConsultedController'
 import OtherPeopleConsultedListController from './other-people-consulted/otherPeopleConsultedListController'
 import ReviewNeedsConditionsStrengthsController from './review-needs-conditions-strengths/reviewNeedsConditionsStrengthsController'
+import IndividualSupportRequirementsController from './individual-support-requirements/individualSupportRequirementsController'
 import LearningEnvironmentAdjustmentsController from './learning-environment-adjustments/learningEnvironmentAdjustmentsController'
 import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
 import SpecificTeachingSkillsController from './specific-teaching-skills/specificTeachingSkillsController'
@@ -41,6 +42,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const addPersonConsultedController = new AddPersonConsultedController()
   const otherPeopleConsultedListController = new OtherPeopleConsultedListController()
   const reviewNeedsConditionsStrengthsController = new ReviewNeedsConditionsStrengthsController()
+  const individualSupportRequirementsController = new IndividualSupportRequirementsController()
   const learningEnvironmentAdjustmentsController = new LearningEnvironmentAdjustmentsController()
   const teachingAdjustmentsController = new TeachingAdjustmentsController()
   const specificTeachingSkillsController = new SpecificTeachingSkillsController()
@@ -102,6 +104,15 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   router.post('/:journeyId/review-needs-conditions-and-strengths', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(reviewNeedsConditionsStrengthsController.submitReviewNeedsConditionsStrengthsForm),
+  ])
+
+  router.get('/:journeyId/individual-support-requirements', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(individualSupportRequirementsController.getIndividualSupportRequirementsView),
+  ])
+  router.post('/:journeyId/individual-support-requirements', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(individualSupportRequirementsController.getIndividualSupportRequirementsView),
   ])
 
   router.get('/:journeyId/learning-environment-adjustments', [
