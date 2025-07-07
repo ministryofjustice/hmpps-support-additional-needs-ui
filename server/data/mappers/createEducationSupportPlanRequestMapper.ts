@@ -10,7 +10,6 @@ const toCreateEducationSupportPlanRequest = (dto: EducationSupportPlanDto): Crea
     ? { name: dto.planCreatedByOtherFullName, jobRole: dto.planCreatedByOtherJobRole }
     : null,
   otherContributors: dto.wereOtherPeopleConsulted ? dto.otherPeopleConsulted : null,
-  learningEnvironmentAdjustments: dto.learningEnvironmentAdjustmentsNeeded ? dto.learningEnvironmentAdjustments : null,
   teachingAdjustments: dto.teachingAdjustmentsNeeded ? dto.teachingAdjustments : null,
   specificTeachingSkills: dto.specificTeachingSkillsNeeded ? dto.specificTeachingSkills : null,
   examAccessArrangements: dto.examArrangementsNeeded ? dto.examArrangements : null,

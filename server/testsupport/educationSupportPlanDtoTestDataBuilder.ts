@@ -33,11 +33,6 @@ const aValidEducationSupportPlanDto = (options?: {
     ? options?.otherPeopleConsulted || [aValidPlanContributor()]
     : null,
   hasCurrentEhcp: options?.hasCurrentEhcp ?? false,
-  learningEnvironmentAdjustmentsNeeded: options?.learningEnvironmentAdjustments !== null,
-  learningEnvironmentAdjustments:
-    options?.learningEnvironmentAdjustments === null
-      ? null
-      : options?.learningEnvironmentAdjustments || 'Needs to sit at the front of the class',
   teachingAdjustmentsNeeded: options?.teachingAdjustments !== null,
   teachingAdjustments:
     options?.teachingAdjustments === null
