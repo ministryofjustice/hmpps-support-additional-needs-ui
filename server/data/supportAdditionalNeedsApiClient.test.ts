@@ -11,6 +11,8 @@ import aValidCreateEducationSupportPlanRequest from '../testsupport/createEducat
 import aValidEducationSupportPlanResponse from '../testsupport/educationSupportPlanResponseTestDataBuilder'
 import { aValidPlanCreationSchedulesResponse } from '../testsupport/planCreationScheduleResponseTestDataBuilder'
 import aValidUpdatePlanCreationStatusRequest from '../testsupport/updatePlanCreationStatusRequestTestDataBuilder'
+import { aValidCreateChallengesRequest } from '../testsupport/challengeRequestTestDataBuilder'
+import { aValidChallengeListResponse } from '../testsupport/challengeResponseTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -367,6 +369,58 @@ describe('supportAdditionalNeedsApiClient', () => {
       // When
       const actual = await supportAdditionalNeedsApiClient
         .updateEducationSupportPlanCreationScheduleStatus(prisonNumber, username, updatePlanCreationStatusRequest)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('createChallenges', () => {
+    it('should create challenges for a prisoner', async () => {
+      // Given
+      const createChallengesRequest = aValidCreateChallengesRequest()
+
+      const expectedResponse = aValidChallengeListResponse()
+      supportAdditionalNeedsApi
+        .post(`/profile/${prisonNumber}/challenges`, requestBody => isMatch(requestBody, createChallengesRequest))
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, expectedResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.createChallenges(
+        prisonNumber,
+        username,
+        createChallengesRequest,
+      )
+
+      // Then
+      expect(actual).toEqual(expectedResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const createChallengesRequest = aValidCreateChallengesRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .post(`/profile/${prisonNumber}/challenges`, requestBody => isMatch(requestBody, createChallengesRequest))
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .createChallenges(prisonNumber, username, createChallengesRequest)
         .catch(e => e)
 
       // Then

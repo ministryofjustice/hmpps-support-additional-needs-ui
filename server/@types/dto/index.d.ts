@@ -41,4 +41,12 @@ declare module 'dto' {
     reason: PlanCreationScheduleExemptionReason
     details?: string
   }
+
+  export interface ChallengeDto {
+    prisonNumber: string
+    prisonId: string
+    challengeTypeCode: string
+    symptoms?: string
+    howIdentified?: string
+  }
 }

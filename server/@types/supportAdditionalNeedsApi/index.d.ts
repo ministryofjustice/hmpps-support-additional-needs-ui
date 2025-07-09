@@ -507,6 +507,7 @@ export interface components {
         | 'EXEMPT_PRISONER_MERGE'
         | 'EXEMPT_PRISONER_NOT_COMPLY'
         | 'EXEMPT_NOT_IN_EDUCATION'
+        | 'EXEMPT_NO_NEED'
         | 'EXEMPT_UNKNOWN'
         | 'COMPLETED'
       exemptionReason?: string
@@ -815,6 +816,7 @@ export interface components {
         | 'EXEMPT_PRISONER_MERGE'
         | 'EXEMPT_PRISONER_NOT_COMPLY'
         | 'EXEMPT_NOT_IN_EDUCATION'
+        | 'EXEMPT_NO_NEED'
         | 'EXEMPT_UNKNOWN'
         | 'COMPLETED'
       /**
@@ -1068,6 +1070,7 @@ export interface components {
         | 'EXEMPT_PRISONER_MERGE'
         | 'EXEMPT_PRISONER_NOT_COMPLY'
         | 'EXEMPT_NOT_IN_EDUCATION'
+        | 'EXEMPT_NO_NEED'
         | 'EXEMPT_UNKNOWN'
         | 'COMPLETED'
       /**
