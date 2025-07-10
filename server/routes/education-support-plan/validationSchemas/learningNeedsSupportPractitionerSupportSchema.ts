@@ -12,7 +12,7 @@ const learningNeedsSupportPractitionerSupportSchema = async () => {
 
   return createSchema({
     supportRequired: z //
-      .nativeEnum(YesNoValue, { message: supportRequiredMandatoryMessage }),
+      .enum(YesNoValue, { message: supportRequiredMandatoryMessage }),
     details: z //
       .string()
       .nullable()

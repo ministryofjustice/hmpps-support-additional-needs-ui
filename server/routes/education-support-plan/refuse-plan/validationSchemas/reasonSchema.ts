@@ -11,18 +11,20 @@ const reasonSchema = async () => {
 
   return createSchema({
     refusalReason: z //
-      .nativeEnum(PlanCreationScheduleExemptionReason, { message: refusalReasonMandatoryMessage }),
+      .enum(PlanCreationScheduleExemptionReason, { message: refusalReasonMandatoryMessage }),
     refusalReasonDetails: z //
-      .record(z.nativeEnum(PlanCreationScheduleExemptionReason), z.string())
+      .record(z.enum(PlanCreationScheduleExemptionReason), z.string().optional())
       .nullable()
       .optional(),
-  }).superRefine(({ refusalReason, refusalReasonDetails }, ctx) => {
+  }).check(ctx => {
+    const { refusalReason, refusalReasonDetails } = ctx.value
     if (!refusalReasonDetails || !Object.prototype.hasOwnProperty.call(refusalReasonDetails, refusalReason)) {
       return
     }
     if (textValueExceedsLength(refusalReasonDetails[refusalReason], MAX_REFUSAL_REASON_DETAILS_LENGTH)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+      ctx.issues.push({
+        code: 'custom',
+        input: ctx.value,
         path: [`${refusalReason}_refusalDetails`],
         message: refusalReasonDetailsMaxLengthMessage,
       })

@@ -8,7 +8,7 @@ const wereOtherPeopleConsultedSchema = async () => {
 
   return createSchema({
     wereOtherPeopleConsulted: z //
-      .nativeEnum(YesNoValue, { message: wereOtherPeopleConsultedMandatoryMessage }),
+      .enum(YesNoValue, { message: wereOtherPeopleConsultedMandatoryMessage }),
   })
 }
 
