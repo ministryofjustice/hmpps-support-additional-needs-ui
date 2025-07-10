@@ -71,14 +71,6 @@ context(`Change links on the Check Your Answers page when creating an Education 
       .submitPageTo(CheckYourAnswersPage)
       .requiresSpecificTeachingSkills('Teacher with BSL proficiency required')
 
-      // check and update learning environment adjustments
-      .doesNotRequireLearningEnvironmentAdjustments()
-      .clickLearningEnvironmentAdjustmentsChangeLink()
-      .selectLearningAdjustmentsRequired()
-      .enterDetails('Needs to sit at the front of the class')
-      .submitPageTo(CheckYourAnswersPage)
-      .requiresLearningEnvironmentAdjustments('Needs to sit at the front of the class')
-
       // check and update teaching adjustments
       .doesNotRequireTeachingAdjustments()
       .clickTeachingAdjustmentsChangeLink()

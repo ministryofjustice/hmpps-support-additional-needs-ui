@@ -16,9 +16,7 @@ export default class IndividualSupportRequirementsController {
     const examArrangementsForm = { ...req.body }
     this.updateDtoFromForm(req, examArrangementsForm)
 
-    return res.redirect(
-      req.query?.submitToCheckAnswers !== 'true' ? 'learning-environment-adjustments' : 'check-your-answers',
-    )
+    return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'teaching-adjustments' : 'check-your-answers')
   }
 
   private populateFormFromDto = (dto: EducationSupportPlanDto) => {

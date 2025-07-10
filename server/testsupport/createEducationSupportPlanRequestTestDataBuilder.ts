@@ -8,7 +8,6 @@ const aValidCreateEducationSupportPlanRequest = (options?: {
   reviewDate?: Date
   planCreatedBy?: PlanContributor
   otherContributors?: Array<PlanContributor>
-  learningEnvironmentAdjustments?: string
   teachingAdjustments?: string
   specificTeachingSkills?: string
   examAccessArrangements?: string
@@ -24,10 +23,6 @@ const aValidCreateEducationSupportPlanRequest = (options?: {
     options?.otherContributors == null || options?.otherContributors.length === 0
       ? null
       : options?.otherContributors || [aValidPlanContributor()],
-  learningEnvironmentAdjustments:
-    options?.learningEnvironmentAdjustments === null
-      ? null
-      : options?.learningEnvironmentAdjustments || 'Needs to sit at the front of the class',
   teachingAdjustments:
     options?.teachingAdjustments === null
       ? null

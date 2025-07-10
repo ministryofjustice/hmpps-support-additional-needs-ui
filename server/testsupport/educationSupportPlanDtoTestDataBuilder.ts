@@ -14,7 +14,6 @@ const aValidEducationSupportPlanDto = (options?: {
     jobRole: string
   }>
   hasCurrentEhcp?: boolean
-  learningEnvironmentAdjustments?: string
   teachingAdjustments?: string
   specificTeachingSkills?: string
   examArrangements?: string
