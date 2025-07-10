@@ -125,7 +125,6 @@ const stubCreateEducationSupportPlan = (prisonNumber = 'G6115VJ'): SuperAgentReq
         hasCurrentEhcp: false,
         planCreatedBy: null,
         otherContributors: null,
-        learningEnvironmentAdjustments: 'Needs to sit at the front of the class',
         teachingAdjustments: 'Use simpler examples to help students understand concepts',
         specificTeachingSkills: 'Teacher with BSL proficiency required',
         examAccessArrangements: 'Escort to the exam room 10 minutes before everyone else',

@@ -152,7 +152,6 @@ context(`Change links on the Check Your Answers page when creating an Education 
               "@.otherContributors[1].name == 'Person 2' && " +
               "@.otherContributors[1].jobRole == 'N/A' && " +
               '@.hasCurrentEhcp == true && ' +
-              "@.learningEnvironmentAdjustments == 'Needs to sit at the front of the class' && " +
               "@.teachingAdjustments == 'Use simpler examples to help students understand concepts' && " +
               "@.specificTeachingSkills == 'Teacher with BSL proficiency required' && " +
               "@.examAccessArrangements == 'Escorting to the exam room 10 minutes before everyone else' && " +

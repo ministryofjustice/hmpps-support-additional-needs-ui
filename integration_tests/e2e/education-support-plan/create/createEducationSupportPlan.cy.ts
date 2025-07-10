@@ -231,7 +231,6 @@ Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. M
               "@.otherContributors[1].name == 'Another Teacher' && " +
               "@.otherContributors[1].jobRole == 'N/A' && " +
               '@.hasCurrentEhcp == true && ' +
-              "@.learningEnvironmentAdjustments == 'Needs to sit at the front of the class' && " +
               "@.teachingAdjustments == 'Use simpler examples to help students understand concepts' && " +
               "@.specificTeachingSkills == 'Adopt a more inclusive approach to teaching' && " +
               "@.examAccessArrangements == 'Chris needs escorting to the exam room 10 minutes before everyone else' && " +
