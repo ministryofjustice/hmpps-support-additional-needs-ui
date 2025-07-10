@@ -16,7 +16,7 @@ const whoCompletedThePlanSchema = async () => {
 
   return createSchema({
     completedBy: z //
-      .nativeEnum(PlanCreatedByValue, { message: completedByMandatoryMessage }),
+      .enum(PlanCreatedByValue, { message: completedByMandatoryMessage }),
     completedByOtherFullName: z //
       .string()
       .max(MAX_COMPLETED_BY_FULL_NAME_LENGTH, completedByFullNameMaxLengthMessage)

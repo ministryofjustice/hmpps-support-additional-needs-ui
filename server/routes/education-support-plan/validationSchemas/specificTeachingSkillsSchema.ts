@@ -12,7 +12,7 @@ const specificTeachingSkillsSchema = async () => {
 
   return createSchema({
     skillsRequired: z //
-      .nativeEnum(YesNoValue, { message: skillsRequiredMandatoryMessage }),
+      .enum(YesNoValue, { message: skillsRequiredMandatoryMessage }),
     details: z //
       .string()
       .nullable()

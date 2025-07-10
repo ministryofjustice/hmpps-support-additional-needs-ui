@@ -12,7 +12,7 @@ const teachingAdjustmentsSchema = async () => {
 
   return createSchema({
     adjustmentsNeeded: z //
-      .nativeEnum(YesNoValue, { message: adjustmentsRequiredMandatoryMessage }),
+      .enum(YesNoValue, { message: adjustmentsRequiredMandatoryMessage }),
     details: z //
       .string()
       .nullable()

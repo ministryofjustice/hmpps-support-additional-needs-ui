@@ -12,7 +12,7 @@ const examArrangementsSchema = async () => {
 
   return createSchema({
     arrangementsNeeded: z //
-      .nativeEnum(YesNoValue, { message: arrangementsRequiredMandatoryMessage }),
+      .enum(YesNoValue, { message: arrangementsRequiredMandatoryMessage }),
     details: z //
       .string()
       .nullable()

@@ -7,7 +7,7 @@ const educationHealthCarePlanSchema = async () => {
 
   return createSchema({
     hasCurrentEhcp: z //
-      .nativeEnum(YesNoValue, { message: ehcpMandatoryMessage }),
+      .enum(YesNoValue, { message: ehcpMandatoryMessage }),
   })
 }
 
