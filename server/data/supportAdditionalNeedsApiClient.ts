@@ -2,7 +2,9 @@ import { asSystem, RestClient } from '@ministryofjustice/hmpps-rest-client'
 import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import type {
   ChallengeListResponse,
+  ConditionListResponse,
   CreateChallengesRequest,
+  CreateConditionsRequest,
   CreateEducationSupportPlanRequest,
   EducationSupportPlanResponse,
   PlanCreationSchedulesResponse,
@@ -98,6 +100,20 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/challenges`,
         data: createChallengesRequest,
+      },
+      asSystem(username),
+    )
+  }
+
+  async createConditions(
+    prisonNumber: string,
+    username: string,
+    createConditionsRequest: CreateConditionsRequest,
+  ): Promise<ConditionListResponse> {
+    return this.post<ConditionListResponse>(
+      {
+        path: `/profile/${prisonNumber}/conditions`,
+        data: createConditionsRequest,
       },
       asSystem(username),
     )

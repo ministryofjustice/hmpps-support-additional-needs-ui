@@ -9,6 +9,7 @@ import CuriousService from './curiousService'
 import EducationSupportPlanService from './educationSupportPlanService'
 import EducationSupportPlanScheduleService from './educationSupportPlanScheduleService'
 import ChallengeService from './challengeService'
+import ConditionService from './conditionService'
 
 export const services = () => {
   const {
@@ -36,6 +37,7 @@ export const services = () => {
     educationSupportPlanService: new EducationSupportPlanService(supportAdditionalNeedsApiClient),
     educationSupportPlanScheduleService: new EducationSupportPlanScheduleService(supportAdditionalNeedsApiClient),
     challengeService: new ChallengeService(supportAdditionalNeedsApiClient),
+    conditionService: new ConditionService(supportAdditionalNeedsApiClient),
   }
 }
 
@@ -44,6 +46,7 @@ export type Services = ReturnType<typeof services>
 export {
   AuditService,
   ChallengeService,
+  ConditionService,
   CuriousService,
   EducationSupportPlanService,
   EducationSupportPlanScheduleService,

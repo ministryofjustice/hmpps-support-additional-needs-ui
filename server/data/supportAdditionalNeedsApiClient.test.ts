@@ -13,6 +13,8 @@ import { aValidPlanCreationSchedulesResponse } from '../testsupport/planCreation
 import aValidUpdatePlanCreationStatusRequest from '../testsupport/updatePlanCreationStatusRequestTestDataBuilder'
 import { aValidCreateChallengesRequest } from '../testsupport/challengeRequestTestDataBuilder'
 import { aValidChallengeListResponse } from '../testsupport/challengeResponseTestDataBuilder'
+import { aValidCreateConditionsRequest } from '../testsupport/conditionRequestTestDataBuilder'
+import { aValidConditionListResponse } from '../testsupport/conditionResponseTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -421,6 +423,58 @@ describe('supportAdditionalNeedsApiClient', () => {
       // When
       const actual = await supportAdditionalNeedsApiClient
         .createChallenges(prisonNumber, username, createChallengesRequest)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('createConditions', () => {
+    it('should create conditions for a prisoner', async () => {
+      // Given
+      const createConditionsRequest = aValidCreateConditionsRequest()
+
+      const expectedResponse = aValidConditionListResponse()
+      supportAdditionalNeedsApi
+        .post(`/profile/${prisonNumber}/conditions`, requestBody => isMatch(requestBody, createConditionsRequest))
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, expectedResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.createConditions(
+        prisonNumber,
+        username,
+        createConditionsRequest,
+      )
+
+      // Then
+      expect(actual).toEqual(expectedResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const createConditionsRequest = aValidCreateConditionsRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .post(`/profile/${prisonNumber}/conditions`, requestBody => isMatch(requestBody, createConditionsRequest))
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .createConditions(prisonNumber, username, createConditionsRequest)
         .catch(e => e)
 
       // Then
