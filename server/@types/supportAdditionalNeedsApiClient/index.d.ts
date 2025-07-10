@@ -17,4 +17,9 @@ declare module 'supportAdditionalNeedsApiClient' {
   export type ChallengeRequest = components['schemas']['ChallengeRequest']
   export type ChallengeListResponse = components['schemas']['ChallengeListResponse']
   export type ChallengeResponse = components['schemas']['ChallengeResponse']
+
+  export type CreateConditionsRequest = components['schemas']['CreateConditionsRequest']
+  export type ConditionRequest = components['schemas']['ConditionRequest']
+  export type ConditionListResponse = components['schemas']['ConditionListResponse']
+  export type ConditionResponse = components['schemas']['ConditionResponse']
 }
