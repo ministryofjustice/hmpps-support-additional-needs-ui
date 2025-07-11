@@ -15,6 +15,7 @@ const specificTeachingSkillsSchema = async () => {
       .enum(YesNoValue, { message: skillsRequiredMandatoryMessage }),
     details: z //
       .string()
+      .trim()
       .nullable()
       .optional(),
   })

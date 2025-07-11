@@ -40,6 +40,12 @@ describe('addPersonConsultedSchema', () => {
     { fullName: null },
     { fullName: undefined },
     { fullName: '' },
+    { fullName: ' ' },
+    {
+      fullName: `
+
+    `,
+    },
   ])('sad path - fullName field validation fails - %s', async requestBody => {
     // Given
     req.body = requestBody

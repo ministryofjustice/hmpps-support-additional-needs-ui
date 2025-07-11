@@ -83,11 +83,19 @@ describe('whoCompletedThePlanSchema', () => {
     )
   })
 
-  it('sad path - mandatory completedByOtherFullName field validation fails', async () => {
+  it.each([
+    undefined,
+    null,
+    '',
+    '  ',
+    `
+
+    `,
+  ])('sad path - mandatory completedByOtherFullName field validation fails', async completedByOtherFullName => {
     // Given
     const requestBody = {
       completedBy: 'SOMEBODY_ELSE',
-      completedByOtherFullName: undefined as string,
+      completedByOtherFullName,
       completedByOtherJobRole: 'Peer mentor',
     }
     req.body = requestBody
@@ -143,12 +151,20 @@ describe('whoCompletedThePlanSchema', () => {
     )
   })
 
-  it('sad path - mandatory completedByOtherJobRole field validation fails', async () => {
+  it.each([
+    undefined,
+    null,
+    '',
+    '  ',
+    `
+
+    `,
+  ])('sad path - mandatory completedByOtherJobRole field validation fails', async completedByOtherJobRole => {
     // Given
     const requestBody = {
       completedBy: 'SOMEBODY_ELSE',
       completedByOtherFullName: 'Joe Bloggs',
-      completedByOtherJobRole: undefined as string,
+      completedByOtherJobRole,
     }
     req.body = requestBody
 

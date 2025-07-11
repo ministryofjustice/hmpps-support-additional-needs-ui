@@ -15,6 +15,7 @@ const learningNeedsSupportPractitionerSupportSchema = async () => {
       .enum(YesNoValue, { message: supportRequiredMandatoryMessage }),
     details: z //
       .string()
+      .trim()
       .nullable()
       .optional(),
   })

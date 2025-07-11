@@ -35,33 +35,40 @@ describe('individualSupportRequirementsSchema', () => {
     expect(res.redirectWithErrors).not.toHaveBeenCalled()
   })
 
-  it.each([{ supportRequirements: null }, { supportRequirements: undefined }, { supportRequirements: '' }])(
-    'sad path - validation false - supportRequirements: supportRequirements',
-    async requestBody => {
-      // Given
-      req.body = requestBody
+  it.each([
+    { supportRequirements: null },
+    { supportRequirements: undefined },
+    { supportRequirements: '' },
+    { supportRequirements: '   ' },
+    {
+      supportRequirements: `
 
-      const expectedErrors: Array<Error> = [
-        {
-          href: '#supportRequirements',
-          text: 'Enter details of any support requirements that the individual feels they need',
-        },
-      ]
-      const expectedInvalidForm = JSON.stringify(requestBody)
-
-      // When
-      await validate(individualSupportRequirementsSchema)(req, res, next)
-
-      // Then
-      expect(req.body).toEqual(requestBody)
-      expect(next).not.toHaveBeenCalled()
-      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
-      expect(res.redirectWithErrors).toHaveBeenCalledWith(
-        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/individual-support-requirements',
-        expectedErrors,
-      )
+  `,
     },
-  )
+  ])('sad path - validation false - supportRequirements: supportRequirements', async requestBody => {
+    // Given
+    req.body = requestBody
+
+    const expectedErrors: Array<Error> = [
+      {
+        href: '#supportRequirements',
+        text: 'Enter details of any support requirements that the individual feels they need',
+      },
+    ]
+    const expectedInvalidForm = JSON.stringify(requestBody)
+
+    // When
+    await validate(individualSupportRequirementsSchema)(req, res, next)
+
+    // Then
+    expect(req.body).toEqual(requestBody)
+    expect(next).not.toHaveBeenCalled()
+    expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+    expect(res.redirectWithErrors).toHaveBeenCalledWith(
+      '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/individual-support-requirements',
+      expectedErrors,
+    )
+  })
 
   it('sad path - validation of supportRequirements field length validation fails', async () => {
     // Given

@@ -15,6 +15,7 @@ const teachingAdjustmentsSchema = async () => {
       .enum(YesNoValue, { message: adjustmentsRequiredMandatoryMessage }),
     details: z //
       .string()
+      .trim()
       .nullable()
       .optional(),
   })

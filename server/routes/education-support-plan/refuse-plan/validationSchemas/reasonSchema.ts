@@ -13,7 +13,7 @@ const reasonSchema = async () => {
     refusalReason: z //
       .enum(PlanCreationScheduleExemptionReason, { message: refusalReasonMandatoryMessage }),
     refusalReasonDetails: z //
-      .record(z.enum(PlanCreationScheduleExemptionReason), z.string().optional())
+      .record(z.enum(PlanCreationScheduleExemptionReason), z.string().trim().nullable().optional())
       .nullable()
       .optional(),
   }).check(ctx => {

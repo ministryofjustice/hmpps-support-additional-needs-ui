@@ -11,6 +11,7 @@ const individualSupportRequirementsSchema = async () => {
   return createSchema({
     supportRequirements: z //
       .string({ message: supportRequirementsMandatoryMessage })
+      .trim()
       .min(1, supportRequirementsMandatoryMessage)
       .max(MAX_SUPPORT_REQUIREMENTS_LENGTH, supportRequirementsMaxLengthMessage),
   })
