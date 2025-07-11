@@ -1,6 +1,6 @@
 import Page from '../../../pages/page'
 import ReasonPage from '../../../pages/education-support-plan/refuse-plan/reasonPage'
-import OverviewPage from '../../../pages/profile/overview/overviewPage'
+import OverviewPage from '../../../pages/profile/overviewPage'
 import PlanCreationScheduleExemptionReason from '../../../../server/enums/planCreationScheduleExemptionReason'
 import { patchRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'

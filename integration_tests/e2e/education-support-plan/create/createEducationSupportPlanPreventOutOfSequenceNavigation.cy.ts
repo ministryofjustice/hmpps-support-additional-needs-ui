@@ -1,6 +1,6 @@
 import { v4 as uuidV4 } from 'uuid'
 import Page from '../../../pages/page'
-import OverviewPage from '../../../pages/profile/overview/overviewPage'
+import OverviewPage from '../../../pages/profile/overviewPage'
 
 context('Prevent out of sequence navigation to pages in the Create Education Support Plan journey', () => {
   const prisonNumber = 'A00001A'

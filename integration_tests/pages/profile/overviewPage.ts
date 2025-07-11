@@ -1,22 +1,12 @@
-import Page, { PageElement } from '../../page'
-import WhoCreatedThePlanPage from '../../education-support-plan/whoCreatedThePlanPage'
-import ReasonPage from '../../education-support-plan/refuse-plan/reasonPage'
+import Page, { PageElement } from '../page'
+import WhoCreatedThePlanPage from '../education-support-plan/whoCreatedThePlanPage'
+import ReasonPage from '../education-support-plan/refuse-plan/reasonPage'
+import ProfilePage from './profilePage'
 
-export default class OverviewPage extends Page {
+export default class OverviewPage extends ProfilePage {
   constructor() {
     super('profile-overview')
-  }
-
-  hasSuccessMessage(message: string): OverviewPage {
-    this.successMessage() //
-      .should('be.visible')
-      .and('contain.text', message)
-    return this
-  }
-
-  doesNotHaveSuccessMessage(): OverviewPage {
-    this.successMessage().should('not.exist')
-    return this
+    this.activeTabIs('Overview')
   }
 
   hasNoAdditionalNeedsRecorded(): OverviewPage {
@@ -63,10 +53,6 @@ export default class OverviewPage extends Page {
     this.refuseEducationSupportPlanButton().click()
     return Page.verifyOnPage(ReasonPage)
   }
-
-  private prisonerSummaryBanner = (): PageElement => cy.get('.prisoner-summary-banner')
-
-  private successMessage = (): PageElement => cy.get('[data-qa=success-message]')
 
   private additionalNeedsSummaryCardContent = (): PageElement =>
     cy.get('[data-qa=additional-needs-summary-card] .govuk-summary-card__content')

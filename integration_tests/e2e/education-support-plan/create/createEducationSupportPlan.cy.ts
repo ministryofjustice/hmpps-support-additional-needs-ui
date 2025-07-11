@@ -6,7 +6,7 @@ import OtherPeopleConsultedPage from '../../../pages/education-support-plan/othe
 import OtherPeopleConsultedAddPersonPage from '../../../pages/education-support-plan/otherPeopleConsultedAddPersonPage'
 import OtherPeopleConsultedListPage from '../../../pages/education-support-plan/otherPeopleConsultedListPage'
 import ReviewNeedsConditionsStrengthsPage from '../../../pages/education-support-plan/reviewNeedsConditionsStrengthsPage'
-import OverviewPage from '../../../pages/profile/overview/overviewPage'
+import OverviewPage from '../../../pages/profile/overviewPage'
 import TeachingAdjustmentsPage from '../../../pages/education-support-plan/teachingAdjustmentsPage'
 import SpecificTeachingSkillsPage from '../../../pages/education-support-plan/specificTeachingSkillsPage'
 import ExamArrangementsPage from '../../../pages/education-support-plan/examArrangementsPage'

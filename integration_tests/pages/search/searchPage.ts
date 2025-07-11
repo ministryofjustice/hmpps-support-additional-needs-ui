@@ -1,5 +1,5 @@
 import Page, { PageElement } from '../page'
-import OverviewPage from '../profile/overview/overviewPage'
+import OverviewPage from '../profile/overviewPage'
 
 export default class SearchPage extends Page {
   constructor() {
