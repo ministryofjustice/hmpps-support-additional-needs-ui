@@ -19,11 +19,15 @@ const whoCompletedThePlanSchema = async () => {
       .enum(PlanCreatedByValue, { message: completedByMandatoryMessage }),
     completedByOtherFullName: z //
       .string()
+      .trim()
       .max(MAX_COMPLETED_BY_FULL_NAME_LENGTH, completedByFullNameMaxLengthMessage)
+      .nullable()
       .optional(),
     completedByOtherJobRole: z //
       .string()
+      .trim()
       .max(MAX_COMPLETED_BY_JOB_ROLE_LENGTH, completedByJobRoleMaxLengthMessage)
+      .nullable()
       .optional(),
   })
     .refine(

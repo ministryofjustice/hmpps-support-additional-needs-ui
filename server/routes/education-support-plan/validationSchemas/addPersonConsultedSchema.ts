@@ -11,6 +11,7 @@ const addPersonConsultedSchema = async () => {
   return createSchema({
     fullName: z //
       .string({ message: fullNameMandatoryMessage })
+      .trim()
       .min(1, fullNameMandatoryMessage)
       .max(MAX_COMPLETED_BY_FULL_NAME_LENGTH, fullNameMaxLengthMessage),
   })

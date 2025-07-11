@@ -9,6 +9,7 @@ const additionalInformationSchema = async () => {
   return createSchema({
     additionalInformation: z //
       .string()
+      .trim()
       .max(MAX_ADDITIONAL_INFORMATION_LENGTH, additionalInformationMaxLengthMessage)
       .nullable()
       .optional(),
