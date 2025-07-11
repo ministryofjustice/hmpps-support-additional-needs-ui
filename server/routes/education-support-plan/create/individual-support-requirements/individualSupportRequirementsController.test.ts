@@ -76,7 +76,7 @@ describe('individualSupportRequirementsController', () => {
       supportRequirements: 'Chris has asked for braille books',
     }
 
-    const expectedNextRoute = 'learning-environment-adjustments'
+    const expectedNextRoute = 'teaching-adjustments'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       individualSupport: 'Chris has asked for braille books',

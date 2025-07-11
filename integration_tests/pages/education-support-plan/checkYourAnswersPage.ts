@@ -2,7 +2,6 @@ import Page, { PageElement } from '../page'
 import WhoCreatedThePlanPage from './whoCreatedThePlanPage'
 import OtherPeopleConsultedPage from './otherPeopleConsultedPage'
 import TeachingAdjustmentsPage from './teachingAdjustmentsPage'
-import LearningEnvironmentAdjustmentsPage from './learningEnvironmentAdjustmentsPage'
 import SpecificTeachingSkillsPage from './specificTeachingSkillsPage'
 import ExamArrangementsPage from './examArrangementsPage'
 import EducationHealthCarePlanPage from './educationHealthCarePlanPage'
@@ -92,23 +91,6 @@ export default class CheckYourAnswersPage extends Page {
   requiresTeachingAdjustments(expected: string): CheckYourAnswersPage {
     this.teachingAdjustmentsValue().should('contain.text', 'Yes')
     this.teachingAdjustmentsValue().find('span').should('be.visible').should('contain.text', expected)
-    return this
-  }
-
-  clickLearningEnvironmentAdjustmentsChangeLink(): LearningEnvironmentAdjustmentsPage {
-    this.learningEnvironmentAdjustmentsChangeLink().click()
-    return Page.verifyOnPage(LearningEnvironmentAdjustmentsPage)
-  }
-
-  doesNotRequireLearningEnvironmentAdjustments(): CheckYourAnswersPage {
-    this.learningEnvironmentAdjustmentsValue().should('contain.text', 'No')
-    this.learningEnvironmentAdjustmentsValue().find('span').should('not.exist')
-    return this
-  }
-
-  requiresLearningEnvironmentAdjustments(expected: string): CheckYourAnswersPage {
-    this.learningEnvironmentAdjustmentsValue().should('contain.text', 'Yes')
-    this.learningEnvironmentAdjustmentsValue().find('span').should('be.visible').should('contain.text', expected)
     return this
   }
 
@@ -224,11 +206,6 @@ export default class CheckYourAnswersPage extends Page {
   private teachingAdjustmentsValue = (): PageElement => cy.get('[data-qa=teaching-adjustments]')
 
   private teachingAdjustmentsChangeLink = (): PageElement => cy.get('[data-qa=teaching-adjustments-change-link]')
-
-  private learningEnvironmentAdjustmentsValue = (): PageElement => cy.get('[data-qa=learning-environment-adjustments]')
-
-  private learningEnvironmentAdjustmentsChangeLink = (): PageElement =>
-    cy.get('[data-qa=learning-environment-adjustments-change-link]')
 
   private specificTeachingSkillsValue = (): PageElement => cy.get('[data-qa=specific-teaching-skills]')
 

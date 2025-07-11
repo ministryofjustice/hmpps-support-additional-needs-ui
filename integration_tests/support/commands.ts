@@ -6,7 +6,6 @@ import Page from '../pages/page'
 import PlanCreatedByValue from '../../server/enums/planCreatedByValue'
 import OtherPeopleConsultedPage from '../pages/education-support-plan/otherPeopleConsultedPage'
 import ReviewNeedsConditionsStrengthsPage from '../pages/education-support-plan/reviewNeedsConditionsStrengthsPage'
-import LearningEnvironmentAdjustmentsPage from '../pages/education-support-plan/learningEnvironmentAdjustmentsPage'
 import TeachingAdjustmentsPage from '../pages/education-support-plan/teachingAdjustmentsPage'
 import SpecificTeachingSkillsPage from '../pages/education-support-plan/specificTeachingSkillsPage'
 import ExamArrangementsPage from '../pages/education-support-plan/examArrangementsPage'
@@ -47,9 +46,6 @@ Cypress.Commands.add(
       .submitPageTo(IndividualSupportRequirementsPage)
       //
       .enterSupportRequirements('Prisoner has requested large print books to help with reading')
-      .submitPageTo(LearningEnvironmentAdjustmentsPage)
-      //
-      .selectLearningAdjustmentsNotRequired()
       .submitPageTo(TeachingAdjustmentsPage)
       //
       .selectTeachingAdjustmentsNotRequired()

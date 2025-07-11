@@ -14,8 +14,6 @@ declare module 'dto' {
       name: string
       jobRole: string
     }>
-    learningEnvironmentAdjustmentsNeeded?: boolean
-    learningEnvironmentAdjustments?: string
     teachingAdjustmentsNeeded?: boolean
     teachingAdjustments?: string
     specificTeachingSkillsNeeded?: boolean

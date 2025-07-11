@@ -9,7 +9,6 @@ import AddPersonConsultedController from './other-people-consulted/addPersonCons
 import OtherPeopleConsultedListController from './other-people-consulted/otherPeopleConsultedListController'
 import ReviewNeedsConditionsStrengthsController from './review-needs-conditions-strengths/reviewNeedsConditionsStrengthsController'
 import IndividualSupportRequirementsController from './individual-support-requirements/individualSupportRequirementsController'
-import LearningEnvironmentAdjustmentsController from './learning-environment-adjustments/learningEnvironmentAdjustmentsController'
 import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
 import SpecificTeachingSkillsController from './specific-teaching-skills/specificTeachingSkillsController'
 import ExamArrangementsController from './exam-arrangements/examArrangementsController'
@@ -20,7 +19,6 @@ import ReviewSupportPlanController from './review-support-plan/reviewSupportPlan
 import CheckYourAnswersController from './check-your-answers/checkYourAnswersController'
 import { validate } from '../../../middleware/validationMiddleware'
 import whoCompletedThePlanSchema from '../validationSchemas/whoCompletedThePlanSchema'
-import learningEnvironmentAdjustmentsSchema from '../validationSchemas/learningEnvironmentAdjustmentsSchema'
 import teachingAdjustmentsSchema from '../validationSchemas/teachingAdjustmentsSchema'
 import specificTeachingSkillsSchema from '../validationSchemas/specificTeachingSkillsSchema'
 import examArrangementsSchema from '../validationSchemas/examArrangementsSchema'
@@ -44,7 +42,6 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const otherPeopleConsultedListController = new OtherPeopleConsultedListController()
   const reviewNeedsConditionsStrengthsController = new ReviewNeedsConditionsStrengthsController()
   const individualSupportRequirementsController = new IndividualSupportRequirementsController()
-  const learningEnvironmentAdjustmentsController = new LearningEnvironmentAdjustmentsController()
   const teachingAdjustmentsController = new TeachingAdjustmentsController()
   const specificTeachingSkillsController = new SpecificTeachingSkillsController()
   const examArrangementsController = new ExamArrangementsController()
@@ -115,16 +112,6 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
     checkEducationSupportPlanDtoExistsInJourneyData,
     validate(individualSupportRequirementsSchema),
     asyncMiddleware(individualSupportRequirementsController.submitIndividualSupportRequirementsForm),
-  ])
-
-  router.get('/:journeyId/learning-environment-adjustments', [
-    checkEducationSupportPlanDtoExistsInJourneyData,
-    asyncMiddleware(learningEnvironmentAdjustmentsController.getLearningEnvironmentAdjustmentsView),
-  ])
-  router.post('/:journeyId/learning-environment-adjustments', [
-    checkEducationSupportPlanDtoExistsInJourneyData,
-    validate(learningEnvironmentAdjustmentsSchema),
-    asyncMiddleware(learningEnvironmentAdjustmentsController.submitLearningEnvironmentAdjustmentsForm),
   ])
 
   router.get('/:journeyId/teaching-adjustments', [

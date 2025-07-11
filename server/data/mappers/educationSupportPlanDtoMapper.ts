@@ -16,8 +16,6 @@ const toEducationSupportPlanDto = (
       ? educationSupportPlanResponse.otherContributors
       : null,
   hasCurrentEhcp: educationSupportPlanResponse.hasCurrentEhcp,
-  learningEnvironmentAdjustmentsNeeded: educationSupportPlanResponse.learningEnvironmentAdjustments != null,
-  learningEnvironmentAdjustments: educationSupportPlanResponse.learningEnvironmentAdjustments,
   teachingAdjustmentsNeeded: educationSupportPlanResponse.teachingAdjustments != null,
   teachingAdjustments: educationSupportPlanResponse.teachingAdjustments,
   specificTeachingSkillsNeeded: educationSupportPlanResponse.specificTeachingSkills != null,

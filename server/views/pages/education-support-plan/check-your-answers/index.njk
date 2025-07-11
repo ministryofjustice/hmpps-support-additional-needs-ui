@@ -87,7 +87,7 @@
 
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
-                Adjustments to teaching
+                Adjustments to teaching, learning environment or materials
               </dt>
               <dd class="govuk-summary-list__value" data-qa="teaching-adjustments">
                 {{ dto.teachingAdjustmentsNeeded | formatYesNo }}
@@ -97,7 +97,7 @@
               </dd>
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="teaching-adjustments?submitToCheckAnswers=true" data-qa="teaching-adjustments-change-link">
-                  Change<span class="govuk-visually-hidden"> details of any required teaching adjustments</span>
+                  Change<span class="govuk-visually-hidden"> details of any required teaching, learning environment or material adjustments</span>
                 </a>
               </dd>
             </div>
@@ -112,23 +112,6 @@
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="individual-support-requirements?submitToCheckAnswers=true" data-qa="individual-support-requirements-change-link">
                   Change<span class="govuk-visually-hidden"> details of any education support the person feels they need</span>
-                </a>
-              </dd>
-            </div>
-
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
-                Adjustments to environment or materials
-              </dt>
-              <dd class="govuk-summary-list__value" data-qa="learning-environment-adjustments">
-                {{ dto.learningEnvironmentAdjustmentsNeeded | formatYesNo }}
-                {% if dto.learningEnvironmentAdjustmentsNeeded %}
-                  <span class="app-u-multiline-text">{{ dto.learningEnvironmentAdjustments }}</span>
-                {% endif %}
-              </dd>
-              <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="learning-environment-adjustments?submitToCheckAnswers=true" data-qa="learning-environment-adjustments-change-link">
-                  Change<span class="govuk-visually-hidden"> details of any required adjustments to the learning environment or materials</span>
                 </a>
               </dd>
             </div>
