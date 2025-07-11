@@ -1,7 +1,7 @@
 import type { Person } from 'supportAdditionalNeedsApiClient'
 import Page from '../../pages/page'
 import SearchPage from '../../pages/search/searchPage'
-import OverviewPage from '../../pages/profile/overview/overviewPage'
+import OverviewPage from '../../pages/profile/overviewPage'
 
 /**
  * Cypress scenarios for the Search page.

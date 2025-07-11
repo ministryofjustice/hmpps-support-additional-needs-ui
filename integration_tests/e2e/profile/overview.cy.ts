@@ -2,10 +2,15 @@
  * Cypress scenarios for the Profile Overview page.
  */
 
-import OverviewPage from '../../pages/profile/overview/overviewPage'
+import OverviewPage from '../../pages/profile/overviewPage'
 import Page from '../../pages/page'
 import Error404Page from '../../pages/error404'
 import PlanCreationScheduleStatus from '../../../server/enums/planCreationScheduleStatus'
+import SupportStrategiesPage from '../../pages/profile/supportStrategiesPage'
+import EducationSupportPlanPage from '../../pages/profile/educationSupportPlanPage'
+import ConditionsPage from '../../pages/profile/conditionsPage'
+import StrengthsPage from '../../pages/profile/strengthsPage'
+import ChallengesPage from '../../pages/profile/challengesPage'
 
 context('Profile Overview Page', () => {
   beforeEach(() => {
@@ -88,5 +93,31 @@ context('Profile Overview Page', () => {
 
     // Then
     Page.verifyOnPage(Error404Page)
+  })
+
+  it('should be able to use the tab bar to navigate between the different profile pages', () => {
+    // Given
+    const prisonNumber = 'H4115SD'
+    cy.task('getPrisonerById', prisonNumber)
+    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+
+    cy.visit(`/profile/${prisonNumber}/overview`)
+
+    // When
+    Page.verifyOnPage(OverviewPage) //
+      .selectTab('Support strategies', SupportStrategiesPage)
+      .activeTabIs('Support strategies')
+      .selectTab('Education support plan', EducationSupportPlanPage)
+      .activeTabIs('Education support plan')
+      .selectTab('Conditions', ConditionsPage)
+      .activeTabIs('Conditions')
+      .selectTab('Strengths', StrengthsPage)
+      .activeTabIs('Strengths')
+      .selectTab('Challenges', ChallengesPage)
+      .activeTabIs('Challenges')
+      .selectTab('Overview', OverviewPage)
+
+    // Then
+    Page.verifyOnPage(OverviewPage)
   })
 })
