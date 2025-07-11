@@ -4,7 +4,7 @@ import OverviewController from './overviewController'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import retrieveCurrentEducationSupportPlanCreationSchedule from '../middleware/retrieveCurrentEducationSupportPlanCreationSchedule'
 
-const overviewRoute = (services: Services): Router => {
+const overviewRoutes = (services: Services): Router => {
   const { educationSupportPlanScheduleService } = services
   const controller = new OverviewController()
 
@@ -15,4 +15,4 @@ const overviewRoute = (services: Services): Router => {
     ])
 }
 
-export default overviewRoute
+export default overviewRoutes

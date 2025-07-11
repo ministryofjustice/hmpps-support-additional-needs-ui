@@ -8,6 +8,11 @@ const pageViewEventMap: Record<string, Page> = {
   '/search': Page.SEARCH,
 
   '/profile/:prisonNumber/overview': Page.PROFILE_OVERVIEW,
+  '/profile/:prisonNumber/support-strategies': Page.PROFILE_SUPPORT_STRATEGIES,
+  '/profile/:prisonNumber/conditions': Page.PROFILE_CONDITIONS,
+  '/profile/:prisonNumber/strengths': Page.PROFILE_STRENGTHS,
+  '/profile/:prisonNumber/challenges': Page.PROFILE_CHALLENGES,
+  '/profile/:prisonNumber/education-support-plan': Page.PROFILE_EDUCATION_SUPPORT_PLAN,
 
   // Create ELSP routes
   '/education-support-plan/:prisonNumber/create/:journeyId/who-created-the-plan': Page.CREATE_ELSP_WHO_CREATED_PLAN,
