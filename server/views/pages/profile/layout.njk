@@ -47,23 +47,22 @@
               Overview
             </a>
           </li>
-          <!--
           <li class="moj-sub-navigation__item">
             <a class="moj-sub-navigation__link"
                data-qa="tab-overview"
-               {% if tab === 'additional-needs' -%} aria-current="page" {% endif %}
-               href="additional-needs"
+               {% if tab === 'support-strategies' -%} aria-current="page" {% endif %}
+               href="support-strategies"
             >
-              Additional needs
+              Support strategies
             </a>
           </li>
           <li class="moj-sub-navigation__item">
             <a class="moj-sub-navigation__link"
                data-qa="tab-overview"
-               {% if tab === 'conditions' -%} aria-current="page" {% endif %}
-               href="conditions"
+              {% if tab === 'challenges' -%} aria-current="page" {% endif %}
+               href="challenges"
             >
-              Conditions
+              Challenges
             </a>
           </li>
           <li class="moj-sub-navigation__item">
@@ -75,7 +74,24 @@
               Strengths
             </a>
           </li>
-          -->
+          <li class="moj-sub-navigation__item">
+            <a class="moj-sub-navigation__link"
+               data-qa="tab-overview"
+              {% if tab === 'conditions' -%} aria-current="page" {% endif %}
+               href="conditions"
+            >
+              Conditions
+            </a>
+          </li>
+          <li class="moj-sub-navigation__item">
+            <a class="moj-sub-navigation__link"
+               data-qa="tab-overview"
+              {% if tab === 'education-support-plan' -%} aria-current="page" {% endif %}
+               href="education-support-plan"
+            >
+              Education support plan
+            </a>
+          </li>
         </ul>
       </nav>
     </div>

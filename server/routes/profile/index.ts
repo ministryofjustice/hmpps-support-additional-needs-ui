@@ -1,10 +1,20 @@
 import { Router } from 'express'
 import { Services } from '../../services'
-import overviewRoute from './overview'
+import overviewRoutes from './overview'
+import supportStrategiesRoutes from './support-strategies'
+import challengesRoutes from './challenges'
+import strengthsRoutes from './strengths'
+import conditionsRoutes from './conditions'
+import educationSupportPlanRoutes from './education-support-plan'
 
 const profileRoutes = (services: Services): Router => {
   return Router({ mergeParams: true }) //
-    .use('/overview', overviewRoute(services))
+    .use('/overview', overviewRoutes(services))
+    .use('/support-strategies', supportStrategiesRoutes())
+    .use('/challenges', challengesRoutes())
+    .use('/strengths', strengthsRoutes())
+    .use('/conditions', conditionsRoutes())
+    .use('/education-support-plan', educationSupportPlanRoutes())
 }
 
 export default profileRoutes
