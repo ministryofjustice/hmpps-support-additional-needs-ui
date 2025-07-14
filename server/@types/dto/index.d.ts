@@ -56,4 +56,9 @@ declare module 'dto' {
     source: ConditionSource
     detail?: string
   }
+
+  export interface ReferenceDataItemDto {
+    code: string
+    areaCode?: string
+  }
 }
