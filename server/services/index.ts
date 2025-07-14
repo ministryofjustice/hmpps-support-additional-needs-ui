@@ -24,6 +24,7 @@ export const services = () => {
     managedUsersApiClient,
     supportAdditionalNeedsApiClient,
     curiousApiClient,
+    referenceDataStore,
   } = dataAccess()
 
   return {
@@ -39,7 +40,7 @@ export const services = () => {
     educationSupportPlanScheduleService: new EducationSupportPlanScheduleService(supportAdditionalNeedsApiClient),
     challengeService: new ChallengeService(supportAdditionalNeedsApiClient),
     conditionService: new ConditionService(supportAdditionalNeedsApiClient),
-    referenceDataService: new ReferenceDataService(supportAdditionalNeedsApiClient),
+    referenceDataService: new ReferenceDataService(referenceDataStore, supportAdditionalNeedsApiClient),
   }
 }
 
