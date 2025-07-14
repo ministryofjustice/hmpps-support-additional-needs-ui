@@ -28,6 +28,9 @@ import PrisonerSearchClient from './prisonerSearchClient'
 import RedisPrisonerSearchStore from './prisonerSearchStore/redisPrisonerSearchStore'
 import InMemoryPrisonerSearchStore from './prisonerSearchStore/inMemoryPrisonerSearchStore'
 import CuriousApiClient from './curiousApiClient'
+import ReferenceDataStore from './referenceDataStore/referenceDataStore'
+import InMemoryReferenceDataStore from './referenceDataStore/inMemoryReferenceDataStore'
+import RedisReferenceDataStore from './referenceDataStore/redisReferenceDataStore'
 
 export const dataAccess = () => {
   const tokenStore = config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore()
@@ -60,6 +63,9 @@ export const dataAccess = () => {
     managedUsersApiClient: new ManageUsersApiClient(hmppsAuthClient),
     supportAdditionalNeedsApiClient: new SupportAdditionalNeedsApiClient(hmppsAuthClient),
     curiousApiClient: new CuriousApiClient(curiousApiAuthClient),
+    referenceDataStore: config.redis.enabled
+      ? new RedisReferenceDataStore(createRedisClient('referenceData:'))
+      : new InMemoryReferenceDataStore(),
   }
 }
 
@@ -76,4 +82,5 @@ export {
   type RedisPrisonRegisterStore,
   SupportAdditionalNeedsApiClient,
   CuriousApiClient,
+  type ReferenceDataStore,
 }
