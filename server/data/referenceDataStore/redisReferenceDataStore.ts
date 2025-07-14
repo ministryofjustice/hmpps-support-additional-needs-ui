@@ -1,4 +1,4 @@
-import type { ReferenceDataItemDto } from 'dto'
+import type { ReferenceDataListResponse } from 'supportAdditionalNeedsApiClient'
 import ReferenceDataStore from './referenceDataStore'
 import ReferenceDataDomain from '../../enums/referenceDataDomain'
 import { RedisClient } from '../redisClient'
@@ -19,54 +19,29 @@ export default class RedisReferenceDataStore implements ReferenceDataStore {
 
   async getReferenceData(
     domain: ReferenceDataDomain,
+    categoriesOnly: boolean,
     includeInactive: boolean,
-  ): Promise<Record<string, Array<ReferenceDataItemDto>>> {
+  ): Promise<ReferenceDataListResponse> {
     await this.ensureConnected()
     const serializedReferenceData = await this.client.get(
-      `referenceData.${domain}.${includeInactive ? 'includesInactive' : 'excludesInactive'}`,
+      `${domain}${categoriesOnly ? '.categories' : ''}.${includeInactive ? 'includesInactive' : 'excludesInactive'}`,
     )
     return serializedReferenceData
-      ? (JSON.parse(serializedReferenceData.toString()) as Record<string, Array<ReferenceDataItemDto>>)
+      ? (JSON.parse(serializedReferenceData.toString()) as ReferenceDataListResponse)
       : undefined
   }
 
   async setReferenceData(
     domain: ReferenceDataDomain,
+    categoriesOnly: boolean,
     includeInactive: boolean,
-    referenceData: Record<string, Array<ReferenceDataItemDto>>,
+    referenceData: ReferenceDataListResponse,
     durationHours = 24,
   ): Promise<void> {
     await this.ensureConnected()
     this.client.set(
-      `referenceData.${domain}.${includeInactive ? 'includesInactive' : 'excludesInactive'}`,
+      `${domain}${categoriesOnly ? '.categories' : ''}.${includeInactive ? 'includesInactive' : 'excludesInactive'}`,
       JSON.stringify(referenceData),
-      { EX: durationHours * 60 * 60 },
-    )
-  }
-
-  async getReferenceDataCategories(
-    domain: ReferenceDataDomain,
-    includeInactive: boolean,
-  ): Promise<Array<ReferenceDataItemDto>> {
-    await this.ensureConnected()
-    const serializedReferenceDataCategories = await this.client.get(
-      `referenceDataCategories.${domain}.${includeInactive ? 'includesInactive' : 'excludesInactive'}`,
-    )
-    return serializedReferenceDataCategories
-      ? (JSON.parse(serializedReferenceDataCategories.toString()) as Array<ReferenceDataItemDto>)
-      : undefined
-  }
-
-  async setReferenceDataCategories(
-    domain: ReferenceDataDomain,
-    includeInactive: boolean,
-    referenceDataCategories: Array<ReferenceDataItemDto>,
-    durationHours = 24,
-  ): Promise<void> {
-    await this.ensureConnected()
-    this.client.set(
-      `referenceDataCategories.${domain}.${includeInactive ? 'includesInactive' : 'excludesInactive'}`,
-      JSON.stringify(referenceDataCategories),
       { EX: durationHours * 60 * 60 },
     )
   }

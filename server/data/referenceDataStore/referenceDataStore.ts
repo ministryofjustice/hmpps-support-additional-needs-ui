@@ -1,28 +1,18 @@
-import type { ReferenceDataItemDto } from 'dto'
+import type { ReferenceDataListResponse } from 'supportAdditionalNeedsApiClient'
 import ReferenceDataDomain from '../../enums/referenceDataDomain'
 
 export default interface ReferenceDataStore {
   getReferenceData(
     domain: ReferenceDataDomain,
+    categoriesOnly: boolean,
     includeInactive: boolean,
-  ): Promise<Record<string, Array<ReferenceDataItemDto>>>
+  ): Promise<ReferenceDataListResponse>
 
   setReferenceData(
     domain: ReferenceDataDomain,
+    categoriesOnly: boolean,
     includeInactive: boolean,
-    referenceData: Record<string, Array<ReferenceDataItemDto>>,
-    durationHours: number,
-  ): Promise<void>
-
-  getReferenceDataCategories(
-    domain: ReferenceDataDomain,
-    includeInactive: boolean,
-  ): Promise<Array<ReferenceDataItemDto>>
-
-  setReferenceDataCategories(
-    domain: ReferenceDataDomain,
-    includeInactive: boolean,
-    referenceDataCategories: Array<ReferenceDataItemDto>,
+    referenceData: ReferenceDataListResponse,
     durationHours: number,
   ): Promise<void>
 }
