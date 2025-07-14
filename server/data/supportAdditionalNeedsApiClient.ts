@@ -8,6 +8,7 @@ import type {
   CreateEducationSupportPlanRequest,
   EducationSupportPlanResponse,
   PlanCreationSchedulesResponse,
+  ReferenceDataListResponse,
   SearchByPrisonResponse,
   UpdatePlanCreationStatusRequest,
 } from 'supportAdditionalNeedsApiClient'
@@ -16,10 +17,27 @@ import logger from '../../logger'
 import SearchSortField from '../enums/searchSortField'
 import SearchSortDirection from '../enums/searchSortDirection'
 import restClientErrorHandler from './restClientErrorHandler'
+import ReferenceDataDomain from '../enums/referenceDataDomain'
 
 export default class SupportAdditionalNeedsApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
     super('Support Additional Needs API Client', config.apis.supportAdditionalNeedsApi, logger, authenticationClient)
+  }
+
+  async getReferenceData(
+    username: string,
+    domain: ReferenceDataDomain,
+    options: { categoriesOnly: boolean; includeInactive: boolean } = { categoriesOnly: false, includeInactive: false },
+  ): Promise<ReferenceDataListResponse> {
+    return this.get<ReferenceDataListResponse>(
+      {
+        path: `/reference-data/${domain}${options.categoriesOnly ? '/categories' : ''}`,
+        query: {
+          includeInactive: options.includeInactive,
+        },
+      },
+      asSystem(username),
+    )
   }
 
   async getPrisonersByPrisonId(

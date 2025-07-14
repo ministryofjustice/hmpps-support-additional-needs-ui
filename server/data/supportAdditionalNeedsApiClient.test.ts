@@ -15,6 +15,8 @@ import { aValidCreateChallengesRequest } from '../testsupport/challengeRequestTe
 import { aValidChallengeListResponse } from '../testsupport/challengeResponseTestDataBuilder'
 import { aValidCreateConditionsRequest } from '../testsupport/conditionRequestTestDataBuilder'
 import { aValidConditionListResponse } from '../testsupport/conditionResponseTestDataBuilder'
+import ReferenceDataDomain from '../enums/referenceDataDomain'
+import { aValidReferenceDataListResponse } from '../testsupport/referenceDataResponseTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -476,6 +478,104 @@ describe('supportAdditionalNeedsApiClient', () => {
       const actual = await supportAdditionalNeedsApiClient
         .createConditions(prisonNumber, username, createConditionsRequest)
         .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('getReferenceData', () => {
+    it('should get reference data given categories and inactive flags are not set', async () => {
+      // Given
+      const domain = ReferenceDataDomain.CHALLENGE
+
+      const referenceDataListResponse = aValidReferenceDataListResponse()
+
+      supportAdditionalNeedsApi
+        .get(`/reference-data/${domain}`)
+        .query(queryParams => queryParams.includeInactive === 'false')
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, referenceDataListResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getReferenceData(username, domain)
+
+      // Then
+      expect(actual).toEqual(referenceDataListResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should get reference data given categories flag is set', async () => {
+      // Given
+      const domain = ReferenceDataDomain.CHALLENGE
+
+      const referenceDataListResponse = aValidReferenceDataListResponse()
+
+      supportAdditionalNeedsApi
+        .get(`/reference-data/${domain}/categories`)
+        .query(queryParams => queryParams.includeInactive === 'false')
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, referenceDataListResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getReferenceData(username, domain, {
+        categoriesOnly: true,
+        includeInactive: false,
+      })
+
+      // Then
+      expect(actual).toEqual(referenceDataListResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should get reference data given inactive flag is set', async () => {
+      // Given
+      const domain = ReferenceDataDomain.CHALLENGE
+
+      const referenceDataListResponse = aValidReferenceDataListResponse()
+
+      supportAdditionalNeedsApi
+        .get(`/reference-data/${domain}`)
+        .query(queryParams => queryParams.includeInactive === 'true')
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, referenceDataListResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getReferenceData(username, domain, {
+        categoriesOnly: false,
+        includeInactive: true,
+      })
+
+      // Then
+      expect(actual).toEqual(referenceDataListResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const domain = ReferenceDataDomain.CHALLENGE
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .get(`/reference-data/${domain}`)
+        .query(queryParams => queryParams.includeInactive === 'false')
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .thrice()
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getReferenceData(username, domain).catch(e => e)
 
       // Then
       expect(actual).toEqual(expectedError)

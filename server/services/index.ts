@@ -10,6 +10,7 @@ import EducationSupportPlanService from './educationSupportPlanService'
 import EducationSupportPlanScheduleService from './educationSupportPlanScheduleService'
 import ChallengeService from './challengeService'
 import ConditionService from './conditionService'
+import ReferenceDataService from './referenceDataService'
 
 export const services = () => {
   const {
@@ -38,6 +39,7 @@ export const services = () => {
     educationSupportPlanScheduleService: new EducationSupportPlanScheduleService(supportAdditionalNeedsApiClient),
     challengeService: new ChallengeService(supportAdditionalNeedsApiClient),
     conditionService: new ConditionService(supportAdditionalNeedsApiClient),
+    referenceDataService: new ReferenceDataService(supportAdditionalNeedsApiClient),
   }
 }
 
@@ -53,6 +55,7 @@ export {
   JourneyDataService,
   PrisonerService,
   PrisonService,
+  ReferenceDataService,
   SearchService,
   UserService,
 }
