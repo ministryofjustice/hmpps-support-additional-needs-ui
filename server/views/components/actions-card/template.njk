@@ -1,9 +1,12 @@
 
+{% set actionMenuType = params.actionMenuType %}
 <div class="govuk-summary-card actions-card govuk-!-display-none-print" data-qa="actions-card">
   <div class="govuk-summary-card__title-wrapper govuk-!-padding-bottom-2">
     <h2 class="govuk-summary-card__title govuk-!-font-size-24">Actions</h2>
   </div>
-
-  {% include './_educationSupportPlanActions.njk' %}
-
+  {% if actionMenuType === 'challenges' %}
+    {% include './_challengesActions.njk' %}
+  {% else %}
+    {% include './_educationSupportPlanActions.njk' %}
+  {% endif %}
 </div>
