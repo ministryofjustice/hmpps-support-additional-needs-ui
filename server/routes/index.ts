@@ -7,6 +7,7 @@ import profileRoutes from './profile'
 import educationSupportPlanRoutes from './education-support-plan'
 import retrievePrisonerSummary from '../middleware/retrievePrisonerSummary'
 import checkPrisonerInCaseload from '../middleware/checkPrisonerInCaseloadMiddleware'
+import strengthsRoutes from './strengths'
 
 export default function routes(services: Services): Router {
   const router = Router({ mergeParams: true })
@@ -31,5 +32,8 @@ export default function routes(services: Services): Router {
   router.use('/search', searchRoutes(services))
   router.use('/profile/:prisonNumber', profileRoutes(services))
   router.use('/education-support-plan/:prisonNumber', educationSupportPlanRoutes(services))
+
+  router.use('/strengths/:prisonNumber', strengthsRoutes(services))
+
   return router
 }

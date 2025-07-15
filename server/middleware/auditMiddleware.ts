@@ -7,6 +7,7 @@ import logger from '../../logger'
 const pageViewEventMap: Record<string, Page> = {
   '/search': Page.SEARCH,
 
+  // Profile routes
   '/profile/:prisonNumber/overview': Page.PROFILE_OVERVIEW,
   '/profile/:prisonNumber/support-strategies': Page.PROFILE_SUPPORT_STRATEGIES,
   '/profile/:prisonNumber/conditions': Page.PROFILE_CONDITIONS,
@@ -43,10 +44,15 @@ const pageViewEventMap: Record<string, Page> = {
   // Prisoner refuses creation of ELSP routes
   '/education-support-plan/:prisonNumber/refuse-plan/:journeyId/reason': Page.REFUSE_ELSP_REASON,
 
+  // Create strengths routes
+  '/strengths/:prisonNumber/create/:journeyId/select-category': Page.CREATE_STRENGTH_CATEGORY,
+  '/strengths/:prisonNumber/create/:journeyId/detail': Page.CREATE_STRENGTH_DETAILS,
+
   // Non audit routes. These routes do not raise an audit event
   '/': null,
   '/education-support-plan/:prisonNumber/create/who-created-the-plan': null,
   '/education-support-plan/:prisonNumber/refuse-plan/reason': null,
+  '/strengths/:prisonNumber/create/select-category': null,
 }
 
 export default function auditMiddleware({ auditService }: Services) {
