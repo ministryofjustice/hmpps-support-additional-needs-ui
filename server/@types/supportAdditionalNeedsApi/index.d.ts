@@ -52,6 +52,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/profile/{prisonNumber}/strengths/{strengthReference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['updateStrength']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/profile/{prisonNumber}/conditions/{conditionReference}': {
     parameters: {
       query?: never
@@ -78,6 +94,22 @@ export interface paths {
     get?: never
     put: operations['updateChallenge']
     post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/strengths': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getStrengths']
+    put?: never
+    post: operations['createStrengths']
     delete?: never
     options?: never
     head?: never
@@ -158,6 +190,22 @@ export interface paths {
     get: operations['getChallenges']
     put?: never
     post: operations['createChallenges']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/aln-screener': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['createALNScreener']
     delete?: never
     options?: never
     head?: never
@@ -272,6 +320,147 @@ export interface components {
       /** Format: int32 */
       messagesFoundCount: number
     }
+    UpdateStrengthRequest: {
+      /**
+       * @description Whether or not the strength is active
+       * @example null
+       */
+      active: boolean
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+    }
+    ReferenceData: {
+      /**
+       * @description The short code of a reference data
+       * @example null
+       */
+      code: string
+      /**
+       * @description The description of the reference data code
+       * @example null
+       */
+      description?: string
+      /**
+       * @description The short code of a reference data category
+       * @example null
+       */
+      categoryCode?: string
+      /**
+       * @description The description of the reference data category
+       * @example null
+       */
+      categoryDescription?: string
+      /**
+       * @description The short code of a reference data area
+       * @example null
+       */
+      areaCode?: string
+      /**
+       * @description The description of the reference data area
+       * @example null
+       */
+      areaDescription?: string
+      /**
+       * Format: int32
+       * @description The sequence number of the code. Used for ordering codes correctly in lists and drop downs.
+       * @example 3
+       */
+      listSequence?: number
+      /**
+       * @description whether or not this ref data is active
+       * @example null
+       */
+      active?: boolean
+    }
+    StrengthResponse: {
+      /**
+       * Format: uuid
+       * @description The unique reference of this strength
+       * @example c88a6c48-97e2-4c04-93b5-98619966447b
+       */
+      reference: string
+      /**
+       * @description Whether or not this strength is from the ALN screener
+       * @example null
+       */
+      fromALNScreener: boolean
+      /** @example null */
+      strengthType: components['schemas']['ReferenceData']
+      /**
+       * @description Whether or not this strength is active
+       * @example null
+       */
+      active: boolean
+      /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
+      /**
+       * @description Optional details about the symptoms of this strength
+       * @example John is great at reading.
+       */
+      symptoms?: string
+      /**
+       * @description The list of enums as to how this strength was identified. Multiple reasons may apply.
+       * @example null
+       */
+      howIdentified?: (
+        | 'EDUCATION_SKILLS_WORK'
+        | 'WIDER_PRISON'
+        | 'CONVERSATIONS'
+        | 'COLLEAGUE_INFO'
+        | 'FORMAL_PROCESSES'
+        | 'SELF_DISCLOSURE'
+        | 'OTHER_SCREENING_TOOL'
+        | 'OTHER'
+      )[]
+      /**
+       * @description Details about how this strength was identified when the OTHER IdentificationSource enum option is chosen
+       * @example The trainer noticed that John was great at reading.
+       */
+      howIdentifiedOther?: string
+    }
     UpdateConditionRequest: {
       /**
        * @description Whether or not the condition is active
@@ -346,53 +535,15 @@ export interface components {
        */
       updatedAtPrison: string
       /**
+       * @description more granular information about the condition
+       * @example (for Mental Health) Social Anxiety
+       */
+      conditionDetail?: string
+      /**
        * @description additional detail about the condition
        * @example null
        */
       detail?: string
-    }
-    ReferenceData: {
-      /**
-       * @description The short code of a reference data
-       * @example null
-       */
-      code: string
-      /**
-       * @description The description of the reference data code
-       * @example null
-       */
-      description?: string
-      /**
-       * @description The short code of a reference data category
-       * @example null
-       */
-      categoryCode?: string
-      /**
-       * @description The description of the reference data category
-       * @example null
-       */
-      categoryDescription?: string
-      /**
-       * @description The short code of a reference data area
-       * @example null
-       */
-      areaCode?: string
-      /**
-       * @description The description of the reference data area
-       * @example null
-       */
-      areaDescription?: string
-      /**
-       * Format: int32
-       * @description The sequence number of the code. Used for ordering codes correctly in lists and drop downs.
-       * @example 3
-       */
-      listSequence?: number
-      /**
-       * @description whether or not this ref data is active
-       * @example null
-       */
-      active?: boolean
     }
     UpdateChallengeRequest: {
       /**
@@ -473,16 +624,74 @@ export interface components {
        */
       symptoms?: string
       /**
-       * @description Details about how this challenge was identified
+       * @description The list of enums as to how this challenge was identified. Multiple reasons may apply.
+       * @example null
+       */
+      howIdentified?: (
+        | 'EDUCATION_SKILLS_WORK'
+        | 'WIDER_PRISON'
+        | 'CONVERSATIONS'
+        | 'COLLEAGUE_INFO'
+        | 'FORMAL_PROCESSES'
+        | 'SELF_DISCLOSURE'
+        | 'OTHER_SCREENING_TOOL'
+        | 'OTHER'
+      )[]
+      /**
+       * @description Details about how this challenge was identified when the OTHER IdentificationSource enum option is chosen
        * @example The trainer noticed that John could read better on a cream background.
        */
-      howIdentified?: string
+      howIdentifiedOther?: string
+    }
+    CreateStrengthsRequest: {
       /**
-       * Format: date
-       * @description An ISO-8601 date representing date that the screening was carried out.
-       * @example 2023-11-19
+       * @description A List containing zero or more Strengths.
+       * @example null
        */
-      screeningDate?: string
+      strengths: components['schemas']['StrengthRequest'][]
+    }
+    StrengthRequest: {
+      /**
+       * @description the reference data type code of the strength
+       * @example null
+       */
+      strengthTypeCode: string
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+      /**
+       * @description Optional details about the symptoms of this strength
+       * @example John struggles is great at reading.
+       */
+      symptoms?: string
+      /**
+       * @description The list of enums as to how this strength was identified. Multiple reasons may apply.
+       * @example null
+       */
+      howIdentified?: (
+        | 'EDUCATION_SKILLS_WORK'
+        | 'WIDER_PRISON'
+        | 'CONVERSATIONS'
+        | 'COLLEAGUE_INFO'
+        | 'FORMAL_PROCESSES'
+        | 'SELF_DISCLOSURE'
+        | 'OTHER_SCREENING_TOOL'
+        | 'OTHER'
+      )[]
+      /**
+       * @description Details about how this strength was identified when the OTHER IdentificationSource enum option is chosen
+       * @example The trainer noticed that John was great at reading.
+       */
+      howIdentifiedOther?: string
+    }
+    StrengthListResponse: {
+      /**
+       * @description A List containing zero or more Strengths.
+       * @example null
+       */
+      strengths?: components['schemas']['StrengthResponse'][]
     }
     EducationNeedRequest: {
       prisonId: string
@@ -557,6 +766,11 @@ export interface components {
        */
       reviewDate: string
       /**
+       * @description Details of education support that the person feels they need or would benefit from.
+       * @example Chris is sensitive to loud noises and has asked for a quieter position in a calm classroom.
+       */
+      individualSupport: string
+      /**
        * @description Optional details of who created the Education Support Plan. If not specified the authenticated user is assumed to have created it.
        * @example null
        */
@@ -566,11 +780,6 @@ export interface components {
        * @example null
        */
       otherContributors?: components['schemas']['PlanContributor'][]
-      /**
-       * @description Optional details of any adjustments that are required for the person's learning environment or materials.
-       * @example Needs to sit near the front of the class and used coloured overlays for reading text.
-       */
-      learningEnvironmentAdjustments?: string
       /**
        * @description Optional details of any adjustments that need to be made to the teaching or curriculum.
        * @example Ensure simple, clear and relevant examples of used when explaining concepts.
@@ -596,11 +805,6 @@ export interface components {
        * @example Chris is very open about his issues and is a pleasure to talk to.
        */
       detail?: string
-      /**
-       * @description Details of education support that the person feels they need or would benefit from.
-       * @example Chris is sensitive to loud noises and has asked for a quieter position in a calm classroom.
-       */
-      individualSupport?: string
     }
     PlanContributor: {
       /** @example Joe Bloggs */
@@ -614,6 +818,11 @@ export interface components {
        * @example true
        */
       hasCurrentEhcp: boolean
+      /**
+       * @description Details of education support that the person feels they need or would benefit from.
+       * @example Chris is sensitive to loud noises and has asked for a quieter position in a calm classroom.
+       */
+      individualSupport: string
       /**
        * @description The DPS username of the person who created this resource.
        * @example asmith_gen
@@ -667,11 +876,6 @@ export interface components {
        */
       otherContributors?: components['schemas']['PlanContributor'][]
       /**
-       * @description Optional details of any adjustments that are required for the person's learning environment or materials.
-       * @example Needs to sit near the front of the class and used coloured overlays for reading text.
-       */
-      learningEnvironmentAdjustments?: string
-      /**
        * @description Optional details of any adjustments that need to be made to the teaching or curriculum.
        * @example Ensure simple, clear and relevant examples of used when explaining concepts.
        */
@@ -696,11 +900,6 @@ export interface components {
        * @example Chris is very open about his issues and is a pleasure to talk to.
        */
       detail?: string
-      /**
-       * @description Details of education support that the person feels they need or would benefit from.
-       * @example Chris is sensitive to loud noises and has asked for a quieter position in a calm classroom.
-       */
-      individualSupport?: string
     }
     ConditionRequest: {
       /**
@@ -709,15 +908,20 @@ export interface components {
        */
       source: 'SELF_DECLARED' | 'CONFIRMED_DIAGNOSIS'
       /**
+       * @description the reference data type code of the condition
+       * @example null
+       */
+      conditionTypeCode: string
+      /**
        * @description The Prison identifier.
        * @example BXI
        */
       prisonId: string
       /**
-       * @description the reference data type code of the condition
-       * @example null
+       * @description more granular information about the condition
+       * @example (for Mental Health) Social Anxiety
        */
-      conditionTypeCode?: string
+      conditionDetail?: string
       /**
        * @description additional detail about the condition
        * @example null
@@ -740,25 +944,39 @@ export interface components {
     }
     ChallengeRequest: {
       /**
+       * @description the reference data type code of the challenge
+       * @example null
+       */
+      challengeTypeCode: string
+      /**
        * @description The Prison identifier.
        * @example BXI
        */
       prisonId: string
-      /**
-       * @description the reference data type code of the challenge
-       * @example null
-       */
-      challengeTypeCode?: string
       /**
        * @description Optional details about the symptoms of this challenge
        * @example John struggles to read text on white background.
        */
       symptoms?: string
       /**
-       * @description Details about how this challenge was identified
+       * @description The list of enums as to how this challenge was identified. Multiple reasons may apply.
+       * @example null
+       */
+      howIdentified?: (
+        | 'EDUCATION_SKILLS_WORK'
+        | 'WIDER_PRISON'
+        | 'CONVERSATIONS'
+        | 'COLLEAGUE_INFO'
+        | 'FORMAL_PROCESSES'
+        | 'SELF_DISCLOSURE'
+        | 'OTHER_SCREENING_TOOL'
+        | 'OTHER'
+      )[]
+      /**
+       * @description Details about how this challenge was identified when the OTHER IdentificationSource enum option is chosen
        * @example The trainer noticed that John could read better on a cream background.
        */
-      howIdentified?: string
+      howIdentifiedOther?: string
     }
     CreateChallengesRequest: {
       /**
@@ -773,6 +991,43 @@ export interface components {
        * @example null
        */
       challenges: components['schemas']['ChallengeResponse'][]
+    }
+    ALNChallenge: {
+      /**
+       * @description the reference data type code of the challenge
+       * @example null
+       */
+      challengeTypeCode: string
+    }
+    ALNScreenerRequest: {
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing the date the screener was carried out.
+       * @example 2023-11-19
+       */
+      screenerDate: string
+      /**
+       * @description A List containing zero or more challenge codes.
+       * @example null
+       */
+      challenges: components['schemas']['ALNChallenge'][]
+      /**
+       * @description A List containing zero or more strength codes.
+       * @example null
+       */
+      strengths: components['schemas']['ALNStrength'][]
+    }
+    ALNStrength: {
+      /**
+       * @description the reference data type code of the strength
+       * @example null
+       */
+      strengthTypeCode: string
     }
     UpdatePlanCreationStatusRequest: {
       /**
@@ -1207,6 +1462,33 @@ export interface operations {
       }
     }
   }
+  updateStrength: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+        strengthReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateStrengthRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['StrengthResponse']
+        }
+      }
+    }
+  }
   updateCondition: {
     parameters: {
       query?: never
@@ -1257,6 +1539,54 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['ChallengeResponse']
+        }
+      }
+    }
+  }
+  getStrengths: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['StrengthListResponse']
+        }
+      }
+    }
+  }
+  createStrengths: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateStrengthsRequest']
+      }
+    }
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['StrengthListResponse']
         }
       }
     }
@@ -1478,6 +1808,30 @@ export interface operations {
         content: {
           '*/*': components['schemas']['ChallengeListResponse']
         }
+      }
+    }
+  }
+  createALNScreener: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ALNScreenerRequest']
+      }
+    }
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
     }
   }

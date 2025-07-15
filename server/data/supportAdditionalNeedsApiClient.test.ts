@@ -15,8 +15,10 @@ import { aValidCreateChallengesRequest } from '../testsupport/challengeRequestTe
 import { aValidChallengeListResponse } from '../testsupport/challengeResponseTestDataBuilder'
 import { aValidCreateConditionsRequest } from '../testsupport/conditionRequestTestDataBuilder'
 import { aValidConditionListResponse } from '../testsupport/conditionResponseTestDataBuilder'
-import ReferenceDataDomain from '../enums/referenceDataDomain'
 import { aValidReferenceDataListResponse } from '../testsupport/referenceDataResponseTestDataBuilder'
+import { aValidStrengthListResponse } from '../testsupport/strengthResponseTestDataBuilder'
+import { aValidCreateStrengthsRequest } from '../testsupport/strengthRequestTestDataBuilder'
+import ReferenceDataDomain from '../enums/referenceDataDomain'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -576,6 +578,58 @@ describe('supportAdditionalNeedsApiClient', () => {
 
       // When
       const actual = await supportAdditionalNeedsApiClient.getReferenceData(username, domain).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('createStrengths', () => {
+    it('should create strengths for a prisoner', async () => {
+      // Given
+      const createStrengthsRequest = aValidCreateStrengthsRequest()
+
+      const expectedResponse = aValidStrengthListResponse()
+      supportAdditionalNeedsApi
+        .post(`/profile/${prisonNumber}/strengths`, requestBody => isMatch(requestBody, createStrengthsRequest))
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, expectedResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.createStrengths(
+        prisonNumber,
+        username,
+        createStrengthsRequest,
+      )
+
+      // Then
+      expect(actual).toEqual(expectedResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const createStrengthsRequest = aValidCreateStrengthsRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .post(`/profile/${prisonNumber}/strengths`, requestBody => isMatch(requestBody, createStrengthsRequest))
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .createStrengths(prisonNumber, username, createStrengthsRequest)
+        .catch(e => e)
 
       // Then
       expect(actual).toEqual(expectedError)

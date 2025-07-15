@@ -23,6 +23,11 @@ declare module 'supportAdditionalNeedsApiClient' {
   export type ConditionListResponse = components['schemas']['ConditionListResponse']
   export type ConditionResponse = components['schemas']['ConditionResponse']
 
+  export type CreateStrengthsRequest = components['schemas']['CreateStrengthsRequest']
+  export type StrengthRequest = components['schemas']['StrengthRequest']
+  export type StrengthListResponse = components['schemas']['StrengthListResponse']
+  export type StrengthResponse = components['schemas']['StrengthResponse']
+
   export type ReferenceDataListResponse = components['schemas']['ReferenceDataListResponse']
   export type ReferenceData = components['schemas']['ReferenceData']
 }
