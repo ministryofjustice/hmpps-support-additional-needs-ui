@@ -21,6 +21,8 @@ const templateParams: ActionsCardParams = {
   educationSupportPlanCreationSchedule: aValidPlanCreationScheduleDto(),
 }
 
+const template = 'actionCards.test.njk'
+
 describe('Tests for actions card component', () => {
   beforeEach(() => {
     jest.resetAllMocks()
@@ -34,14 +36,14 @@ describe('Tests for actions card component', () => {
     }
 
     // When
-    const content = nunjucks.render('actionCards.test.njk', params)
+    const content = nunjucks.render(template, params)
     const $ = cheerio.load(content)
 
     // Then
     expect($('[data-qa=education-support-plan-actions]').length).toEqual(1)
   })
 
-  it('should render the actions card component based on menu type', () => {
+  it('should render the actions card component based on challenges menu type', () => {
     // Given
     const params = {
       ...templateParams,
@@ -49,12 +51,29 @@ describe('Tests for actions card component', () => {
     }
 
     // When
-    const content = nunjucks.render('actionCardChallenges.test.njk', params)
+    const content = nunjucks.render(template, params)
     const $ = cheerio.load(content)
 
     // Then
     expect($('[data-qa=challenges-actions]').length).toEqual(1)
     expect($('[data-qa=add-challenge-button]').length).toEqual(1)
+    expect($('[data-qa=record-screener-results-button]').length).toEqual(1)
+  })
+
+  it('should render the actions card component based on strengths menu type', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      actionMenuType: 'strengths',
+    }
+
+    // When
+    const content = nunjucks.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=strengths-actions]').length).toEqual(1)
+    expect($('[data-qa=add-strength-button]').length).toEqual(1)
     expect($('[data-qa=record-screener-results-button]').length).toEqual(1)
   })
 
@@ -66,7 +85,7 @@ describe('Tests for actions card component', () => {
     }
 
     // When
-    const content = nunjucks.render('actionCards.test.njk', params)
+    const content = nunjucks.render(template, params)
     const $ = cheerio.load(content)
 
     // Then
