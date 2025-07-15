@@ -1,4 +1,4 @@
-import type { ChallengeDto, EducationSupportPlanDto, RefuseEducationSupportPlanDto } from 'dto'
+import type { ChallengeDto, EducationSupportPlanDto, StrengthDto, RefuseEducationSupportPlanDto } from 'dto'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 
 export declare module 'express-session' {

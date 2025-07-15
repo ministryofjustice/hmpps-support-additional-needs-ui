@@ -3,10 +3,12 @@ import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import SelectCategoryController from './select-category/selectCategoryController'
+import DetailController from './detail/detailController'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import createEmptyStrengthDtoIfNotInJourneyData from './middleware/createEmptyStrengthDtoIfNotInJourneyData'
 import checkStrengthDtoExistsInJourneyData from './middleware/checkStrengthDtoExistsInJourneyData'
-import DetailController from './detail/detailController'
+import selectCategorySchema from '../validationSchemas/selectCategorySchema'
+import { validate } from '../../../middleware/validationMiddleware'
 
 const createStrengthRoutes = (services: Services): Router => {
   const { journeyDataService } = services
@@ -25,6 +27,11 @@ const createStrengthRoutes = (services: Services): Router => {
   router.get('/:journeyId/select-category', [
     createEmptyStrengthDtoIfNotInJourneyData,
     asyncMiddleware(selectCategoryController.getSelectCategoryView),
+  ])
+  router.post('/:journeyId/select-category', [
+    checkStrengthDtoExistsInJourneyData,
+    validate(selectCategorySchema),
+    asyncMiddleware(selectCategoryController.submitSelectCategoryForm),
   ])
 
   router.get('/:journeyId/detail', [
