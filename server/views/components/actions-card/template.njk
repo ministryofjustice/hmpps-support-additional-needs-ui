@@ -6,6 +6,8 @@
   </div>
   {% if actionMenuType === 'challenges' %}
     {% include './_challengesActions.njk' %}
+  {% elseif actionMenuType === 'strengths' %}
+    {% include './_strengthsActions.njk' %}
   {% else %}
     {% include './_educationSupportPlanActions.njk' %}
   {% endif %}

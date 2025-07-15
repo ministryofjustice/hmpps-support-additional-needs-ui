@@ -53,5 +53,6 @@ declare module 'viewModels' {
     prisonerSummary: PrisonerSummary
     userHasPermissionTo: () => boolean
     educationSupportPlanCreationSchedule?: PlanCreationScheduleDto
+    actionMenuType?: 'challenges' | 'strengths' | 'conditions'
   }
 }
