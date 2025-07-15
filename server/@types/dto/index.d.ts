@@ -2,6 +2,8 @@ declare module 'dto' {
   import PlanCreationScheduleStatus from '../../enums/planCreationScheduleStatus'
   import PlanCreationScheduleExemptionReason from '../../enums/planCreationScheduleExemptionReason'
   import ConditionSource from '../../enums/conditionSource'
+  import ChallengeIdentificationSource from '../../enums/challengeIdentificationSource'
+  import StrengthIdentificationSource from '../../enums/strengthIdentificationSource'
 
   export interface EducationSupportPlanDto {
     prisonNumber: string
@@ -46,7 +48,8 @@ declare module 'dto' {
     prisonId: string
     challengeTypeCode: string
     symptoms?: string
-    howIdentified?: string
+    howIdentified?: Array<ChallengeIdentificationSource>
+    howIdentifiedOther?: string
   }
 
   export interface ConditionDto {
@@ -61,7 +64,9 @@ declare module 'dto' {
     prisonNumber: string
     prisonId: string
     strengthTypeCode: string
-    detail?: string
+    symptoms?: string
+    howIdentified?: Array<StrengthIdentificationSource>
+    howIdentifiedOther?: string
   }
 
   export interface ReferenceDataItemDto {

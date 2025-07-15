@@ -6,10 +6,12 @@ import type {
   CreateChallengesRequest,
   CreateConditionsRequest,
   CreateEducationSupportPlanRequest,
+  CreateStrengthsRequest,
   EducationSupportPlanResponse,
   PlanCreationSchedulesResponse,
   ReferenceDataListResponse,
   SearchByPrisonResponse,
+  StrengthListResponse,
   UpdatePlanCreationStatusRequest,
 } from 'supportAdditionalNeedsApiClient'
 import config from '../config'
@@ -132,6 +134,20 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/conditions`,
         data: createConditionsRequest,
+      },
+      asSystem(username),
+    )
+  }
+
+  async createStrengths(
+    prisonNumber: string,
+    username: string,
+    createStrengthsRequest: CreateStrengthsRequest,
+  ): Promise<StrengthListResponse> {
+    return this.post<StrengthListResponse>(
+      {
+        path: `/profile/${prisonNumber}/strengths`,
+        data: createStrengthsRequest,
       },
       asSystem(username),
     )

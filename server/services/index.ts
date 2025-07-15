@@ -11,6 +11,7 @@ import EducationSupportPlanScheduleService from './educationSupportPlanScheduleS
 import ChallengeService from './challengeService'
 import ConditionService from './conditionService'
 import ReferenceDataService from './referenceDataService'
+import StrengthService from './strengthService'
 
 export const services = () => {
   const {
@@ -41,6 +42,7 @@ export const services = () => {
     challengeService: new ChallengeService(supportAdditionalNeedsApiClient),
     conditionService: new ConditionService(supportAdditionalNeedsApiClient),
     referenceDataService: new ReferenceDataService(referenceDataStore, supportAdditionalNeedsApiClient),
+    strengthService: new StrengthService(supportAdditionalNeedsApiClient),
   }
 }
 
@@ -58,5 +60,6 @@ export {
   PrisonService,
   ReferenceDataService,
   SearchService,
+  StrengthService,
   UserService,
 }

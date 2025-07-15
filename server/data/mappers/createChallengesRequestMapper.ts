@@ -10,6 +10,7 @@ const toCreateChallengeRequest = (challenge: ChallengeDto): ChallengeRequest => 
   challengeTypeCode: challenge.challengeTypeCode,
   symptoms: challenge.symptoms,
   howIdentified: challenge.howIdentified,
+  howIdentifiedOther: challenge.howIdentifiedOther,
 })
 
 export { toCreateChallengesRequest, toCreateChallengeRequest }

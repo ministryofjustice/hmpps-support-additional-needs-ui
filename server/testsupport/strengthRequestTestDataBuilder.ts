@@ -1,15 +1,17 @@
-import type { StrengthDto } from 'dto'
+import type { CreateStrengthsRequest, StrengthRequest } from 'supportAdditionalNeedsApiClient'
 import StrengthIdentificationSource from '../enums/strengthIdentificationSource'
 
-const aValidStrengthDto = (options?: {
-  prisonNumber?: string
+const aValidCreateStrengthsRequest = (options?: { strengths?: Array<StrengthRequest> }): CreateStrengthsRequest => ({
+  strengths: options?.strengths || [aValidStrengthRequest()],
+})
+
+const aValidStrengthRequest = (options?: {
   prisonId?: string
   strengthTypeCode?: string
   symptoms?: string
   howIdentified?: Array<StrengthIdentificationSource>
   howIdentifiedOther?: string
-}): StrengthDto => ({
-  prisonNumber: options?.prisonNumber || 'A1234BC',
+}): StrengthRequest => ({
   prisonId: options?.prisonId || 'BXI',
   strengthTypeCode: options?.strengthTypeCode || 'READING_COMPREHENSION',
   symptoms:
@@ -21,4 +23,4 @@ const aValidStrengthDto = (options?: {
       : options?.howIdentifiedOther || `John's reading strength was discovered during a poetry recital evening`,
 })
 
-export default aValidStrengthDto
+export { aValidStrengthRequest, aValidCreateStrengthsRequest }
