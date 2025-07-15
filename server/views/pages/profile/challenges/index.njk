@@ -1,4 +1,5 @@
 {% extends "../layout.njk" %}
+{% from "../../../components/actions-card/macro.njk" import actionsCard %}
 
 {% set pageId = 'profile-challenges' %}
 {% set pageTitle = "Support for additional needs - Challenges" %}
@@ -6,7 +7,14 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
+      <h2 class="govuk-heading-m">Challenges</h2>
+      {% include "./_challenges.njk" %}
+    </div>
 
+    <div class="govuk-grid-column-one-third app-u-print-full-width">
+      {{ actionsCard({
+        actionMenuType: 'challenges'
+      }) }}
     </div>
   </div>
 {% endblock %}
