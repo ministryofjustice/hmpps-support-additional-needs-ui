@@ -4,6 +4,8 @@ import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import SelectCategoryController from './select-category/selectCategoryController'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import createEmptyStrengthDtoIfNotInJourneyData from './middleware/createEmptyStrengthDtoIfNotInJourneyData'
+import checkStrengthDtoExistsInJourneyData from './middleware/checkStrengthDtoExistsInJourneyData'
 
 const createStrengthRoutes = (services: Services): Router => {
   const { journeyDataService } = services
@@ -19,12 +21,12 @@ const createStrengthRoutes = (services: Services): Router => {
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
 
   router.get('/:journeyId/select-category', [
-    // TODO write createEmptyStrengthsDtoIfNotInJourneyData middleware
+    createEmptyStrengthDtoIfNotInJourneyData,
     asyncMiddleware(selectCategoryController.getSelectCategoryView),
   ])
 
   router.get('/:journeyId/detail', [
-    // TODO write checkStrengthsDtoExistsInJourneyData middleware
+    checkStrengthDtoExistsInJourneyData,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       res.send('Add Strength - Enter strength details page')
     },

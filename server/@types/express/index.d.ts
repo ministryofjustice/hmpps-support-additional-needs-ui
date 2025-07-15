@@ -1,4 +1,4 @@
-import type { EducationSupportPlanDto, RefuseEducationSupportPlanDto } from 'dto'
+import type { ChallengeDto, EducationSupportPlanDto, RefuseEducationSupportPlanDto } from 'dto'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 
 export declare module 'express-session' {
@@ -20,6 +20,9 @@ export declare global {
     interface JourneyData {
       educationSupportPlanDto?: EducationSupportPlanDto
       refuseEducationSupportPlanDto?: RefuseEducationSupportPlanDto
+      challengeDto?: ChallengeDto
+      conditionDto?: ConditionDto
+      strengthDto?: StrengthDto
     }
 
     interface Response {
