@@ -2,10 +2,14 @@ import { NextFunction, Request, Response, Router } from 'express'
 import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
+import SelectCategoryController from './select-category/selectCategoryController'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
 
 const createStrengthRoutes = (services: Services): Router => {
   const { journeyDataService } = services
   const router = Router({ mergeParams: true })
+
+  const selectCategoryController = new SelectCategoryController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -16,9 +20,7 @@ const createStrengthRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/select-category', [
     // TODO write createEmptyStrengthsDtoIfNotInJourneyData middleware
-    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      res.send('Add Strength - select category page')
-    },
+    asyncMiddleware(selectCategoryController.getSelectCategoryView),
   ])
 
   router.get('/:journeyId/detail', [
