@@ -57,6 +57,13 @@ declare module 'dto' {
     detail?: string
   }
 
+  export interface StrengthDto {
+    prisonNumber: string
+    prisonId: string
+    strengthTypeCode: string
+    detail?: string
+  }
+
   export interface ReferenceDataItemDto {
     code: string
     areaCode?: string
