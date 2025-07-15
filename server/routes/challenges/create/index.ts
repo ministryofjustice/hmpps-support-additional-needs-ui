@@ -1,0 +1,34 @@
+import { NextFunction, Request, Response, Router } from 'express'
+import { Services } from '../../../services'
+import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
+import setupJourneyData from '../../../middleware/setupJourneyData'
+
+const createChallengeRoutes = (services: Services): Router => {
+  const { journeyDataService } = services
+  const router = Router({ mergeParams: true })
+
+  router.use('/', [
+    // TODO - enable this line when we understand the RBAC roles and permissions
+    // checkUserHasPermissionTo(ApplicationAction.RECORD_CHALLENGES),
+    insertJourneyIdentifier({ insertIdAfterElement: 3 }), // insert journey ID immediately after '/challenges/:prisonNumber/create' - eg: '/challenges/A1234BC/create/473e9ee4-37d6-4afb-92a2-5729b10cc60f/select-category'
+  ])
+  router.use('/:journeyId', [setupJourneyData(journeyDataService)])
+
+  router.get('/:journeyId/select-category', [
+    // TODO write createEmptyStrengthsDtoIfNotInJourneyData middleware
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      res.send('Add Challenge - select category page')
+    },
+  ])
+
+  router.get('/:journeyId/detail', [
+    // TODO write checkStrengthsDtoExistsInJourneyData middleware
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      res.send('View Challenge - Enter strength details page')
+    },
+  ])
+
+  return router
+}
+
+export default createChallengeRoutes

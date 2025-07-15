@@ -8,6 +8,7 @@ import educationSupportPlanRoutes from './education-support-plan'
 import retrievePrisonerSummary from '../middleware/retrievePrisonerSummary'
 import checkPrisonerInCaseload from '../middleware/checkPrisonerInCaseloadMiddleware'
 import strengthsRoutes from './strengths'
+import challengesRoutes from './challenges'
 import alnScreenerRoutes from './additional-learning-needs-screener'
 
 export default function routes(services: Services): Router {
@@ -35,6 +36,8 @@ export default function routes(services: Services): Router {
   router.use('/education-support-plan/:prisonNumber', educationSupportPlanRoutes(services))
 
   router.use('/strengths/:prisonNumber', strengthsRoutes(services))
+
+  router.use('/challenges/:prisonNumber', challengesRoutes(services))
 
   router.use('/aln-screener/:prisonNumber', alnScreenerRoutes(services))
 
