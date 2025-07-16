@@ -17,6 +17,10 @@ import {
   formatStrengthCategoryScreenValueFilter,
 } from '../filters/formatStrengthCategoryFilter'
 import formatStrengthIdentificationSourceScreenValueFilter from '../filters/formatStrengthIdentificationSourceFilter'
+import {
+  formatChallengeCategoryHintTextFilter,
+  formatChallengeCategoryScreenValueFilter,
+} from '../filters/formatChallengeCategoryFilter'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -60,6 +64,8 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatStrengthCategoryScreenValue', formatStrengthCategoryScreenValueFilter)
   njkEnv.addFilter('formatStrengthCategoryHintText', formatStrengthCategoryHintTextFilter)
   njkEnv.addFilter('formatStrengthIdentificationSourceScreenValue', formatStrengthIdentificationSourceScreenValueFilter)
+  njkEnv.addFilter('formatChallengeCategoryScreenValue', formatChallengeCategoryScreenValueFilter)
+  njkEnv.addFilter('formatChallengeCategoryHintText', formatChallengeCategoryHintTextFilter)
 
   // Name format filters
   njkEnv.addFilter('formatFIRST_NAME_ONLY', formatPrisonerNameFilter(NameFormat.FIRST_NAME_ONLY))

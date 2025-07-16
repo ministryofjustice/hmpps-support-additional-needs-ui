@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import checkStrengthDtoExistsInJourneyData from './checkStrengthDtoExistsInJourneyData'
+import checkChallengeDtoExistsInJourneyData from './checkChallengeDtoExistsInJourneyData'
 import aValidStrengthDto from '../../../../testsupport/strengthDtoTestDataBuilder'
 
 describe('checkStrengthDtoExistsInJourneyData', () => {
@@ -25,7 +25,7 @@ describe('checkStrengthDtoExistsInJourneyData', () => {
     req.journeyData.strengthDto = aValidStrengthDto()
 
     // When
-    await checkStrengthDtoExistsInJourneyData(req, res, next)
+    await checkChallengeDtoExistsInJourneyData(req, res, next)
 
     // Then
     expect(next).toHaveBeenCalled()
@@ -37,7 +37,7 @@ describe('checkStrengthDtoExistsInJourneyData', () => {
     req.journeyData.strengthDto = undefined
 
     // When
-    await checkStrengthDtoExistsInJourneyData(req, res, next)
+    await checkChallengeDtoExistsInJourneyData(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(`/profile/${prisonNumber}/overview`)
@@ -49,7 +49,7 @@ describe('checkStrengthDtoExistsInJourneyData', () => {
     req.journeyData = undefined
 
     // When
-    await checkStrengthDtoExistsInJourneyData(req, res, next)
+    await checkChallengeDtoExistsInJourneyData(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(`/profile/${prisonNumber}/overview`)

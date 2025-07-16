@@ -1,6 +1,6 @@
-import StrengthCategory from '../enums/strengthCategory'
+import ChallengeCategory from '../enums/challengeCategory'
 
-const strengthCategoryScreenValues: Record<StrengthCategory, string> = {
+const challengeCategoryScreenValues: Record<ChallengeCategory, string> = {
   SENSORY: 'Sensory',
   EMOTIONS_FEELINGS_DEFAULT: 'Emotions and feelings',
   PHYSICAL_SKILLS_DEFAULT: 'Physical skills and coordination',
@@ -12,7 +12,7 @@ const strengthCategoryScreenValues: Record<StrengthCategory, string> = {
   MEMORY: 'Memory',
 }
 
-const strengthCategoryHintTextValues: Record<StrengthCategory, string> = {
+const challengeCategoryHintTextValues: Record<ChallengeCategory, string> = {
   SENSORY: 'Things like reacting to some environments or situations eg noise or being touched',
   EMOTIONS_FEELINGS_DEFAULT: 'Things like confidence, empathy, managing emotions and impulses',
   PHYSICAL_SKILLS_DEFAULT: 'Things like learning new skills, co-ordination, stamina and fine motor skills',
@@ -24,8 +24,8 @@ const strengthCategoryHintTextValues: Record<StrengthCategory, string> = {
   MEMORY: 'Things like remembering and recalling information',
 }
 
-const formatStrengthCategoryScreenValueFilter = (value: StrengthCategory): string => strengthCategoryScreenValues[value]
+const formatChallengeCategoryScreenValueFilter = (value: ChallengeCategory): string => challengeCategoryScreenValues[value]
 
-const formatStrengthCategoryHintTextFilter = (value: StrengthCategory): string => strengthCategoryHintTextValues[value]
+const formatChallengeCategoryHintTextFilter = (value: ChallengeCategory): string => challengeCategoryHintTextValues[value]
 
-export { formatStrengthCategoryScreenValueFilter, formatStrengthCategoryHintTextFilter }
+export { formatChallengeCategoryScreenValueFilter, formatChallengeCategoryHintTextFilter }

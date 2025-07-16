@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import type { StrengthDto } from 'dto'
-import createEmptyStrengthDtoIfNotInJourneyData from './createEmptyStrengthDtoIfNotInJourneyData'
+import type { ChallengeDto } from 'dto'
+import createEmptyChallengeDtoIfNotInJourneyData from './createEmptyChallengeDtoIfNotInJourneyData'
 
 describe('createEmptyStrengthDtoIfNotInJourneyData', () => {
   const prisonNumber = 'A1234BC'
@@ -21,54 +21,54 @@ describe('createEmptyStrengthDtoIfNotInJourneyData', () => {
     req.journeyData = {}
   })
 
-  it('should create an empty StrengthDto for the prisoner given there is no StrengthDto in the journeyData', async () => {
+  it('should create an empty ChallengeDto for the prisoner given there is no ChallengeDto in the journeyData', async () => {
     // Given
-    req.journeyData.strengthDto = undefined
+    req.journeyData.challengeDto = undefined
 
-    const expectedStrengthDto = {
+    const expectedChallengeDto = {
       prisonNumber,
       prisonId,
-    } as StrengthDto
+    } as ChallengeDto
 
     // When
-    await createEmptyStrengthDtoIfNotInJourneyData(req, res, next)
+    await createEmptyChallengeDtoIfNotInJourneyData(req, res, next)
 
     // Then
     expect(next).toHaveBeenCalled()
-    expect(req.journeyData.strengthDto).toEqual(expectedStrengthDto)
+    expect(req.journeyData.challengeDto).toEqual(expectedChallengeDto)
   })
 
-  it('should create an empty StrengthDto for a prisoner given there is an StrengthDto in the journeyData for a different prisoner', async () => {
+  it('should create an empty ChallengeDto for a prisoner given there is an ChallengeDto in the journeyData for a different prisoner', async () => {
     // Given
-    req.journeyData.strengthDto = { prisonNumber: 'Z1234ZZ', prisonId } as StrengthDto
+    req.journeyData.challengeDto = { prisonNumber: 'Z1234ZZ', prisonId } as ChallengeDto
 
-    const expectedStrengthDto = {
+    const expectedChallengeDto = {
       prisonNumber,
       prisonId,
-    } as StrengthDto
+    } as ChallengeDto
 
     // When
-    await createEmptyStrengthDtoIfNotInJourneyData(req, res, next)
+    await createEmptyChallengeDtoIfNotInJourneyData(req, res, next)
 
     // Then
     expect(next).toHaveBeenCalled()
-    expect(req.journeyData.strengthDto).toEqual(expectedStrengthDto)
+    expect(req.journeyData.challengeDto).toEqual(expectedChallengeDto)
   })
 
   it('should not create an empty StrengthDto for the prisoner given there is already an StrengthDto in the journeyData for the prisoner', async () => {
     // Given
-    const expectedStrengthDto = {
+    const expectedChallengeDto = {
       prisonNumber,
       prisonId,
-    } as StrengthDto
+    } as ChallengeDto
 
-    req.journeyData.strengthDto = expectedStrengthDto
+    req.journeyData.challengeDto = expectedChallengeDto
 
     // When
-    await createEmptyStrengthDtoIfNotInJourneyData(req, res, next)
+    await createEmptyChallengeDtoIfNotInJourneyData(req, res, next)
 
     // Then
     expect(next).toHaveBeenCalled()
-    expect(req.journeyData.strengthDto).toEqual(expectedStrengthDto)
+    expect(req.journeyData.challengeDto).toEqual(expectedChallengeDto)
   })
 })

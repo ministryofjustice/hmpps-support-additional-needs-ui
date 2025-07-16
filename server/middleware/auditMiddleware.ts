@@ -48,11 +48,16 @@ const pageViewEventMap: Record<string, Page> = {
   '/strengths/:prisonNumber/create/:journeyId/select-category': Page.CREATE_STRENGTH_CATEGORY,
   '/strengths/:prisonNumber/create/:journeyId/detail': Page.CREATE_STRENGTH_DETAILS,
 
+  // Create challenges routes
+  '/challenges/:prisonNumber/create/:journeyId/select-category': Page.CREATE_CHALLENGE_CATEGORY,
+  '/challenges/:prisonNumber/create/:journeyId/detail': Page.CREATE_CHALLENGE_DETAILS,
+
   // Non audit routes. These routes do not raise an audit event
   '/': null,
   '/education-support-plan/:prisonNumber/create/who-created-the-plan': null,
   '/education-support-plan/:prisonNumber/refuse-plan/reason': null,
   '/strengths/:prisonNumber/create/select-category': null,
+  '/challenges/:prisonNumber/create/select-category': null,
 }
 
 export default function auditMiddleware({ auditService }: Services) {
