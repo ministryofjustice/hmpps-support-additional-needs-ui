@@ -1,0 +1,111 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'create-strenth-select-category' %}
+{% set pageTitle = "Add a strenth - select category" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukRadios({
+            name: "category",
+            fieldset: {
+              legend: {
+                text: "Select category",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            items: [
+              {
+                value: "LITERACY_SKILLS_DEFAULT",
+                text: "LITERACY_SKILLS_DEFAULT" | formatStrengthCategoryScreenValue,
+                hint: {
+                  text: "LITERACY_SKILLS_DEFAULT" | formatStrengthCategoryHintText
+                },
+                checked: form.category === "LITERACY_SKILLS_DEFAULT"
+              },
+              {
+                value: "NUMERACY_SKILLS_DEFAULT",
+                text: "NUMERACY_SKILLS_DEFAULT" | formatStrengthCategoryScreenValue,
+                hint: {
+                  text: "NUMERACY_SKILLS_DEFAULT" | formatStrengthCategoryHintText
+                },
+                checked: form.category === "NUMERACY_SKILLS_DEFAULT"
+              },
+              {
+                value: "ATTENTION_ORGANISING_TIME_DEFAULT",
+                text: "ATTENTION_ORGANISING_TIME_DEFAULT" | formatStrengthCategoryScreenValue,
+                hint: {
+                  text: "ATTENTION_ORGANISING_TIME_DEFAULT" | formatStrengthCategoryHintText
+                },
+                checked: form.category === "ATTENTION_ORGANISING_TIME_DEFAULT"
+              },
+              {
+                value: "MEMORY",
+                text: "MEMORY" | formatStrengthCategoryScreenValue,
+                hint: {
+                  text: "MEMORY" | formatStrengthCategoryHintText
+                },
+                checked: form.category === "MEMORY"
+              },
+              {
+                value: "PROCESSING_SPEED",
+                text: "PROCESSING_SPEED" | formatStrengthCategoryScreenValue,
+                hint: {
+                  text: "PROCESSING_SPEED" | formatStrengthCategoryHintText
+                },
+                checked: form.category === "PROCESSING_SPEED"
+              },
+              {
+                value: "LANGUAGE_COMM_SKILLS_DEFAULT",
+                text: "LANGUAGE_COMM_SKILLS_DEFAULT" | formatStrengthCategoryScreenValue,
+                hint: {
+                  text: "LANGUAGE_COMM_SKILLS_DEFAULT" | formatStrengthCategoryHintText
+                },
+                checked: form.category === "LANGUAGE_COMM_SKILLS_DEFAULT"
+              },
+              {
+                value: "EMOTIONS_FEELINGS_DEFAULT",
+                text: "EMOTIONS_FEELINGS_DEFAULT" | formatStrengthCategoryScreenValue,
+                hint: {
+                  text: "EMOTIONS_FEELINGS_DEFAULT" | formatStrengthCategoryHintText
+                },
+                checked: form.category === "EMOTIONS_FEELINGS_DEFAULT"
+              },
+              {
+                value: "PHYSICAL_SKILLS_DEFAULT",
+                text: "PHYSICAL_SKILLS_DEFAULT" | formatStrengthCategoryScreenValue,
+                hint: {
+                  text: "PHYSICAL_SKILLS_DEFAULT" | formatStrengthCategoryHintText
+                },
+                checked: form.category === "PHYSICAL_SKILLS_DEFAULT"
+              },
+              {
+                value: "SENSORY",
+                text: "SENSORY" | formatStrengthCategoryScreenValue,
+                hint: {
+                  text: "SENSORY" | formatStrengthCategoryHintText
+                },
+                checked: form.category === "SENSORY"
+              }
+            ],
+            errorMessage: errors | findError('category')
+          }) }}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
