@@ -2,10 +2,18 @@ import { NextFunction, Request, Response, Router } from 'express'
 import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
+import SelectCategoryController from './select-category/selectCategoryController'
+import createEmptyChallengeDtoIfNotInJourneyData from './middleware/createEmptyChallengeDtoIfNotInJourneyData'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import checkChallengeDtoExistsInJourneyData from './middleware/checkChallengeDtoExistsInJourneyData'
+import DetailController from './detail/detailController'
 
 const createChallengeRoutes = (services: Services): Router => {
   const { journeyDataService } = services
   const router = Router({ mergeParams: true })
+
+  const selectCategoryController = new SelectCategoryController()
+  const detailController = new DetailController(services.challengeService)
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -15,17 +23,25 @@ const createChallengeRoutes = (services: Services): Router => {
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
 
   router.get('/:journeyId/select-category', [
-    // TODO write createEmptyStrengthsDtoIfNotInJourneyData middleware
-    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      res.send('Add Challenge - select category page')
-    },
+    createEmptyChallengeDtoIfNotInJourneyData,
+    asyncMiddleware(selectCategoryController.getSelectCategoryView),
+  ])
+
+  router.post('/:journeyId/select-category', [
+    checkChallengeDtoExistsInJourneyData,
+    //validate(selectCategorySchema),
+    asyncMiddleware(selectCategoryController.submitSelectCategoryForm),
   ])
 
   router.get('/:journeyId/detail', [
-    // TODO write checkStrengthsDtoExistsInJourneyData middleware
-    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      res.send('View Challenge - Enter strength details page')
-    },
+    checkChallengeDtoExistsInJourneyData,
+    asyncMiddleware(detailController.getDetailView),
+  ])
+
+  router.post('/:journeyId/detail', [
+    checkChallengeDtoExistsInJourneyData,
+    //validate(selectCategorySchema),
+    asyncMiddleware(detailController.submitDetailForm),
   ])
 
   return router

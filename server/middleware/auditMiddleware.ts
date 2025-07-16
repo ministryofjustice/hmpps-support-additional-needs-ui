@@ -48,6 +48,10 @@ const pageViewEventMap: Record<string, Page> = {
   '/strengths/:prisonNumber/create/:journeyId/select-category': Page.CREATE_STRENGTH_CATEGORY,
   '/strengths/:prisonNumber/create/:journeyId/detail': Page.CREATE_STRENGTH_DETAILS,
 
+  // Create challenges routes
+  '/challenges/:prisonNumber/create/:journeyId/select-category': Page.CREATE_CHALLENGE_CATEGORY,
+  '/challenges/:prisonNumber/create/:journeyId/detail': Page.CREATE_CHALLENGE_DETAILS,
+
   // Record ALN Screener routes
   '/aln-screener/:prisonNumber/create/:journeyId/screener-date': Page.RECORD_ALN_SCREENER_DATE,
   '/aln-screener/:prisonNumber/create/:journeyId/add-challenges': Page.RECORD_ALN_SCREENER_CHALLENGES,
@@ -59,6 +63,7 @@ const pageViewEventMap: Record<string, Page> = {
   '/education-support-plan/:prisonNumber/create/who-created-the-plan': null,
   '/education-support-plan/:prisonNumber/refuse-plan/reason': null,
   '/strengths/:prisonNumber/create/select-category': null,
+  '/challenges/:prisonNumber/create/select-category': null,
   '/aln-screener/:prisonNumber/create/screener-date': null,
 }
 

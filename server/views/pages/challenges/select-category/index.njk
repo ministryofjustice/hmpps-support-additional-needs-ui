@@ -1,7 +1,7 @@
 {% extends "../layout.njk" %}
 
-{% set pageId = 'create-strenth-select-category' %}
-{% set pageTitle = "Add a strenth - select category" %}
+{% set pageId = 'create-challenge-select-category' %}
+{% set pageTitle = "Add a Challenge - select category" %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -23,73 +23,73 @@
             items: [
               {
                 value: "LITERACY_SKILLS_DEFAULT",
-                text: "LITERACY_SKILLS_DEFAULT" | formatStrengthCategoryScreenValue,
+                text: "LITERACY_SKILLS_DEFAULT" | formatChallengeCategoryScreenValue,
                 hint: {
-                  text: "LITERACY_SKILLS_DEFAULT" | formatStrengthCategoryHintText
+                  text: "LITERACY_SKILLS_DEFAULT" | formatChallengeCategoryHintText
                 },
                 checked: form.category === "LITERACY_SKILLS_DEFAULT"
               },
               {
                 value: "NUMERACY_SKILLS_DEFAULT",
-                text: "NUMERACY_SKILLS_DEFAULT" | formatStrengthCategoryScreenValue,
+                text: "NUMERACY_SKILLS_DEFAULT" | formatChallengeCategoryScreenValue,
                 hint: {
-                  text: "NUMERACY_SKILLS_DEFAULT" | formatStrengthCategoryHintText
+                  text: "NUMERACY_SKILLS_DEFAULT" | formatChallengeCategoryHintText
                 },
                 checked: form.category === "NUMERACY_SKILLS_DEFAULT"
               },
               {
                 value: "ATTENTION_ORGANISING_TIME_DEFAULT",
-                text: "ATTENTION_ORGANISING_TIME_DEFAULT" | formatStrengthCategoryScreenValue,
+                text: "ATTENTION_ORGANISING_TIME_DEFAULT" | formatChallengeCategoryScreenValue,
                 hint: {
-                  text: "ATTENTION_ORGANISING_TIME_DEFAULT" | formatStrengthCategoryHintText
+                  text: "ATTENTION_ORGANISING_TIME_DEFAULT" | formatChallengeCategoryHintText
                 },
                 checked: form.category === "ATTENTION_ORGANISING_TIME_DEFAULT"
               },
               {
                 value: "MEMORY",
-                text: "MEMORY" | formatStrengthCategoryScreenValue,
+                text: "MEMORY" | formatChallengeCategoryScreenValue,
                 hint: {
-                  text: "MEMORY" | formatStrengthCategoryHintText
+                  text: "MEMORY" | formatChallengeCategoryHintText
                 },
                 checked: form.category === "MEMORY"
               },
               {
                 value: "PROCESSING_SPEED",
-                text: "PROCESSING_SPEED" | formatStrengthCategoryScreenValue,
+                text: "PROCESSING_SPEED" | formatChallengeCategoryScreenValue,
                 hint: {
-                  text: "PROCESSING_SPEED" | formatStrengthCategoryHintText
+                  text: "PROCESSING_SPEED" | formatChallengeCategoryHintText
                 },
                 checked: form.category === "PROCESSING_SPEED"
               },
               {
                 value: "LANGUAGE_COMM_SKILLS_DEFAULT",
-                text: "LANGUAGE_COMM_SKILLS_DEFAULT" | formatStrengthCategoryScreenValue,
+                text: "LANGUAGE_COMM_SKILLS_DEFAULT" | formatChallengeCategoryScreenValue,
                 hint: {
-                  text: "LANGUAGE_COMM_SKILLS_DEFAULT" | formatStrengthCategoryHintText
+                  text: "LANGUAGE_COMM_SKILLS_DEFAULT" | formatChallengeCategoryHintText
                 },
                 checked: form.category === "LANGUAGE_COMM_SKILLS_DEFAULT"
               },
               {
                 value: "EMOTIONS_FEELINGS_DEFAULT",
-                text: "EMOTIONS_FEELINGS_DEFAULT" | formatStrengthCategoryScreenValue,
+                text: "EMOTIONS_FEELINGS_DEFAULT" | formatChallengeCategoryScreenValue,
                 hint: {
-                  text: "EMOTIONS_FEELINGS_DEFAULT" | formatStrengthCategoryHintText
+                  text: "EMOTIONS_FEELINGS_DEFAULT" | formatChallengeCategoryHintText
                 },
                 checked: form.category === "EMOTIONS_FEELINGS_DEFAULT"
               },
               {
                 value: "PHYSICAL_SKILLS_DEFAULT",
-                text: "PHYSICAL_SKILLS_DEFAULT" | formatStrengthCategoryScreenValue,
+                text: "PHYSICAL_SKILLS_DEFAULT" | formatChallengeCategoryScreenValue,
                 hint: {
-                  text: "PHYSICAL_SKILLS_DEFAULT" | formatStrengthCategoryHintText
+                  text: "PHYSICAL_SKILLS_DEFAULT" | formatChallengeCategoryHintText
                 },
                 checked: form.category === "PHYSICAL_SKILLS_DEFAULT"
               },
               {
                 value: "SENSORY",
-                text: "SENSORY" | formatStrengthCategoryScreenValue,
+                text: "SENSORY" | formatChallengeCategoryScreenValue,
                 hint: {
-                  text: "SENSORY" | formatStrengthCategoryHintText
+                  text: "SENSORY" | formatChallengeCategoryHintText
                 },
                 checked: form.category === "SENSORY"
               }
