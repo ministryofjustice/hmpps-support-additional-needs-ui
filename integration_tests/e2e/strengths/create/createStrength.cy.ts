@@ -93,7 +93,7 @@ context('Create a Strength', () => {
     )
   })
 
-  it('should not create a prisoners Education Support Plan given API returns an error response', () => {
+  it('should not create a prisoners Strength given API returns an error response', () => {
     // Given
     cy.task('stubCreateStrengths500Error', prisonNumber)
 
