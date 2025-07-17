@@ -2,9 +2,11 @@ import { Request, Response } from 'express'
 import DetailController from './detailController'
 import aValidStrengthDto from '../../../../testsupport/strengthDtoTestDataBuilder'
 import StrengthIdentificationSource from '../../../../enums/strengthIdentificationSource'
+import { ChallengeService } from '../../../../services'
 
 describe('detailController', () => {
-  const controller = new DetailController()
+  const mockedChallengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
+  const controller = new DetailController(mockedChallengeService)
 
   const req = {
     session: {},
