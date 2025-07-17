@@ -48,11 +48,18 @@ const pageViewEventMap: Record<string, Page> = {
   '/strengths/:prisonNumber/create/:journeyId/select-category': Page.CREATE_STRENGTH_CATEGORY,
   '/strengths/:prisonNumber/create/:journeyId/detail': Page.CREATE_STRENGTH_DETAILS,
 
+  // Record ALN Screener routes
+  '/aln-screener/:prisonNumber/create/:journeyId/screener-date': Page.RECORD_ALN_SCREENER_DATE,
+  '/aln-screener/:prisonNumber/create/:journeyId/add-challenges': Page.RECORD_ALN_SCREENER_CHALLENGES,
+  '/aln-screener/:prisonNumber/create/:journeyId/add-strengths': Page.RECORD_ALN_SCREENER_STRENGTHS,
+  '/aln-screener/:prisonNumber/create/:journeyId/check-your-answers': Page.RECORD_ALN_SCREENER_CHECK_YOUR_ANSWERS,
+
   // Non audit routes. These routes do not raise an audit event
   '/': null,
   '/education-support-plan/:prisonNumber/create/who-created-the-plan': null,
   '/education-support-plan/:prisonNumber/refuse-plan/reason': null,
   '/strengths/:prisonNumber/create/select-category': null,
+  '/aln-screener/:prisonNumber/create/screener-date': null,
 }
 
 export default function auditMiddleware({ auditService }: Services) {
