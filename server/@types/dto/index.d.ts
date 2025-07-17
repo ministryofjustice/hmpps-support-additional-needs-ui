@@ -73,4 +73,10 @@ declare module 'dto' {
     code: string
     areaCode?: string
   }
+
+  export interface AlnScreenerDto {
+    prisonNumber: string
+    prisonId: string
+    screenerDate?: Date
+  }
 }

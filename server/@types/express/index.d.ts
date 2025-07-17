@@ -1,4 +1,10 @@
-import type { ChallengeDto, EducationSupportPlanDto, StrengthDto, RefuseEducationSupportPlanDto } from 'dto'
+import type {
+  ChallengeDto,
+  EducationSupportPlanDto,
+  StrengthDto,
+  RefuseEducationSupportPlanDto,
+  AlnScreenerDto,
+} from 'dto'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 
 export declare module 'express-session' {
@@ -23,6 +29,7 @@ export declare global {
       challengeDto?: ChallengeDto
       conditionDto?: ConditionDto
       strengthDto?: StrengthDto
+      alnScreenerDto?: AlnScreenerDto
     }
 
     interface Response {
