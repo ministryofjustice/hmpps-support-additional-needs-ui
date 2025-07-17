@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
@@ -7,6 +7,9 @@ import createEmptyChallengeDtoIfNotInJourneyData from './middleware/createEmptyC
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import checkChallengeDtoExistsInJourneyData from './middleware/checkChallengeDtoExistsInJourneyData'
 import DetailController from './detail/detailController'
+import { validate } from '../../../middleware/validationMiddleware'
+import selectCategorySchema from '../validationSchemas/selectCategorySchema'
+import detailSchema from '../validationSchemas/detailSchema'
 
 const createChallengeRoutes = (services: Services): Router => {
   const { journeyDataService } = services
@@ -29,7 +32,7 @@ const createChallengeRoutes = (services: Services): Router => {
 
   router.post('/:journeyId/select-category', [
     checkChallengeDtoExistsInJourneyData,
-    //validate(selectCategorySchema),
+    validate(selectCategorySchema),
     asyncMiddleware(selectCategoryController.submitSelectCategoryForm),
   ])
 
@@ -40,7 +43,7 @@ const createChallengeRoutes = (services: Services): Router => {
 
   router.post('/:journeyId/detail', [
     checkChallengeDtoExistsInJourneyData,
-    //validate(selectCategorySchema),
+    validate(detailSchema),
     asyncMiddleware(detailController.submitDetailForm),
   ])
 

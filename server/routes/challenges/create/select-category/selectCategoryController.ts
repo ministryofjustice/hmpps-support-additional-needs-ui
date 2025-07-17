@@ -1,10 +1,12 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import StrengthCategory from '../../../../enums/strengthCategory'
 import challengeCategory from '../../../../enums/challengeCategory'
+import type { ChallengeDto } from 'dto'
 
 export default class SelectCategoryController {
   async getSelectCategoryView(req: Request, res: Response, next: NextFunction) {
-    const selectCategoryForm = {}
+    const { invalidForm } = res.locals
+    const { challengeDto } = req.journeyData
+    const selectCategoryForm = invalidForm ?? this.populateFormFromDto(challengeDto)
 
     const viewRenderArgs = { form: selectCategoryForm }
     return res.render('pages/challenges/select-category/index', viewRenderArgs)
@@ -21,5 +23,11 @@ export default class SelectCategoryController {
     const { challengeDto } = req.journeyData
     challengeDto.challengeTypeCode = form.category
     req.journeyData.challengeDto = challengeDto
+  }
+
+  private populateFormFromDto = (challengeDto: ChallengeDto) => {
+    return {
+      category: challengeDto.challengeTypeCode,
+    }
   }
 }

@@ -9,7 +9,6 @@ export default class DetailController {
   constructor(private readonly challengeService: ChallengeService) {
   }
 
-
   getDetailView = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
     const { challengeDto } = req.journeyData
@@ -50,11 +49,11 @@ export default class DetailController {
     req.journeyData.challengeDto = challengeDto
   }
 
-  private populateFormFromDto = (dto: ChallengeDto) => {
+  private populateFormFromDto = (challengeDto: ChallengeDto) => {
     return {
-      description: dto.symptoms,
-      howIdentified: dto.howIdentified || [],
-      howIdentifiedOther: dto.howIdentifiedOther,
+      description: challengeDto.symptoms,
+      howIdentified: challengeDto.howIdentified || [],
+      howIdentifiedOther: challengeDto.howIdentifiedOther,
     }
   }
 }
