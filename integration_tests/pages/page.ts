@@ -103,9 +103,16 @@ export default abstract class Page {
 
   headerUserName = (): PageElement => cy.get('[data-qa=header-user-name]')
 
+  hasPageHeading(expected: string) {
+    this.mainPageHeading().should('have.text', expected)
+    return this
+  }
+
   private submitButton = (): PageElement => cy.get('[data-qa=submit-button], #submit-button')
 
   private backLink = (): PageElement => cy.get('.govuk-back-link')
 
   private apiErrorBanner = (): PageElement => cy.get('[data-qa=api-error-banner]')
+
+  private mainPageHeading = (): PageElement => cy.get('h1')
 }
