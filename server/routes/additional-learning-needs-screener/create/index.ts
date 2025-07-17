@@ -1,13 +1,19 @@
 import { Request, Response, Router } from 'express'
 import { Services } from '../../../services'
+import ScreenerDateController from './screener-date/screenerDateController'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import createEmptyAlnScreenerDtoIfNotInJourneyData from './middleware/createEmptyAlnScreenerDtoIfNotInJourneyData'
 import checkAlnScreenerDtoExistsInJourneyData from './middleware/checkAlnScreenerDtoExistsInJourneyData'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import { validate } from '../../../middleware/validationMiddleware'
+import screenerDateSchema from '../validationSchemas/screenerDateSchema'
 
 const createAlnRoutes = (services: Services): Router => {
   const { journeyDataService } = services
   const router = Router({ mergeParams: true })
+
+  const screenerDateController = new ScreenerDateController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -18,9 +24,12 @@ const createAlnRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/screener-date', [
     createEmptyAlnScreenerDtoIfNotInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('ALN Screener - Add Date page')
-    },
+    asyncMiddleware(screenerDateController.getScreenerDateView),
+  ])
+  router.post('/:journeyId/screener-date', [
+    checkAlnScreenerDtoExistsInJourneyData,
+    validate(screenerDateSchema),
+    asyncMiddleware(screenerDateController.submitScreenerDateView),
   ])
 
   router.get('/:journeyId/add-challenges', [
