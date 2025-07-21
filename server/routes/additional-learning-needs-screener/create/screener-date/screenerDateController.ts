@@ -13,7 +13,7 @@ export default class ScreenerDateController {
     return res.render('pages/additional-learning-needs-screener/screener-date/index', viewRenderArgs)
   }
 
-  submitScreenerDateView = async (req: Request, res: Response, next: NextFunction) => {
+  submitScreenerDateForm = async (req: Request, res: Response, next: NextFunction) => {
     const screenerDateForm = { ...req.body }
     this.updateDtoFromForm(req, screenerDateForm)
 

@@ -11,6 +11,7 @@ import screenerDateSchema from '../validationSchemas/screenerDateSchema'
 import retrieveReferenceData from '../../middleware/retrieveReferenceData'
 import ReferenceDataDomain from '../../../enums/referenceDataDomain'
 import AddChallengesController from './add-challenges/addChallengesController'
+import addChallengesSchema from '../validationSchemas/addChallengesSchema'
 
 const createAlnRoutes = (services: Services): Router => {
   const { journeyDataService, referenceDataService } = services
@@ -33,13 +34,18 @@ const createAlnRoutes = (services: Services): Router => {
   router.post('/:journeyId/screener-date', [
     checkAlnScreenerDtoExistsInJourneyData,
     validate(screenerDateSchema),
-    asyncMiddleware(screenerDateController.submitScreenerDateView),
+    asyncMiddleware(screenerDateController.submitScreenerDateForm),
   ])
 
   router.get('/:journeyId/add-challenges', [
     checkAlnScreenerDtoExistsInJourneyData,
     retrieveReferenceData(ReferenceDataDomain.CHALLENGE, referenceDataService),
     asyncMiddleware(addChallengesController.getAddChallengesView),
+  ])
+  router.post('/:journeyId/add-challenges', [
+    checkAlnScreenerDtoExistsInJourneyData,
+    validate(addChallengesSchema),
+    asyncMiddleware(addChallengesController.submitAddChallengesForm),
   ])
 
   router.get('/:journeyId/add-strengths', [

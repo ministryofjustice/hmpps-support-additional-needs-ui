@@ -7,26 +7,36 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full-width govuk-!-padding-left-3 govuk-!-padding-right-3">
 
-      <h1 class="govuk-heading-l">Select the challenges identified by the screener</h1>
-
       <form class="form additional-learning-needs-form" method="post" novalidate="">
         <div class="govuk-form-group">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
           <div class="govuk-form-group">
-            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+            {% set fieldError = errors | findError('challengeTypeCodes')  %}
 
+            <div class="govuk-checkboxes {{ 'govuk-form-group--error' if fieldError }}" data-module="govuk-checkboxes" {{ 'aria-describedby="challengeTypeCodes-error"' if fieldError }}>
+
+              <h1 class="govuk-heading-l">Select the challenges identified by the screener</h1>
+
+              {% if fieldError %}
+                <p id="challengeTypeCodes-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span> {{ fieldError.text }}
+                </p>
+              {% endif %}
+
+              {% set loopIndex = 0 %}
               {% for challengeCategory, challengeTypes in challengesReferenceData %}
                 <fieldset class="govuk-fieldset">
                   <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{{ challengeCategory }}</legend>
                   <section>
                     {% for challengeType in challengeTypes %}
                       <div class="govuk-checkboxes__item">
-                        <input class="govuk-checkboxes__input" id="{{ challengeCategory ~ loop.index0 }}" name="challengeTypeCodes" type="checkbox" value="{{ challengeType.code }}">
-                        <label class="govuk-label govuk-checkboxes__label" for="{{ challengeCategory ~ loop.index0 }}">
+                        <input class="govuk-checkboxes__input" id="{{ 'challengeTypeCodes' ~ (loopIndex if loopIndex > 0) }}" name="challengeTypeCodes" type="checkbox" value="{{ challengeType.code }}">
+                        <label class="govuk-label govuk-checkboxes__label" for="{{ challengeCategory ~ loopIndex }}">
                           {{ challengeType.code | formatChallengeTypeScreenValue | default(challengeType.code, true) }}
                         </label>
                       </div>
+                      {% set loopIndex = loopIndex + 1 %}
                     {% endfor %}
                   </section>
                 </fieldset>
