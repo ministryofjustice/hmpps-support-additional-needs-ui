@@ -49,15 +49,18 @@ describe('detailController', () => {
 
   it('should render the view when there is no previously submitted invalid form', async () => {
     // Given
+    flash.mockReturnValue([])
     res.locals.invalidForm = undefined
 
     const expectedViewTemplate = 'pages/challenges/detail/index'
     const expectedViewModel = {
       category: ChallengeIdentificationSource.CONVERSATIONS,
+      errorRecordingChallenge: false,
       form: {
         symptoms: undefined as string,
         howIdentified: [] as Array<ChallengeIdentificationSource>,
         howIdentifiedOther: undefined as string,
+        description: undefined as string,
       },
     }
 
