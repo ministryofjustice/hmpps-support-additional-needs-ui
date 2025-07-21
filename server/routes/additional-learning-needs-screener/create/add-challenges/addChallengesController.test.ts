@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
-import { parseISO } from 'date-fns'
-import ScreenerDateController from './screenerDateController'
 import aValidAlnScreenerDto from '../../../../testsupport/alnScreenerDtoTestDataBuilder'
+import AddChallengesController from './addChallengesController'
+import ChallengeType from '../../../../enums/challengeType'
 
-describe('screenerDateController', () => {
-  const controller = new ScreenerDateController()
+describe('addChallengesController', () => {
+  const controller = new AddChallengesController()
 
   const req = {
     session: {},
@@ -13,7 +13,6 @@ describe('screenerDateController', () => {
   } as unknown as Request
   const res = {
     redirect: jest.fn(),
-    redirectWithErrors: jest.fn(),
     render: jest.fn(),
     locals: {},
   } as unknown as Response
@@ -23,7 +22,7 @@ describe('screenerDateController', () => {
     jest.resetAllMocks()
     req.body = {}
     req.journeyData = {
-      alnScreenerDto: aValidAlnScreenerDto({ screenerDate: parseISO('2025-06-20') }),
+      alnScreenerDto: aValidAlnScreenerDto({ challenges: [ChallengeType.ARITHMETIC, ChallengeType.MATHS_CONFIDENCE] }),
     }
   })
 
@@ -31,15 +30,15 @@ describe('screenerDateController', () => {
     // Given
     res.locals.invalidForm = undefined
 
-    const expectedViewTemplate = 'pages/additional-learning-needs-screener/screener-date/index'
+    const expectedViewTemplate = 'pages/additional-learning-needs-screener/add-challenges/index'
     const expectedViewModel = {
       form: {
-        screenerDate: '20/6/2025',
+        challengeTypeCodes: ['ARITHMETIC', 'MATHS_CONFIDENCE'],
       },
     }
 
     // When
-    await controller.getScreenerDateView(req, res, next)
+    await controller.getAddChallengesView(req, res, next)
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
@@ -48,15 +47,15 @@ describe('screenerDateController', () => {
   it('should render view given previously submitted invalid form', async () => {
     // Given
     const invalidForm = {
-      screenerDate: 'not-a-valid-value',
+      challengeTypeCodes: 'not-a-valid-value',
     }
     res.locals.invalidForm = invalidForm
 
-    const expectedViewTemplate = 'pages/additional-learning-needs-screener/screener-date/index'
+    const expectedViewTemplate = 'pages/additional-learning-needs-screener/add-challenges/index'
     const expectedViewModel = { form: invalidForm }
 
     // When
-    await controller.getScreenerDateView(req, res, next)
+    await controller.getAddChallengesView(req, res, next)
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
@@ -65,16 +64,18 @@ describe('screenerDateController', () => {
   it('should submit form and redirect to next route given previous page was not check your answers', async () => {
     // Given
     req.query = {}
-    req.journeyData = { alnScreenerDto: aValidAlnScreenerDto({ screenerDate: null }) }
+    req.journeyData = { alnScreenerDto: aValidAlnScreenerDto({ challenges: null }) }
     req.body = {
-      screenerDate: '10/6/2025',
+      challengeTypeCodes: ['ARITHMETIC', 'MATHS_CONFIDENCE'],
     }
 
-    const expectedNextRoute = 'add-challenges'
-    const expectedAlnScreenerDto = aValidAlnScreenerDto({ screenerDate: parseISO('2025-06-10') })
+    const expectedNextRoute = 'add-strengths'
+    const expectedAlnScreenerDto = aValidAlnScreenerDto({
+      challenges: [ChallengeType.ARITHMETIC, ChallengeType.MATHS_CONFIDENCE],
+    })
 
     // When
-    await controller.submitScreenerDateForm(req, res, next)
+    await controller.submitAddChallengesForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
@@ -84,16 +85,18 @@ describe('screenerDateController', () => {
   it('should submit form and redirect to next route given previous page was check your answers', async () => {
     // Given
     req.query = { submitToCheckAnswers: 'true' }
-    req.journeyData = { alnScreenerDto: aValidAlnScreenerDto({ screenerDate: parseISO('2025-06-09') }) }
+    req.journeyData = { alnScreenerDto: aValidAlnScreenerDto({ challenges: [ChallengeType.NONE] }) }
     req.body = {
-      screenerDate: '10/6/2025',
+      challengeTypeCodes: ['ARITHMETIC', 'MATHS_CONFIDENCE'],
     }
 
     const expectedNextRoute = 'check-your-answers'
-    const expectedAlnScreenerDto = aValidAlnScreenerDto({ screenerDate: parseISO('2025-06-10') })
+    const expectedAlnScreenerDto = aValidAlnScreenerDto({
+      challenges: [ChallengeType.ARITHMETIC, ChallengeType.MATHS_CONFIDENCE],
+    })
 
     // When
-    await controller.submitScreenerDateForm(req, res, next)
+    await controller.submitAddChallengesForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
