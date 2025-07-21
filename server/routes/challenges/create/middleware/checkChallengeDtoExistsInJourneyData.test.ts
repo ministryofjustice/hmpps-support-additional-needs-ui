@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import checkChallengeDtoExistsInJourneyData from './checkChallengeDtoExistsInJourneyData'
-import aValidStrengthDto from '../../../../testsupport/strengthDtoTestDataBuilder'
 import aValidChallengeDto from '../../../../testsupport/challengeDtoTestDataBuilder'
 
 describe('checkChallengeDtoExistsInJourneyData', () => {

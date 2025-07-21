@@ -4,7 +4,6 @@ import challengeCategory from '../../../../enums/challengeCategory'
 
 export default class SelectCategoryController {
   populateFormFromDto = (challengeDto: ChallengeDto) => {
-    console.log(challengeDto)
     return {
       category: challengeDto?.challengeTypeCode,
     }

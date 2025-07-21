@@ -24,8 +24,10 @@ const challengeCategoryHintTextValues: Record<ChallengeCategory, string> = {
   MEMORY: 'Things like remembering and recalling information',
 }
 
-const formatChallengeCategoryScreenValueFilter = (value: ChallengeCategory): string => challengeCategoryScreenValues[value]
+const formatChallengeCategoryScreenValueFilter = (value: ChallengeCategory): string =>
+  challengeCategoryScreenValues[value]
 
-const formatChallengeCategoryHintTextFilter = (value: ChallengeCategory): string => challengeCategoryHintTextValues[value]
+const formatChallengeCategoryHintTextFilter = (value: ChallengeCategory): string =>
+  challengeCategoryHintTextValues[value]
 
 export { formatChallengeCategoryScreenValueFilter, formatChallengeCategoryHintTextFilter }
