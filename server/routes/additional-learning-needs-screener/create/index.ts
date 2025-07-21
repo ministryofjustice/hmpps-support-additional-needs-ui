@@ -8,12 +8,16 @@ import checkAlnScreenerDtoExistsInJourneyData from './middleware/checkAlnScreene
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import { validate } from '../../../middleware/validationMiddleware'
 import screenerDateSchema from '../validationSchemas/screenerDateSchema'
+import retrieveReferenceData from '../../middleware/retrieveReferenceData'
+import ReferenceDataDomain from '../../../enums/referenceDataDomain'
+import AddChallengesController from './add-challenges/addChallengesController'
 
 const createAlnRoutes = (services: Services): Router => {
-  const { journeyDataService } = services
+  const { journeyDataService, referenceDataService } = services
   const router = Router({ mergeParams: true })
 
   const screenerDateController = new ScreenerDateController()
+  const addChallengesController = new AddChallengesController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -34,9 +38,8 @@ const createAlnRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/add-challenges', [
     checkAlnScreenerDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('ALN Screener - Add Challenges page')
-    },
+    retrieveReferenceData(ReferenceDataDomain.CHALLENGE, referenceDataService),
+    asyncMiddleware(addChallengesController.getAddChallengesView),
   ])
 
   router.get('/:journeyId/add-strengths', [

@@ -1,0 +1,61 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'record-aln-add-challenges' %}
+{% set pageTitle = "Additional learning needs screener - Add challenges" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full-width govuk-!-padding-left-3 govuk-!-padding-right-3">
+
+      <h1 class="govuk-heading-l">Select the challenges identified by the screener</h1>
+
+      <form class="form additional-learning-needs-form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          <div class="govuk-form-group">
+            <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+
+              {% for challengeCategory, challengeTypes in challengesReferenceData %}
+                <fieldset class="govuk-fieldset">
+                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{{ challengeCategory }}</legend>
+                  <section>
+                    {% for challengeType in challengeTypes %}
+                      <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="{{ challengeCategory ~ loop.index0 }}" name="challengeTypeCode" type="checkbox" value="{{ challengeType.code }}">
+                        <label class="govuk-label govuk-checkboxes__label" for="{{ challengeCategory ~ loop.index0 }}">
+                          {{ challengeType.code }}
+                        </label>
+                      </div>
+                    {% endfor %}
+                  </section>
+                </fieldset>
+
+              {% endfor %}
+
+              <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Or</legend>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="no-challenges" name="challengeTypeCode" type="checkbox" value="NONE" data-behaviour="exclusive">
+                  <label class="govuk-label govuk-checkboxes__label" for="no-challenges">
+                    No challenges identified
+                  </label>
+                </div>
+              </fieldset>
+
+            </div>
+          </div>
+
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
