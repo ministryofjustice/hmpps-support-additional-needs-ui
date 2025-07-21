@@ -1,0 +1,71 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'record-aln-add-strengths' %}
+{% set pageTitle = "Additional learning needs screener - Add strengths" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full-width govuk-!-padding-left-3 govuk-!-padding-right-3">
+
+      <form class="form additional-learning-needs-form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          <div class="govuk-form-group">
+            {% set fieldError = errors | findError('strengthTypeCodes')  %}
+
+            <div class="govuk-checkboxes {{ 'govuk-form-group--error' if fieldError }}" data-module="govuk-checkboxes" {{ 'aria-describedby="strengthTypeCodes-error"' if fieldError }}>
+
+              <h1 class="govuk-heading-l">Select the strengths identified by the screener</h1>
+
+              {% if fieldError %}
+                <p id="strengthTypeCodes-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span> {{ fieldError.text }}
+                </p>
+              {% endif %}
+
+              {% set loopIndex = 0 %}
+              {% for strengthCategory, strengthTypes in strengthsReferenceData %}
+                <fieldset class="govuk-fieldset">
+                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{{ strengthCategory }}</legend>
+                  <section>
+                    {% for strengthType in strengthTypes %}
+                      <div class="govuk-checkboxes__item">
+                        <input class="govuk-checkboxes__input" id="{{ 'strengthTypeCodes' ~ (loopIndex if loopIndex > 0) }}" name="strengthTypeCodes" type="checkbox" value="{{ strengthType.code }}">
+                        <label class="govuk-label govuk-checkboxes__label" for="{{ strengthCategory ~ loopIndex }}">
+                          {{ strengthType.code | formatStrengthTypeScreenValue | default(strengthType.code, true) }}
+                        </label>
+                      </div>
+                      {% set loopIndex = loopIndex + 1 %}
+                    {% endfor %}
+                  </section>
+                </fieldset>
+
+              {% endfor %}
+
+              <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Or</legend>
+                <div class="govuk-checkboxes__item">
+                  <input class="govuk-checkboxes__input" id="no-strengths" name="strengthTypeCodes" type="checkbox" value="NONE" data-behaviour="exclusive">
+                  <label class="govuk-label govuk-checkboxes__label" for="no-strengths">
+                    {{ 'NONE' | formatStrengthTypeScreenValue | default('NONE', true) }}
+                  </label>
+                </div>
+              </fieldset>
+
+            </div>
+          </div>
+
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

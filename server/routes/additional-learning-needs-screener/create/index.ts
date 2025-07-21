@@ -1,6 +1,9 @@
 import { Request, Response, Router } from 'express'
 import { Services } from '../../../services'
 import ScreenerDateController from './screener-date/screenerDateController'
+import AddChallengesController from './add-challenges/addChallengesController'
+import AddStrengthsController from './add-strengths/addStrengthsController'
+import ReferenceDataDomain from '../../../enums/referenceDataDomain'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import createEmptyAlnScreenerDtoIfNotInJourneyData from './middleware/createEmptyAlnScreenerDtoIfNotInJourneyData'
@@ -9,8 +12,6 @@ import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import { validate } from '../../../middleware/validationMiddleware'
 import screenerDateSchema from '../validationSchemas/screenerDateSchema'
 import retrieveReferenceData from '../../middleware/retrieveReferenceData'
-import ReferenceDataDomain from '../../../enums/referenceDataDomain'
-import AddChallengesController from './add-challenges/addChallengesController'
 import addChallengesSchema from '../validationSchemas/addChallengesSchema'
 
 const createAlnRoutes = (services: Services): Router => {
@@ -19,6 +20,7 @@ const createAlnRoutes = (services: Services): Router => {
 
   const screenerDateController = new ScreenerDateController()
   const addChallengesController = new AddChallengesController()
+  const addStrengthsController = new AddStrengthsController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -50,9 +52,8 @@ const createAlnRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/add-strengths', [
     checkAlnScreenerDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('ALN Screener - Add Strengths page')
-    },
+    retrieveReferenceData(ReferenceDataDomain.STRENGTH, referenceDataService),
+    asyncMiddleware(addStrengthsController.getAddStrengthsView),
   ])
 
   router.get('/:journeyId/check-your-answers', [
