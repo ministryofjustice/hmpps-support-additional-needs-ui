@@ -24,7 +24,7 @@
                       <div class="govuk-checkboxes__item">
                         <input class="govuk-checkboxes__input" id="{{ challengeCategory ~ loop.index0 }}" name="challengeTypeCode" type="checkbox" value="{{ challengeType.code }}">
                         <label class="govuk-label govuk-checkboxes__label" for="{{ challengeCategory ~ loop.index0 }}">
-                          {{ challengeType.code }}
+                          {{ challengeType.code | formatChallengeTypeScreenValue | default(challengeType.code, true) }}
                         </label>
                       </div>
                     {% endfor %}
@@ -38,7 +38,7 @@
                 <div class="govuk-checkboxes__item">
                   <input class="govuk-checkboxes__input" id="no-challenges" name="challengeTypeCode" type="checkbox" value="NONE" data-behaviour="exclusive">
                   <label class="govuk-label govuk-checkboxes__label" for="no-challenges">
-                    No challenges identified
+                    {{ 'NONE' | formatChallengeTypeScreenValue | default(challengeType.code, true) }}
                   </label>
                 </div>
               </fieldset>
