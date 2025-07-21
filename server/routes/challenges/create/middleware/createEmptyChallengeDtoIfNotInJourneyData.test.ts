@@ -55,7 +55,7 @@ describe('createEmptyStrengthDtoIfNotInJourneyData', () => {
     expect(req.journeyData.challengeDto).toEqual(expectedChallengeDto)
   })
 
-  it('should not create an empty StrengthDto for the prisoner given there is already an StrengthDto in the journeyData for the prisoner', async () => {
+  it('should not create an empty ChallengeDto for the prisoner given there is already an ChallengeDto in the journeyData for the prisoner', async () => {
     // Given
     const expectedChallengeDto = {
       prisonNumber,

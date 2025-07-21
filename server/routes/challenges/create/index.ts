@@ -12,11 +12,11 @@ import selectCategorySchema from '../validationSchemas/selectCategorySchema'
 import detailSchema from '../validationSchemas/detailSchema'
 
 const createChallengeRoutes = (services: Services): Router => {
-  const { journeyDataService } = services
+  const { journeyDataService, challengeService } = services
   const router = Router({ mergeParams: true })
 
   const selectCategoryController = new SelectCategoryController()
-  const detailController = new DetailController(services.challengeService)
+  const detailController = new DetailController(challengeService)
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions

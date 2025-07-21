@@ -17,32 +17,32 @@ describe('detailSchema', () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
-    req.originalUrl = '/strengths/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/detail'
+    req.originalUrl = '/challenges/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/detail'
   })
 
   it.each([
     {
-      description: `A description of the person's strength`,
+      description: `A description of the person's challenge`,
       howIdentified: ['EDUCATION_SKILLS_WORK'],
       howIdentifiedOther: undefined,
     },
     {
-      description: `A description of the person's strength`,
+      description: `A description of the person's challenge`,
       howIdentified: ['EDUCATION_SKILLS_WORK', 'WIDER_PRISON'],
       howIdentifiedOther: undefined,
     },
     {
-      description: `A description of the person's strength`,
+      description: `A description of the person's challenge`,
       howIdentified: ['OTHER'],
       howIdentifiedOther: 'Some other identification',
     },
     {
-      description: `A description of the person's strength`,
+      description: `A description of the person's challenge`,
       howIdentified: ['EDUCATION_SKILLS_WORK', 'OTHER'],
       howIdentifiedOther: 'Some other identification',
     },
     {
-      description: `A description of the person's strength`,
+      description: `A description of the person's challenge`,
       howIdentified: 'EDUCATION_SKILLS_WORK', // single values are parsed by express as a string rather than an array
       howIdentifiedOther: 'Some other identification',
     },
@@ -81,7 +81,7 @@ describe('detailSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#description',
-        text: 'Enter a description of the strength',
+        text: 'Enter a description of the challenge',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -94,7 +94,7 @@ describe('detailSchema', () => {
     expect(next).not.toHaveBeenCalled()
     expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
     expect(res.redirectWithErrors).toHaveBeenCalledWith(
-      '/strengths/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/detail',
+      '/challenges/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/detail',
       expectedErrors,
     )
   })
@@ -111,7 +111,7 @@ describe('detailSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#description',
-        text: 'Description of the strength must be 4000 characters or less',
+        text: 'Description of the challenge must be 4000 characters or less',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -124,7 +124,7 @@ describe('detailSchema', () => {
     expect(next).not.toHaveBeenCalled()
     expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
     expect(res.redirectWithErrors).toHaveBeenCalledWith(
-      '/strengths/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/detail',
+      '/challenges/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/detail',
       expectedErrors,
     )
   })
@@ -141,7 +141,7 @@ describe('detailSchema', () => {
   ])('sad path - howIdentified field validation fails - %s', async howIdentified => {
     // Given
     const requestBody = {
-      description: `A description of the person's strength`,
+      description: `A description of the person's challenge`,
       howIdentified,
       howIdentifiedOther: undefined as string,
     }
@@ -150,7 +150,7 @@ describe('detailSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#howIdentified',
-        text: 'Select at least one option for how this strength was identified',
+        text: 'Select at least one option for how the challenge was identified',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -163,7 +163,7 @@ describe('detailSchema', () => {
     expect(next).not.toHaveBeenCalled()
     expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
     expect(res.redirectWithErrors).toHaveBeenCalledWith(
-      '/strengths/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/detail',
+      '/challenges/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/detail',
       expectedErrors,
     )
   })
@@ -182,7 +182,7 @@ describe('detailSchema', () => {
     async howIdentifiedOther => {
       // Given
       const requestBody = {
-        description: `A description of the person's strength`,
+        description: `A description of the person's challenge`,
         howIdentified: ['OTHER'],
         howIdentifiedOther,
       }
@@ -191,7 +191,7 @@ describe('detailSchema', () => {
       const expectedErrors: Array<Error> = [
         {
           href: '#howIdentifiedOther',
-          text: 'Enter details of how this strength was identified',
+          text: 'Enter details of how the challenge was identified',
         },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
@@ -204,7 +204,7 @@ describe('detailSchema', () => {
       expect(next).not.toHaveBeenCalled()
       expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
       expect(res.redirectWithErrors).toHaveBeenCalledWith(
-        '/strengths/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/detail',
+        '/challenges/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/detail',
         expectedErrors,
       )
     },
@@ -213,7 +213,7 @@ describe('detailSchema', () => {
   it('sad path - howIdentifiedOther field length validation fails', async () => {
     // Given
     const requestBody = {
-      description: `A description of the person's strength`,
+      description: `A description of the person's challenges`,
       howIdentified: ['OTHER'],
       howIdentifiedOther: 'a'.repeat(201),
     }
@@ -222,7 +222,7 @@ describe('detailSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#howIdentifiedOther',
-        text: 'How this strength was identified must be 200 characters or less',
+        text: 'How the challenge was identified must be 200 characters or less',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -235,7 +235,7 @@ describe('detailSchema', () => {
     expect(next).not.toHaveBeenCalled()
     expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
     expect(res.redirectWithErrors).toHaveBeenCalledWith(
-      '/strengths/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/detail',
+      '/challenges/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/detail',
       expectedErrors,
     )
   })

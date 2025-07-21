@@ -1,13 +1,11 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import type { ChallengeDto, StrengthDto } from 'dto'
+import type { ChallengeDto } from 'dto'
 import ChallengeIdentificationSource from '../../../../enums/challengeIdentificationSource'
 import { Result } from '../../../../utils/result/result'
 import { ChallengeService } from '../../../../services'
 
 export default class DetailController {
-
-  constructor(private readonly challengeService: ChallengeService) {
-  }
+  constructor(private readonly challengeService: ChallengeService) {}
 
   getDetailView = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
@@ -15,7 +13,11 @@ export default class DetailController {
 
     const detailForm = invalidForm ?? this.populateFormFromDto(challengeDto)
 
-    const viewRenderArgs = { form: detailForm, category: challengeDto.challengeTypeCode }
+    const viewRenderArgs = {
+      form: detailForm,
+      category: challengeDto.challengeTypeCode,
+      errorRecordingChallenge: req.flash('pageHasApiErrors')[0] != null,
+    }
     return res.render('pages/challenges/detail/index', viewRenderArgs)
   }
 
@@ -35,7 +37,8 @@ export default class DetailController {
     }
 
     const { prisonNumber } = challengeDto
-    res.redirectWithSuccess(`/profile/${prisonNumber}/challenges`, 'Challenge added')
+    req.journeyData.challengeDto = undefined
+    return res.redirectWithSuccess(`/profile/${prisonNumber}/challenges`, 'Challenge added')
   }
 
   private updateDtoFromForm = (

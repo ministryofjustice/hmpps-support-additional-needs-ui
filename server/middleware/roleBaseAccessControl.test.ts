@@ -26,6 +26,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.VIEW_PROFILE,
         ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN,
         ApplicationAction.UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN,
+        ApplicationAction.RECORD_CHALLENGES,
       ]
 
       // When

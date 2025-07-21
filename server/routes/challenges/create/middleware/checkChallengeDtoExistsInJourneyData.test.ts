@@ -1,8 +1,9 @@
 import { Request, Response } from 'express'
 import checkChallengeDtoExistsInJourneyData from './checkChallengeDtoExistsInJourneyData'
 import aValidStrengthDto from '../../../../testsupport/strengthDtoTestDataBuilder'
+import aValidChallengeDto from '../../../../testsupport/challengeDtoTestDataBuilder'
 
-describe('checkStrengthDtoExistsInJourneyData', () => {
+describe('checkChallengeDtoExistsInJourneyData', () => {
   const prisonNumber = 'A1234BC'
 
   const req = {
@@ -20,9 +21,9 @@ describe('checkStrengthDtoExistsInJourneyData', () => {
     req.params = { prisonNumber }
   })
 
-  it(`should invoke next handler given StrengthDto exists in journeyData`, async () => {
+  it(`should invoke next handler given ChallegeDto exists in journeyData`, async () => {
     // Given
-    req.journeyData.strengthDto = aValidStrengthDto()
+    req.journeyData.challengeDto = aValidChallengeDto()
 
     // When
     await checkChallengeDtoExistsInJourneyData(req, res, next)
@@ -32,9 +33,9 @@ describe('checkStrengthDtoExistsInJourneyData', () => {
     expect(res.redirect).not.toHaveBeenCalled()
   })
 
-  it(`should redirect to Profile Overview page given no StrengthDto exists in journeyData`, async () => {
+  it(`should redirect to Profile Overview page given no ChallengeDto exists in journeyData`, async () => {
     // Given
-    req.journeyData.strengthDto = undefined
+    req.journeyData.challengeDto = undefined
 
     // When
     await checkChallengeDtoExistsInJourneyData(req, res, next)
