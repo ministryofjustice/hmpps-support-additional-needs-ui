@@ -1,13 +1,11 @@
 import { Request, Response } from 'express'
 import type { ChallengeDto } from 'dto'
 import DetailController from './detailController'
-import { ChallengeService } from '../../../../services'
+import ChallengeService from '../../../../services/challengeService'
 import aValidChallengeDto from '../../../../testsupport/challengeDtoTestDataBuilder'
 import ChallengeIdentificationSource from '../../../../enums/challengeIdentificationSource'
 
 jest.mock('../../../../services/challengeService')
-jest.mock('../../../../applicationInfo')
-jest.mock('../../../../utils/azureAppInsights')
 
 describe('detailController', () => {
   const mockedChallengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
