@@ -64,6 +64,7 @@ const challengeTypeScreenValues: Record<ChallengeType, string> = {
   TASK_SWITCHING: 'Task switching',
   NUMBER_SEQUENCING: 'Number sequencing',
   PEOPLE_PERSON: 'People person',
+  NONE: 'No challenges identified',
 }
 
 const formatChallengeTypeScreenValueFilter = (value: ChallengeType): string => challengeTypeScreenValues[value]

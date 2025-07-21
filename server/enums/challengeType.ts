@@ -62,6 +62,7 @@ enum ChallengeType {
   TASK_SWITCHING = 'TASK_SWITCHING',
   NUMBER_SEQUENCING = 'NUMBER_SEQUENCING',
   PEOPLE_PERSON = 'PEOPLE_PERSON',
+  NONE = 'NONE',
 }
 
 export default ChallengeType
