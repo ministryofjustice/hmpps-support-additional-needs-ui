@@ -1,0 +1,121 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'create-challenge-detail' %}
+{% set pageTitle = "Add a challenge - detail" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">Add {{ category | formatChallengeCategoryScreenValue | lower }} challenge</h1>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukTextarea({
+            id: "description",
+            name: "description",
+            rows: "4",
+            value: form.description,
+            type: "text",
+            label: {
+              text: "Describe the challenge",
+              classes: "govuk-label--m",
+              attributes: { "aria-live": "polite" }
+            },
+            hint: {
+              text: "You can include triggers, signs they are struggling and when this happens"
+            },
+            attributes: { "aria-label" : "Enter the description of the challenge" },
+            errorMessage: errors | findError('description')
+          }) }}
+
+          {% set otherHtml %}
+            {{ govukInput({
+              id: "howIdentifiedOther",
+              name: "howIdentifiedOther",
+              value: form.howIdentifiedOther,
+              maxlength: 200,
+              label: {
+                text: "Please specify",
+                attributes: { "aria-live": "polite" }
+              },
+              attributes: {
+                "aria-label" : "Give details as to how this challenge was identified"
+              },
+              errorMessage: errors | findError('howIdentifiedOther')
+            }) }}
+          {% endset -%}
+
+          {{ govukCheckboxes({
+            name: "howIdentified",
+            fieldset: {
+              legend: {
+                text: "How was this strength identified?",
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            items: [
+              {
+                value: "EDUCATION_SKILLS_WORK",
+                text: "EDUCATION_SKILLS_WORK" | formatStrengthIdentificationSourceScreenValue,
+                checked: form.howIdentified.includes("EDUCATION_SKILLS_WORK")
+              },
+              {
+                value: "WIDER_PRISON",
+                text: "WIDER_PRISON" | formatStrengthIdentificationSourceScreenValue,
+                checked: form.howIdentified.includes("WIDER_PRISON")
+              },
+              {
+                value: "CONVERSATIONS",
+                text: "CONVERSATIONS" | formatStrengthIdentificationSourceScreenValue,
+                checked: form.howIdentified.includes("CONVERSATIONS")
+              },
+              {
+                value: "COLLEAGUE_INFO",
+                text: "COLLEAGUE_INFO" | formatStrengthIdentificationSourceScreenValue,
+                checked: form.howIdentified.includes("COLLEAGUE_INFO")
+              },
+              {
+                value: "FORMAL_PROCESSES",
+                text: "FORMAL_PROCESSES" | formatStrengthIdentificationSourceScreenValue,
+                checked: form.howIdentified.includes("FORMAL_PROCESSES")
+              },
+              {
+                value: "SELF_DISCLOSURE",
+                text: "SELF_DISCLOSURE" | formatStrengthIdentificationSourceScreenValue,
+                checked: form.howIdentified.includes("SELF_DISCLOSURE")
+              },
+              {
+                value: "OTHER_SCREENING_TOOL",
+                text: "OTHER_SCREENING_TOOL" | formatStrengthIdentificationSourceScreenValue,
+                checked: form.howIdentified.includes("OTHER_SCREENING_TOOL")
+              },
+              {
+                value: "OTHER",
+                text: "OTHER" | formatStrengthIdentificationSourceScreenValue,
+                checked: form.howIdentified.includes("OTHER"),
+                conditional: {
+                  html: otherHtml
+                }
+              }
+            ],
+            errorMessage: errors | findError('howIdentified')
+          }) }}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Add challenge",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
