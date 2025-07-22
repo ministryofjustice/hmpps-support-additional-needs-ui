@@ -76,7 +76,7 @@ describe('detailController', () => {
     // Given
     flash.mockReturnValue([])
     const invalidForm = {
-      howIdentified: 'not-a-valid-value',
+      howIdentified: ['not-a-valid-value'],
     }
     res.locals.invalidForm = invalidForm
 

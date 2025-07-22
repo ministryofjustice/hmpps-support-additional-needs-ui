@@ -5,9 +5,9 @@ import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
 import SelectChallengeCategoryPage from '../../../pages/challenges/selectChallengeCategoryPage'
 import ChallengesPage from '../../../pages/profile/challengesPage'
-import ChallengeCategory from '../../../../server/enums/challengeCategory'
 import AddChallengeDetailPage from '../../../pages/challenges/addChallengeDetailPage'
 import ChallengeIdentificationSource from '../../../../server/enums/challengeIdentificationSource'
+import ChallengeType from '../../../../server/enums/challengeType'
 
 context('Create a Challenge', () => {
   const prisonNumber = 'A00001A'
@@ -45,7 +45,7 @@ context('Create a Challenge', () => {
       .hasErrorCount(1)
       .hasFieldInError('category')
       // select a category and submit the form to the next page
-      .selectCategory(ChallengeCategory.EMOTIONS_FEELINGS_DEFAULT)
+      .selectCategory(ChallengeType.EMOTIONS_FEELINGS_DEFAULT)
       .submitPageTo(AddChallengeDetailPage)
 
     Page.verifyOnPage(AddChallengeDetailPage)
@@ -95,12 +95,12 @@ context('Create a Challenge', () => {
 
   it('should not create a Challenge given API returns an error response', () => {
     // Given
-    cy.task('stubCreateChallenge500Error', prisonNumber)
+    cy.task('stubCreateChallenges500Error', prisonNumber)
 
     cy.visit(`/challenges/${prisonNumber}/create/select-category`)
 
     Page.verifyOnPage(SelectChallengeCategoryPage)
-      .selectCategory(ChallengeCategory.EMOTIONS_FEELINGS_DEFAULT)
+      .selectCategory(ChallengeType.EMOTIONS_FEELINGS_DEFAULT)
       .submitPageTo(AddChallengeDetailPage)
       .enterDescription('Chris struggles showing empathy when dealing with others')
       .selectHowChallengeIdentified(ChallengeIdentificationSource.FORMAL_PROCESSES)
