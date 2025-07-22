@@ -12,17 +12,17 @@ import formatYesNoFilter from '../filters/formatYesNoFilter'
 import findErrorFilter from '../filters/findErrorFilter'
 import formatPrisonerNameFilter, { NameFormat } from '../filters/formatPrisonerNameFilter'
 import formatPlanRefusalReasonFilter from '../filters/formatPlanRefusalReasonFilter'
-import {
-  formatStrengthCategoryHintTextFilter,
-  formatStrengthCategoryScreenValueFilter,
-} from '../filters/formatStrengthCategoryFilter'
+import formatStrengthCategoryScreenValueFilter from '../filters/formatStrengthCategoryFilter'
 import formatStrengthIdentificationSourceScreenValueFilter from '../filters/formatStrengthIdentificationSourceFilter'
 import formatChallengeCategoryScreenValueFilter from '../filters/formatChallengeCategoryFilter'
 import {
   formatChallengeTypeScreenValueFilter,
   formatChallengeTypeHintTextFilter,
 } from '../filters/formatChallengeTypeFilter'
-import formatStrengthTypeScreenValueFilter from '../filters/formatStrengthTypeFilter'
+import {
+  formatStrengthTypeScreenValueFilter,
+  formatStrengthTypeHintTextFilter,
+} from '../filters/formatStrengthTypeFilter'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -64,9 +64,9 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatYesNo', formatYesNoFilter)
   njkEnv.addFilter('formatPlanRefusalReason', formatPlanRefusalReasonFilter)
   njkEnv.addFilter('formatStrengthCategoryScreenValue', formatStrengthCategoryScreenValueFilter)
-  njkEnv.addFilter('formatStrengthCategoryHintText', formatStrengthCategoryHintTextFilter)
   njkEnv.addFilter('formatStrengthIdentificationSourceScreenValue', formatStrengthIdentificationSourceScreenValueFilter)
   njkEnv.addFilter('formatStrengthTypeScreenValue', formatStrengthTypeScreenValueFilter)
+  njkEnv.addFilter('formatStrengthTypeHintText', formatStrengthTypeHintTextFilter)
   njkEnv.addFilter('formatChallengeCategoryScreenValue', formatChallengeCategoryScreenValueFilter)
   njkEnv.addFilter('formatChallengeTypeScreenValue', formatChallengeTypeScreenValueFilter)
   njkEnv.addFilter('formatChallengeTypeHintText', formatChallengeTypeHintTextFilter)

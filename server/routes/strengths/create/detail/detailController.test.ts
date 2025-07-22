@@ -4,6 +4,7 @@ import DetailController from './detailController'
 import aValidStrengthDto from '../../../../testsupport/strengthDtoTestDataBuilder'
 import StrengthIdentificationSource from '../../../../enums/strengthIdentificationSource'
 import StrengthService from '../../../../services/strengthService'
+import StrengthType from '../../../../enums/strengthType'
 
 jest.mock('../../../../services/strengthService')
 
@@ -39,7 +40,7 @@ describe('detailController', () => {
     req.journeyData = {
       strengthDto: {
         ...aValidStrengthDto(),
-        strengthTypeCode: StrengthIdentificationSource.COLLEAGUE_INFO,
+        strengthTypeCode: StrengthType.ACTIVE_LISTENING,
         symptoms: undefined,
         howIdentified: undefined,
         howIdentifiedOther: undefined,
@@ -54,7 +55,7 @@ describe('detailController', () => {
 
     const expectedViewTemplate = 'pages/strengths/detail/index'
     const expectedViewModel = {
-      category: StrengthIdentificationSource.COLLEAGUE_INFO,
+      category: StrengthType.ACTIVE_LISTENING,
       form: {
         description: undefined as string,
         howIdentified: [] as Array<StrengthIdentificationSource>,
@@ -81,7 +82,7 @@ describe('detailController', () => {
 
     const expectedViewTemplate = 'pages/strengths/detail/index'
     const expectedViewModel = {
-      category: StrengthIdentificationSource.COLLEAGUE_INFO,
+      category: StrengthType.ACTIVE_LISTENING,
       form: invalidForm,
       errorRecordingStrength: false,
     }
@@ -101,7 +102,7 @@ describe('detailController', () => {
 
     const expectedViewTemplate = 'pages/strengths/detail/index'
     const expectedViewModel = {
-      category: StrengthIdentificationSource.COLLEAGUE_INFO,
+      category: StrengthType.ACTIVE_LISTENING,
       form: {
         description: undefined as string,
         howIdentified: [] as Array<StrengthIdentificationSource>,

@@ -27,12 +27,13 @@
               {% set loopIndex = 0 %}
               {% for strengthCategory, strengthTypes in strengthsReferenceData %}
                 <fieldset class="govuk-fieldset">
-                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{{ strengthCategory }}</legend>
+                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{{ strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true) }}</legend>
                   <section>
                     {% for strengthType in strengthTypes %}
                       <div class="govuk-checkboxes__item">
-                        <input class="govuk-checkboxes__input" id="{{ 'strengthTypeCodes' ~ (loopIndex if loopIndex > 0) }}" name="strengthTypeCodes" type="checkbox" value="{{ strengthType.code }}">
-                        <label class="govuk-label govuk-checkboxes__label" for="{{ strengthCategory ~ loopIndex }}">
+                        {% set fieldId = 'strengthTypeCodes' ~ (loopIndex if loopIndex > 0) %}
+                        <input class="govuk-checkboxes__input" id="{{ fieldId }}" name="strengthTypeCodes" type="checkbox" value="{{ strengthType.code }}">
+                        <label class="govuk-label govuk-checkboxes__label" for="{{ fieldId }}">
                           {{ strengthType.code | formatStrengthTypeScreenValue | default(strengthType.code, true) }}
                         </label>
                       </div>

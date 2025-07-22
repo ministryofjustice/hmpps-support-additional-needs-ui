@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import type { StrengthDto } from 'dto'
-import StrengthCategory from '../../../../enums/strengthCategory'
+import StrengthType from '../../../../enums/strengthType'
 
 export default class SelectCategoryController {
   getSelectCategoryView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -26,7 +26,7 @@ export default class SelectCategoryController {
     }
   }
 
-  private updateDtoFromForm = (req: Request, form: { category: StrengthCategory }) => {
+  private updateDtoFromForm = (req: Request, form: { category: StrengthType }) => {
     const { strengthDto } = req.journeyData
     strengthDto.strengthTypeCode = form.category
     req.journeyData.strengthDto = strengthDto

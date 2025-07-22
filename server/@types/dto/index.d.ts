@@ -65,7 +65,7 @@ declare module 'dto' {
   export interface StrengthDto {
     prisonNumber: string
     prisonId: string
-    strengthTypeCode: string
+    strengthTypeCode: StrengthType
     symptoms?: string
     howIdentified?: Array<StrengthIdentificationSource>
     howIdentifiedOther?: string
