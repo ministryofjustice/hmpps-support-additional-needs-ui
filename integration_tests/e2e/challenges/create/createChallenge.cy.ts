@@ -93,26 +93,26 @@ context('Create a Challenge', () => {
     )
   })
 
-  // it('should not create a prisoners Challange given API returns an error response', () => {
+  // it('should not create a prisoners Challenge given API returns an error response', () => {
   //   // Given
-  //   cy.task('stubCreateStrengths500Error', prisonNumber)
+  //   cy.task('stubCreateChallenge500Error', prisonNumber)
   //
-  //   cy.visit(`/strengths/${prisonNumber}/create/select-category`)
+  //   cy.visit(`/challenges/${prisonNumber}/create/select-category`)
   //
-  //   Page.verifyOnPage(SelectStrengthCategoryPage)
-  //     .selectCategory(StrengthCategory.EMOTIONS_FEELINGS_DEFAULT)
-  //     .submitPageTo(AddStrengthDetailPage)
+  //   Page.verifyOnPage(SelectChallengeCategoryPage)
+  //     .selectCategory(ChallengeCategory.EMOTIONS_FEELINGS_DEFAULT)
+  //     .submitPageTo(AddChallengeDetailPage)
   //     .enterDescription('Chris shows strong empathy when dealing with others')
-  //     .selectHowStrengthIdentified(StrengthIdentificationSource.FORMAL_PROCESSES)
+  //     .selectHowChallengeIdentified(ChallengeIdentificationSource.FORMAL_PROCESSES)
   //
   //   // When
-  //   Page.verifyOnPage(AddStrengthDetailPage) //
+  //   Page.verifyOnPage(AddChallengeDetailPage) //
   //     .apiErrorBannerIsNotDisplayed()
-  //   Page.verifyOnPage(AddStrengthDetailPage) //
-  //     .submitPageTo(AddStrengthDetailPage) // Submit the page but expect to stay on the Add Strengths Detail page due to API error
+  //   Page.verifyOnPage(AddChallengeDetailPage) //
+  //     .submitPageTo(AddChallengeDetailPage) // Submit the page but expect to stay on the Add Challenge Detail page due to API error
   //
   //   // Then
-  //   Page.verifyOnPage(AddStrengthDetailPage) //
+  //   Page.verifyOnPage(AddChallengeDetailPage) //
   //     .apiErrorBannerIsDisplayed()
   // })
 })

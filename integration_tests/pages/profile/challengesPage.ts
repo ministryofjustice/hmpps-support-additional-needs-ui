@@ -15,6 +15,6 @@ export default class ChallengesPage extends ProfilePage {
 
   private challengesActionItems = (): PageElement => cy.get('[data-qa=challenges-action-items] li')
 
-  private addChallengeButton = (): PageElement => this.challengesActionItems().find('[data-qa=add-challenges-button]')
+  private addChallengeButton = (): PageElement => this.challengesActionItems().find('[data-qa=add-challenge-button]')
 
 }
