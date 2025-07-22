@@ -1,13 +1,13 @@
 import { z } from 'zod'
 import { createSchema } from '../../../middleware/validationMiddleware'
-import ChallengeCategory from '../../../enums/challengeCategory'
+import ChallengeType from '../../../enums/challengeType'
 
 const selectCategorySchema = async () => {
   const categoryMandatoryMessage = 'Select a category'
 
   return createSchema({
     category: z //
-      .enum(ChallengeCategory, { message: categoryMandatoryMessage }),
+      .enum(ChallengeType, { message: categoryMandatoryMessage }),
   })
 }
 

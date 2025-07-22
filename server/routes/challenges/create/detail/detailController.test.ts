@@ -4,6 +4,7 @@ import DetailController from './detailController'
 import ChallengeService from '../../../../services/challengeService'
 import aValidChallengeDto from '../../../../testsupport/challengeDtoTestDataBuilder'
 import ChallengeIdentificationSource from '../../../../enums/challengeIdentificationSource'
+import ChallengeType from '../../../../enums/challengeType'
 
 jest.mock('../../../../services/challengeService')
 
@@ -39,7 +40,7 @@ describe('detailController', () => {
     req.journeyData = {
       challengeDto: {
         ...aValidChallengeDto(),
-        challengeTypeCode: ChallengeIdentificationSource.CONVERSATIONS,
+        challengeTypeCode: ChallengeType.ARITHMETIC,
         symptoms: undefined,
         howIdentified: undefined,
         howIdentifiedOther: undefined,
@@ -54,7 +55,7 @@ describe('detailController', () => {
 
     const expectedViewTemplate = 'pages/challenges/detail/index'
     const expectedViewModel = {
-      category: ChallengeIdentificationSource.CONVERSATIONS,
+      category: ChallengeType.ARITHMETIC,
       errorRecordingChallenge: false,
       form: {
         symptoms: undefined as string,
@@ -81,7 +82,7 @@ describe('detailController', () => {
 
     const expectedViewTemplate = 'pages/challenges/detail/index'
     const expectedViewModel = {
-      category: ChallengeIdentificationSource.CONVERSATIONS,
+      category: ChallengeType.ARITHMETIC,
       form: invalidForm,
       errorRecordingChallenge: false,
     }

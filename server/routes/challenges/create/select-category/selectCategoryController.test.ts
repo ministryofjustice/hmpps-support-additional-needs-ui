@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import SelectCategoryController from './selectCategoryController'
 import aValidChallengeDto from '../../../../testsupport/challengeDtoTestDataBuilder'
+import ChallengeType from '../../../../enums/challengeType'
 
 describe('selectCategoryController', () => {
   const controller = new SelectCategoryController()
@@ -24,7 +25,7 @@ describe('selectCategoryController', () => {
     req.journeyData = {
       challengeDto: {
         ...aValidChallengeDto(),
-        challengeTypeCode: 'SENSORY',
+        challengeTypeCode: ChallengeType.SENSORY,
       },
     }
   })
