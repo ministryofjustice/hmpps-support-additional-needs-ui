@@ -5,6 +5,7 @@ declare module 'dto' {
   import ChallengeIdentificationSource from '../../enums/challengeIdentificationSource'
   import StrengthIdentificationSource from '../../enums/strengthIdentificationSource'
   import ChallengeType from '../../enums/challengeType'
+  import StrengthType from '../../enums/strengthType'
 
   export interface EducationSupportPlanDto {
     prisonNumber: string
@@ -80,5 +81,6 @@ declare module 'dto' {
     prisonId: string
     screenerDate?: Date
     challenges?: Array<ChallengeType>
+    strengths?: Array<StrengthType>
   }
 }
