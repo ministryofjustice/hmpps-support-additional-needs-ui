@@ -48,7 +48,7 @@
                 <div class="govuk-checkboxes__item">
                   <input class="govuk-checkboxes__input" id="no-challenges" name="challengeTypeCodes" type="checkbox" value="NONE" data-behaviour="exclusive">
                   <label class="govuk-label govuk-checkboxes__label" for="no-challenges">
-                    {{ 'NONE' | formatChallengeTypeScreenValue | default(challengeType.code, true) }}
+                    {{ 'NONE' | formatChallengeTypeScreenValue | default('NONE', true) }}
                   </label>
                 </div>
               </fieldset>
