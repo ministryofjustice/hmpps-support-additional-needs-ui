@@ -93,26 +93,26 @@ context('Create a Challenge', () => {
     )
   })
 
-  // it('should not create a prisoners Challenge given API returns an error response', () => {
-  //   // Given
-  //   cy.task('stubCreateChallenge500Error', prisonNumber)
-  //
-  //   cy.visit(`/challenges/${prisonNumber}/create/select-category`)
-  //
-  //   Page.verifyOnPage(SelectChallengeCategoryPage)
-  //     .selectCategory(ChallengeCategory.EMOTIONS_FEELINGS_DEFAULT)
-  //     .submitPageTo(AddChallengeDetailPage)
-  //     .enterDescription('Chris shows strong empathy when dealing with others')
-  //     .selectHowChallengeIdentified(ChallengeIdentificationSource.FORMAL_PROCESSES)
-  //
-  //   // When
-  //   Page.verifyOnPage(AddChallengeDetailPage) //
-  //     .apiErrorBannerIsNotDisplayed()
-  //   Page.verifyOnPage(AddChallengeDetailPage) //
-  //     .submitPageTo(AddChallengeDetailPage) // Submit the page but expect to stay on the Add Challenge Detail page due to API error
-  //
-  //   // Then
-  //   Page.verifyOnPage(AddChallengeDetailPage) //
-  //     .apiErrorBannerIsDisplayed()
-  // })
+  it('should not create a Challenge given API returns an error response', () => {
+    // Given
+    cy.task('stubCreateChallenge500Error', prisonNumber)
+
+    cy.visit(`/challenges/${prisonNumber}/create/select-category`)
+
+    Page.verifyOnPage(SelectChallengeCategoryPage)
+      .selectCategory(ChallengeCategory.EMOTIONS_FEELINGS_DEFAULT)
+      .submitPageTo(AddChallengeDetailPage)
+      .enterDescription('Chris struggles showing empathy when dealing with others')
+      .selectHowChallengeIdentified(ChallengeIdentificationSource.FORMAL_PROCESSES)
+
+    // When
+    Page.verifyOnPage(AddChallengeDetailPage) //
+      .apiErrorBannerIsNotDisplayed()
+    Page.verifyOnPage(AddChallengeDetailPage) //
+      .submitPageTo(AddChallengeDetailPage) // Submit the page but expect to stay on the Add Challenge Detail page due to API error
+
+    // Then
+    Page.verifyOnPage(AddChallengeDetailPage) //
+      .apiErrorBannerIsDisplayed()
+  })
 })

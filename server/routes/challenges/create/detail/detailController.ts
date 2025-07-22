@@ -14,9 +14,9 @@ export default class DetailController {
 
     const detailForm = invalidForm
       ? {
-        ...invalidForm,
-        howIdentified: asArray(invalidForm.howIdentified),
-      }
+          ...invalidForm,
+          howIdentified: asArray(invalidForm.howIdentified),
+        }
       : this.populateFormFromDto(challengeDto)
 
     const viewRenderArgs = {

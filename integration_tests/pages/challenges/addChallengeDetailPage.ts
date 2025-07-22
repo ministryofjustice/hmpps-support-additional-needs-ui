@@ -1,5 +1,4 @@
 import Page, { PageElement } from '../page'
-import StrengthIdentificationSource from '../../../server/enums/strengthIdentificationSource'
 import ChallengeIdentificationSource from '../../../server/enums/challengeIdentificationSource'
 
 export default class AddChallengeDetailPage extends Page {
