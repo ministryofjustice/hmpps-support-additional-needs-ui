@@ -5,6 +5,7 @@ import {
   aValidCreateChallengesRequest,
 } from '../../testsupport/challengeRequestTestDataBuilder'
 import ChallengeIdentificationSource from '../../enums/challengeIdentificationSource'
+import ChallengeType from '../../enums/challengeType'
 
 describe('createChallengesRequestMapper', () => {
   describe('toCreateChallengesRequest', () => {
@@ -14,7 +15,7 @@ describe('createChallengesRequestMapper', () => {
         aValidChallengeDto({
           prisonNumber: 'A1234BC',
           prisonId: 'BXI',
-          challengeTypeCode: 'READING_COMPREHENSION',
+          challengeTypeCode: ChallengeType.READING_COMPREHENSION,
           symptoms: 'John struggles to read text on white background',
           howIdentified: [ChallengeIdentificationSource.WIDER_PRISON, ChallengeIdentificationSource.OTHER],
           howIdentifiedOther: 'The trainer noticed that John could read better on a cream background',
@@ -22,7 +23,7 @@ describe('createChallengesRequestMapper', () => {
         aValidChallengeDto({
           prisonNumber: 'A1234BC',
           prisonId: 'BXI',
-          challengeTypeCode: 'PROBLEM_SOLVING',
+          challengeTypeCode: ChallengeType.PROBLEM_SOLVING,
           symptoms: 'John struggles to reason about things and solve simple problems',
           howIdentified: [ChallengeIdentificationSource.OTHER],
           howIdentifiedOther: 'It was noticed in class that John struggles with problem solving tasks',
@@ -30,7 +31,7 @@ describe('createChallengesRequestMapper', () => {
         aValidChallengeDto({
           prisonNumber: 'A1234BC',
           prisonId: 'BXI',
-          challengeTypeCode: 'SPEED_OF_CALCULATION',
+          challengeTypeCode: ChallengeType.SPEED_OF_CALCULATION,
           symptoms: null,
           howIdentified: [ChallengeIdentificationSource.OTHER_SCREENING_TOOL],
           howIdentifiedOther: null,

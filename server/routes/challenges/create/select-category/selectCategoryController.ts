@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import type { ChallengeDto } from 'dto'
-import challengeCategory from '../../../../enums/challengeCategory'
+import ChallengeType from '../../../../enums/challengeType'
 
 export default class SelectCategoryController {
   populateFormFromDto = (challengeDto: ChallengeDto) => {
@@ -9,7 +9,7 @@ export default class SelectCategoryController {
     }
   }
 
-  async getSelectCategoryView(req: Request, res: Response, next: NextFunction) {
+  getSelectCategoryView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
     const { challengeDto } = req.journeyData || {}
     const selectCategoryForm = invalidForm ?? this.populateFormFromDto(challengeDto)
@@ -25,7 +25,7 @@ export default class SelectCategoryController {
     return res.redirect('detail')
   }
 
-  updateDtoFromForm = (req: Request, form: { category: challengeCategory }) => {
+  updateDtoFromForm = (req: Request, form: { category: ChallengeType }) => {
     const { challengeDto } = req.journeyData
     challengeDto.challengeTypeCode = form.category
     req.journeyData.challengeDto = challengeDto

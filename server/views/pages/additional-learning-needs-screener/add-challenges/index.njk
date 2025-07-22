@@ -27,12 +27,13 @@
               {% set loopIndex = 0 %}
               {% for challengeCategory, challengeTypes in challengesReferenceData %}
                 <fieldset class="govuk-fieldset">
-                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{{ challengeCategory }}</legend>
+                  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">{{ challengeCategory | formatChallengeCategoryScreenValue | default(challengeCategory, true) }}</legend>
                   <section>
                     {% for challengeType in challengeTypes %}
                       <div class="govuk-checkboxes__item">
-                        <input class="govuk-checkboxes__input" id="{{ 'challengeTypeCodes' ~ (loopIndex if loopIndex > 0) }}" name="challengeTypeCodes" type="checkbox" value="{{ challengeType.code }}">
-                        <label class="govuk-label govuk-checkboxes__label" for="{{ challengeCategory ~ loopIndex }}">
+                        {% set fieldId = 'challengeTypeCodes' ~ (loopIndex if loopIndex > 0) %}
+                        <input class="govuk-checkboxes__input" id="{{ fieldId }}" name="challengeTypeCodes" type="checkbox" value="{{ challengeType.code }}">
+                        <label class="govuk-label govuk-checkboxes__label" for="{{ fieldId }}">
                           {{ challengeType.code | formatChallengeTypeScreenValue | default(challengeType.code, true) }}
                         </label>
                       </div>

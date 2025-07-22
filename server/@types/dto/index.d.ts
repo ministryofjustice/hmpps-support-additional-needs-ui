@@ -48,7 +48,7 @@ declare module 'dto' {
   export interface ChallengeDto {
     prisonNumber: string
     prisonId: string
-    challengeTypeCode: string
+    challengeTypeCode: ChallengeType
     symptoms?: string
     howIdentified?: Array<ChallengeIdentificationSource>
     howIdentifiedOther?: string
