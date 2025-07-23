@@ -1,8 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
 import type { ReferenceDataItemDto } from 'dto'
 import { asArray } from '../../../../utils/utils'
+import { AdditionalLearningNeedsScreenerService } from '../../../../services'
+import { Result } from '../../../../utils/result/result'
 
 export default class CheckYourAnswersController {
+  constructor(private readonly alnService: AdditionalLearningNeedsScreenerService) {}
+
   getCheckYourAnswersView = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm, challengesReferenceData, strengthsReferenceData } = res.locals
     const { alnScreenerDto } = req.journeyData
@@ -22,9 +26,18 @@ export default class CheckYourAnswersController {
   submitCheckYourAnswersForm = async (req: Request, res: Response, next: NextFunction) => {
     const { alnScreenerDto } = req.journeyData
     const { prisonNumber } = alnScreenerDto
-    // TODO - call API to save ALN screener here
-    req.journeyData.alnScreenerDto = undefined
 
+    const { apiErrorCallback } = res.locals
+    const apiResult = await Result.wrap(
+      this.alnService.recordAlnScreener(req.user.username, alnScreenerDto),
+      apiErrorCallback,
+    )
+    if (!apiResult.isFulfilled()) {
+      req.flash('pageHasApiErrors', 'true')
+      return res.redirect('check-your-answers')
+    }
+
+    req.journeyData.alnScreenerDto = undefined
     return res.redirect(`/profile/${prisonNumber}/overview`)
   }
 }
