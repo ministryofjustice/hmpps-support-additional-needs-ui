@@ -2,12 +2,12 @@ import Page from '../../../pages/page'
 import OverviewPage from '../../../pages/profile/overviewPage'
 import SelectStrengthCategoryPage from '../../../pages/strengths/selectStrengthCategoryPage'
 import StrengthsPage from '../../../pages/profile/strengthsPage'
-import StrengthCategory from '../../../../server/enums/strengthCategory'
 import AddStrengthDetailPage from '../../../pages/strengths/addStrengthDetailPage'
 import StrengthIdentificationSource from '../../../../server/enums/strengthIdentificationSource'
 import { postRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
+import StrengthType from '../../../../server/enums/strengthType'
 
 context('Create a Strength', () => {
   const prisonNumber = 'A00001A'
@@ -45,7 +45,7 @@ context('Create a Strength', () => {
       .hasErrorCount(1)
       .hasFieldInError('category')
       // select a category and submit the form to the next page
-      .selectCategory(StrengthCategory.EMOTIONS_FEELINGS_DEFAULT)
+      .selectCategory(StrengthType.EMOTIONS_FEELINGS_DEFAULT)
       .submitPageTo(AddStrengthDetailPage)
 
     Page.verifyOnPage(AddStrengthDetailPage)
@@ -100,7 +100,7 @@ context('Create a Strength', () => {
     cy.visit(`/strengths/${prisonNumber}/create/select-category`)
 
     Page.verifyOnPage(SelectStrengthCategoryPage)
-      .selectCategory(StrengthCategory.EMOTIONS_FEELINGS_DEFAULT)
+      .selectCategory(StrengthType.EMOTIONS_FEELINGS_DEFAULT)
       .submitPageTo(AddStrengthDetailPage)
       .enterDescription('Chris shows strong empathy when dealing with others')
       .selectHowStrengthIdentified(StrengthIdentificationSource.FORMAL_PROCESSES)

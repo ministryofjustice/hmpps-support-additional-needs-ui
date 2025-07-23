@@ -1,7 +1,8 @@
 import { toCreateStrengthsRequest } from './createStrengthsRequestMapper'
 import aValidStrengthDto from '../../testsupport/strengthDtoTestDataBuilder'
-import { aValidStrengthRequest, aValidCreateStrengthsRequest } from '../../testsupport/strengthRequestTestDataBuilder'
+import { aValidCreateStrengthsRequest, aValidStrengthRequest } from '../../testsupport/strengthRequestTestDataBuilder'
 import StrengthIdentificationSource from '../../enums/strengthIdentificationSource'
+import StrengthType from '../../enums/strengthType'
 
 describe('createStrengthsRequestMapper', () => {
   describe('toCreateStrengthsRequest', () => {
@@ -11,7 +12,7 @@ describe('createStrengthsRequestMapper', () => {
         aValidStrengthDto({
           prisonNumber: 'A1234BC',
           prisonId: 'BXI',
-          strengthTypeCode: 'READING_COMPREHENSION',
+          strengthTypeCode: StrengthType.READING_COMPREHENSION,
           symptoms: 'John struggles to read text on white background',
           howIdentified: [StrengthIdentificationSource.WIDER_PRISON, StrengthIdentificationSource.OTHER],
           howIdentifiedOther: 'The trainer noticed that John could read better on a cream background',
@@ -19,7 +20,7 @@ describe('createStrengthsRequestMapper', () => {
         aValidStrengthDto({
           prisonNumber: 'A1234BC',
           prisonId: 'BXI',
-          strengthTypeCode: 'PROBLEM_SOLVING',
+          strengthTypeCode: StrengthType.PROBLEM_SOLVING,
           symptoms: 'John struggles to reason about things and solve simple problems',
           howIdentified: [StrengthIdentificationSource.OTHER],
           howIdentifiedOther: 'It was noticed in class that John struggles with problem solving tasks',
@@ -27,7 +28,7 @@ describe('createStrengthsRequestMapper', () => {
         aValidStrengthDto({
           prisonNumber: 'A1234BC',
           prisonId: 'BXI',
-          strengthTypeCode: 'SPEED_OF_CALCULATION',
+          strengthTypeCode: StrengthType.SPEED_OF_CALCULATION,
           symptoms: null,
           howIdentified: [StrengthIdentificationSource.OTHER_SCREENING_TOOL],
           howIdentifiedOther: null,
