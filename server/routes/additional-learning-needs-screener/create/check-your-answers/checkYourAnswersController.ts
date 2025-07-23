@@ -4,16 +4,28 @@ import { asArray } from '../../../../utils/utils'
 
 export default class CheckYourAnswersController {
   getCheckYourAnswersView = async (req: Request, res: Response, next: NextFunction) => {
-    const { challengesReferenceData, strengthsReferenceData } = res.locals
+    const { invalidForm, challengesReferenceData, strengthsReferenceData } = res.locals
     const { alnScreenerDto } = req.journeyData
+
+    const checkYourAnswersForm = invalidForm ?? { screenerInformationIsCorrect: null }
 
     const viewRenderArgs = {
       screenerDate: alnScreenerDto.screenerDate,
       challenges: mapSelectedTypesToCategories(alnScreenerDto.challenges, challengesReferenceData),
       strengths: mapSelectedTypesToCategories(alnScreenerDto.strengths, strengthsReferenceData),
+      form: checkYourAnswersForm,
       errorRecordingAlnScreener: req.flash('pageHasApiErrors')[0] != null,
     }
     return res.render('pages/additional-learning-needs-screener/check-your-answers/index', viewRenderArgs)
+  }
+
+  submitCheckYourAnswersForm = async (req: Request, res: Response, next: NextFunction) => {
+    const { alnScreenerDto } = req.journeyData
+    const { prisonNumber } = alnScreenerDto
+    // TODO - call API to save ALN screener here
+    req.journeyData.alnScreenerDto = undefined
+
+    return res.redirect(`/profile/${prisonNumber}/overview`)
   }
 }
 

@@ -15,6 +15,7 @@ import screenerDateSchema from '../validationSchemas/screenerDateSchema'
 import retrieveReferenceData from '../../middleware/retrieveReferenceData'
 import addChallengesSchema from '../validationSchemas/addChallengesSchema'
 import addStrengthsSchema from '../validationSchemas/addStrengthsSchema'
+import checkYourAnswersSchema from '../validationSchemas/checkYourAnswersSchema'
 
 const createAlnRoutes = (services: Services): Router => {
   const { journeyDataService, referenceDataService } = services
@@ -69,6 +70,11 @@ const createAlnRoutes = (services: Services): Router => {
     retrieveReferenceData(ReferenceDataDomain.CHALLENGE, referenceDataService),
     retrieveReferenceData(ReferenceDataDomain.STRENGTH, referenceDataService),
     asyncMiddleware(checkYourAnswersController.getCheckYourAnswersView),
+  ])
+  router.post('/:journeyId/check-your-answers', [
+    checkAlnScreenerDtoExistsInJourneyData,
+    validate(checkYourAnswersSchema),
+    asyncMiddleware(checkYourAnswersController.submitCheckYourAnswersForm),
   ])
 
   return router

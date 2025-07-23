@@ -79,6 +79,24 @@
             </div>
           </dl>
 
+          <h2 class="govuk-heading-m">Is the recorded screener information correct?</h2>
+          {{ govukWarningText({
+            text: "You cannot edit screener results after they have been recorded",
+            iconFallbackText: "Warning",
+            classes: "govuk-!-margin-bottom-3"
+          }) }}
+          {{ govukCheckboxes({
+            name: "screenerInformationIsCorrect",
+            items: [
+              {
+                value: "true",
+                text: "Yes, the recorded screener information is correct",
+                checked: form.screenerInformationIsCorrect === "true"
+              }
+            ],
+            classes: "govuk-!-margin-bottom-8",
+            errorMessage: errors | findError('screenerInformationIsCorrect')
+          }) }}
         </div>
 
         {{ govukButton({
