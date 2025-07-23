@@ -1,9 +1,165 @@
+import { Request, Response } from 'express'
+import { startOfToday } from 'date-fns'
 import type { ReferenceDataItemDto } from 'dto'
-import { mapSelectedTypesToCategories } from './checkYourAnswersController'
+import CheckYourAnswersController, { mapSelectedTypesToCategories } from './checkYourAnswersController'
 import { asArray } from '../../../../utils/utils'
+import aValidAlnScreenerDto from '../../../../testsupport/alnScreenerDtoTestDataBuilder'
+import ChallengeType from '../../../../enums/challengeType'
+import StrengthType from '../../../../enums/strengthType'
 
 describe('checkYourAnswersController', () => {
-  // TODO write controller unit tests in next PR
+  const controller = new CheckYourAnswersController()
+
+  const prisonNumber = 'A1234BC'
+  const prisonId = 'MDI'
+
+  const screenerDate = startOfToday()
+  const alnScreenerDto = aValidAlnScreenerDto({
+    prisonNumber,
+    prisonId,
+    screenerDate,
+    challenges: [ChallengeType.ARITHMETIC],
+    strengths: [StrengthType.READING, StrengthType.SPELLING],
+  })
+
+  const flash = jest.fn()
+
+  const req = {
+    session: {},
+    journeyData: {},
+    body: {},
+    flash,
+  } as unknown as Request
+  const res = {
+    redirect: jest.fn(),
+    render: jest.fn(),
+    locals: {},
+  } as unknown as Response
+  const next = jest.fn()
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    req.body = {}
+    req.journeyData = { alnScreenerDto }
+    res.locals.challengesReferenceData = {
+      LITERACY_SKILLS: [
+        { areaCode: 'COGNITION_LEARNING', code: 'READING' },
+        { areaCode: 'COGNITION_LEARNING', code: 'SPELLING' },
+      ],
+      NUMERACY_SKILLS: [
+        { areaCode: 'COGNITION_LEARNING', code: 'SPEED_OF_CALCULATION' },
+        { areaCode: 'COGNITION_LEARNING', code: 'ARITHMETIC' },
+      ],
+    }
+    res.locals.strengthsReferenceData = {
+      LITERACY_SKILLS: [
+        { areaCode: 'COGNITION_LEARNING', code: 'READING' },
+        { areaCode: 'COGNITION_LEARNING', code: 'SPELLING' },
+      ],
+      NUMERACY_SKILLS: [
+        { areaCode: 'COGNITION_LEARNING', code: 'SPEED_OF_CALCULATION' },
+        { areaCode: 'COGNITION_LEARNING', code: 'ARITHMETIC' },
+      ],
+    }
+  })
+
+  it('should render view given no previously submitted invalid form', async () => {
+    // Given
+    flash.mockReturnValue([])
+    res.locals.invalidForm = undefined
+
+    const expectedViewTemplate = 'pages/additional-learning-needs-screener/check-your-answers/index'
+    const expectedViewModel = {
+      form: {
+        screenerInformationIsCorrect: null as string,
+      },
+      errorRecordingAlnScreener: false,
+      screenerDate,
+      challenges: {
+        NUMERACY_SKILLS: ['ARITHMETIC'],
+      },
+      strengths: {
+        LITERACY_SKILLS: ['READING', 'SPELLING'],
+      },
+    }
+
+    // When
+    await controller.getCheckYourAnswersView(req, res, next)
+
+    // Then
+    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(flash).toHaveBeenCalledWith('pageHasApiErrors')
+  })
+
+  it('should render view given previously submitted invalid form', async () => {
+    // Given
+    flash.mockReturnValue([])
+    const invalidForm = {
+      screenerInformationIsCorrect: 'not-a-valid-value',
+    }
+    res.locals.invalidForm = invalidForm
+
+    const expectedViewTemplate = 'pages/additional-learning-needs-screener/check-your-answers/index'
+    const expectedViewModel = {
+      form: invalidForm,
+      errorRecordingAlnScreener: false,
+      screenerDate,
+      challenges: {
+        NUMERACY_SKILLS: ['ARITHMETIC'],
+      },
+      strengths: {
+        LITERACY_SKILLS: ['READING', 'SPELLING'],
+      },
+    }
+
+    // When
+    await controller.getCheckYourAnswersView(req, res, next)
+
+    // Then
+    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(flash).toHaveBeenCalledWith('pageHasApiErrors')
+  })
+
+  it('should render view given api errors from previous submission', async () => {
+    // Given
+    flash.mockReturnValue(['true'])
+    res.locals.invalidForm = undefined
+
+    const expectedViewTemplate = 'pages/additional-learning-needs-screener/check-your-answers/index'
+    const expectedViewModel = {
+      form: {
+        screenerInformationIsCorrect: null as string,
+      },
+      errorRecordingAlnScreener: true,
+      screenerDate,
+      challenges: {
+        NUMERACY_SKILLS: ['ARITHMETIC'],
+      },
+      strengths: {
+        LITERACY_SKILLS: ['READING', 'SPELLING'],
+      },
+    }
+
+    // When
+    await controller.getCheckYourAnswersView(req, res, next)
+
+    // Then
+    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(flash).toHaveBeenCalledWith('pageHasApiErrors')
+  })
+
+  it('should submit form and redirect to next route', async () => {
+    // Given
+    const expectedNextRoute = `/profile/${prisonNumber}/overview`
+
+    // When
+    await controller.submitCheckYourAnswersForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.alnScreenerDto).toBeUndefined()
+    expect(flash).not.toHaveBeenCalled()
+  })
 })
 
 describe('mapSelectedTypesToCategories', () => {
