@@ -12,6 +12,7 @@ import ChallengeService from './challengeService'
 import ConditionService from './conditionService'
 import ReferenceDataService from './referenceDataService'
 import StrengthService from './strengthService'
+import AdditionalLearningNeedsScreenerService from './additionalLearningNeedsScreenerService'
 
 export const services = () => {
   const {
@@ -43,12 +44,14 @@ export const services = () => {
     conditionService: new ConditionService(supportAdditionalNeedsApiClient),
     referenceDataService: new ReferenceDataService(referenceDataStore, supportAdditionalNeedsApiClient),
     strengthService: new StrengthService(supportAdditionalNeedsApiClient),
+    additionalLearningNeedsService: new AdditionalLearningNeedsScreenerService(supportAdditionalNeedsApiClient),
   }
 }
 
 export type Services = ReturnType<typeof services>
 
 export {
+  AdditionalLearningNeedsScreenerService,
   AuditService,
   ChallengeService,
   ConditionService,

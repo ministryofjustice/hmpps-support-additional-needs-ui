@@ -24,7 +24,7 @@ describe('challengeService', () => {
       const unPersistedChallengeDtos = [aValidChallengeDto()]
       const expectedCreateChallengesRequest = aValidCreateChallengesRequest()
 
-      supportAdditionalNeedsApiClient.createEducationSupportPlan.mockResolvedValue(null)
+      supportAdditionalNeedsApiClient.createChallenges.mockResolvedValue(null)
 
       // When
       await service.createChallenges(username, unPersistedChallengeDtos)

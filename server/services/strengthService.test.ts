@@ -24,7 +24,7 @@ describe('strengthService', () => {
       const unPersistedStrengthDtos = [aValidStrengthDto()]
       const expectedCreateStrengthsRequest = aValidCreateStrengthsRequest()
 
-      supportAdditionalNeedsApiClient.createEducationSupportPlan.mockResolvedValue(null)
+      supportAdditionalNeedsApiClient.createStrengths.mockResolvedValue(null)
 
       // When
       await service.createStrengths(username, unPersistedStrengthDtos)
