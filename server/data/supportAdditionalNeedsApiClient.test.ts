@@ -636,5 +636,24 @@ describe('supportAdditionalNeedsApiClient', () => {
       expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
       expect(nock.isDone()).toBe(true)
     })
+
+    describe('getChallenges', () => {
+      it('should get challenges for a prisoner', async () => {
+        // Given
+        const expectedResponse = aValidChallengeListResponse()
+        supportAdditionalNeedsApi
+          .get(`/profile/${prisonNumber}/challenges`)
+          .matchHeader('authorization', `Bearer ${systemToken}`)
+          .reply(200, expectedResponse)
+
+        // When
+        const actual = await supportAdditionalNeedsApiClient.getChallenges(prisonNumber, username)
+
+        // Then
+        expect(actual).toEqual(expectedResponse)
+        expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+        expect(nock.isDone()).toBe(true)
+      })
+    })
   })
 })

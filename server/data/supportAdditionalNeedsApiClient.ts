@@ -125,6 +125,15 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     )
   }
 
+  async getChallenges(prisonNumber: string, username: string): Promise<ChallengeListResponse> {
+    return this.get<ChallengeListResponse>(
+      {
+        path: `/profile/${prisonNumber}/challenges`,
+      },
+      asSystem(username),
+    )
+  }
+
   async createConditions(
     prisonNumber: string,
     username: string,

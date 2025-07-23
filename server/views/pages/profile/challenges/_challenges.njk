@@ -1,8 +1,16 @@
 <div class="govuk-summary-card" data-qa="challenges-summary-card">
   <div class="govuk-summary-card__content">
-    <p class="govuk-body">
-      No challenges recorded
-    </p>
+
+    {% if challengeList %}
+      {% for challenge in challengeList %}
+          <h3> {{ challenge.challengeType.description }}</h3>
+          <p> {{  challenge.symptoms }}</p>
+      {% endfor %}
+    {% else %}
+      <p class="govuk-body">
+        No challenges recorded
+      </p>
+    {% endif %}
     <a class="govuk-link govuk-!-font-weight-regular" href="#" data-qa="add-challenge-button">Add challenge</a>
   </div>
 </div>
