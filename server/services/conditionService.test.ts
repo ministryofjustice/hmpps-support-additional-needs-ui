@@ -24,7 +24,7 @@ describe('conditionService', () => {
       const unPersistedConditionDtos = [aValidConditionDto()]
       const expectedCreateConditionsRequest = aValidCreateConditionsRequest()
 
-      supportAdditionalNeedsApiClient.createEducationSupportPlan.mockResolvedValue(null)
+      supportAdditionalNeedsApiClient.createConditions.mockResolvedValue(null)
 
       // When
       await service.createConditions(username, unPersistedConditionDtos)

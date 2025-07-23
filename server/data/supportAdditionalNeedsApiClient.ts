@@ -1,6 +1,7 @@
 import { asSystem, RestClient } from '@ministryofjustice/hmpps-rest-client'
 import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import type {
+  AlnScreenerRequest,
   ChallengeListResponse,
   ConditionListResponse,
   CreateChallengesRequest,
@@ -148,6 +149,20 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/strengths`,
         data: createStrengthsRequest,
+      },
+      asSystem(username),
+    )
+  }
+
+  async createAdditionalLearningNeedsScreener(
+    prisonNumber: string,
+    username: string,
+    alnScreenerRequest: AlnScreenerRequest,
+  ): Promise<void> {
+    return this.post<void>(
+      {
+        path: `/profile/${prisonNumber}/aln-screener`,
+        data: alnScreenerRequest,
       },
       asSystem(username),
     )

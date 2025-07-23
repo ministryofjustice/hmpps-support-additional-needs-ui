@@ -19,6 +19,7 @@ import { aValidReferenceDataListResponse } from '../testsupport/referenceDataRes
 import { aValidStrengthListResponse } from '../testsupport/strengthResponseTestDataBuilder'
 import { aValidCreateStrengthsRequest } from '../testsupport/strengthRequestTestDataBuilder'
 import ReferenceDataDomain from '../enums/referenceDataDomain'
+import { aValidAlnScreenerRequest } from '../testsupport/alnScreenerRequestTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -629,6 +630,57 @@ describe('supportAdditionalNeedsApiClient', () => {
       // When
       const actual = await supportAdditionalNeedsApiClient
         .createStrengths(prisonNumber, username, createStrengthsRequest)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('createAdditionalLearningNeedsScreener', () => {
+    it('should create ALN Screener for a prisoner', async () => {
+      // Given
+      const createAlnScreenerRequest = aValidAlnScreenerRequest()
+
+      supportAdditionalNeedsApi
+        .post(`/profile/${prisonNumber}/aln-screener`, requestBody => isMatch(requestBody, createAlnScreenerRequest))
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(201)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.createAdditionalLearningNeedsScreener(
+        prisonNumber,
+        username,
+        createAlnScreenerRequest,
+      )
+
+      // Then
+      expect(actual).toEqual({})
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const createAlnScreenerRequest = aValidAlnScreenerRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .post(`/profile/${prisonNumber}/aln-screener`, requestBody => isMatch(requestBody, createAlnScreenerRequest))
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .createAdditionalLearningNeedsScreener(prisonNumber, username, createAlnScreenerRequest)
         .catch(e => e)
 
       // Then
