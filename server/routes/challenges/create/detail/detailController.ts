@@ -3,6 +3,7 @@ import type { ChallengeDto } from 'dto'
 import ChallengeIdentificationSource from '../../../../enums/challengeIdentificationSource'
 import { Result } from '../../../../utils/result/result'
 import { ChallengeService } from '../../../../services'
+import { asArray } from '../../../../utils/utils'
 
 export default class DetailController {
   constructor(private readonly challengeService: ChallengeService) {}
@@ -11,7 +12,12 @@ export default class DetailController {
     const { invalidForm } = res.locals
     const { challengeDto } = req.journeyData
 
-    const detailForm = invalidForm ?? this.populateFormFromDto(challengeDto)
+    const detailForm = invalidForm
+      ? {
+          ...invalidForm,
+          howIdentified: asArray(invalidForm.howIdentified),
+        }
+      : this.populateFormFromDto(challengeDto)
 
     const viewRenderArgs = {
       form: detailForm,
