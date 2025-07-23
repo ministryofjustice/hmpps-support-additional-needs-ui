@@ -11,7 +11,11 @@ describe('challengesController', () => {
 
   const prisonerSummary = aValidPrisonerSummary()
 
-  const req = {} as unknown as Request
+  const req = {
+    user: {
+      username: 'a-user',
+    },
+  } as unknown as Request
   const res = {
     render: jest.fn(),
     locals: { prisonerSummary },

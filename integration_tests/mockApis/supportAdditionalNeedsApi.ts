@@ -314,6 +314,50 @@ const stubGetEducationSupportPlanCreationSchedules500Error = (options?: {
   })
 }
 
+const stubGetChallenges = (options?: { prisonNumber?: string }): SuperAgentRequest => {
+  const prisonNumber = options?.prisonNumber || 'G6115VJ'
+
+  return stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: `/support-additional-needs-api/profile/${prisonNumber}/challenges`,
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        challenges: [
+          {
+            reference: 'c88a6c48-97e2-4c04-93b5-98619966447b',
+            createdBy: 'asmith_gen',
+            createdByDisplayName: 'Alex Smith',
+            createdAt: '2023-06-19T09:39:44Z',
+            createdAtPrison: 'MDI',
+            updatedBy: 'asmith_gen',
+            updatedByDisplayName: 'Alex Smith',
+            updatedAt: '2023-06-19T09:39:44Z',
+            updatedAtPrison: 'MDI',
+            symptoms: 'Has difficulty with reading comprehension',
+            howIdentified: ['EDUCATION_SKILLS_WORK'],
+            challengeType: {
+              code: 'READING_DIFFICULTY',
+              description: 'Reading Difficulty',
+              categoryCode: 'LITERACY_SKILLS',
+              categoryDescription: 'Literacy Skills',
+              areaCode: 'COGNITION_LEARNING',
+              areaDescription: 'Cognition & Learning',
+              listSequence: 0,
+              active: true,
+            },
+            fromALNScreener: false,
+            active: true,
+          },
+        ],
+      },
+    },
+  })
+}
+
 const stubCreateStrengths = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
   stubFor({
     request: {
@@ -449,4 +493,5 @@ export default {
   stubSupportAdditionalNeedsApiPing: stubPing('support-additional-needs-api'),
   stubCreateChallenges,
   stubCreateChallenges500Error,
+  stubGetChallenges,
 }
