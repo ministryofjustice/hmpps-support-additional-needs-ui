@@ -6,10 +6,17 @@ import { asArray } from '../../../../utils/utils'
 import aValidAlnScreenerDto from '../../../../testsupport/alnScreenerDtoTestDataBuilder'
 import ChallengeType from '../../../../enums/challengeType'
 import StrengthType from '../../../../enums/strengthType'
+import AdditionalLearningNeedsScreenerService from '../../../../services/additionalLearningNeedsScreenerService'
+
+jest.mock('../../../../services/additionalLearningNeedsScreenerService')
 
 describe('checkYourAnswersController', () => {
-  const controller = new CheckYourAnswersController()
+  const alnService = new AdditionalLearningNeedsScreenerService(
+    null,
+  ) as jest.Mocked<AdditionalLearningNeedsScreenerService>
+  const controller = new CheckYourAnswersController(alnService)
 
+  const username = 'A_USER'
   const prisonNumber = 'A1234BC'
   const prisonId = 'MDI'
 
@@ -28,6 +35,7 @@ describe('checkYourAnswersController', () => {
     session: {},
     journeyData: {},
     body: {},
+    user: { username },
     flash,
   } as unknown as Request
   const res = {
@@ -148,8 +156,10 @@ describe('checkYourAnswersController', () => {
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors')
   })
 
-  it('should submit form and redirect to next route', async () => {
+  it('should submit form and redirect to next route given calling API is successful', async () => {
     // Given
+    alnService.recordAlnScreener.mockResolvedValue()
+
     const expectedNextRoute = `/profile/${prisonNumber}/overview`
 
     // When
@@ -159,6 +169,23 @@ describe('checkYourAnswersController', () => {
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
     expect(req.journeyData.alnScreenerDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
+    expect(alnService.recordAlnScreener).toHaveBeenCalledWith(username, alnScreenerDto)
+  })
+
+  it('should submit form and redirect to next route given calling API is not successful', async () => {
+    // Given
+    alnService.recordAlnScreener.mockRejectedValue(new Error('Internal Server Error'))
+
+    const expectedNextRoute = 'check-your-answers'
+
+    // When
+    await controller.submitCheckYourAnswersForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.alnScreenerDto).toEqual(alnScreenerDto)
+    expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
+    expect(alnService.recordAlnScreener).toHaveBeenCalledWith(username, alnScreenerDto)
   })
 })
 

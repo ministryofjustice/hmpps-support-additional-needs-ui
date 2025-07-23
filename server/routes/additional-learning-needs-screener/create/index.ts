@@ -18,13 +18,13 @@ import addStrengthsSchema from '../validationSchemas/addStrengthsSchema'
 import checkYourAnswersSchema from '../validationSchemas/checkYourAnswersSchema'
 
 const createAlnRoutes = (services: Services): Router => {
-  const { journeyDataService, referenceDataService } = services
+  const { additionalLearningNeedsService, journeyDataService, referenceDataService } = services
   const router = Router({ mergeParams: true })
 
   const screenerDateController = new ScreenerDateController()
   const addChallengesController = new AddChallengesController()
   const addStrengthsController = new AddStrengthsController()
-  const checkYourAnswersController = new CheckYourAnswersController()
+  const checkYourAnswersController = new CheckYourAnswersController(additionalLearningNeedsService)
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
