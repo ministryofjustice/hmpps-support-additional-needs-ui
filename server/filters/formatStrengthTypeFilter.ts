@@ -77,7 +77,7 @@ const strengthTypeScreenValues = new Map<StrengthType, string>([
   [StrengthType.NUMBER_SEQUENCING, 'Number sequencing'],
   [StrengthType.PEOPLE_PERSON, 'People person'],
 
-  [StrengthType.NONE, 'No challenges identified'],
+  [StrengthType.NONE, 'No strengths identified'],
 ])
 
 const strengthTypeHintTextValues = new Map<StrengthType, string>([
