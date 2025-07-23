@@ -32,7 +32,7 @@
                     {% for challengeType in challengeTypes %}
                       <div class="govuk-checkboxes__item">
                         {% set fieldId = 'challengeTypeCodes' ~ (loopIndex if loopIndex > 0) %}
-                        <input class="govuk-checkboxes__input" id="{{ fieldId }}" name="challengeTypeCodes" type="checkbox" value="{{ challengeType.code }}">
+                        <input class="govuk-checkboxes__input" id="{{ fieldId }}" name="challengeTypeCodes" type="checkbox" value="{{ challengeType.code }}" {{ 'checked' if form.challengeTypeCodes.includes(challengeType.code) }}>
                         <label class="govuk-label govuk-checkboxes__label" for="{{ fieldId }}">
                           {{ challengeType.code | formatChallengeTypeScreenValue | default(challengeType.code, true) }}
                         </label>
@@ -47,7 +47,7 @@
               <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Or</legend>
                 <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="no-challenges" name="challengeTypeCodes" type="checkbox" value="NONE" data-behaviour="exclusive">
+                  <input class="govuk-checkboxes__input" id="no-challenges" name="challengeTypeCodes" type="checkbox" value="NONE" data-behaviour="exclusive" {{ 'checked' if form.challengeTypeCodes.includes('NONE') }}>
                   <label class="govuk-label govuk-checkboxes__label" for="no-challenges">
                     {{ 'NONE' | formatChallengeTypeScreenValue | default('NONE', true) }}
                   </label>

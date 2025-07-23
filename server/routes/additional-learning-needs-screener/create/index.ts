@@ -1,8 +1,9 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import ScreenerDateController from './screener-date/screenerDateController'
 import AddChallengesController from './add-challenges/addChallengesController'
 import AddStrengthsController from './add-strengths/addStrengthsController'
+import CheckYourAnswersController from './check-your-answers/checkYourAnswersController'
 import ReferenceDataDomain from '../../../enums/referenceDataDomain'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
@@ -22,6 +23,7 @@ const createAlnRoutes = (services: Services): Router => {
   const screenerDateController = new ScreenerDateController()
   const addChallengesController = new AddChallengesController()
   const addStrengthsController = new AddStrengthsController()
+  const checkYourAnswersController = new CheckYourAnswersController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -64,9 +66,9 @@ const createAlnRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/check-your-answers', [
     checkAlnScreenerDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('ALN Screener - Check Your Answers page')
-    },
+    retrieveReferenceData(ReferenceDataDomain.CHALLENGE, referenceDataService),
+    retrieveReferenceData(ReferenceDataDomain.STRENGTH, referenceDataService),
+    asyncMiddleware(checkYourAnswersController.getCheckYourAnswersView),
   ])
 
   return router

@@ -32,7 +32,7 @@
                     {% for strengthType in strengthTypes %}
                       <div class="govuk-checkboxes__item">
                         {% set fieldId = 'strengthTypeCodes' ~ (loopIndex if loopIndex > 0) %}
-                        <input class="govuk-checkboxes__input" id="{{ fieldId }}" name="strengthTypeCodes" type="checkbox" value="{{ strengthType.code }}">
+                        <input class="govuk-checkboxes__input" id="{{ fieldId }}" name="strengthTypeCodes" type="checkbox" value="{{ strengthType.code }}" {{ 'checked' if form.strengthTypeCodes.includes(strengthType.code) }}>
                         <label class="govuk-label govuk-checkboxes__label" for="{{ fieldId }}">
                           {{ strengthType.code | formatStrengthTypeScreenValue | default(strengthType.code, true) }}
                         </label>
@@ -47,7 +47,7 @@
               <fieldset class="govuk-fieldset">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Or</legend>
                 <div class="govuk-checkboxes__item">
-                  <input class="govuk-checkboxes__input" id="no-strengths" name="strengthTypeCodes" type="checkbox" value="NONE" data-behaviour="exclusive">
+                  <input class="govuk-checkboxes__input" id="no-strengths" name="strengthTypeCodes" type="checkbox" value="NONE" data-behaviour="exclusive" {{ 'checked' if form.strengthTypeCodes.includes('NONE') }}>
                   <label class="govuk-label govuk-checkboxes__label" for="no-strengths">
                     {{ 'NONE' | formatStrengthTypeScreenValue | default('NONE', true) }}
                   </label>
