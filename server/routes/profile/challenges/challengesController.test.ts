@@ -1,13 +1,21 @@
 import { Request, Response } from 'express'
 import ChallengesController from './challengesController'
 import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
+import ChallengeService from '../../../services/challengeService'
+
+jest.mock('../../../services/challengeService')
 
 describe('challengesController', () => {
-  const controller = new ChallengesController()
+  const mockedChallengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
+  const controller = new ChallengesController(mockedChallengeService)
 
   const prisonerSummary = aValidPrisonerSummary()
 
-  const req = {} as unknown as Request
+  const req = {
+    user: {
+      username: 'a-user',
+    },
+  } as unknown as Request
   const res = {
     render: jest.fn(),
     locals: { prisonerSummary },
