@@ -8,6 +8,8 @@
     {% include './_challengesActions.njk' %}
   {% elseif actionMenuType === 'strengths' %}
     {% include './_strengthsActions.njk' %}
+  {% elseif actionMenuType === 'conditions' %}
+    {% include './_conditionsActions.njk' %}
   {% else %}
     {% include './_educationSupportPlanActions.njk' %}
   {% endif %}
