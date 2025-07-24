@@ -1,0 +1,147 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'record-conditions-select-conditions' %}
+{% set pageTitle = "Record conditions - select conditions" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">What self-declared condition do you want to record for {{ prisonerSummary | formatFirst_name_Last_name }}?</h1>
+      {{ govukWarningText({
+        text: "You must have " + prisonerSummary | formatFirst_name_Last_name + "'s consent to share this information",
+        iconFallbackText: "Warning"
+      }) }}
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          <div class="govuk-grid-row">
+            {# left hand column of check boxes #}
+            <div class="govuk-grid-column-one-half">
+              {{ govukCheckboxes({
+                name: "conditions",
+                hint: {
+                  text: "Select all that apply"
+                },
+                idPrefix: 'main-conditions',
+                items: [
+                  {
+                    value: "ABI",
+                    text: "ABI"
+                  },
+                  {
+                    value: "ADHD",
+                    text: "ADHD"
+                  },
+                  {
+                    value: "ASC",
+                    text: "ASC"
+                  },
+                  {
+                    value: "DLD_LANG",
+                    text: "DLD_LANG"
+                  },
+                  {
+                    value: "LD_DOWN",
+                    text: "LD_DOWN"
+                  },
+                  {
+                    value: "DYSCALCULIA",
+                    text: "DYSCALCULIA"
+                  },
+                  {
+                    value: "DYSLEXIA",
+                    text: "DYSLEXIA"
+                  },
+                  {
+                    value: "DYSPRAXIA",
+                    text: "DYSPRAXIA"
+                  },
+                  {
+                    value: "FASD",
+                    text: "FASD"
+                  },
+                  {
+                    value: "DLD_HEAR",
+                    text: "DLD_HEAR"
+                  },
+                  {
+                    value: "LD_OTHER",
+                    text: "LD_OTHER"
+                  },
+                  {
+                    value: "MENTAL_HEALTH",
+                    text: "MENTAL_HEALTH"
+                  },
+                  {
+                    value: "NEURODEGEN",
+                    text: "NEURODEGEN"
+                  },
+                  {
+                    value: "PHYSICAL_OTHER",
+                    text: "PHYSICAL_OTHER"
+                  },
+                  {
+                    value: "TOURETTES",
+                    text: "TOURETTES"
+                  },
+                  {
+                    value: "VISUAL_IMPAIR",
+                    text: "VISUAL_IMPAIR"
+                  }
+                ],
+                errorMessage: errors | findError('conditions')
+              }) }}
+            </div>
+
+            {# right hand column of check boxes #}
+            <div class="govuk-grid-column-one-half">
+              {{ govukCheckboxes({
+                name: "conditions",
+                hint: {
+                  text: "Or any other:"
+                },
+                idPrefix: 'secondary-conditions',
+                items: [
+                  {
+                    value: "OTHER",
+                    text: "OTHER"
+                  },
+                  {
+                    value: "DLD_OTHER",
+                    text: "DLD_OTHER"
+                  },
+                  {
+                    value: "LEARN_DIFF_OTHER",
+                    text: "LEARN_DIFF_OTHER"
+                  },
+                  {
+                    value: "LONG_TERM_OTHER",
+                    text: "LONG_TERM_OTHER"
+                  },
+                  {
+                    value: "NEURO_OTHER",
+                    text: "NEURO_OTHER"
+                  }
+                ]
+              }) }}
+            </div>
+          </div>
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
