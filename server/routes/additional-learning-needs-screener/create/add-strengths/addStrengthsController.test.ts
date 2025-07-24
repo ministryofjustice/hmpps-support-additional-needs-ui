@@ -47,12 +47,29 @@ describe('addStrengthsController', () => {
   it('should render view given previously submitted invalid form', async () => {
     // Given
     const invalidForm = {
-      strengthTypeCodes: 'not-a-valid-value',
+      strengthTypeCodes: ['not-a-valid-value'],
     }
     res.locals.invalidForm = invalidForm
 
     const expectedViewTemplate = 'pages/additional-learning-needs-screener/add-strengths/index'
     const expectedViewModel = { form: invalidForm }
+
+    // When
+    await controller.getAddStrengthsView(req, res, next)
+
+    // Then
+    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+  })
+
+  it('should render view given previously submitted invalid form where strengthTypeCodes is not present', async () => {
+    // Given
+    const invalidForm = {
+      strengthTypeCodes: undefined as unknown as string[],
+    }
+    res.locals.invalidForm = invalidForm
+
+    const expectedViewTemplate = 'pages/additional-learning-needs-screener/add-strengths/index'
+    const expectedViewModel = { form: { strengthTypeCodes: [] as string[] } }
 
     // When
     await controller.getAddStrengthsView(req, res, next)
