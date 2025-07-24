@@ -2,10 +2,14 @@ import { Request, Response, Router } from 'express'
 import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
+import SelectConditionsController from './select-conditions/selectConditionsController'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
 
 const createConditionsRoutes = (services: Services): Router => {
   const { journeyDataService } = services
   const router = Router({ mergeParams: true })
+
+  const selectConditionsController = new SelectConditionsController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -14,11 +18,7 @@ const createConditionsRoutes = (services: Services): Router => {
   ])
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
 
-  router.get('/:journeyId/select-conditions', [
-    async (req: Request, res: Response) => {
-      res.send('Add Conditions - select conditions page')
-    },
-  ])
+  router.get('/:journeyId/select-conditions', [asyncMiddleware(selectConditionsController.getSelectConditionsView)])
 
   router.get('/:journeyId/details', [
     async (req: Request, res: Response) => {
