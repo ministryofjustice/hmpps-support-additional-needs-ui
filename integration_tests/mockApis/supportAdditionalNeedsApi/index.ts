@@ -5,6 +5,7 @@ import challengesEndpoints from './challengesEndpoints'
 import strengthsEndpoints from './strengthsEndpoints'
 import educationSupportPlanEndpoints from './educationSupportPlanEndpoints'
 import educationSupportPlanCreationScheduleEndpoints from './educationSupportPlanCreationScheduleEndpoints'
+import additionalLearningNeedsScreenerEndpoints from './additionalLearningNeedsScreenerEndpoints'
 
 export default {
   stubSupportAdditionalNeedsApiPing: stubPing('support-additional-needs-api'),
@@ -14,4 +15,5 @@ export default {
   ...strengthsEndpoints,
   ...educationSupportPlanEndpoints,
   ...educationSupportPlanCreationScheduleEndpoints,
+  ...additionalLearningNeedsScreenerEndpoints,
 }
