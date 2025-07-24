@@ -19,7 +19,7 @@ context('Create a Challenge', () => {
     cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
     cy.task('stubCreateChallenges', prisonNumber)
-    cy.task('stubGetChallenges', prisonNumber)
+    cy.task('stubGetChallenges', { prisonNumber })
   })
 
   it('should be able to navigate directly to the create challenge page', () => {
