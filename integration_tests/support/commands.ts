@@ -1,4 +1,4 @@
-import { addMonths, format, startOfToday } from 'date-fns'
+import { addMonths, format, startOfToday, subDays } from 'date-fns'
 import { RequestPatternBuilder } from '../mockApis/wiremock/requestPatternBuilder'
 import { verify } from '../mockApis/wiremock'
 import WhoCreatedThePlanPage from '../pages/education-support-plan/whoCreatedThePlanPage'
@@ -12,9 +12,15 @@ import ExamArrangementsPage from '../pages/education-support-plan/examArrangemen
 import EducationHealthCarePlanPage from '../pages/education-support-plan/educationHealthCarePlanPage'
 import LearningNeedsSupportPractitionerSupportPage from '../pages/education-support-plan/learningNeedsSupportPractitionerSupportPage'
 import ReviewSupportPlanPage from '../pages/education-support-plan/reviewSupportPlanPage'
-import CheckYourAnswersPage from '../pages/education-support-plan/checkYourAnswersPage'
+import EducationSupportPlanCheckYourAnswersPage from '../pages/education-support-plan/checkYourAnswersPage'
 import AdditionalInformationPage from '../pages/education-support-plan/additionalInformationPage'
 import IndividualSupportRequirementsPage from '../pages/education-support-plan/individualSupportRequirementsPage'
+import ScreenerDatePage from '../pages/additional-learning-needs-screener/screenerDatePage'
+import AddChallengesPage from '../pages/additional-learning-needs-screener/addChallengesPage'
+import ChallengeType from '../../server/enums/challengeType'
+import AddStrengthsPage from '../pages/additional-learning-needs-screener/addStrengthsPage'
+import StrengthType from '../../server/enums/strengthType'
+import AdditionalLearningNeedsScreenerCheckYourAnswersPage from '../pages/additional-learning-needs-screener/checkYourAnswersPage'
 
 Cypress.Commands.add('signIn', (options = { failOnStatusCode: true }) => {
   cy.request('/')
@@ -67,6 +73,26 @@ Cypress.Commands.add(
       .submitPageTo(ReviewSupportPlanPage)
       //
       .setReviewDate(format(reviewDate, 'd/M/yyyy'))
-      .submitPageTo(CheckYourAnswersPage)
+      .submitPageTo(EducationSupportPlanCheckYourAnswersPage)
+  },
+)
+
+Cypress.Commands.add(
+  'recordAlnScreenerToArriveOnCheckYourAnswers',
+  (options?: { prisonNumber?: string; screenerDate?: Date }) => {
+    const screenerDate = options?.screenerDate || subDays(startOfToday(), 1)
+
+    cy.visit(`/aln-screener/${options?.prisonNumber || 'G6115VJ'}/create/screener-date`)
+
+    Page.verifyOnPage(ScreenerDatePage) //
+      .setScreenerDate(format(screenerDate, 'd/M/yyyy'))
+      //
+      .submitPageTo(AddChallengesPage)
+      .selectChallenge(ChallengeType.NONE)
+      //
+      .submitPageTo(AddStrengthsPage)
+      .selectStrength(StrengthType.NONE)
+      //
+      .submitPageTo(AdditionalLearningNeedsScreenerCheckYourAnswersPage)
   },
 )

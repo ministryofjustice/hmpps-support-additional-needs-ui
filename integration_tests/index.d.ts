@@ -11,5 +11,7 @@ declare namespace Cypress {
     wiremockVerifyNoInteractions(requestPatternBuilder: RequestPatternBuilder): Chainable<*>
 
     createEducationSupportPlanToArriveOnCheckYourAnswers(options?: { prisonNumber?: string; reviewDate?: Date })
+
+    recordAlnScreenerToArriveOnCheckYourAnswers(options?: { prisonNumber?: string; screenerDate?: Date })
   }
 }
