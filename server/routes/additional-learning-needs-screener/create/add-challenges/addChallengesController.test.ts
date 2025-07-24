@@ -47,12 +47,29 @@ describe('addChallengesController', () => {
   it('should render view given previously submitted invalid form', async () => {
     // Given
     const invalidForm = {
-      challengeTypeCodes: 'not-a-valid-value',
+      challengeTypeCodes: ['not-a-valid-value'],
     }
     res.locals.invalidForm = invalidForm
 
     const expectedViewTemplate = 'pages/additional-learning-needs-screener/add-challenges/index'
     const expectedViewModel = { form: invalidForm }
+
+    // When
+    await controller.getAddChallengesView(req, res, next)
+
+    // Then
+    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+  })
+
+  it('should render view given previously submitted invalid form where challengeTypeCodes is not present', async () => {
+    // Given
+    const invalidForm = {
+      challengeTypeCodes: undefined as unknown as string[],
+    }
+    res.locals.invalidForm = invalidForm
+
+    const expectedViewTemplate = 'pages/additional-learning-needs-screener/add-challenges/index'
+    const expectedViewModel = { form: { challengeTypeCodes: [] as string[] } }
 
     // When
     await controller.getAddChallengesView(req, res, next)

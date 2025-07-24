@@ -1,13 +1,19 @@
 import { NextFunction, Request, Response } from 'express'
 import type { AlnScreenerDto } from 'dto'
 import ChallengeType from '../../../../enums/challengeType'
+import { asArray } from '../../../../utils/utils'
 
 export default class AddChallengesController {
   getAddChallengesView = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
     const { alnScreenerDto } = req.journeyData
 
-    const addChallengesForm = invalidForm ?? this.populateFormFromDto(alnScreenerDto)
+    const addChallengesForm = invalidForm
+      ? {
+          ...invalidForm,
+          challengeTypeCodes: asArray(invalidForm.challengeTypeCodes),
+        }
+      : this.populateFormFromDto(alnScreenerDto)
 
     const viewRenderArgs = { form: addChallengesForm }
     return res.render('pages/additional-learning-needs-screener/add-challenges/index', viewRenderArgs)
