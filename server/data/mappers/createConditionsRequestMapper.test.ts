@@ -5,6 +5,7 @@ import {
   aValidCreateConditionsRequest,
 } from '../../testsupport/conditionRequestTestDataBuilder'
 import ConditionSource from '../../enums/conditionSource'
+import ConditionType from '../../enums/conditionType'
 
 describe('createConditionsRequestMapper', () => {
   describe('toCreateConditionsRequest', () => {
@@ -14,14 +15,14 @@ describe('createConditionsRequestMapper', () => {
         aValidConditionDto({
           prisonNumber: 'A1234BC',
           prisonId: 'BXI',
-          conditionTypeCode: 'DYSLEXIA',
+          conditionTypeCode: ConditionType.DYSLEXIA,
           source: ConditionSource.SELF_DECLARED,
           detail: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
         }),
         aValidConditionDto({
           prisonNumber: 'A1234BC',
           prisonId: 'BXI',
-          conditionTypeCode: 'DYSCALCULIA',
+          conditionTypeCode: ConditionType.DYSCALCULIA,
           source: ConditionSource.SELF_DECLARED,
           detail:
             'John struggles with numeracy and feels he has this condition, though has not been seen by a medical professional about it',
@@ -29,7 +30,7 @@ describe('createConditionsRequestMapper', () => {
         aValidConditionDto({
           prisonNumber: 'A1234BC',
           prisonId: 'BXI',
-          conditionTypeCode: 'ADHD',
+          conditionTypeCode: ConditionType.ADHD,
           source: ConditionSource.CONFIRMED_DIAGNOSIS,
           detail: null,
         }),
