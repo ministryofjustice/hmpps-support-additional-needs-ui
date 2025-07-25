@@ -57,7 +57,7 @@ declare module 'dto' {
   export interface ConditionDto {
     prisonNumber: string
     prisonId: string
-    conditionTypeCode: string
+    conditionTypeCode: ConditionType
     source: ConditionSource
     detail?: string
   }

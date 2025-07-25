@@ -23,6 +23,7 @@ import {
   formatStrengthTypeScreenValueFilter,
   formatStrengthTypeHintTextFilter,
 } from '../filters/formatStrengthTypeFilter'
+import formatConditionTypeScreenValueFilter from '../filters/formatConditionTypeFilter'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -70,6 +71,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatChallengeCategoryScreenValue', formatChallengeCategoryScreenValueFilter)
   njkEnv.addFilter('formatChallengeTypeScreenValue', formatChallengeTypeScreenValueFilter)
   njkEnv.addFilter('formatChallengeTypeHintText', formatChallengeTypeHintTextFilter)
+  njkEnv.addFilter('formatConditionTypeScreenValue', formatConditionTypeScreenValueFilter)
 
   // Name format filters
   njkEnv.addFilter('formatFIRST_NAME_ONLY', formatPrisonerNameFilter(NameFormat.FIRST_NAME_ONLY))

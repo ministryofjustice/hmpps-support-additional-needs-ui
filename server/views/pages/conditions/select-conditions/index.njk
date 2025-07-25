@@ -32,67 +32,67 @@
                 items: [
                   {
                     value: "ABI",
-                    text: "ABI"
+                    text: "ABI" | formatConditionTypeScreenValue | default("ABI", true)
                   },
                   {
                     value: "ADHD",
-                    text: "ADHD"
+                    text: "ADHD" | formatConditionTypeScreenValue | default("ADHD", true)
                   },
                   {
                     value: "ASC",
-                    text: "ASC"
+                    text: "ASC" | formatConditionTypeScreenValue | default("ASC", true)
                   },
                   {
                     value: "DLD_LANG",
-                    text: "DLD_LANG"
+                    text: "DLD_LANG" | formatConditionTypeScreenValue | default("DLD_LANG", true)
                   },
                   {
                     value: "LD_DOWN",
-                    text: "LD_DOWN"
+                    text: "LD_DOWN" | formatConditionTypeScreenValue | default("LD_DOWN", true)
                   },
                   {
                     value: "DYSCALCULIA",
-                    text: "DYSCALCULIA"
+                    text: "DYSCALCULIA" | formatConditionTypeScreenValue | default("DYSCALCULIA", true)
                   },
                   {
                     value: "DYSLEXIA",
-                    text: "DYSLEXIA"
+                    text: "DYSLEXIA" | formatConditionTypeScreenValue | default("DYSLEXIA", true)
                   },
                   {
                     value: "DYSPRAXIA",
-                    text: "DYSPRAXIA"
+                    text: "DYSPRAXIA" | formatConditionTypeScreenValue | default("DYSPRAXIA", true)
                   },
                   {
                     value: "FASD",
-                    text: "FASD"
+                    text: "FASD" | formatConditionTypeScreenValue | default("FASD", true)
                   },
                   {
                     value: "DLD_HEAR",
-                    text: "DLD_HEAR"
+                    text: "DLD_HEAR" | formatConditionTypeScreenValue | default("DLD_HEAR", true)
                   },
                   {
                     value: "LD_OTHER",
-                    text: "LD_OTHER"
+                    text: "LD_OTHER" | formatConditionTypeScreenValue | default("LD_OTHER", true)
                   },
                   {
                     value: "MENTAL_HEALTH",
-                    text: "MENTAL_HEALTH"
+                    text: "MENTAL_HEALTH" | formatConditionTypeScreenValue | default("MENTAL_HEALTH", true)
                   },
                   {
                     value: "NEURODEGEN",
-                    text: "NEURODEGEN"
+                    text: "NEURODEGEN" | formatConditionTypeScreenValue | default("NEURODEGEN", true)
                   },
                   {
                     value: "PHYSICAL_OTHER",
-                    text: "PHYSICAL_OTHER"
+                    text: "PHYSICAL_OTHER" | formatConditionTypeScreenValue | default("PHYSICAL_OTHER", true)
                   },
                   {
                     value: "TOURETTES",
-                    text: "TOURETTES"
+                    text: "TOURETTES" | formatConditionTypeScreenValue | default("TOURETTES", true)
                   },
                   {
                     value: "VISUAL_IMPAIR",
-                    text: "VISUAL_IMPAIR"
+                    text: "VISUAL_IMPAIR" | formatConditionTypeScreenValue | default("VISUAL_IMPAIR", true)
                   }
                 ],
                 errorMessage: errors | findError('conditions')
@@ -110,23 +110,23 @@
                 items: [
                   {
                     value: "OTHER",
-                    text: "OTHER"
+                    text: "OTHER" | formatConditionTypeScreenValue | default("OTHER", true)
                   },
                   {
                     value: "DLD_OTHER",
-                    text: "DLD_OTHER"
+                    text: "DLD_OTHER" | formatConditionTypeScreenValue | default("DLD_OTHER", true)
                   },
                   {
                     value: "LEARN_DIFF_OTHER",
-                    text: "LEARN_DIFF_OTHER"
+                    text: "LEARN_DIFF_OTHER" | formatConditionTypeScreenValue | default("LEARN_DIFF_OTHER", true)
                   },
                   {
                     value: "LONG_TERM_OTHER",
-                    text: "LONG_TERM_OTHER"
+                    text: "LONG_TERM_OTHER" | formatConditionTypeScreenValue | default("LONG_TERM_OTHER", true)
                   },
                   {
                     value: "NEURO_OTHER",
-                    text: "NEURO_OTHER"
+                    text: "NEURO_OTHER" | formatConditionTypeScreenValue | default("NEURO_OTHER", true)
                   }
                 ]
               }) }}
