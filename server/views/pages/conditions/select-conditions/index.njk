@@ -20,6 +20,19 @@
         <div class="govuk-form-group">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
+          {% macro conditionDetailsInput(conditionType, value) %}
+            {{ govukInput({
+              id: conditionType + "_conditionDetails",
+              name: "conditionDetails[" + conditionType + "]",
+              value: value,
+              maxlength: 200,
+              label: {
+                text: "Add details"
+              },
+              errorMessage: errors | findError(conditionType + "_conditionDetails")
+            }) }}
+          {% endmacro %}
+
           <div class="govuk-grid-row">
             {# left hand column of check boxes #}
             <div class="govuk-grid-column-one-half">
@@ -72,19 +85,43 @@
                   },
                   {
                     value: "LD_OTHER",
-                    text: "LD_OTHER" | formatConditionTypeScreenValue | default("LD_OTHER", true)
+                    text: "LD_OTHER" | formatConditionTypeScreenValue | default("LD_OTHER", true),
+                    conditional: {
+                      html: conditionDetailsInput(
+                        "LD_OTHER",
+                        form.conditionDetails["LD_OTHER"]
+                      )
+                    }
                   },
                   {
                     value: "MENTAL_HEALTH",
-                    text: "MENTAL_HEALTH" | formatConditionTypeScreenValue | default("MENTAL_HEALTH", true)
+                    text: "MENTAL_HEALTH" | formatConditionTypeScreenValue | default("MENTAL_HEALTH", true),
+                    conditional: {
+                      html: conditionDetailsInput(
+                        "MENTAL_HEALTH",
+                        form.conditionDetails["MENTAL_HEALTH"]
+                      )
+                    }
                   },
                   {
                     value: "NEURODEGEN",
-                    text: "NEURODEGEN" | formatConditionTypeScreenValue | default("NEURODEGEN", true)
+                    text: "NEURODEGEN" | formatConditionTypeScreenValue | default("NEURODEGEN", true),
+                    conditional: {
+                      html: conditionDetailsInput(
+                        "NEURODEGEN",
+                        form.conditionDetails["NEURODEGEN"]
+                      )
+                    }
                   },
                   {
                     value: "PHYSICAL_OTHER",
-                    text: "PHYSICAL_OTHER" | formatConditionTypeScreenValue | default("PHYSICAL_OTHER", true)
+                    text: "PHYSICAL_OTHER" | formatConditionTypeScreenValue | default("PHYSICAL_OTHER", true),
+                    conditional: {
+                      html: conditionDetailsInput(
+                        "PHYSICAL_OTHER",
+                        form.conditionDetails["PHYSICAL_OTHER"]
+                      )
+                    }
                   },
                   {
                     value: "TOURETTES",
@@ -92,7 +129,13 @@
                   },
                   {
                     value: "VISUAL_IMPAIR",
-                    text: "VISUAL_IMPAIR" | formatConditionTypeScreenValue | default("VISUAL_IMPAIR", true)
+                    text: "VISUAL_IMPAIR" | formatConditionTypeScreenValue | default("VISUAL_IMPAIR", true),
+                    conditional: {
+                      html: conditionDetailsInput(
+                        "VISUAL_IMPAIR",
+                        form.conditionDetails["VISUAL_IMPAIR"]
+                      )
+                    }
                   }
                 ],
                 errorMessage: errors | findError('conditions')
@@ -110,23 +153,53 @@
                 items: [
                   {
                     value: "OTHER",
-                    text: "OTHER" | formatConditionTypeScreenValue | default("OTHER", true)
+                    text: "OTHER" | formatConditionTypeScreenValue | default("OTHER", true),
+                    conditional: {
+                      html: conditionDetailsInput(
+                        "OTHER",
+                        form.conditionDetails["OTHER"]
+                      )
+                    }
                   },
                   {
                     value: "DLD_OTHER",
-                    text: "DLD_OTHER" | formatConditionTypeScreenValue | default("DLD_OTHER", true)
+                    text: "DLD_OTHER" | formatConditionTypeScreenValue | default("DLD_OTHER", true),
+                    conditional: {
+                      html: conditionDetailsInput(
+                        "DLD_OTHER",
+                        form.conditionDetails["DLD_OTHER"]
+                      )
+                    }
                   },
                   {
                     value: "LEARN_DIFF_OTHER",
-                    text: "LEARN_DIFF_OTHER" | formatConditionTypeScreenValue | default("LEARN_DIFF_OTHER", true)
+                    text: "LEARN_DIFF_OTHER" | formatConditionTypeScreenValue | default("LEARN_DIFF_OTHER", true),
+                    conditional: {
+                      html: conditionDetailsInput(
+                        "LEARN_DIFF_OTHER",
+                        form.conditionDetails["LEARN_DIFF_OTHER"]
+                      )
+                    }
                   },
                   {
                     value: "LONG_TERM_OTHER",
-                    text: "LONG_TERM_OTHER" | formatConditionTypeScreenValue | default("LONG_TERM_OTHER", true)
+                    text: "LONG_TERM_OTHER" | formatConditionTypeScreenValue | default("LONG_TERM_OTHER", true),
+                    conditional: {
+                      html: conditionDetailsInput(
+                        "LONG_TERM_OTHER",
+                        form.conditionDetails["LONG_TERM_OTHER"]
+                      )
+                    }
                   },
                   {
                     value: "NEURO_OTHER",
-                    text: "NEURO_OTHER" | formatConditionTypeScreenValue | default("NEURO_OTHER", true)
+                    text: "NEURO_OTHER" | formatConditionTypeScreenValue | default("NEURO_OTHER", true),
+                    conditional: {
+                      html: conditionDetailsInput(
+                        "NEURO_OTHER",
+                        form.conditionDetails["NEURO_OTHER"]
+                      )
+                    }
                   }
                 ]
               }) }}
