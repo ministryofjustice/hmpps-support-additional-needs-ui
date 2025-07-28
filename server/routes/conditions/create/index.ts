@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
@@ -8,12 +8,14 @@ import createEmptyConditionsListIfNotInJourneyData from './middleware/createEmpt
 import checkConditionsListExistsInJourneyData from './middleware/checkConditionsListExistsInJourneyData'
 import { validate } from '../../../middleware/validationMiddleware'
 import selectConditionsSchema from '../validationSchemas/selectConditionsSchema'
+import DetailsController from './details/detailsController'
 
 const createConditionsRoutes = (services: Services): Router => {
   const { journeyDataService } = services
   const router = Router({ mergeParams: true })
 
   const selectConditionsController = new SelectConditionsController()
+  const detailsController = new DetailsController()
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
@@ -34,9 +36,7 @@ const createConditionsRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/details', [
     checkConditionsListExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Add Conditions - enter conditions details page')
-    },
+    asyncMiddleware(detailsController.getDetailsView),
   ])
 
   return router
