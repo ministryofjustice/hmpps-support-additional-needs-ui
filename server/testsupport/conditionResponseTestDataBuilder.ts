@@ -13,7 +13,8 @@ const aValidConditionResponse = (options?: {
   active?: boolean
   conditionTypeCode?: string
   source?: ConditionSource
-  detail?: string
+  conditionDetails?: string
+  conditionName?: string
   createdBy?: string
   createdByDisplayName?: string
   createdAt?: string
@@ -26,13 +27,15 @@ const aValidConditionResponse = (options?: {
   reference: options?.reference || 'c88a6c48-97e2-4c04-93b5-98619966447b',
   active: options?.active == null ? true : options?.active,
   source: options?.source || ConditionSource.SELF_DECLARED,
-  detail:
-    options?.detail === null
+  conditionDetails:
+    options?.conditionDetails === null
       ? null
-      : options?.detail || 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+      : options?.conditionDetails ||
+        'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
   conditionType: {
     code: options?.conditionTypeCode || 'DYSLEXIA',
   },
+  conditionName: options?.conditionName === null ? null : options?.conditionName || 'Phonological dyslexia',
   ...validAuditFields(options),
 })
 
