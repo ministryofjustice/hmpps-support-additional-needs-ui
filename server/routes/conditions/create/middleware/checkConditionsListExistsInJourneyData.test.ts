@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import checkChallengeDtoExistsInJourneyData from './checkChallengeDtoExistsInJourneyData'
-import aValidChallengeDto from '../../../../testsupport/challengeDtoTestDataBuilder'
+import checkConditionsListExistsInJourneyData from './checkConditionsListExistsInJourneyData'
+import { aValidConditionsList } from '../../../../testsupport/conditionDtoTestDataBuilder'
 
-describe('checkChallengeDtoExistsInJourneyData', () => {
+describe('checkConditionsListExistsInJourneyData', () => {
   const prisonNumber = 'A1234BC'
 
   const req = {
@@ -20,24 +20,24 @@ describe('checkChallengeDtoExistsInJourneyData', () => {
     req.params = { prisonNumber }
   })
 
-  it(`should invoke next handler given ChallengeDto exists in journeyData`, async () => {
+  it(`should invoke next handler given ConditionsList exists in journeyData`, async () => {
     // Given
-    req.journeyData.challengeDto = aValidChallengeDto()
+    req.journeyData.conditionsList = aValidConditionsList()
 
     // When
-    await checkChallengeDtoExistsInJourneyData(req, res, next)
+    await checkConditionsListExistsInJourneyData(req, res, next)
 
     // Then
     expect(next).toHaveBeenCalled()
     expect(res.redirect).not.toHaveBeenCalled()
   })
 
-  it(`should redirect to Profile Overview page given no ChallengeDto exists in journeyData`, async () => {
+  it(`should redirect to Profile Overview page given no ConditionsList exists in journeyData`, async () => {
     // Given
-    req.journeyData.challengeDto = undefined
+    req.journeyData.conditionsList = undefined
 
     // When
-    await checkChallengeDtoExistsInJourneyData(req, res, next)
+    await checkConditionsListExistsInJourneyData(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(`/profile/${prisonNumber}/overview`)
@@ -49,7 +49,7 @@ describe('checkChallengeDtoExistsInJourneyData', () => {
     req.journeyData = undefined
 
     // When
-    await checkChallengeDtoExistsInJourneyData(req, res, next)
+    await checkConditionsListExistsInJourneyData(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(`/profile/${prisonNumber}/overview`)

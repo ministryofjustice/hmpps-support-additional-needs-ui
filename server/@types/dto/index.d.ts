@@ -54,8 +54,12 @@ declare module 'dto' {
     howIdentifiedOther?: string
   }
 
-  export interface ConditionDto {
+  export interface ConditionsList {
     prisonNumber: string
+    conditions: Array<ConditionDto>
+  }
+
+  export interface ConditionDto {
     prisonId: string
     conditionTypeCode: ConditionType
     conditionName?: string

@@ -1,8 +1,8 @@
 import type { CreateConditionsRequest, ConditionRequest } from 'supportAdditionalNeedsApiClient'
-import type { ConditionDto } from 'dto'
+import type { ConditionDto, ConditionsList } from 'dto'
 
-const toCreateConditionsRequest = (conditions: Array<ConditionDto>): CreateConditionsRequest => ({
-  conditions: conditions.map(toCreateConditionRequest),
+const toCreateConditionsRequest = (conditionList: ConditionsList): CreateConditionsRequest => ({
+  conditions: conditionList.conditions.map(toCreateConditionRequest),
 })
 
 const toCreateConditionRequest = (condition: ConditionDto): ConditionRequest => ({

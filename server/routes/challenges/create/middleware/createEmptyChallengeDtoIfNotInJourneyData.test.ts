@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import type { ChallengeDto } from 'dto'
 import createEmptyChallengeDtoIfNotInJourneyData from './createEmptyChallengeDtoIfNotInJourneyData'
 
-describe('createEmptyStrengthDtoIfNotInJourneyData', () => {
+describe('createEmptyChallengeDtoIfNotInJourneyData', () => {
   const prisonNumber = 'A1234BC'
   const prisonId = 'MDI'
 

@@ -1,16 +1,22 @@
-import type { ConditionDto } from 'dto'
+import type { ConditionDto, ConditionsList } from 'dto'
 import ConditionSource from '../enums/conditionSource'
 import ConditionType from '../enums/conditionType'
 
-const aValidConditionDto = (options?: {
+const aValidConditionsList = (options?: {
   prisonNumber?: string
+  conditions?: Array<ConditionDto>
+}): ConditionsList => ({
+  prisonNumber: options?.prisonNumber || 'A1234BC',
+  conditions: options?.conditions || [aValidConditionDto()],
+})
+
+const aValidConditionDto = (options?: {
   prisonId?: string
   conditionTypeCode?: ConditionType
   conditionName?: string
   conditionDetails?: string
   source?: ConditionSource
 }): ConditionDto => ({
-  prisonNumber: options?.prisonNumber || 'A1234BC',
   prisonId: options?.prisonId || 'BXI',
   conditionTypeCode: options?.conditionTypeCode || ConditionType.DYSLEXIA,
   source: options?.source || ConditionSource.SELF_DECLARED,
@@ -22,4 +28,4 @@ const aValidConditionDto = (options?: {
   conditionName: options?.conditionName === null ? null : options?.conditionName || 'Phonological dyslexia',
 })
 
-export default aValidConditionDto
+export { aValidConditionDto, aValidConditionsList }

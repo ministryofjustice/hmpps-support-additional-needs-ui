@@ -4,6 +4,10 @@ import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import SelectConditionsController from './select-conditions/selectConditionsController'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import createEmptyConditionsListIfNotInJourneyData from './middleware/createEmptyConditionsListIfNotInJourneyData'
+import checkConditionsListExistsInJourneyData from './middleware/checkConditionsListExistsInJourneyData'
+import { validate } from '../../../middleware/validationMiddleware'
+import selectConditionsSchema from '../validationSchemas/selectConditionsSchema'
 
 const createConditionsRoutes = (services: Services): Router => {
   const { journeyDataService } = services
@@ -18,9 +22,18 @@ const createConditionsRoutes = (services: Services): Router => {
   ])
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
 
-  router.get('/:journeyId/select-conditions', [asyncMiddleware(selectConditionsController.getSelectConditionsView)])
+  router.get('/:journeyId/select-conditions', [
+    createEmptyConditionsListIfNotInJourneyData,
+    asyncMiddleware(selectConditionsController.getSelectConditionsView),
+  ])
+  router.post('/:journeyId/select-conditions', [
+    checkConditionsListExistsInJourneyData,
+    validate(selectConditionsSchema),
+    asyncMiddleware(selectConditionsController.submitSelectConditionsForm),
+  ])
 
   router.get('/:journeyId/details', [
+    checkConditionsListExistsInJourneyData,
     async (req: Request, res: Response) => {
       res.send('Add Conditions - enter conditions details page')
     },
