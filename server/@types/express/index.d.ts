@@ -27,7 +27,7 @@ export declare global {
       educationSupportPlanDto?: EducationSupportPlanDto
       refuseEducationSupportPlanDto?: RefuseEducationSupportPlanDto
       challengeDto?: ChallengeDto
-      conditionDto?: ConditionDto
+      conditionsList?: ConditionsList
       strengthDto?: StrengthDto
       alnScreenerDto?: AlnScreenerDto
     }

@@ -1,6 +1,6 @@
 import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiClient'
 import ConditionService from './conditionService'
-import aValidConditionDto from '../testsupport/conditionDtoTestDataBuilder'
+import { aValidConditionsList } from '../testsupport/conditionDtoTestDataBuilder'
 import { aValidCreateConditionsRequest } from '../testsupport/conditionRequestTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
@@ -21,13 +21,13 @@ describe('conditionService', () => {
   describe('createConditions', () => {
     it('should create conditions', async () => {
       // Given
-      const unPersistedConditionDtos = [aValidConditionDto()]
+      const unPersistedConditions = aValidConditionsList()
       const expectedCreateConditionsRequest = aValidCreateConditionsRequest()
 
       supportAdditionalNeedsApiClient.createConditions.mockResolvedValue(null)
 
       // When
-      await service.createConditions(username, unPersistedConditionDtos)
+      await service.createConditions(username, unPersistedConditions)
 
       // Then
       expect(supportAdditionalNeedsApiClient.createConditions).toHaveBeenCalledWith(
@@ -42,11 +42,11 @@ describe('conditionService', () => {
       const expectedError = new Error('Internal Server Error')
       supportAdditionalNeedsApiClient.createConditions.mockRejectedValue(expectedError)
 
-      const unPersistedConditionDtos = [aValidConditionDto()]
+      const unPersistedConditions = aValidConditionsList()
       const expectedCreateConditionsRequest = aValidCreateConditionsRequest()
 
       // When
-      const actual = await service.createConditions(username, unPersistedConditionDtos).catch(e => e)
+      const actual = await service.createConditions(username, unPersistedConditions).catch(e => e)
 
       // Then
       expect(actual).toEqual(expectedError)
