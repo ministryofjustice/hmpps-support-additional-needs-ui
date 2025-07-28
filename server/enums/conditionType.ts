@@ -1,4 +1,4 @@
-const enum ConditionType {
+enum ConditionType {
   ABI = 'ABI',
   ADHD = 'ADHD',
   ASC = 'ASC',
