@@ -58,8 +58,9 @@ declare module 'dto' {
     prisonNumber: string
     prisonId: string
     conditionTypeCode: ConditionType
+    conditionName?: string
+    conditionDetails: string
     source: ConditionSource
-    detail?: string
   }
 
   export interface StrengthDto {

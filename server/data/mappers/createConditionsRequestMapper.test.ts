@@ -17,22 +17,25 @@ describe('createConditionsRequestMapper', () => {
           prisonId: 'BXI',
           conditionTypeCode: ConditionType.DYSLEXIA,
           source: ConditionSource.SELF_DECLARED,
-          detail: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+          conditionDetails: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+          conditionName: 'Phonological dyslexia',
         }),
         aValidConditionDto({
           prisonNumber: 'A1234BC',
           prisonId: 'BXI',
           conditionTypeCode: ConditionType.DYSCALCULIA,
           source: ConditionSource.SELF_DECLARED,
-          detail:
+          conditionDetails:
             'John struggles with numeracy and feels he has this condition, though has not been seen by a medical professional about it',
+          conditionName: null,
         }),
         aValidConditionDto({
           prisonNumber: 'A1234BC',
           prisonId: 'BXI',
           conditionTypeCode: ConditionType.ADHD,
           source: ConditionSource.CONFIRMED_DIAGNOSIS,
-          detail: null,
+          conditionDetails: 'John has difficulty paying attention and is generally hyperactive and impulsive.',
+          conditionName: null,
         }),
       ]
 
@@ -42,20 +45,24 @@ describe('createConditionsRequestMapper', () => {
             prisonId: 'BXI',
             conditionTypeCode: 'DYSLEXIA',
             source: ConditionSource.SELF_DECLARED,
-            detail: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+            conditionDetails:
+              'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+            conditionName: 'Phonological dyslexia',
           }),
           aValidConditionRequest({
             prisonId: 'BXI',
             conditionTypeCode: 'DYSCALCULIA',
             source: ConditionSource.SELF_DECLARED,
-            detail:
+            conditionDetails:
               'John struggles with numeracy and feels he has this condition, though has not been seen by a medical professional about it',
+            conditionName: null,
           }),
           aValidConditionRequest({
             prisonId: 'BXI',
             conditionTypeCode: 'ADHD',
             source: ConditionSource.CONFIRMED_DIAGNOSIS,
-            detail: null,
+            conditionDetails: 'John has difficulty paying attention and is generally hyperactive and impulsive.',
+            conditionName: null,
           }),
         ],
       })

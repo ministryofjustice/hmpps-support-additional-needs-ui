@@ -11,15 +11,18 @@ const aValidConditionRequest = (options?: {
   prisonId?: string
   conditionTypeCode?: string
   source?: ConditionSource
-  detail?: string
+  conditionDetails?: string
+  conditionName?: string
 }): ConditionRequest => ({
   prisonId: options?.prisonId || 'BXI',
   conditionTypeCode: options?.conditionTypeCode || 'DYSLEXIA',
   source: options?.source || ConditionSource.SELF_DECLARED,
-  detail:
-    options?.detail === null
+  conditionDetails:
+    options?.conditionDetails === null
       ? null
-      : options?.detail || 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+      : options?.conditionDetails ||
+        'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+  conditionName: options?.conditionName === null ? null : options?.conditionName || 'Phonological dyslexia',
 })
 
 export { aValidConditionRequest, aValidCreateConditionsRequest }

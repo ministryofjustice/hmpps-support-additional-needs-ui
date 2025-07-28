@@ -52,6 +52,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/profile/{prisonNumber}/support-strategies/{supportStrategyReference}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['updateSupportStrategy']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/profile/{prisonNumber}/strengths/{strengthReference}': {
     parameters: {
       query?: never
@@ -100,6 +116,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/profile/{prisonNumber}/support-strategies': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getSupportStrategies']
+    put?: never
+    post: operations['createSupportStrategies']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/profile/{prisonNumber}/strengths': {
     parameters: {
       query?: never
@@ -126,22 +158,6 @@ export interface paths {
     get?: never
     put?: never
     post: operations['createPersonInEducationWithNeeds']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/profile/{prisonNumber}/plan-creation-schedule': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['getPlanCreationSchedules']
-    put?: never
-    post: operations['createPlanCreationSchedule']
     delete?: never
     options?: never
     head?: never
@@ -308,6 +324,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/profile/{prisonNumber}/plan-creation-schedule': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getPlanCreationSchedules']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -320,11 +352,8 @@ export interface components {
       /** Format: int32 */
       messagesFoundCount: number
     }
-    UpdateStrengthRequest: {
-      /**
-       * @description Whether or not the strength is active
-       * @example null
-       */
+    UpdateSupportStrategyRequest: {
+      /** @example null */
       active: boolean
       /**
        * @description The Prison identifier.
@@ -374,6 +403,73 @@ export interface components {
        * @example null
        */
       active?: boolean
+    }
+    SupportStrategyResponse: {
+      /**
+       * Format: uuid
+       * @example null
+       */
+      reference: string
+      /** @example null */
+      supportStrategyType: components['schemas']['ReferenceData']
+      /** @example null */
+      active: boolean
+      /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
+      /** @example null */
+      detail?: string
+    }
+    UpdateStrengthRequest: {
+      /**
+       * @description Whether or not the strength is active
+       * @example null
+       */
+      active: boolean
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
     }
     StrengthResponse: {
       /**
@@ -538,12 +634,12 @@ export interface components {
        * @description more granular information about the condition
        * @example (for Mental Health) Social Anxiety
        */
-      conditionDetail?: string
+      conditionName?: string
       /**
        * @description additional detail about the condition
        * @example null
        */
-      detail?: string
+      conditionDetails?: string
     }
     UpdateChallengeRequest: {
       /**
@@ -643,6 +739,28 @@ export interface components {
        */
       howIdentifiedOther?: string
     }
+    CreateSupportStrategiesRequest: {
+      /** @example null */
+      supportStrategies: components['schemas']['SupportStrategyRequest'][]
+    }
+    SupportStrategyRequest: {
+      /** @example null */
+      supportStrategyTypeCode: string
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+      /**
+       * @description Optional further explanation or description of this strategy
+       * @example null
+       */
+      detail?: string
+    }
+    SupportStrategyListResponse: {
+      /** @example null */
+      supportStrategies: components['schemas']['SupportStrategyResponse'][]
+    }
     CreateStrengthsRequest: {
       /**
        * @description A List containing zero or more Strengths.
@@ -691,7 +809,7 @@ export interface components {
        * @description A List containing zero or more Strengths.
        * @example null
        */
-      strengths?: components['schemas']['StrengthResponse'][]
+      strengths: components['schemas']['StrengthResponse'][]
     }
     EducationNeedRequest: {
       prisonId: string
@@ -700,6 +818,8 @@ export interface components {
       conditionSelfDeclared: boolean
       conditionConfirmed: boolean
       challengeNotALN: boolean
+      strengthNotALN: boolean
+      alnScreener: boolean
       inEducation: boolean
     }
     PlanCreationScheduleEntity: {
@@ -742,11 +862,6 @@ export interface components {
       updatedBy?: string
       /** Format: date-time */
       updatedAt?: string
-    }
-    Request: {
-      /** Format: date */
-      deadlineDate: string
-      prisonId: string
     }
     CreateEducationSupportPlanRequest: {
       /**
@@ -921,12 +1036,12 @@ export interface components {
        * @description more granular information about the condition
        * @example (for Mental Health) Social Anxiety
        */
-      conditionDetail?: string
+      conditionName?: string
       /**
        * @description additional detail about the condition
        * @example null
        */
-      detail?: string
+      conditionDetails?: string
     }
     CreateConditionsRequest: {
       /**
@@ -1122,6 +1237,27 @@ export interface components {
        * @example 2023-11-19
        */
       deadlineDate?: string
+      /**
+       * Format: date
+       * @description If the status of this Plan Creation Schedule is COMPLETED, this field is an ISO-8601 date representing  date that the Education Support Plan was created. This field will only have a value when the status of the  Plan Creation Schedule is COMPLETED, and reflects the date the Education Support Plan was created  (rather than the Plan Creation Schedule)
+       * @example 2023-11-19
+       */
+      planCompletedDate?: string
+      /**
+       * @description If the status of this Plan Creation Schedule is COMPLETED, and the person who met with the  prisoner to create their Education Support Plan was not the same person who keyed it into  the SAN service, this field will be that person's name. This field will only have a value  when the status of the Plan Creation Schedule is COMPLETED, and the person who met with  the prisoner to create their Education Support Plan was not the same person who keyed it into the SAN service. If the Plan Creation Schedule is COMPLETED and this field is null,  consumers of this API can assume the person who created the Education Support Plan is  the person who keyed it in. See field planKeyedInBy
+       * @example null
+       */
+      planCompletedBy?: string
+      /**
+       * @description If the status of this Plan Creation Schedule is COMPLETED, this field is the DPS  username of the user that keyed the Education Support Plan into the system.This  field will only have a value when the status of the Plan Creation Schedule is COMPLETED,  and reflects the logged in user who interacted with the SAN service.
+       * @example null
+       */
+      planKeyedInBy?: string
+      /**
+       * @description The job role of the person who completed the plan.
+       * @example Education coordinator
+       */
+      planCompletedByJobRole?: string
       /**
        * @example null
        * @enum {string}
@@ -1371,6 +1507,27 @@ export interface components {
        */
       updatedAtPrison: string
       /**
+       * Format: date
+       * @description If the status of this Review Schedule is COMPLETED, this field is an ISO-8601 date representing  date that the Review was created. This field will only have a value when the status of the  Review Schedule is COMPLETED, and reflects the date the Review was completed.
+       * @example 2023-11-19
+       */
+      reviewCompletedDate?: string
+      /**
+       * @description If the status of this Review Schedule is COMPLETED, this field is the DPS  username of the user that keyed the Review into the system.This  field will only have a value when the status of the Review Schedule is COMPLETED,  and reflects the logged in user who interacted with the SAN service.
+       * @example null
+       */
+      reviewKeyedInBy?: string
+      /**
+       * @description If the status of this Review Schedule is COMPLETED, and the person who met with the  prisoner to create their Review was not the same person who keyed it into  the SAN service, this field will be that person's name. This field will only have a value  when the status of the Review Schedule is COMPLETED, and the person who met with  the prisoner to create their Education Support Plan was not the same person who keyed it into the SAN service. If the Review Schedule is COMPLETED and this field is null,  consumers of this API can assume the person who created the Review is  the person who keyed it in. See field reviewKeyedInBy
+       * @example null
+       */
+      reviewCompletedBy?: string
+      /**
+       * @description The job role of the person who completed the review.
+       * @example Education coordinator
+       */
+      reviewCompletedByJobRole?: string
+      /**
        * @description An optional reason as to why the Review Schedule is exempted.  Only present when the `status` field is one of the `EXEMPTION_` statuses and the user entered an exemption  reason when marking the Review as Exempted.
        * @example null
        */
@@ -1462,6 +1619,33 @@ export interface operations {
       }
     }
   }
+  updateSupportStrategy: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+        supportStrategyReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateSupportStrategyRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['SupportStrategyResponse']
+        }
+      }
+    }
+  }
   updateStrength: {
     parameters: {
       query?: never
@@ -1543,6 +1727,54 @@ export interface operations {
       }
     }
   }
+  getSupportStrategies: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['SupportStrategyListResponse']
+        }
+      }
+    }
+  }
+  createSupportStrategies: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CreateSupportStrategiesRequest']
+      }
+    }
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['SupportStrategyListResponse']
+        }
+      }
+    }
+  }
   getStrengths: {
     parameters: {
       query?: never
@@ -1603,56 +1835,6 @@ export interface operations {
     requestBody: {
       content: {
         'application/json': components['schemas']['EducationNeedRequest']
-      }
-    }
-    responses: {
-      /** @description Created */
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['PlanCreationScheduleEntity']
-        }
-      }
-    }
-  }
-  getPlanCreationSchedules: {
-    parameters: {
-      query?: {
-        includeAllHistory?: boolean
-      }
-      header?: never
-      path: {
-        prisonNumber: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['PlanCreationSchedulesResponse']
-        }
-      }
-    }
-  }
-  createPlanCreationSchedule: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        prisonNumber: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['Request']
       }
     }
     responses: {
@@ -1898,7 +2080,7 @@ export interface operations {
       header?: never
       path: {
         /** @description Reference data domain. */
-        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH' | 'SUPPORT_STRATEGY'
       }
       cookie?: never
     }
@@ -1924,7 +2106,7 @@ export interface operations {
       header?: never
       path: {
         /** @description Reference data domain. */
-        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH'
+        domain: 'CONDITION' | 'CHALLENGE' | 'STRENGTH' | 'SUPPORT_STRATEGY'
       }
       cookie?: never
     }
@@ -1983,6 +2165,30 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['ReviewSchedulesResponse']
+        }
+      }
+    }
+  }
+  getPlanCreationSchedules: {
+    parameters: {
+      query?: {
+        includeAllHistory?: boolean
+      }
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PlanCreationSchedulesResponse']
         }
       }
     }

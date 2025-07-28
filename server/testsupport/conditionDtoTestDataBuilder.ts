@@ -6,17 +6,20 @@ const aValidConditionDto = (options?: {
   prisonNumber?: string
   prisonId?: string
   conditionTypeCode?: ConditionType
+  conditionName?: string
+  conditionDetails?: string
   source?: ConditionSource
-  detail?: string
 }): ConditionDto => ({
   prisonNumber: options?.prisonNumber || 'A1234BC',
   prisonId: options?.prisonId || 'BXI',
   conditionTypeCode: options?.conditionTypeCode || ConditionType.DYSLEXIA,
   source: options?.source || ConditionSource.SELF_DECLARED,
-  detail:
-    options?.detail === null
+  conditionDetails:
+    options?.conditionDetails === null
       ? null
-      : options?.detail || 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+      : options?.conditionDetails ||
+        'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+  conditionName: options?.conditionName === null ? null : options?.conditionName || 'Phonological dyslexia',
 })
 
 export default aValidConditionDto

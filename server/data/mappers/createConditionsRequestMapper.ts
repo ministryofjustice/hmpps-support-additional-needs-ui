@@ -9,7 +9,8 @@ const toCreateConditionRequest = (condition: ConditionDto): ConditionRequest => 
   prisonId: condition.prisonId,
   conditionTypeCode: condition.conditionTypeCode,
   source: condition.source,
-  detail: condition.detail,
+  conditionName: condition.conditionName,
+  conditionDetails: condition.conditionDetails,
 })
 
 export { toCreateConditionsRequest, toCreateConditionRequest }
