@@ -9,6 +9,7 @@ import checkConditionsListExistsInJourneyData from './middleware/checkConditions
 import { validate } from '../../../middleware/validationMiddleware'
 import selectConditionsSchema from '../validationSchemas/selectConditionsSchema'
 import DetailsController from './details/detailsController'
+import detailsSchema from '../validationSchemas/detailsSchema'
 
 const createConditionsRoutes = (services: Services): Router => {
   const { journeyDataService } = services
@@ -37,6 +38,11 @@ const createConditionsRoutes = (services: Services): Router => {
   router.get('/:journeyId/details', [
     checkConditionsListExistsInJourneyData,
     asyncMiddleware(detailsController.getDetailsView),
+  ])
+  router.post('/:journeyId/details', [
+    checkConditionsListExistsInJourneyData,
+    validate(detailsSchema),
+    asyncMiddleware(detailsController.submitDetailsForm),
   ])
 
   return router

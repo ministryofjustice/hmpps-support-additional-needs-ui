@@ -4,6 +4,7 @@ import SelectConditionsController from './selectConditionsController'
 import { aValidConditionDto } from '../../../../testsupport/conditionDtoTestDataBuilder'
 import ConditionType from '../../../../enums/conditionType'
 import ConditionSource from '../../../../enums/conditionSource'
+import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 
 describe('selectConditionsController', () => {
   const controller = new SelectConditionsController()
@@ -11,6 +12,7 @@ describe('selectConditionsController', () => {
   const username = 'A_USER'
   const prisonId = 'MDI'
   const prisonNumber = 'A1234BC'
+  const prisonerSummary = aValidPrisonerSummary({ prisonNumber })
 
   const req = {
     session: {},
@@ -25,6 +27,7 @@ describe('selectConditionsController', () => {
     render: jest.fn(),
     locals: {
       user: { activeCaseLoadId: prisonId },
+      prisonerSummary,
     },
   } as unknown as Response
   const next = jest.fn()
@@ -49,6 +52,7 @@ describe('selectConditionsController', () => {
       form: {
         conditions: ['ADHD'],
       },
+      prisonerSummary,
     }
 
     // When
@@ -68,6 +72,7 @@ describe('selectConditionsController', () => {
     const expectedViewTemplate = 'pages/conditions/select-conditions/index'
     const expectedViewModel = {
       form: invalidForm,
+      prisonerSummary,
     }
 
     // When
