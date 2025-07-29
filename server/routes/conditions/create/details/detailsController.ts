@@ -21,7 +21,7 @@ export default class DetailsController {
     const { prisonNumber } = conditionsList
     // TODO - map DTO to request and call API via service to save Conditions
 
-    return res.redirectWithSuccess(`/profile/${prisonNumber}/challenges`, 'Condition(s) updated')
+    return res.redirectWithSuccess(`/profile/${prisonNumber}/conditions`, 'Condition(s) updated')
   }
 
   private populateFormFromDto = (dto: ConditionsList) => {
@@ -34,11 +34,13 @@ export default class DetailsController {
 
   private updateDtoFromForm = (req: Request, form: { conditionDetails: Record<ConditionType, string> }) => {
     const { conditionsList } = req.journeyData
-    Object.entries(form.conditionDetails).forEach(([conditionType, details]) => {
-      ;(conditionsList.conditions as Array<ConditionDto>).find(
-        condition => condition.conditionTypeCode === conditionType,
-      ).conditionDetails = details
-    })
+    Object.entries(form.conditionDetails)
+      .filter(([_conditionType, conditionDetail]) => conditionDetail != null)
+      .forEach(([conditionType, details]) => {
+        ;(conditionsList.conditions as Array<ConditionDto>).find(
+          condition => condition.conditionTypeCode === conditionType,
+        ).conditionDetails = details
+      })
     req.journeyData.conditionsList = conditionsList
   }
 }
