@@ -60,7 +60,7 @@ const challengeTypeScreenValues = new Map<ChallengeType, string>([
   [ChallengeType.FOLDING_PACKING_SORTING, 'Folding, packing, and sorting'],
   [ChallengeType.SPEAKING, 'Speaking'],
   [ChallengeType.SELF_ORGANISED, 'Self organised (routine)'],
-  [ChallengeType.WORD_BASED_PROBLEMS, 'Word-based_problems'],
+  [ChallengeType.WORD_BASED_PROBLEMS, 'Word-based problems'],
   [ChallengeType.MONEY_MANAGEMENT, 'Money management'],
   [ChallengeType.FORWARD_PLANNING, 'Forward planning'],
   [ChallengeType.LANGUAGE_DECODING, 'Language decoding'],

@@ -60,7 +60,7 @@ const strengthTypeScreenValues = new Map<StrengthType, string>([
   [StrengthType.FOLDING_PACKING_SORTING, 'Folding, packing, and sorting'],
   [StrengthType.SPEAKING, 'Speaking'],
   [StrengthType.SELF_ORGANISED, 'Self organised (routine)'],
-  [StrengthType.WORD_BASED_PROBLEMS, 'Word-based_problems'],
+  [StrengthType.WORD_BASED_PROBLEMS, 'Word-based problems'],
   [StrengthType.MONEY_MANAGEMENT, 'Money management'],
   [StrengthType.FORWARD_PLANNING, 'Forward planning'],
   [StrengthType.LANGUAGE_DECODING, 'Language decoding'],
