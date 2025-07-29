@@ -152,7 +152,7 @@ describe('detailsController', () => {
         }),
       ],
     })
-    const expectedNextRoute = `/profile/${prisonNumber}/challenges`
+    const expectedNextRoute = `/profile/${prisonNumber}/conditions`
 
     // When
     await controller.submitDetailsForm(req, res, next)
