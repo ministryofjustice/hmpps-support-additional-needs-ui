@@ -26,7 +26,7 @@ describe('selectConditionsSchema', () => {
     { conditions: ['ADHD', 'DYSLEXIA', 'TOURETTES'], conditionNames: undefined },
     {
       conditions: ['ADHD', 'VISUAL_IMPAIR', 'DYSLEXIA', 'LONG_TERM_OTHER', 'TOURETTES'],
-      conditionNames: { LONG_TERM_OTHER: 'Details for LONG_TERM_OTHER', VISUAL_IMPAIR: 'Details for VISUAL_IMPAIR' },
+      conditionNames: { LONG_TERM_OTHER: 'Names for LONG_TERM_OTHER', VISUAL_IMPAIR: 'Names for VISUAL_IMPAIR' },
     },
   ])('happy path - validation passes - conditions: $conditions, conditionNames: $conditionNames', async requestBody => {
     // Given
@@ -116,7 +116,7 @@ describe('selectConditionsSchema', () => {
     { conditions: ['NEURO_OTHER'], conditionNames: { NEURO_OTHER: '' } },
     { conditions: ['NEURO_OTHER'], conditionNames: { NEURO_OTHER: '  ' } },
   ])(
-    'sad path - validation of conditional detail field fails due to missing details - conditions: $conditions, conditionNames: $conditionNames',
+    'sad path - validation of conditional detail field fails due to missing names - conditions: $conditions, conditionNames: $conditionNames',
     async requestBody => {
       const conditionType = requestBody.conditions[0]
       req.body = requestBody
