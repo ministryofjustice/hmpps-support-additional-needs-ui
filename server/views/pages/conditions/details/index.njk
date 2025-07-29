@@ -1,0 +1,57 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'record-conditions-details' %}
+{% set pageTitle = "Record conditions - details" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">
+        {# TODO - heading text is dependent on user's role - this heading is correct for default access; RR-1706 will add logic to render a different heading based on role #}
+        Provide details for {{ prisonerSummary | formatFirst_name_Last_name }}'s self-declared conditions
+      </h1>
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {% for condition in dto.conditions %}
+            <section class="govuk-!-margin-bottom-8">
+              <h2 class="govuk-heading-m govuk-!-margin-bottom-2">{{ condition.conditionTypeCode | formatConditionTypeScreenValue | default(condition.conditionTypeCode, true) }}</h2>
+              {% if condition.conditionName %}
+                <p class="govuk-body govuk-!-margin-bottom-2">{{ condition.conditionName }}</p>
+              {% endif %}
+
+              {{ govukTextarea({
+                id: condition.conditionTypeCode + "_details",
+                name: "conditionDetails[" + condition.conditionTypeCode + "]",
+                rows: "4",
+                value: form.conditionDetails[condition.conditionTypeCode],
+                type: "text",
+                label: {
+                  text: "Provide more detail",
+                  classes: "govuk-label--s",
+                  attributes: { "aria-live": "polite" }
+                },
+                hint: {
+                  text: 'Such as date, circumstances and evidence'
+                },
+                attributes: { "aria-label" : "Give details of the condition" },
+                errorMessage: errors | findError('details')
+              }) }}
+            </section>
+          {% endfor %}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Record conditions",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
