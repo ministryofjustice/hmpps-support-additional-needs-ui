@@ -10,6 +10,8 @@ import checkStrengthDtoExistsInJourneyData from './middleware/checkStrengthDtoEx
 import selectCategorySchema from '../validationSchemas/selectCategorySchema'
 import detailSchema from '../validationSchemas/detailSchema'
 import { validate } from '../../../middleware/validationMiddleware'
+import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
+import ApplicationAction from '../../../enums/applicationAction'
 
 const createStrengthRoutes = (services: Services): Router => {
   const { journeyDataService, strengthService } = services
@@ -19,8 +21,7 @@ const createStrengthRoutes = (services: Services): Router => {
   const detailController = new DetailController(strengthService)
 
   router.use('/', [
-    // TODO - enable this line when we understand the RBAC roles and permissions
-    // checkUserHasPermissionTo(ApplicationAction.RECORD_STRENGTHS),
+    checkUserHasPermissionTo(ApplicationAction.RECORD_STRENGTHS),
     insertJourneyIdentifier({ insertIdAfterElement: 3 }), // insert journey ID immediately after '/strengths/:prisonNumber/create' - eg: '/strengths/A1234BC/create/473e9ee4-37d6-4afb-92a2-5729b10cc60f/select-category'
   ])
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])

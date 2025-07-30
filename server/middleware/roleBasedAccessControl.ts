@@ -12,7 +12,10 @@ const rolesForAction = (): Record<ApplicationAction, Array<ApplicationRole>> => 
   [ApplicationAction.VIEW_PROFILE]: [],
   [ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_MANAGER],
   [ApplicationAction.UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_MANAGER],
-  [ApplicationAction.RECORD_CHALLENGES]: [ApplicationRole.ROLE_SAN_MANAGER],
+  [ApplicationAction.RECORD_CHALLENGES]: [],
+  [ApplicationAction.RECORD_STRENGTHS]: [],
+  [ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS]: [],
+  [ApplicationAction.RECORD_DIAGNOSED_CONDITIONS]: [ApplicationRole.ROLE_SAN_MANAGER],
 })
 
 /**
@@ -25,7 +28,8 @@ const checkUserHasPermissionTo = (action: ApplicationAction) => authorisationMid
  * Returns true if the specified [ApplicationAction] can be satisfied with any of the specified user roles.
  */
 const userHasPermissionTo = (action: ApplicationAction, userRoles: string[]): boolean => {
-  return userRoles.some(role => (rolesForAction()[action] || []).includes(role as ApplicationRole))
+  const requiredRoles = rolesForAction()[action]
+  return requiredRoles.length === 0 || userRoles.some(role => requiredRoles.includes(role as ApplicationRole))
 }
 
 /**

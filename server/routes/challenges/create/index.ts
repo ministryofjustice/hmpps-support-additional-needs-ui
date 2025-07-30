@@ -10,6 +10,8 @@ import DetailController from './detail/detailController'
 import { validate } from '../../../middleware/validationMiddleware'
 import selectCategorySchema from '../validationSchemas/selectCategorySchema'
 import detailSchema from '../validationSchemas/detailSchema'
+import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
+import ApplicationAction from '../../../enums/applicationAction'
 
 const createChallengeRoutes = (services: Services): Router => {
   const { journeyDataService, challengeService } = services
@@ -19,8 +21,7 @@ const createChallengeRoutes = (services: Services): Router => {
   const detailController = new DetailController(challengeService)
 
   router.use('/', [
-    // TODO - enable this line when we understand the RBAC roles and permissions
-    // checkUserHasPermissionTo(ApplicationAction.RECORD_CHALLENGES),
+    checkUserHasPermissionTo(ApplicationAction.RECORD_CHALLENGES),
     insertJourneyIdentifier({ insertIdAfterElement: 3 }), // insert journey ID immediately after '/challenges/:prisonNumber/create' - eg: '/challenges/A1234BC/create/473e9ee4-37d6-4afb-92a2-5729b10cc60f/select-category'
   ])
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
