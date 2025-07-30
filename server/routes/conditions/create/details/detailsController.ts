@@ -1,8 +1,12 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import type { ConditionDto, ConditionsList } from 'dto'
 import ConditionType from '../../../../enums/conditionType'
+import { ConditionService } from '../../../../services'
+import { Result } from '../../../../utils/result/result'
 
 export default class DetailsController {
+  constructor(private readonly conditionService: ConditionService) {}
+
   getDetailsView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm, prisonerSummary } = res.locals
     const { conditionsList } = req.journeyData
@@ -18,9 +22,18 @@ export default class DetailsController {
     this.updateDtoFromForm(req, detailsForm)
 
     const { conditionsList } = req.journeyData
-    const { prisonNumber } = conditionsList
-    // TODO - map DTO to request and call API via service to save Conditions
+    const { apiErrorCallback } = res.locals
+    const apiResult = await Result.wrap(
+      this.conditionService.createConditions(req.user.username, conditionsList),
+      apiErrorCallback,
+    )
+    if (!apiResult.isFulfilled()) {
+      req.flash('pageHasApiErrors', 'true')
+      return res.redirect('details')
+    }
 
+    const { prisonNumber } = conditionsList
+    req.journeyData.conditionsList = undefined
     return res.redirectWithSuccess(`/profile/${prisonNumber}/conditions`, 'Condition(s) updated')
   }
 
