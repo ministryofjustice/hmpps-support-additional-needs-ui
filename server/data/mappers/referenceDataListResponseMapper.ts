@@ -29,4 +29,11 @@ const toReferenceDataItems = (referenceData: ReferenceDataListResponse): Array<R
   }))
 }
 
-export { toGroupedReferenceDataItems, toReferenceDataItems }
+const toReferenceDataItem = (referenceData: ReferenceData): ReferenceDataItemDto => {
+  return {
+    code: referenceData.code,
+    areaCode: referenceData.areaCode,
+  }
+}
+
+export { toGroupedReferenceDataItems, toReferenceDataItems, toReferenceDataItem }
