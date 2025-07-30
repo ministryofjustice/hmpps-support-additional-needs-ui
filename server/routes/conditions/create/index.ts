@@ -12,11 +12,11 @@ import DetailsController from './details/detailsController'
 import detailsSchema from '../validationSchemas/detailsSchema'
 
 const createConditionsRoutes = (services: Services): Router => {
-  const { journeyDataService } = services
+  const { conditionService, journeyDataService } = services
   const router = Router({ mergeParams: true })
 
   const selectConditionsController = new SelectConditionsController()
-  const detailsController = new DetailsController()
+  const detailsController = new DetailsController(conditionService)
 
   router.use('/', [
     // TODO - enable this line when we understand the RBAC roles and permissions
