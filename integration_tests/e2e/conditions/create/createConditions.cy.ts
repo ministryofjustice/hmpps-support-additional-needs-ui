@@ -69,10 +69,7 @@ describe('Create Conditions', () => {
         'Has trouble concentrating and sitting still for long periods. Easily distracted.',
       )
       .enterConditionDetails(ConditionType.VISUAL_IMPAIR, 'Has red-green colour blindness.')
-      .enterConditionDetails(
-        ConditionType.LONG_TERM_OTHER,
-        'Acute arthritis in the right hand wrist yet strong forearm strength. Cause unknown.',
-      )
+      .enterConditionDetails(ConditionType.LONG_TERM_OTHER, 'Acute arthritis in the right arm and hand. Cause unknown.')
       .submitPageTo(ConditionsPage)
 
     // Then
@@ -98,7 +95,7 @@ describe('Create Conditions', () => {
               "@.conditions[2].conditionTypeCode == 'LONG_TERM_OTHER' && " +
               "@.conditions[2].source == 'SELF_DECLARED' && " +
               "@.conditions[2].conditionName == 'Arthritis' && " +
-              "@.conditions[2].conditionDetails == 'Acute arthritis in the right hand wrist yet strong forearm strength. Cause unknown.' " +
+              "@.conditions[2].conditionDetails == 'Acute arthritis in the right arm and hand. Cause unknown.' " +
               ')]',
           ),
         ),
