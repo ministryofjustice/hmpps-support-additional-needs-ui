@@ -1,12 +1,14 @@
 <div class="govuk-summary-card__content govuk-!-padding-bottom-0 govuk-!-padding-top-2" data-qa="conditions-actions">
-  <ul class="govuk-list govuk-!-margin-0" data-qa="challenges-action-items">
-    <li class="govuk-!-margin-0 govuk-!-padding-bottom-3 govuk-!-padding-top-3">
-      <a class="govuk-link" data-qa="record-conditions-button" href="/conditions/{{ params.prisonerSummary.prisonNumber }}/create/select-conditions">
-          <span>
-            <img src="/assets/images/icon-edit.svg" role="presentation" alt="" class="action-icon" />
-            Record conditions
-          </span>
-      </a>
-    </li>
+  <ul class="govuk-list govuk-!-margin-0" data-qa="conditions-action-items">
+    {% if params.userHasPermissionTo('RECORD_SELF_DECLARED_CONDITIONS') %}
+      <li class="govuk-!-margin-0 govuk-!-padding-bottom-3 govuk-!-padding-top-3">
+        <a class="govuk-link" data-qa="record-conditions-button" href="/conditions/{{ params.prisonerSummary.prisonNumber }}/create/select-conditions">
+            <span>
+              <img src="/assets/images/icon-edit.svg" role="presentation" alt="" class="action-icon" />
+              Record conditions
+            </span>
+        </a>
+      </li>
+    {% endif %}
   </ul>
 </div>

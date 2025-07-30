@@ -10,6 +10,8 @@ import { validate } from '../../../middleware/validationMiddleware'
 import selectConditionsSchema from '../validationSchemas/selectConditionsSchema'
 import DetailsController from './details/detailsController'
 import detailsSchema from '../validationSchemas/detailsSchema'
+import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
+import ApplicationAction from '../../../enums/applicationAction'
 
 const createConditionsRoutes = (services: Services): Router => {
   const { conditionService, journeyDataService } = services
@@ -19,8 +21,7 @@ const createConditionsRoutes = (services: Services): Router => {
   const detailsController = new DetailsController(conditionService)
 
   router.use('/', [
-    // TODO - enable this line when we understand the RBAC roles and permissions
-    // checkUserHasPermissionTo(ApplicationAction.RECORD_CONDITIONS),
+    checkUserHasPermissionTo(ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS),
     insertJourneyIdentifier({ insertIdAfterElement: 3 }), // insert journey ID immediately after '/conditions/:prisonNumber/create' - eg: '/conditions/A1234BC/create/473e9ee4-37d6-4afb-92a2-5729b10cc60f/select-conditions'
   ])
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
