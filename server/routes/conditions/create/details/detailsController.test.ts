@@ -46,6 +46,7 @@ describe('detailsController', () => {
 
   it('should render view given no previously submitted invalid form', async () => {
     // Given
+    flash.mockReturnValue([])
     res.locals.invalidForm = undefined
 
     const expectedViewTemplate = 'pages/conditions/details/index'
@@ -55,6 +56,7 @@ describe('detailsController', () => {
       },
       prisonerSummary,
       dto: conditionsList,
+      errorRecordingConditions: false,
     }
 
     // When
@@ -62,10 +64,12 @@ describe('detailsController', () => {
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(flash).toHaveBeenCalledWith('pageHasApiErrors')
   })
 
   it('should render view given previously submitted invalid form', async () => {
     // Given
+    flash.mockReturnValue([])
     const invalidForm = {
       conditionDetails: ['not-a-valid-value'],
     }
@@ -76,6 +80,7 @@ describe('detailsController', () => {
       form: invalidForm,
       prisonerSummary,
       dto: conditionsList,
+      errorRecordingConditions: false,
     }
 
     // When
@@ -83,10 +88,12 @@ describe('detailsController', () => {
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(flash).toHaveBeenCalledWith('pageHasApiErrors')
   })
 
-  it('should render view given DTO has previously submitted values', async () => {
+  it('should render view given api errors from previous submission', async () => {
     // Given
+    flash.mockReturnValue(['true'])
     res.locals.invalidForm = undefined
 
     const conditions = aValidConditionsList({
@@ -115,6 +122,7 @@ describe('detailsController', () => {
       },
       prisonerSummary,
       dto: conditions,
+      errorRecordingConditions: true,
     }
 
     // When
@@ -122,6 +130,7 @@ describe('detailsController', () => {
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(flash).toHaveBeenCalledWith('pageHasApiErrors')
   })
 
   it('should submit form and redirect to next route given calling API is successful', async () => {

@@ -25,7 +25,7 @@ export default class AddChallengeDetailPage extends Page {
     return this
   }
 
-  deSelectHowStrengthIdentified(option: ChallengeIdentificationSource): AddChallengeDetailPage {
+  deSelectHowChallengeIdentified(option: ChallengeIdentificationSource): AddChallengeDetailPage {
     this.checkbox(option).then(checkbox => {
       if (checkbox.attr('checked')) {
         cy.wrap(checkbox).click()
