@@ -13,7 +13,12 @@ export default class DetailsController {
 
     const selectDetailsForm = invalidForm ?? this.populateFormFromDto(conditionsList)
 
-    const viewRenderArgs = { prisonerSummary, form: selectDetailsForm, dto: conditionsList }
+    const viewRenderArgs = {
+      prisonerSummary,
+      form: selectDetailsForm,
+      dto: conditionsList,
+      errorRecordingConditions: req.flash('pageHasApiErrors')[0] != null,
+    }
     return res.render('pages/conditions/details/index', viewRenderArgs)
   }
 
