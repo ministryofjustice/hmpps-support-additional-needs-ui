@@ -6,7 +6,7 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">What self-declared condition do you want to record for {{ prisonerSummary | formatFirst_name_Last_name }}?</h1>
+      <h1 class="govuk-heading-l">What self-declared{{ ' or diagnosed' if userHasPermissionTo('RECORD_DIAGNOSED_CONDITIONS') }} condition do you want to record for {{ prisonerSummary | formatFirst_name_Last_name }}?</h1>
       {{ govukWarningText({
         text: "You must have " + prisonerSummary | formatFirst_name_Last_name + "'s consent to share this information",
         iconFallbackText: "Warning"

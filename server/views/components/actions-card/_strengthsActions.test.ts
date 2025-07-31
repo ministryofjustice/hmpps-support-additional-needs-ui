@@ -19,6 +19,10 @@ const templateParams: ActionsCardParams = {
 }
 
 describe('_strengthsActions', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
   it('should render the strengths actions section given user has permission to create strengths', () => {
     // Given
     userHasPermissionTo.mockReturnValue(true)

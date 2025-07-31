@@ -24,6 +24,10 @@ const templateParams: ActionsCardParams = {
 }
 
 describe('_educationSupportPlanActions', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
   it('should render support plan actions section given plan creation schedule status is SCHEDULED', () => {
     // Given
     const params = {
