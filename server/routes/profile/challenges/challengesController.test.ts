@@ -1,16 +1,18 @@
 import { Request, Response } from 'express'
 import ChallengesController from './challengesController'
 import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
+import { aValidChallengeResponse } from '../../../testsupport/challengeResponseTestDataBuilder'
 
 describe('challengesController', () => {
   const controller = new ChallengesController()
 
   const prisonerSummary = aValidPrisonerSummary()
+  const challenges = aValidChallengeResponse()
 
   const req = {} as unknown as Request
   const res = {
     render: jest.fn(),
-    locals: { prisonerSummary },
+    locals: { prisonerSummary, challenges },
   } as unknown as Response
   const next = jest.fn()
 
@@ -23,6 +25,7 @@ describe('challengesController', () => {
     const expectedViewTemplate = 'pages/profile/challenges/index'
     const expectedViewModel = {
       prisonerSummary,
+      challengeList: challenges,
       tab: 'challenges',
     }
 
