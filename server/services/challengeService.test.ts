@@ -2,6 +2,8 @@ import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiCl
 import ChallengeService from './challengeService'
 import aValidChallengeDto from '../testsupport/challengeDtoTestDataBuilder'
 import { aValidCreateChallengesRequest } from '../testsupport/challengeRequestTestDataBuilder'
+import { aValidChallengeListResponse, aValidChallengeResponse } from '../testsupport/challengeResponseTestDataBuilder'
+import toChallengeDto from '../data/mappers/challengeDtoMapper'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -61,41 +63,19 @@ describe('challengeService', () => {
     it('should get challenges', async () => {
       // Given
       supportAdditionalNeedsApiClient.createEducationSupportPlan.mockResolvedValue(null)
-      const expectedChallenges = [
-        {
-          challengeId: '1234',
-          prisonId: 'BXI',
-          prisonNumber: 'A1234BC',
-          challengeTypeCode: 'READING_COMPREHENSION',
-          symptoms: 'John struggles to read text on white background',
-          howIdentified: ['CONVERSATIONS'],
-          howIdentifiedOther: 'The trainer noticed that John could read better on a cream background',
-          createdBy: 'some-username',
-          createdAt: '2024-01-01T00:00:00Z',
-        },
-        {
-          challengeId: '5678',
-          prisonId: 'BXI',
-          prisonNumber: 'A1234BC',
-          challengeTypeCode: 'WRITING',
-          symptoms: 'Difficulty writing legibly',
-          howIdentified: ['OBSERVATIONS'],
-          howIdentifiedOther: null,
-          createdBy: 'some-username',
-          createdAt: '2024-01-01T00:00:00Z',
-        },
-      ]
-      supportAdditionalNeedsApiClient.getChallenges.mockResolvedValue({
-        challenges: expectedChallenges,
-      })
+      aValidChallengeResponse()
+      aValidChallengeDto()
+      const expectedChallengeListResponse = aValidChallengeListResponse()
+
+      supportAdditionalNeedsApiClient.getChallenges.mockResolvedValue(expectedChallengeListResponse)
 
       // When
       const result = await service.getChallenges(username, 'A1234BC')
 
       // Then
       expect(supportAdditionalNeedsApiClient.getChallenges).toHaveBeenCalledWith('A1234BC', username)
-      expect(result).toHaveLength(2)
-      expect(result).toEqual(expectedChallenges)
+      expect(result).toHaveLength(1)
+      expect(result).toEqual(toChallengeDto(prisonNumber, expectedChallengeListResponse))
     })
   })
 })

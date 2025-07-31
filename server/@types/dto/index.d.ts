@@ -54,6 +54,34 @@ declare module 'dto' {
     howIdentifiedOther?: string
   }
 
+  export interface ChallengeResponseDto {
+    prisonNumber: string
+    reference: string
+    fromALNScreener: boolean
+    challengeType: ReferenceDataItemDto
+    active: boolean
+    createdBy: string
+    createdByDisplayName: string
+    createdAt: Date
+    createdAtPrison: string
+    updatedBy: string
+    updatedByDisplayName: string
+    updatedAt: Date
+    updatedAtPrison: string
+    symptoms?: string
+    howIdentified?: (
+      | 'EDUCATION_SKILLS_WORK'
+      | 'WIDER_PRISON'
+      | 'CONVERSATIONS'
+      | 'COLLEAGUE_INFO'
+      | 'FORMAL_PROCESSES'
+      | 'SELF_DISCLOSURE'
+      | 'OTHER_SCREENING_TOOL'
+      | 'OTHER'
+    )[]
+    howIdentifiedOther?: string
+  }
+
   export interface ConditionsList {
     prisonNumber: string
     conditions: Array<ConditionDto>
