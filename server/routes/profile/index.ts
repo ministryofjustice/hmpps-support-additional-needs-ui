@@ -11,7 +11,7 @@ const profileRoutes = (services: Services): Router => {
   return Router({ mergeParams: true }) //
     .use('/overview', overviewRoutes(services))
     .use('/support-strategies', supportStrategiesRoutes())
-    .use('/challenges', challengesRoutes())
+    .use('/challenges', challengesRoutes(services))
     .use('/strengths', strengthsRoutes())
     .use('/conditions', conditionsRoutes())
     .use('/education-support-plan', educationSupportPlanRoutes())
