@@ -19,6 +19,10 @@ const templateParams: ActionsCardParams = {
 }
 
 describe('_challengesActions', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
   it('should render the challenges actions section given user has permission to create challenges', () => {
     // Given
     userHasPermissionTo.mockReturnValue(true)
