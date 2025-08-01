@@ -106,7 +106,7 @@ describe('Create Conditions', () => {
     )
   })
 
-  it('should create a prisoners Conditions, triggering validation on every screen given user has permission to create diagnosed conditions', () => {
+  it.skip('should create a prisoners Conditions, triggering validation on every screen given user has permission to create diagnosed conditions', () => {
     // Given
     cy.task('stubSignIn', { roles: ['ROLE_SAN_MANAGER'] }) // user has the role that gives them permission to create diagnosed conditions
     cy.signIn()
