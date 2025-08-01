@@ -1,15 +1,5 @@
 export type AuditFields = {
-  createdBy: string
-  createdByDisplayName: string
-  createdAt: string
-  createdAtPrison: string
-  updatedBy: string
-  updatedByDisplayName: string
-  updatedAt: string
-  updatedAtPrison: string
-}
-
-const validAuditFields = (options?: {
+  reference?: string
   createdBy?: string
   createdByDisplayName?: string
   createdAt?: string
@@ -18,7 +8,22 @@ const validAuditFields = (options?: {
   updatedByDisplayName?: string
   updatedAt?: string
   updatedAtPrison?: string
-}): AuditFields => ({
+}
+
+const validAuditFields = (
+  options?: AuditFields,
+): {
+  reference: string
+  createdBy: string
+  createdByDisplayName: string
+  createdAt: string
+  createdAtPrison: string
+  updatedBy: string
+  updatedByDisplayName: string
+  updatedAt: string
+  updatedAtPrison: string
+} => ({
+  reference: options?.reference || 'c88a6c48-97e2-4c04-93b5-98619966447b',
   createdBy: options?.createdBy || 'asmith_gen',
   createdByDisplayName: options?.createdByDisplayName || 'Alex Smith',
   createdAt: options?.createdAt || '2023-06-19T09:39:44Z',

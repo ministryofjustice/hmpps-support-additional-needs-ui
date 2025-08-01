@@ -149,6 +149,16 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     )
   }
 
+  async getConditions(prisonNumber: string, username: string): Promise<ConditionListResponse> {
+    return this.get<ConditionListResponse>(
+      {
+        path: `/profile/${prisonNumber}/conditions`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
   async createStrengths(
     prisonNumber: string,
     username: string,
