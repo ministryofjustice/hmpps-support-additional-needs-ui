@@ -50,14 +50,19 @@ export default class DetailsController {
     }
   }
 
-  private updateDtoFromForm = (req: Request, form: { conditionDetails: Record<ConditionType, string> }) => {
+  private updateDtoFromForm = (
+    req: Request,
+    form: { conditionDetails: Record<ConditionType, string>; conditionDiagnosis?: Record<ConditionType, string> },
+  ) => {
     const { conditionsList } = req.journeyData
     Object.entries(form.conditionDetails)
       .filter(([_conditionType, conditionDetail]) => conditionDetail != null)
-      .forEach(([conditionType, details]) => {
-        ;(conditionsList.conditions as Array<ConditionDto>).find(
-          condition => condition.conditionTypeCode === conditionType,
-        ).conditionDetails = details
+      .forEach(([conditionType, details]: [ConditionType, string]) => {
+        const conditionDto = (conditionsList.conditions as Array<ConditionDto>).find(
+          it => it.conditionTypeCode === conditionType,
+        )
+        conditionDto.conditionDetails = details
+        conditionDto.source = form.conditionDiagnosis?.[conditionType] ?? 'SELF_DECLARED'
       })
     req.journeyData.conditionsList = conditionsList
   }
