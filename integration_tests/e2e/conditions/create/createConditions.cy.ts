@@ -7,6 +7,7 @@ import ConditionsDetailsPage from '../../../pages/conditions/conditionsDetailsPa
 import { postRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
+import ConditionSource from '../../../../server/enums/conditionSource'
 
 describe('Create Conditions', () => {
   const prisonNumber = 'A00001A' // This prisoner is Abby Kyriakopoulos
@@ -106,7 +107,7 @@ describe('Create Conditions', () => {
     )
   })
 
-  it.skip('should create a prisoners Conditions, triggering validation on every screen given user has permission to create diagnosed conditions', () => {
+  it('should create a prisoners Conditions, triggering validation on every screen given user has permission to create diagnosed conditions', () => {
     // Given
     cy.task('stubSignIn', { roles: ['ROLE_SAN_MANAGER'] }) // user has the role that gives them permission to create diagnosed conditions
     cy.signIn()
@@ -139,17 +140,29 @@ describe('Create Conditions', () => {
     Page.verifyOnPage(ConditionsDetailsPage)
       // submit the page without answering the questions to trigger a validation error
       .submitPageTo(ConditionsDetailsPage)
-      .hasErrorCount(3)
+      .hasErrorCount(6)
       .hasFieldInError('ADHD_details')
+      .hasFieldInError('conditionDiagnosis[ADHD]')
       .hasFieldInError('VISUAL_IMPAIR_details')
+      .hasFieldInError('conditionDiagnosis[VISUAL_IMPAIR]')
       .hasFieldInError('LONG_TERM_OTHER_details')
-      // enter the condition details
+      .hasFieldInError('conditionDiagnosis[LONG_TERM_OTHER]')
+      // enter the condition details, but without the diagnosis sources, so will still trigger a validation error
       .enterConditionDetails(
         ConditionType.ADHD,
         'Has trouble concentrating and sitting still for long periods. Easily distracted.',
       )
       .enterConditionDetails(ConditionType.VISUAL_IMPAIR, 'Has red-green colour blindness.')
       .enterConditionDetails(ConditionType.LONG_TERM_OTHER, 'Acute arthritis in the right arm and hand. Cause unknown.')
+      .submitPageTo(ConditionsDetailsPage)
+      .hasErrorCount(3)
+      .hasFieldInError('conditionDiagnosis[ADHD]')
+      .hasFieldInError('conditionDiagnosis[VISUAL_IMPAIR]')
+      .hasFieldInError('conditionDiagnosis[LONG_TERM_OTHER]')
+      // select the condition diagnosis sources
+      .selectHowConditionWasDiagnosed(ConditionType.ADHD, ConditionSource.SELF_DECLARED)
+      .selectHowConditionWasDiagnosed(ConditionType.VISUAL_IMPAIR, ConditionSource.CONFIRMED_DIAGNOSIS)
+      .selectHowConditionWasDiagnosed(ConditionType.LONG_TERM_OTHER, ConditionSource.CONFIRMED_DIAGNOSIS)
       .submitPageTo(ConditionsPage)
 
     // Then
@@ -168,12 +181,12 @@ describe('Create Conditions', () => {
               "@.conditions[0].conditionDetails == 'Has trouble concentrating and sitting still for long periods. Easily distracted.' && " +
               "@.conditions[1].prisonId == 'BXI' && " +
               "@.conditions[1].conditionTypeCode == 'VISUAL_IMPAIR' && " +
-              "@.conditions[1].source == 'SELF_DECLARED' && " +
+              "@.conditions[1].source == 'CONFIRMED_DIAGNOSIS' && " +
               "@.conditions[1].conditionName == 'Colour blindness' && " +
               "@.conditions[1].conditionDetails == 'Has red-green colour blindness.' && " +
               "@.conditions[2].prisonId == 'BXI' && " +
               "@.conditions[2].conditionTypeCode == 'LONG_TERM_OTHER' && " +
-              "@.conditions[2].source == 'SELF_DECLARED' && " +
+              "@.conditions[2].source == 'CONFIRMED_DIAGNOSIS' && " +
               "@.conditions[2].conditionName == 'Arthritis' && " +
               "@.conditions[2].conditionDetails == 'Acute arthritis in the right arm and hand. Cause unknown.' " +
               ')]',
