@@ -4,6 +4,7 @@ import { aValidConditionDto, aValidConditionsList } from '../../../../testsuppor
 import ConditionType from '../../../../enums/conditionType'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import ConditionService from '../../../../services/conditionService'
+import ConditionSource from '../../../../enums/conditionSource'
 
 jest.mock('../../../../services/conditionService')
 
@@ -133,7 +134,7 @@ describe('detailsController', () => {
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors')
   })
 
-  it('should submit form and redirect to next route given calling API is successful', async () => {
+  it('should submit form and redirect to next route given conditionDiagnosis is not in form submission and calling API is successful', async () => {
     // Given
     const conditions = aValidConditionsList({
       prisonNumber,
@@ -165,11 +166,71 @@ describe('detailsController', () => {
         aValidConditionDto({
           conditionTypeCode: ConditionType.ADHD,
           conditionDetails: 'Can become distracted and easily agitated',
+          source: ConditionSource.SELF_DECLARED,
         }),
         aValidConditionDto({
           conditionTypeCode: ConditionType.VISUAL_IMPAIR,
           conditionName: 'Colour blindness',
           conditionDetails: 'Has red-green colour blindness',
+          source: ConditionSource.SELF_DECLARED,
+        }),
+      ],
+    })
+    const expectedNextRoute = `/profile/${prisonNumber}/conditions`
+
+    // When
+    await controller.submitDetailsForm(req, res, next)
+
+    // Then
+    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Condition(s) updated')
+    expect(req.journeyData.conditionsList).toBeUndefined()
+    expect(flash).not.toHaveBeenCalled()
+    expect(conditionService.createConditions).toHaveBeenCalledWith(username, expectedConditionsList)
+  })
+
+  it('should submit form and redirect to next route given conditionDiagnosis is in form submission and calling API is successful', async () => {
+    // Given
+    const conditions = aValidConditionsList({
+      prisonNumber,
+      conditions: [
+        aValidConditionDto({
+          conditionTypeCode: ConditionType.ADHD,
+          conditionDetails: '',
+        }),
+        aValidConditionDto({
+          conditionTypeCode: ConditionType.VISUAL_IMPAIR,
+          conditionName: 'Colour blindness',
+          conditionDetails: '',
+        }),
+      ],
+    })
+    req.journeyData = { conditionsList: conditions }
+    req.body = {
+      conditionDetails: {
+        ADHD: 'Can become distracted and easily agitated',
+        VISUAL_IMPAIR: 'Has red-green colour blindness',
+      },
+      conditionDiagnosis: {
+        ADHD: 'CONFIRMED_DIAGNOSIS',
+        VISUAL_IMPAIR: 'SELF_DECLARED',
+      },
+    }
+
+    conditionService.createConditions.mockResolvedValue(null)
+
+    const expectedConditionsList = aValidConditionsList({
+      prisonNumber,
+      conditions: [
+        aValidConditionDto({
+          conditionTypeCode: ConditionType.ADHD,
+          conditionDetails: 'Can become distracted and easily agitated',
+          source: ConditionSource.CONFIRMED_DIAGNOSIS,
+        }),
+        aValidConditionDto({
+          conditionTypeCode: ConditionType.VISUAL_IMPAIR,
+          conditionName: 'Colour blindness',
+          conditionDetails: 'Has red-green colour blindness',
+          source: ConditionSource.SELF_DECLARED,
         }),
       ],
     })

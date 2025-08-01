@@ -8,8 +8,11 @@
     <div class="govuk-grid-column-two-thirds">
 
       <h1 class="govuk-heading-l">
-        {# TODO - heading text is dependent on user's role - this heading is correct for default access; RR-1706 will add logic to render a different heading based on role #}
-        Provide details for {{ prisonerSummary | formatFirst_name_Last_name }}'s self-declared conditions
+        {% if userHasPermissionTo('RECORD_DIAGNOSED_CONDITIONS') %}
+          Select if the condition is self-declared by {{ prisonerSummary | formatFirst_name_Last_name }} or a confirmed diagnosis
+        {% else %}
+          Provide details for {{ prisonerSummary | formatFirst_name_Last_name }}'s self-declared conditions
+        {% endif %}
       </h1>
 
       <form class="form" method="post" novalidate="">
@@ -21,6 +24,25 @@
               <h2 class="govuk-heading-m govuk-!-margin-bottom-2">{{ condition.conditionTypeCode | formatConditionTypeScreenValue | default(condition.conditionTypeCode, true) }}</h2>
               {% if condition.conditionName %}
                 <p class="govuk-body govuk-!-margin-bottom-2">{{ condition.conditionName }}</p>
+              {% endif %}
+
+              {% if userHasPermissionTo('RECORD_DIAGNOSED_CONDITIONS') %}
+                {{ govukRadios({
+                  name: "conditionDiagnosis[" + condition.conditionTypeCode + "]",
+                  items: [
+                    {
+                      value: "SELF_DECLARED",
+                      text: "Self-declared",
+                      checked: form.conditionDiagnosis[condition.conditionTypeCode] === "SELF_DECLARED"
+                    },
+                    {
+                      value: "CONFIRMED_DIAGNOSIS",
+                      text: "Confirmed diagnosis",
+                      checked: form.conditionDiagnosis[condition.conditionTypeCode] === "CONFIRMED_DIAGNOSIS"
+                    }
+                  ],
+                  errorMessage: errors | findError("conditionDiagnosis[" + condition.conditionTypeCode + "]")
+                }) }}
               {% endif %}
 
               {{ govukTextarea({
