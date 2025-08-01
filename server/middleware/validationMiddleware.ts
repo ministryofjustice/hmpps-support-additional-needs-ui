@@ -1,5 +1,6 @@
 import { RequestHandler, Request, Response } from 'express'
 import { z } from 'zod'
+import { $ZodSuperRefineIssue } from 'zod/v4/core'
 import { format, getYear, isAfter, isBefore, isValid, isWithinInterval, parse, startOfToday } from 'date-fns'
 import type { Error } from '../filters/findErrorFilter'
 
@@ -15,7 +16,7 @@ const zObjectStrict = <T = object>(shape: T) => z.object({ _csrf: z.string().opt
 const zodAlwaysRefine = <T extends z.ZodTypeAny>(zodType: T) =>
   z.any().transform((val, ctx) => {
     const res = zodType.safeParse(val)
-    if (!res.success) res.error.issues.forEach(ctx.addIssue)
+    if (!res.success) res.error.issues.forEach(issue => ctx.addIssue(issue as $ZodSuperRefineIssue))
     return res.data || val
   }) as unknown as T
 
