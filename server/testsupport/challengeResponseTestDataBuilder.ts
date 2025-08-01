@@ -1,6 +1,6 @@
 import { format, startOfToday, subMonths } from 'date-fns'
 import type { ChallengeListResponse, ChallengeResponse } from 'supportAdditionalNeedsApiClient'
-import validAuditFields from './auditFieldsTestDataBuilder'
+import validAuditFields, { AuditFields } from './auditFieldsTestDataBuilder'
 
 const aValidChallengeListResponse = (options?: {
   challengeResponses?: Array<ChallengeResponse>
@@ -8,24 +8,16 @@ const aValidChallengeListResponse = (options?: {
   challenges: options?.challengeResponses || [aValidChallengeResponse()],
 })
 
-const aValidChallengeResponse = (options?: {
-  reference?: string
-  active?: boolean
-  fromALNScreener?: boolean
-  screeningDate?: Date
-  challengeTypeCode?: string
-  symptoms?: string
-  howIdentified?: string
-  createdBy?: string
-  createdByDisplayName?: string
-  createdAt?: string
-  createdAtPrison?: string
-  updatedBy?: string
-  updatedByDisplayName?: string
-  updatedAt?: string
-  updatedAtPrison?: string
-}): ChallengeResponse => ({
-  reference: options?.reference || 'c88a6c48-97e2-4c04-93b5-98619966447b',
+const aValidChallengeResponse = (
+  options?: AuditFields & {
+    active?: boolean
+    fromALNScreener?: boolean
+    screeningDate?: Date
+    challengeTypeCode?: string
+    symptoms?: string
+    howIdentified?: string
+  },
+): ChallengeResponse => ({
   active: options?.active == null ? true : options?.active,
   fromALNScreener: options?.fromALNScreener == null ? true : options?.fromALNScreener,
   screeningDate:

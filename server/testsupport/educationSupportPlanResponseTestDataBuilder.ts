@@ -1,27 +1,21 @@
 import type { EducationSupportPlanResponse, PlanContributor } from 'supportAdditionalNeedsApiClient'
-import validAuditFields from './auditFieldsTestDataBuilder'
+import validAuditFields, { AuditFields } from './auditFieldsTestDataBuilder'
 import aValidPlanContributor from './planContributorTestDataBuilder'
 
-const aValidEducationSupportPlanResponse = (options?: {
-  hasCurrentEhcp?: boolean
-  createdBy?: string
-  createdByDisplayName?: string
-  createdAt?: string
-  createdAtPrison?: string
-  updatedBy?: string
-  updatedByDisplayName?: string
-  updatedAt?: string
-  updatedAtPrison?: string
-  planCreatedBy?: PlanContributor
-  otherContributors?: Array<PlanContributor>
-  learningEnvironmentAdjustments?: string
-  teachingAdjustments?: string
-  specificTeachingSkills?: string
-  examAccessArrangements?: string
-  lnspSupport?: string
-  individualSupport?: string
-  detail?: string
-}): EducationSupportPlanResponse => ({
+const aValidEducationSupportPlanResponse = (
+  options?: AuditFields & {
+    hasCurrentEhcp?: boolean
+    planCreatedBy?: PlanContributor
+    otherContributors?: Array<PlanContributor>
+    learningEnvironmentAdjustments?: string
+    teachingAdjustments?: string
+    specificTeachingSkills?: string
+    examAccessArrangements?: string
+    lnspSupport?: string
+    individualSupport?: string
+    detail?: string
+  },
+): EducationSupportPlanResponse => ({
   hasCurrentEhcp: options?.hasCurrentEhcp ?? false,
   planCreatedBy: options?.planCreatedBy === null ? null : options?.planCreatedBy || aValidPlanContributor(),
   otherContributors:

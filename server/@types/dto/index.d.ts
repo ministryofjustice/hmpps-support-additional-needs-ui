@@ -7,6 +7,21 @@ declare module 'dto' {
   import ChallengeType from '../../enums/challengeType'
   import StrengthType from '../../enums/strengthType'
 
+  /**
+   * Interface defining common reference and audit related properties that DTO types can inherit through extension.
+   */
+  interface ReferencedAndAuditable {
+    reference?: string
+    createdBy?: string
+    createdByDisplayName?: string
+    createdAt?: Date
+    createdAtPrison?: string
+    updatedBy?: string
+    updatedByDisplayName?: string
+    updatedAt?: Date
+    updatedAtPrison?: string
+  }
+
   export interface EducationSupportPlanDto {
     prisonNumber: string
     prisonId: string
@@ -54,20 +69,11 @@ declare module 'dto' {
     howIdentifiedOther?: string
   }
 
-  export interface ChallengeResponseDto {
+  export interface ChallengeResponseDto extends ReferencedAndAuditable {
     prisonNumber: string
-    reference: string
     fromALNScreener: boolean
     challengeType: ReferenceDataItemDto
     active: boolean
-    createdBy: string
-    createdByDisplayName: string
-    createdAt: Date
-    createdAtPrison: string
-    updatedBy: string
-    updatedByDisplayName: string
-    updatedAt: Date
-    updatedAtPrison: string
     symptoms?: string
     howIdentified?: (
       | 'EDUCATION_SKILLS_WORK'
@@ -87,12 +93,13 @@ declare module 'dto' {
     conditions: Array<ConditionDto>
   }
 
-  export interface ConditionDto {
-    prisonId: string
+  export interface ConditionDto extends ReferencedAndAuditable {
+    prisonId?: string
     conditionTypeCode: ConditionType
     conditionName?: string
     conditionDetails: string
     source: ConditionSource
+    active?: boolean
   }
 
   export interface StrengthDto {

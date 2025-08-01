@@ -1,5 +1,5 @@
 import type { ConditionListResponse, ConditionResponse } from 'supportAdditionalNeedsApiClient'
-import validAuditFields from './auditFieldsTestDataBuilder'
+import validAuditFields, { AuditFields } from './auditFieldsTestDataBuilder'
 import ConditionSource from '../enums/conditionSource'
 
 const aValidConditionListResponse = (options?: {
@@ -8,23 +8,15 @@ const aValidConditionListResponse = (options?: {
   conditions: options?.conditionResponses || [aValidConditionResponse()],
 })
 
-const aValidConditionResponse = (options?: {
-  reference?: string
-  active?: boolean
-  conditionTypeCode?: string
-  source?: ConditionSource
-  conditionDetails?: string
-  conditionName?: string
-  createdBy?: string
-  createdByDisplayName?: string
-  createdAt?: string
-  createdAtPrison?: string
-  updatedBy?: string
-  updatedByDisplayName?: string
-  updatedAt?: string
-  updatedAtPrison?: string
-}): ConditionResponse => ({
-  reference: options?.reference || 'c88a6c48-97e2-4c04-93b5-98619966447b',
+const aValidConditionResponse = (
+  options?: AuditFields & {
+    active?: boolean
+    conditionTypeCode?: string
+    source?: ConditionSource
+    conditionDetails?: string
+    conditionName?: string
+  },
+): ConditionResponse => ({
   active: options?.active == null ? true : options?.active,
   source: options?.source || ConditionSource.SELF_DECLARED,
   conditionDetails:
