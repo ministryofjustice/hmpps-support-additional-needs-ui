@@ -8,6 +8,22 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
       <h2 class="govuk-heading-m">Conditions</h2>
+
+
+      {% if conditions.isFulfilled() %}
+        {% set activeConditions = conditions.value.conditions | filterArrayOnProperty('active', true) %}
+
+        {% if activeConditions | length %}
+          {# TODO - loop through activeConditions rendering each one #}
+
+        {% else %}
+          {# TODO - 'empty state', where the person has no Conditions recorded #}
+        {% endif %}
+
+      {% else %}
+        <h2 class="govuk-heading-m" data-qa="conditions-unavailable-message">We cannot show these details right now</h2>
+        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+      {% endif %}
     </div>
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">
