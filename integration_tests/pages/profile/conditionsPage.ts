@@ -8,6 +8,11 @@ export default class ConditionsPage extends ProfilePage {
     this.activeTabIs('Conditions')
   }
 
+  hasNoActiveConditions(): ConditionsPage {
+    this.noConditionsSummaryCard().should('be.visible')
+    return this
+  }
+
   clickRecordConditionsButton(): SelectConditionsPage {
     this.recordConditionsButton().click()
     return Page.verifyOnPage(SelectConditionsPage)
@@ -17,4 +22,6 @@ export default class ConditionsPage extends ProfilePage {
 
   private recordConditionsButton = (): PageElement =>
     this.conditionsActionItems().find('[data-qa=record-conditions-button]')
+
+  private noConditionsSummaryCard = (): PageElement => cy.get('[data-qa=no-conditions-summary-card]')
 }
