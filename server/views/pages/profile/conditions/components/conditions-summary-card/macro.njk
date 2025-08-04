@@ -1,0 +1,14 @@
+{# Conditions Summary Card macro
+
+Data supplied to this marco:
+  params: {
+    conditions: Array<ConditionDto> - Pre-filtered array of conditions to render
+    title: string - Summary Card title
+    id: string
+    classes: string
+    attributes: Map<string, string>
+  }
+#}
+{% macro conditionsSummaryCard(params) %}
+  {%- include "./template.njk" -%}
+{% endmacro %}

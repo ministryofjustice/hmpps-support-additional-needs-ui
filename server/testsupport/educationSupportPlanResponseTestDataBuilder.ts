@@ -1,5 +1,5 @@
 import type { EducationSupportPlanResponse, PlanContributor } from 'supportAdditionalNeedsApiClient'
-import validAuditFields, { AuditFields } from './auditFieldsTestDataBuilder'
+import { validAuditFields, AuditFields } from './auditFieldsTestDataBuilder'
 import aValidPlanContributor from './planContributorTestDataBuilder'
 
 const aValidEducationSupportPlanResponse = (

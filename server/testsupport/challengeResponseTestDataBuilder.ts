@@ -1,6 +1,6 @@
 import { format, startOfToday, subMonths } from 'date-fns'
 import type { ChallengeListResponse, ChallengeResponse } from 'supportAdditionalNeedsApiClient'
-import validAuditFields, { AuditFields } from './auditFieldsTestDataBuilder'
+import { validAuditFields, AuditFields } from './auditFieldsTestDataBuilder'
 
 const aValidChallengeListResponse = (options?: {
   challengeResponses?: Array<ChallengeResponse>
