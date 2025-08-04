@@ -31,6 +31,7 @@ describe('conditionDtoMapper', () => {
     })
 
     const expected = aValidConditionsList({
+      prisonNumber,
       conditions: [
         {
           active: true,
@@ -49,6 +50,23 @@ describe('conditionDtoMapper', () => {
           updatedByDisplayName: 'Alex Smith',
         },
       ],
+    })
+
+    // When
+    const actual = toConditionsList(apiResponse, prisonNumber)
+
+    // Then
+    expect(actual).toEqual(expected)
+  })
+
+  it.each([null, undefined])('should map %s ConditionListResponse to an empty ConditionsList', conditionsList => {
+    // Given
+    const prisonNumber = 'A1234BC'
+    const apiResponse = conditionsList
+
+    const expected = aValidConditionsList({
+      prisonNumber,
+      conditions: [],
     })
 
     // When

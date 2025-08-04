@@ -4,7 +4,7 @@ import toReferenceAndAuditable from './referencedAndAuditableMapper'
 
 const toConditionsList = (conditionListResponse: ConditionListResponse, prisonNumber: string): ConditionsList => ({
   prisonNumber,
-  conditions: conditionListResponse.conditions.map(toConditionDto),
+  conditions: conditionListResponse?.conditions.map(toConditionDto) || [],
 })
 
 const toConditionDto = (conditionResponse: ConditionResponse): ConditionDto => ({

@@ -21,7 +21,7 @@ export default class ConditionService {
   async getConditions(username: string, prisonNumber: string): Promise<ConditionsList> {
     try {
       const conditionListResponse = await this.supportAdditionalNeedsApiClient.getConditions(prisonNumber, username)
-      return conditionListResponse ? toConditionsList(conditionListResponse, prisonNumber) : null
+      return toConditionsList(conditionListResponse, prisonNumber)
     } catch (e) {
       logger.error(`Error getting Conditions for [${prisonNumber}]`, e)
       throw e
