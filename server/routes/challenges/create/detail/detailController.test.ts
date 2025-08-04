@@ -9,7 +9,7 @@ import ChallengeType from '../../../../enums/challengeType'
 jest.mock('../../../../services/challengeService')
 
 describe('detailController', () => {
-  const mockedChallengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
+  const mockedChallengeService = new ChallengeService(null, null) as jest.Mocked<ChallengeService>
   const controller = new DetailController(mockedChallengeService)
 
   const username = 'FRED_123'

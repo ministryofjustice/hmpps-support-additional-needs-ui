@@ -6,7 +6,7 @@ import { aValidConditionsList } from '../../../testsupport/conditionDtoTestDataB
 jest.mock('../../../services/conditionService')
 
 describe('retrieveConditions', () => {
-  const conditionService = new ConditionService(null) as jest.Mocked<ConditionService>
+  const conditionService = new ConditionService(null, null) as jest.Mocked<ConditionService>
   const requestHandler = retrieveConditions(conditionService)
 
   const prisonNumber = 'A1234BC'

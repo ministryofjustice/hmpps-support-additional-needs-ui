@@ -3,11 +3,15 @@ import type { ChallengeResponseDto } from 'dto'
 import { toReferenceDataItem } from './referenceDataListResponseMapper'
 import toReferenceAndAuditable from './referencedAndAuditableMapper'
 
-const toChallengeDto = (prisonNumber: string, apiResponse: ChallengeListResponse): ChallengeResponseDto[] => {
+const toChallengeDto = (
+  prisonNumber: string,
+  apiResponse: ChallengeListResponse,
+  prisonNamesById: Map<string, string>,
+): ChallengeResponseDto[] => {
   return (apiResponse.challenges as Array<ChallengeResponse>).map(
     challenge =>
       ({
-        ...toReferenceAndAuditable(challenge),
+        ...toReferenceAndAuditable(challenge, prisonNamesById),
         prisonNumber,
         fromALNScreener: challenge.fromALNScreener,
         challengeType: toReferenceDataItem(challenge.challengeType),

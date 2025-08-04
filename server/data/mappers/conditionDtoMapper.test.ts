@@ -6,6 +6,11 @@ import ConditionType from '../../enums/conditionType'
 import ConditionSource from '../../enums/conditionSource'
 
 describe('conditionDtoMapper', () => {
+  const prisonNamesById = new Map([
+    ['BXI', 'Brixton (HMP)'],
+    ['MDI', 'Moorland (HMP & YOI)'],
+  ])
+
   it('should map ConditionListResponse to a ConditionsList', () => {
     // Given
     const prisonNumber = 'A1234BC'
@@ -39,13 +44,13 @@ describe('conditionDtoMapper', () => {
           conditionName: 'Phonological dyslexia',
           conditionTypeCode: ConditionType.DYSLEXIA,
           createdAt: parseISO('2023-06-19T09:39:44Z'),
-          createdAtPrison: 'MDI',
+          createdAtPrison: 'Moorland (HMP & YOI)',
           createdBy: 'asmith_gen',
           createdByDisplayName: 'Alex Smith',
           reference: 'c88a6c48-97e2-4c04-93b5-98619966447b',
           source: ConditionSource.SELF_DECLARED,
           updatedAt: parseISO('2023-06-19T09:39:44Z'),
-          updatedAtPrison: 'MDI',
+          updatedAtPrison: 'Moorland (HMP & YOI)',
           updatedBy: 'asmith_gen',
           updatedByDisplayName: 'Alex Smith',
         },
@@ -53,7 +58,7 @@ describe('conditionDtoMapper', () => {
     })
 
     // When
-    const actual = toConditionsList(apiResponse, prisonNumber)
+    const actual = toConditionsList(apiResponse, prisonNumber, prisonNamesById)
 
     // Then
     expect(actual).toEqual(expected)
@@ -70,7 +75,7 @@ describe('conditionDtoMapper', () => {
     })
 
     // When
-    const actual = toConditionsList(apiResponse, prisonNumber)
+    const actual = toConditionsList(apiResponse, prisonNumber, prisonNamesById)
 
     // Then
     expect(actual).toEqual(expected)

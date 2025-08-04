@@ -5,6 +5,11 @@ import type { ChallengeResponseDto, ReferenceDataItemDto } from 'dto'
 import toChallengeDto from './challengeDtoMapper'
 
 describe('toChallengeDto', () => {
+  const prisonNamesById = new Map([
+    ['BXI', 'Brixton (HMP)'],
+    ['MDI', 'Moorland (HMP & YOI)'],
+  ])
+
   it('should map a single challenge correctly', () => {
     const prisonNumber = 'A1234BC'
     const testRef = 'abcdef'
@@ -33,7 +38,7 @@ describe('toChallengeDto', () => {
       ],
     }
 
-    const result = toChallengeDto(prisonNumber, apiResponse)
+    const result = toChallengeDto(prisonNumber, apiResponse, prisonNamesById)
 
     expect(result).toHaveLength(1)
     expect(result[0]).toEqual<ChallengeResponseDto>({
@@ -44,7 +49,7 @@ describe('toChallengeDto', () => {
       createdBy: 'user1',
       updatedAt: parseISO('2025-07-26T12:00:00.000Z'),
       updatedBy: 'user2',
-      updatedAtPrison: 'BXI',
+      updatedAtPrison: 'Brixton (HMP)',
       reference: testRef,
       fromALNScreener: false,
       active: true,
@@ -105,7 +110,7 @@ describe('toChallengeDto', () => {
       ],
     }
 
-    const result = toChallengeDto(prisonNumber, apiResponse)
+    const result = toChallengeDto(prisonNumber, apiResponse, prisonNamesById)
 
     expect(result).toHaveLength(2)
     expect(result[0]).toEqual<ChallengeResponseDto>({
@@ -116,7 +121,7 @@ describe('toChallengeDto', () => {
       createdBy: 'user1',
       updatedAt: parseISO('2025-07-26T12:00:00.000Z'),
       updatedBy: 'user2',
-      updatedAtPrison: 'BXI',
+      updatedAtPrison: 'Brixton (HMP)',
       reference: testRef1,
       fromALNScreener: false,
       active: true,
@@ -134,7 +139,7 @@ describe('toChallengeDto', () => {
       createdBy: 'user1',
       updatedAt: parseISO('2025-07-26T12:00:00.000Z'),
       updatedBy: 'user2',
-      updatedAtPrison: 'BXI',
+      updatedAtPrison: 'Brixton (HMP)',
       reference: testRef2,
       fromALNScreener: true,
       active: true,
@@ -149,7 +154,7 @@ describe('toChallengeDto', () => {
   it('should handle empty `challenges` array', () => {
     const prisonNumber = 'C9012EF'
     const apiResponse: ChallengeListResponse = { challenges: [] }
-    const result = toChallengeDto(prisonNumber, apiResponse)
+    const result = toChallengeDto(prisonNumber, apiResponse, prisonNamesById)
 
     expect(result).toHaveLength(0)
   })

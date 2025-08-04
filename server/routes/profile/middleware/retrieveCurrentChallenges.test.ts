@@ -6,7 +6,7 @@ import { aValidChallengeResponse } from '../../../testsupport/challengeResponseT
 jest.mock('../../../services/challengeService')
 
 describe('retrieveCurrentChallenges', () => {
-  const mockedChallengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
+  const mockedChallengeService = new ChallengeService(null, null) as jest.Mocked<ChallengeService>
 
   const requestHandler = retrieveCurrentChallenges(mockedChallengeService)
   const prisonNumber = 'A1234BC'

@@ -6,20 +6,29 @@ import { aValidCreateConditionsRequest } from '../testsupport/conditionRequestTe
 import { aValidConditionListResponse } from '../testsupport/conditionResponseTestDataBuilder'
 import ConditionType from '../enums/conditionType'
 import ConditionSource from '../enums/conditionSource'
+import PrisonService from './prisonService'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
+jest.mock('./prisonService')
 
 describe('conditionService', () => {
   const supportAdditionalNeedsApiClient = new SupportAdditionalNeedsApiClient(
     null,
   ) as jest.Mocked<SupportAdditionalNeedsApiClient>
-  const service = new ConditionService(supportAdditionalNeedsApiClient)
+  const prisonService = new PrisonService(null, null) as jest.Mocked<PrisonService>
+  const service = new ConditionService(supportAdditionalNeedsApiClient, prisonService)
+
+  const prisonNamesById = new Map([
+    ['BXI', 'Brixton (HMP)'],
+    ['MDI', 'Moorland (HMP & YOI)'],
+  ])
 
   const prisonNumber = 'A1234BC'
   const username = 'some-username'
 
   beforeEach(() => {
     jest.resetAllMocks()
+    prisonService.getAllPrisonNamesById.mockResolvedValue(prisonNamesById)
   })
 
   describe('createConditions', () => {
@@ -77,13 +86,13 @@ describe('conditionService', () => {
             conditionName: 'Phonological dyslexia',
             conditionTypeCode: ConditionType.DYSLEXIA,
             createdAt: parseISO('2023-06-19T09:39:44Z'),
-            createdAtPrison: 'MDI',
+            createdAtPrison: 'Moorland (HMP & YOI)',
             createdBy: 'asmith_gen',
             createdByDisplayName: 'Alex Smith',
             reference: 'c88a6c48-97e2-4c04-93b5-98619966447b',
             source: ConditionSource.SELF_DECLARED,
             updatedAt: parseISO('2023-06-19T09:39:44Z'),
-            updatedAtPrison: 'MDI',
+            updatedAtPrison: 'Moorland (HMP & YOI)',
             updatedBy: 'asmith_gen',
             updatedByDisplayName: 'Alex Smith',
           },

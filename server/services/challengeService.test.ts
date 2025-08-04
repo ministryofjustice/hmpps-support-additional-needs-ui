@@ -4,20 +4,29 @@ import aValidChallengeDto from '../testsupport/challengeDtoTestDataBuilder'
 import { aValidCreateChallengesRequest } from '../testsupport/challengeRequestTestDataBuilder'
 import { aValidChallengeListResponse, aValidChallengeResponse } from '../testsupport/challengeResponseTestDataBuilder'
 import toChallengeDto from '../data/mappers/challengeDtoMapper'
+import PrisonService from './prisonService'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
+jest.mock('./prisonService')
 
 describe('challengeService', () => {
   const supportAdditionalNeedsApiClient = new SupportAdditionalNeedsApiClient(
     null,
   ) as jest.Mocked<SupportAdditionalNeedsApiClient>
-  const service = new ChallengeService(supportAdditionalNeedsApiClient)
+  const prisonService = new PrisonService(null, null) as jest.Mocked<PrisonService>
+  const service = new ChallengeService(supportAdditionalNeedsApiClient, prisonService)
 
   const prisonNumber = 'A1234BC'
   const username = 'some-username'
 
+  const prisonNamesById = new Map([
+    ['BXI', 'Brixton (HMP)'],
+    ['MDI', 'Moorland (HMP & YOI)'],
+  ])
+
   beforeEach(() => {
     jest.resetAllMocks()
+    prisonService.getAllPrisonNamesById.mockResolvedValue(prisonNamesById)
   })
 
   describe('createChallenges', () => {
@@ -75,7 +84,7 @@ describe('challengeService', () => {
       // Then
       expect(supportAdditionalNeedsApiClient.getChallenges).toHaveBeenCalledWith('A1234BC', username)
       expect(result).toHaveLength(1)
-      expect(result).toEqual(toChallengeDto(prisonNumber, expectedChallengeListResponse))
+      expect(result).toEqual(toChallengeDto(prisonNumber, expectedChallengeListResponse, prisonNamesById))
     })
   })
 })

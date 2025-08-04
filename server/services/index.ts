@@ -29,19 +29,21 @@ export const services = () => {
     referenceDataStore,
   } = dataAccess()
 
+  const prisonService = new PrisonService(prisonRegisterStore, prisonRegisterClient)
+
   return {
     applicationInfo,
     auditService: new AuditService(hmppsAuditClient),
     journeyDataService: new JourneyDataService(journeyDataStore),
     prisonerService: new PrisonerService(prisonerSearchStore, prisonerSearchClient),
-    prisonService: new PrisonService(prisonRegisterStore, prisonRegisterClient),
+    prisonService,
     userService: new UserService(managedUsersApiClient),
     searchService: new SearchService(supportAdditionalNeedsApiClient),
     curiousService: new CuriousService(curiousApiClient),
     educationSupportPlanService: new EducationSupportPlanService(supportAdditionalNeedsApiClient),
     educationSupportPlanScheduleService: new EducationSupportPlanScheduleService(supportAdditionalNeedsApiClient),
-    challengeService: new ChallengeService(supportAdditionalNeedsApiClient),
-    conditionService: new ConditionService(supportAdditionalNeedsApiClient),
+    challengeService: new ChallengeService(supportAdditionalNeedsApiClient, prisonService),
+    conditionService: new ConditionService(supportAdditionalNeedsApiClient, prisonService),
     referenceDataService: new ReferenceDataService(referenceDataStore, supportAdditionalNeedsApiClient),
     strengthService: new StrengthService(supportAdditionalNeedsApiClient),
     additionalLearningNeedsService: new AdditionalLearningNeedsScreenerService(supportAdditionalNeedsApiClient),

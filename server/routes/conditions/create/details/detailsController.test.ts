@@ -9,7 +9,7 @@ import ConditionSource from '../../../../enums/conditionSource'
 jest.mock('../../../../services/conditionService')
 
 describe('detailsController', () => {
-  const conditionService = new ConditionService(null) as jest.Mocked<ConditionService>
+  const conditionService = new ConditionService(null, null) as jest.Mocked<ConditionService>
   const controller = new DetailsController(conditionService)
 
   const username = 'FRED_123'
