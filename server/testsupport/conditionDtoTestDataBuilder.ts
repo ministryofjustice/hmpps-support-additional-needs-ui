@@ -16,6 +16,7 @@ const aValidConditionDto = (options?: {
   conditionName?: string
   conditionDetails?: string
   source?: ConditionSource
+  active?: boolean
 }): ConditionDto => ({
   prisonId: options?.prisonId || 'BXI',
   conditionTypeCode: options?.conditionTypeCode || ConditionType.DYSLEXIA,
@@ -26,6 +27,7 @@ const aValidConditionDto = (options?: {
       : options?.conditionDetails ||
         'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
   conditionName: options?.conditionName === null ? null : options?.conditionName || 'Phonological dyslexia',
+  active: options?.active == null ? true : options?.active,
 })
 
 export { aValidConditionDto, aValidConditionsList }
