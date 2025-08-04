@@ -99,15 +99,20 @@ describe('conditionService', () => {
     })
   })
 
-  it('should return null given API returns null', async () => {
+  it('should return empty ConditionsList given API returns null', async () => {
     // Given
     supportAdditionalNeedsApiClient.getConditions.mockResolvedValue(null)
+
+    const expectedConditionsList = aValidConditionsList({
+      prisonNumber,
+      conditions: [],
+    })
 
     // When
     const actual = await service.getConditions(username, prisonNumber)
 
     // Then
-    expect(actual).toBeNull()
+    expect(actual).toEqual(expectedConditionsList)
     expect(supportAdditionalNeedsApiClient.getConditions).toHaveBeenCalledWith(prisonNumber, username)
   })
 
