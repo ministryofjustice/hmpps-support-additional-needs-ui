@@ -17,6 +17,7 @@ describe('Create Conditions', () => {
     cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
     cy.task('stubCreateConditions', prisonNumber)
+    cy.task('stubGetConditions', { prisonNumber })
   })
 
   it('should be able to navigate directly to the create Conditions page', () => {

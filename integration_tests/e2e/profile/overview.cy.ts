@@ -100,6 +100,7 @@ context('Profile Overview Page', () => {
     const prisonNumber = 'H4115SD'
     cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetConditions', { prisonNumber })
 
     cy.visit(`/profile/${prisonNumber}/overview`)
 

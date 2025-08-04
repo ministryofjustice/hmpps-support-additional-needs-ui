@@ -13,7 +13,7 @@ const profileRoutes = (services: Services): Router => {
     .use('/support-strategies', supportStrategiesRoutes())
     .use('/challenges', challengesRoutes(services))
     .use('/strengths', strengthsRoutes())
-    .use('/conditions', conditionsRoutes())
+    .use('/conditions', conditionsRoutes(services))
     .use('/education-support-plan', educationSupportPlanRoutes())
 }
 
