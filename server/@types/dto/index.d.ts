@@ -6,6 +6,7 @@ declare module 'dto' {
   import StrengthIdentificationSource from '../../enums/strengthIdentificationSource'
   import ChallengeType from '../../enums/challengeType'
   import StrengthType from '../../enums/strengthType'
+  import StrengthCategory from '../../enums/strengthCategory'
 
   /**
    * Interface defining common reference and audit related properties that DTO types can inherit through extension.
@@ -111,6 +112,7 @@ declare module 'dto' {
     prisonId?: string
     prisonNumber?: string
     strengthTypeCode: StrengthType
+    strengthCategory: StrengthCategory
     symptoms?: string
     howIdentified?: Array<StrengthIdentificationSource>
     howIdentifiedOther?: string

@@ -6,6 +6,7 @@ import { aValidCreateStrengthsRequest } from '../testsupport/strengthRequestTest
 import { aValidStrengthListResponse } from '../testsupport/strengthResponseTestDataBuilder'
 import StrengthType from '../enums/strengthType'
 import StrengthIdentificationSource from '../enums/strengthIdentificationSource'
+import StrengthCategory from '../enums/strengthCategory'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -75,6 +76,7 @@ describe('strengthService', () => {
             fromALNScreener: true,
             symptoms: 'John can read and understand written language very well',
             strengthTypeCode: StrengthType.READING_COMPREHENSION,
+            strengthCategory: StrengthCategory.LITERACY_SKILLS,
             howIdentified: [StrengthIdentificationSource.CONVERSATIONS],
             howIdentifiedOther: `John's reading strength was discovered during a poetry recital evening`,
             createdAt: parseISO('2023-06-19T09:39:44Z'),

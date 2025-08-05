@@ -11,6 +11,7 @@ const aValidStrengthResponse = (
     active?: boolean
     fromALNScreener?: boolean
     strengthTypeCode?: string
+    strengthCategory?: string
     symptoms?: string
     howIdentified?: Array<StrengthIdentificationSource>
     howIdentifiedOther?: string
@@ -27,6 +28,7 @@ const aValidStrengthResponse = (
       : options?.howIdentifiedOther || `John's reading strength was discovered during a poetry recital evening`,
   strengthType: {
     code: options?.strengthTypeCode || 'READING_COMPREHENSION',
+    categoryCode: options?.strengthCategory || 'LITERACY_SKILLS',
   },
   ...validAuditFields(options),
 })
