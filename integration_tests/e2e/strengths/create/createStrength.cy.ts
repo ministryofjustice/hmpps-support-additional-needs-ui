@@ -19,6 +19,7 @@ context('Create a Strength', () => {
     cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
     cy.task('stubCreateStrengths', prisonNumber)
+    cy.task('stubGetStrengths', { prisonNumber })
   })
 
   it('should be able to navigate directly to the create Strength page', () => {
