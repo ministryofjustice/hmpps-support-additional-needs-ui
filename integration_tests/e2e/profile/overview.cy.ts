@@ -101,6 +101,7 @@ context('Profile Overview Page', () => {
     cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
     cy.task('stubGetConditions', { prisonNumber })
+    cy.task('stubGetStrengths', { prisonNumber })
 
     cy.visit(`/profile/${prisonNumber}/overview`)
 
