@@ -1,0 +1,8 @@
+{% from "./macro.njk" import conditionsSummaryCard %}
+
+{{ conditionsSummaryCard({
+  conditions: conditions,
+  title: title,
+  classes: classes,
+  attributes: attributes
+}) }}

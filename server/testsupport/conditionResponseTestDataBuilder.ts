@@ -1,5 +1,5 @@
 import type { ConditionListResponse, ConditionResponse } from 'supportAdditionalNeedsApiClient'
-import validAuditFields, { AuditFields } from './auditFieldsTestDataBuilder'
+import { validAuditFields, AuditFields } from './auditFieldsTestDataBuilder'
 import ConditionSource from '../enums/conditionSource'
 
 const aValidConditionListResponse = (options?: {

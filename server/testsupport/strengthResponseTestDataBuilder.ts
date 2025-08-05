@@ -1,5 +1,5 @@
 import type { StrengthListResponse, StrengthResponse } from 'supportAdditionalNeedsApiClient'
-import validAuditFields, { AuditFields } from './auditFieldsTestDataBuilder'
+import { validAuditFields, AuditFields } from './auditFieldsTestDataBuilder'
 import StrengthIdentificationSource from '../enums/strengthIdentificationSource'
 
 const aValidStrengthListResponse = (options?: { strengths?: Array<StrengthResponse> }): StrengthListResponse => ({

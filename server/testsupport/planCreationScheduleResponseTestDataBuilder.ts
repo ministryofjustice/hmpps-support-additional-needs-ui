@@ -1,7 +1,7 @@
 import { addMonths, format, startOfToday } from 'date-fns'
 import type { PlanCreationScheduleResponse, PlanCreationSchedulesResponse } from 'supportAdditionalNeedsApiClient'
 import PlanCreationScheduleStatus from '../enums/planCreationScheduleStatus'
-import validAuditFields, { AuditFields } from './auditFieldsTestDataBuilder'
+import { validAuditFields, AuditFields } from './auditFieldsTestDataBuilder'
 
 const aValidPlanCreationSchedulesResponse = (options?: {
   planCreationSchedules?: Array<PlanCreationScheduleResponse>
