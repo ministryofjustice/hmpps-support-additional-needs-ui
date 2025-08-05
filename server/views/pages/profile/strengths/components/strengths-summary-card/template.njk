@@ -1,0 +1,68 @@
+{% from "govuk/macros/attributes.njk" import govukAttributes %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{#- Set classes for this component #}
+{%- set classNames = "govuk-summary-card" -%}
+{%- if params.classes %}
+  {% set classNames = classNames + " " + params.classes %}
+{% endif %}
+
+{#- Define component attributes #}
+{%- set componentAttributes %} class="{{ classNames }}" {{- govukAttributes(params.attributes) -}} {% if params.id %} id="{{ params.id }}"{% endif %}{% endset %}
+
+{% if params.strengths | length %}
+  <div {{ componentAttributes | safe }}>
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">{{ params.title }}</h2>
+    </div>
+
+    <div class="govuk-summary-card__content govuk-!-padding-top-0">
+      <div class="govuk-summary-list">
+
+        {# Render non-ALN strengths first #}
+        {% set nonAlnStrengths = params.strengths | filterArrayOnProperty('fromALNScreener', false) | sort(true, false, 'updatedAt') %}
+        {% for strength in nonAlnStrengths %}
+          <div class="govuk-summary-list__row non-aln-strength" data-qa="{{ strength.strengthTypeCode }}">
+            <p class="govuk-body govuk-!-margin-top-3" data-qa="non-aln-strength-symptoms">{{ strength.symptoms }}</p>
+
+            {% set expanderContent %}
+              <ul class="govuk-list govuk-!-font-size-16">
+                {% for strengthIdentificationSource in strength.howIdentified %}
+                  <li>{{ strengthIdentificationSource | formatStrengthIdentificationSourceScreenValue if strengthIdentificationSource != 'OTHER' else strength.howIdentifiedOther }}</li>
+                {% endfor %}
+              </ul>
+            {% endset %}
+            {{ govukDetails({
+              summaryText: "How was this identified?",
+              html: expanderContent,
+              classes: "govuk-!-font-size-16",
+              attributes: {
+                "data-qa": "non-aln-strength-how-identified"
+              }
+            }) }}
+
+            <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="non-aln-strength-audit">
+              Added on {{ strength.updatedAt | formatDate('d MMMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ strength.updatedByDisplayName }}</span>
+            </p>
+          </div>
+        {% endfor %}
+
+        {# Render strengths from the most recent ALN Screener #}
+        {% set strengthsFromMostRecentAlnScreener = params.strengths | filterArrayOnProperty('fromALNScreener', true) %}
+        {% if strengthsFromMostRecentAlnScreener | length %}
+          <div class="govuk-summary-list__row aln-strengths">
+            <ul class="govuk-list govuk-!-margin-top-3">
+              {% for strength in strengthsFromMostRecentAlnScreener %}
+                <li>{{ strength.strengthTypeCode | formatStrengthTypeScreenValue }}</li>
+              {% endfor %}
+            </ul>
+
+            <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-strengths-audit">
+              From Additional Learning Needs Screener completed on {{ strengthsFromMostRecentAlnScreener[0].alnScreenerDate | formatDate('d MMMM yyyy') }}, {{ strengthsFromMostRecentAlnScreener[0].createdAtPrison }}
+            </p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}

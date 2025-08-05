@@ -1,4 +1,5 @@
 {% extends "../layout.njk" %}
+{% from "./components/strengths-summary-card/macro.njk" import strengthsSummaryCard %}
 {% from "../../../components/actions-card/macro.njk" import actionsCard %}
 
 {% set pageId = 'profile-strengths' %}
@@ -11,14 +12,21 @@
 
       {% if strengths.isFulfilled() %}
         {% set activeStrengths = strengths.value.strengths | filterArrayOnProperty('active', true) %}
-
         {% if activeStrengths | length %}
-          {# TODO - loop through activeStrengths rendering each one #}
+
+          {% for strengthCategory, activeStrengthsInCategory in activeStrengths | groupby('strengthCategory') %}
+             {{ strengthsSummaryCard({
+               title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
+               strengths: activeStrengthsInCategory,
+               attributes: {
+                 'data-qa': strengthCategory
+               }
+            }) }}
+          {% endfor %}
 
         {% else %}
           {% include './_noStrengthsSummaryCard.njk' %}
         {% endif %}
-
       {% else %}
         <h3 class="govuk-heading-s" data-qa="strengths-unavailable-message">We cannot show these details right now</h3>
         <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>

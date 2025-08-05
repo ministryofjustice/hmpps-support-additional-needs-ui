@@ -1,0 +1,8 @@
+{% from "./macro.njk" import strengthsSummaryCard %}
+
+{{ strengthsSummaryCard({
+  strengths: strengths,
+  title: title,
+  classes: classes,
+  attributes: attributes
+}) }}
