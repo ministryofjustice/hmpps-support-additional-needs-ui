@@ -173,6 +173,16 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     )
   }
 
+  async getStrengths(prisonNumber: string, username: string): Promise<StrengthListResponse> {
+    return this.get<StrengthListResponse>(
+      {
+        path: `/profile/${prisonNumber}/strengths`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
   async createAdditionalLearningNeedsScreener(
     prisonNumber: string,
     username: string,

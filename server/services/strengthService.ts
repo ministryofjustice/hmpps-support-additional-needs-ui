@@ -1,7 +1,8 @@
-import type { StrengthDto } from 'dto'
+import type { StrengthDto, StrengthsList } from 'dto'
 import { SupportAdditionalNeedsApiClient } from '../data'
 import { toCreateStrengthsRequest } from '../data/mappers/createStrengthsRequestMapper'
 import logger from '../../logger'
+import { toStrengthsList } from '../data/mappers/strengthDtoMapper'
 
 export default class StrengthService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -14,6 +15,16 @@ export default class StrengthService {
       await this.supportAdditionalNeedsApiClient.createStrengths(prisonNumber, username, createStrengthsRequest)
     } catch (e) {
       logger.error(`Error creating Strengths for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
+
+  async getStrengths(username: string, prisonNumber: string): Promise<StrengthsList> {
+    try {
+      const strengthListResponse = await this.supportAdditionalNeedsApiClient.getStrengths(prisonNumber, username)
+      return toStrengthsList(strengthListResponse, prisonNumber)
+    } catch (e) {
+      logger.error(`Error getting Strengths for [${prisonNumber}]`, e)
       throw e
     }
   }
