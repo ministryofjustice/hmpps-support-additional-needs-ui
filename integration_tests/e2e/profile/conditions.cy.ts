@@ -1,5 +1,5 @@
 /**
- * Cypress scenarios for the Profile Overview page.
+ * Cypress scenarios for the Profile Conditions page.
  */
 
 import Page from '../../pages/page'
