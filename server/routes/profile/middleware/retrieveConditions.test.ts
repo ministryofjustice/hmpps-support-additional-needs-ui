@@ -1,16 +1,24 @@
 import { Request, Response } from 'express'
 import ConditionService from '../../../services/conditionService'
+import PrisonService from '../../../services/prisonService'
 import retrieveConditions from './retrieveConditions'
-import { aValidConditionsList } from '../../../testsupport/conditionDtoTestDataBuilder'
+import { aValidConditionDto, aValidConditionsList } from '../../../testsupport/conditionDtoTestDataBuilder'
 
 jest.mock('../../../services/conditionService')
+jest.mock('../../../services/prisonService')
 
 describe('retrieveConditions', () => {
   const conditionService = new ConditionService(null) as jest.Mocked<ConditionService>
-  const requestHandler = retrieveConditions(conditionService)
+  const prisonService = new PrisonService(null, null) as jest.Mocked<PrisonService>
+  const requestHandler = retrieveConditions(conditionService, prisonService)
 
   const prisonNumber = 'A1234BC'
   const username = 'a-dps-user'
+
+  const prisonNamesById = new Map([
+    ['BXI', 'Brixton (HMP)'],
+    ['MDI', 'Moorland (HMP & YOI)'],
+  ])
 
   const apiErrorCallback = jest.fn()
   const req = {
@@ -26,12 +34,31 @@ describe('retrieveConditions', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     res.locals = { user: undefined, apiErrorCallback }
+    prisonService.getAllPrisonNamesById.mockResolvedValue(prisonNamesById)
   })
 
   it('should retrieve Conditions and store on res.locals', async () => {
     // Given
-    const expectedConditionsList = aValidConditionsList({ prisonNumber })
-    conditionService.getConditions.mockResolvedValue(expectedConditionsList)
+    const conditionsList = aValidConditionsList({
+      prisonNumber,
+      conditions: [
+        aValidConditionDto({
+          createdAtPrison: 'MDI',
+          updatedAtPrison: 'MDI',
+        }),
+      ],
+    })
+    conditionService.getConditions.mockResolvedValue(conditionsList)
+
+    const expectedConditionsList = aValidConditionsList({
+      prisonNumber,
+      conditions: [
+        aValidConditionDto({
+          createdAtPrison: 'Moorland (HMP & YOI)',
+          updatedAtPrison: 'Moorland (HMP & YOI)',
+        }),
+      ],
+    })
 
     // When
     await requestHandler(req, res, next)

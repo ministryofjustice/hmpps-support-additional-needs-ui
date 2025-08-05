@@ -5,6 +5,7 @@ import { stubFor, getMatchingRequests } from './wiremock'
 import tokenVerification from './tokenVerification'
 import manageUsersApi from './manageUsersApi'
 import supportAdditionalNeedsApi from './supportAdditionalNeedsApi'
+import prisonRegisterApi from './prisonRegisterApi'
 import stubPing from './common'
 
 interface UserToken {
@@ -109,7 +110,7 @@ export default {
   stubAuthPing: stubPing('auth'),
   stubSignIn: (
     userToken: UserToken = {},
-  ): Promise<[Response, Response, Response, Response, Response, Response, Response]> =>
+  ): Promise<[Response, Response, Response, Response, Response, Response, Response, Response]> =>
     Promise.all([
       favicon(),
       redirect(),
@@ -118,5 +119,6 @@ export default {
       tokenVerification.stubVerifyToken(),
       manageUsersApi.stubGetUserCaseloads(),
       supportAdditionalNeedsApi.stubSearchByPrison(),
+      prisonRegisterApi.stubGetAllPrisons(),
     ]),
 }

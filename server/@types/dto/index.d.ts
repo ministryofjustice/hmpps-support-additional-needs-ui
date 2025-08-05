@@ -10,7 +10,7 @@ declare module 'dto' {
   /**
    * Interface defining common reference and audit related properties that DTO types can inherit through extension.
    */
-  interface ReferencedAndAuditable {
+  export interface ReferencedAndAuditable {
     reference?: string
     createdBy?: string
     createdByDisplayName?: string
