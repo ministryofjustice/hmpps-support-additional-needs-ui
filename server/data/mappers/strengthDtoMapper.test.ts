@@ -4,6 +4,7 @@ import { aValidStrengthListResponse } from '../../testsupport/strengthResponseTe
 import { aValidStrengthsList } from '../../testsupport/strengthDtoTestDataBuilder'
 import StrengthType from '../../enums/strengthType'
 import StrengthIdentificationSource from '../../enums/strengthIdentificationSource'
+import StrengthCategory from '../../enums/strengthCategory'
 
 describe('strengthDtoMapper', () => {
   it('should map StrengthListResponse to a StrengthsList', () => {
@@ -15,7 +16,7 @@ describe('strengthDtoMapper', () => {
           active: true,
           fromALNScreener: true,
           symptoms: 'John can read and understand very well.',
-          strengthType: { code: 'READING_COMPREHENSION' },
+          strengthType: { code: 'READING_COMPREHENSION', categoryCode: 'LITERACY_SKILLS' },
           howIdentified: ['CONVERSATIONS'],
           howIdentifiedOther: 'I have spoken to the person',
           reference: 'c88a6c48-97e2-4c04-93b5-98619966447b',
@@ -39,6 +40,7 @@ describe('strengthDtoMapper', () => {
           fromALNScreener: true,
           symptoms: 'John can read and understand very well.',
           strengthTypeCode: StrengthType.READING_COMPREHENSION,
+          strengthCategory: StrengthCategory.LITERACY_SKILLS,
           howIdentified: [StrengthIdentificationSource.CONVERSATIONS],
           howIdentifiedOther: 'I have spoken to the person',
           createdAt: parseISO('2023-06-19T09:39:44Z'),

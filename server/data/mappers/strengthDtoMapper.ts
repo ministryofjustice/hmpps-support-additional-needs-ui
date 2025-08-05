@@ -10,6 +10,7 @@ const toStrengthsList = (strengthListResponse: StrengthListResponse, prisonNumbe
 const toStrengthDto = (strengthResponse: StrengthResponse): StrengthDto => ({
   ...toReferenceAndAuditable(strengthResponse),
   strengthTypeCode: strengthResponse.strengthType.code,
+  strengthCategory: strengthResponse.strengthType.categoryCode,
   symptoms: strengthResponse.symptoms,
   howIdentified: strengthResponse.howIdentified,
   howIdentifiedOther: strengthResponse.howIdentifiedOther,
