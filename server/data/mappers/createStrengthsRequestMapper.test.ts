@@ -1,5 +1,5 @@
 import { toCreateStrengthsRequest } from './createStrengthsRequestMapper'
-import aValidStrengthDto from '../../testsupport/strengthDtoTestDataBuilder'
+import { aValidStrengthDto } from '../../testsupport/strengthDtoTestDataBuilder'
 import { aValidCreateStrengthsRequest, aValidStrengthRequest } from '../../testsupport/strengthRequestTestDataBuilder'
 import StrengthIdentificationSource from '../../enums/strengthIdentificationSource'
 import StrengthType from '../../enums/strengthType'

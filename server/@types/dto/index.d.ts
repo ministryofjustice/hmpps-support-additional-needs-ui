@@ -102,13 +102,20 @@ declare module 'dto' {
     active?: boolean
   }
 
-  export interface StrengthDto {
+  export interface StrengthsList {
     prisonNumber: string
-    prisonId: string
+    strengths: Array<StrengthDto>
+  }
+
+  export interface StrengthDto extends ReferencedAndAuditable {
+    prisonId?: string
+    prisonNumber?: string
     strengthTypeCode: StrengthType
     symptoms?: string
     howIdentified?: Array<StrengthIdentificationSource>
     howIdentifiedOther?: string
+    active?: boolean
+    fromALNScreener?: boolean
   }
 
   export interface ReferenceDataItemDto {

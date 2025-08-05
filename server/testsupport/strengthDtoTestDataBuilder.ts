@@ -1,16 +1,26 @@
-import type { StrengthDto } from 'dto'
+import type { StrengthDto, StrengthsList } from 'dto'
 import StrengthIdentificationSource from '../enums/strengthIdentificationSource'
 import StrengthType from '../enums/strengthType'
+import { DtoAuditFields, validDtoAuditFields } from './auditFieldsTestDataBuilder'
 
-const aValidStrengthDto = (options?: {
-  prisonNumber?: string
-  prisonId?: string
-  strengthTypeCode?: StrengthType
-  symptoms?: string
-  howIdentified?: Array<StrengthIdentificationSource>
-  howIdentifiedOther?: string
-}): StrengthDto => ({
+const aValidStrengthsList = (options?: { prisonNumber?: string; strengths?: Array<StrengthDto> }): StrengthsList => ({
   prisonNumber: options?.prisonNumber || 'A1234BC',
+  strengths: options?.strengths || [aValidStrengthDto()],
+})
+
+const aValidStrengthDto = (
+  options?: DtoAuditFields & {
+    prisonNumber?: string
+    prisonId?: string
+    strengthTypeCode?: StrengthType
+    symptoms?: string
+    howIdentified?: Array<StrengthIdentificationSource>
+    howIdentifiedOther?: string
+    active?: boolean
+    fromALNScreener?: boolean
+  },
+): StrengthDto => ({
+  prisonNumber: options?.prisonNumber === null ? null : options?.prisonNumber || 'A1234BC',
   prisonId: options?.prisonId || 'BXI',
   strengthTypeCode: options?.strengthTypeCode || StrengthType.READING_COMPREHENSION,
   symptoms:
@@ -20,6 +30,9 @@ const aValidStrengthDto = (options?: {
     options?.howIdentifiedOther === null
       ? null
       : options?.howIdentifiedOther || `John's reading strength was discovered during a poetry recital evening`,
+  active: options?.active == null ? true : options?.active,
+  fromALNScreener: options?.fromALNScreener == null ? true : options?.fromALNScreener,
+  ...validDtoAuditFields(options),
 })
 
-export default aValidStrengthDto
+export { aValidStrengthDto, aValidStrengthsList }

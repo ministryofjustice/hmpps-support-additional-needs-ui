@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import type { StrengthDto } from 'dto'
 import DetailController from './detailController'
-import aValidStrengthDto from '../../../../testsupport/strengthDtoTestDataBuilder'
+import { aValidStrengthDto } from '../../../../testsupport/strengthDtoTestDataBuilder'
 import StrengthIdentificationSource from '../../../../enums/strengthIdentificationSource'
 import StrengthService from '../../../../services/strengthService'
 import StrengthType from '../../../../enums/strengthType'

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import checkStrengthDtoExistsInJourneyData from './checkStrengthDtoExistsInJourneyData'
-import aValidStrengthDto from '../../../../testsupport/strengthDtoTestDataBuilder'
+import { aValidStrengthDto } from '../../../../testsupport/strengthDtoTestDataBuilder'
 
 describe('checkStrengthDtoExistsInJourneyData', () => {
   const prisonNumber = 'A1234BC'
