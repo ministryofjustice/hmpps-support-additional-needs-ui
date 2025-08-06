@@ -27,7 +27,8 @@
             <p class="govuk-body app-u-multiline-text govuk-!-margin-bottom-2" data-qa="condition-details">{{ condition.conditionDetails }}</p>
 
             <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="condition-audit">
-              Added on {{ condition.updatedAt | formatDate('d MMMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ condition.updatedByDisplayName }}, {{ condition.updatedAtPrison }}</span>
+              {% set prisonName = params.prisonNamesById[condition.updatedAtPrison] | default(condition.updatedAtPrison) %}
+              Added on {{ condition.updatedAt | formatDate('d MMMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ condition.updatedByDisplayName }}, {{ prisonName }}</span>
             </p>
           </div>
         {% endfor %}
