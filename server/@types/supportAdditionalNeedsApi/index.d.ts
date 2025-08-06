@@ -533,6 +533,12 @@ export interface components {
        */
       updatedAtPrison: string
       /**
+       * Format: date
+       * @description The date that the screener was recorded that has this strength
+       * @example 2023-11-19
+       */
+      alnScreenerDate?: string
+      /**
        * @description Optional details about the symptoms of this strength
        * @example John is great at reading.
        */
@@ -714,6 +720,12 @@ export interface components {
        * @example BXI
        */
       updatedAtPrison: string
+      /**
+       * Format: date
+       * @description The date that the screener was recorded that has this challenge
+       * @example 2023-11-19
+       */
+      alnScreenerDate?: string
       /**
        * @description Optional details about the symptoms of this challenge
        * @example John struggles to read text on white background.
@@ -1293,28 +1305,6 @@ export interface components {
        */
       planCreationSchedules: components['schemas']['PlanCreationScheduleResponse'][]
     }
-    AdditionalNeedsSummary: {
-      /**
-       * @description Whether this person has any Conditions recorded in the service.
-       * @example true
-       */
-      hasConditions: boolean
-      /**
-       * @description Whether this person has any Challenges recorded in the service.
-       * @example true
-       */
-      hasChallenges: boolean
-      /**
-       * @description Whether this person has any Strengths recorded in the service.
-       * @example true
-       */
-      hasStrengths: boolean
-      /**
-       * @description Whether this person has any Support Recommendations recorded in the service.
-       * @example true
-       */
-      hasSupportRecommendations: boolean
-    }
     PaginationMetaData: {
       /**
        * Format: int32
@@ -1390,6 +1380,31 @@ export interface components {
         | 'UNKNOWN'
         | 'OTHER'
       /**
+       * @description Returns true if this person has any ALN needs, LDD needs, SAN condition or SAN Challenge.
+       * @example null
+       */
+      hasAdditionalNeed: boolean
+      /**
+       * @description Returns true if this person is currently in education.
+       * @example null
+       */
+      inEducation: boolean
+      /**
+       * @description The status of the persons plan.
+       * @example null
+       * @enum {string}
+       */
+      planStatus:
+        | 'PLAN_OVERDUE'
+        | 'PLAN_DUE'
+        | 'REVIEW_OVERDUE'
+        | 'REVIEW_DUE'
+        | 'ACTIVE_PLAN'
+        | 'NEEDS_PLAN'
+        | 'INACTIVE_PLAN'
+        | 'PLAN_DECLINED'
+        | 'NO_PLAN'
+      /**
        * @description The prisoner's cell location within prison
        * @example B-3-047
        */
@@ -1401,10 +1416,11 @@ export interface components {
        */
       releaseDate?: string
       /**
-       * @description Optional object containing summary data held in this service about the person.   The object is only populated if the person has Additional Needs data in this service.   If the person does not yet have any data recorded in this service this field will be null.
-       * @example null
+       * Format: date
+       * @description Either the plan creation,or review deadline date.
+       * @example 2035-11-01
        */
-      additionalNeeds?: components['schemas']['AdditionalNeedsSummary']
+      deadlineDate?: string
     }
     SearchByPrisonResponse: {
       /** @example null */
@@ -2047,7 +2063,7 @@ export interface operations {
     parameters: {
       query?: {
         prisonerNameOrNumber?: string
-        sortBy?: 'PRISONER_NAME' | 'PRISON_NUMBER' | 'CELL_LOCATION' | 'RELEASE_DATE'
+        sortBy?: 'PRISONER_NAME' | 'PRISON_NUMBER' | 'CELL_LOCATION' | 'RELEASE_DATE' | 'DEADLINE_DATE' | 'PLAN_STATUS'
         sortDirection?: 'ASC' | 'DESC'
         page?: number
         pageSize?: number

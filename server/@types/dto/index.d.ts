@@ -118,6 +118,7 @@ declare module 'dto' {
     howIdentifiedOther?: string
     active?: boolean
     fromALNScreener?: boolean
+    alnScreenerDate?: Date
   }
 
   export interface ReferenceDataItemDto {

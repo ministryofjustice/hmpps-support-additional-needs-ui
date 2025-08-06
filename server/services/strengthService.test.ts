@@ -3,7 +3,7 @@ import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiCl
 import StrengthService from './strengthService'
 import { aValidStrengthDto, aValidStrengthsList } from '../testsupport/strengthDtoTestDataBuilder'
 import { aValidCreateStrengthsRequest } from '../testsupport/strengthRequestTestDataBuilder'
-import { aValidStrengthListResponse } from '../testsupport/strengthResponseTestDataBuilder'
+import { aValidStrengthListResponse, aValidStrengthResponse } from '../testsupport/strengthResponseTestDataBuilder'
 import StrengthType from '../enums/strengthType'
 import StrengthIdentificationSource from '../enums/strengthIdentificationSource'
 import StrengthCategory from '../enums/strengthCategory'
@@ -66,14 +66,17 @@ describe('strengthService', () => {
   describe('getStrengths', () => {
     it('should get strengths', async () => {
       // Given
-      const strengthListResponse = aValidStrengthListResponse()
+      const strengthListResponse = aValidStrengthListResponse({
+        strengths: [aValidStrengthResponse({ fromALNScreener: false, alnScreenerDate: null })],
+      })
       supportAdditionalNeedsApiClient.getStrengths.mockResolvedValue(strengthListResponse)
 
       const expectedStrengthsList = aValidStrengthsList({
         strengths: [
           {
             active: true,
-            fromALNScreener: true,
+            fromALNScreener: false,
+            alnScreenerDate: null,
             symptoms: 'John can read and understand written language very well',
             strengthTypeCode: StrengthType.READING_COMPREHENSION,
             strengthCategory: StrengthCategory.LITERACY_SKILLS,
