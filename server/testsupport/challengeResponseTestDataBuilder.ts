@@ -16,6 +16,7 @@ const aValidChallengeResponse = (
     challengeTypeCode?: string
     symptoms?: string
     howIdentified?: string
+    alnScreenerDate?: string
   },
 ): ChallengeResponse => ({
   active: options?.active == null ? true : options?.active,
@@ -32,6 +33,7 @@ const aValidChallengeResponse = (
   challengeType: {
     code: options?.challengeTypeCode || 'READING_COMPREHENSION',
   },
+  alnScreenerDate: options?.alnScreenerDate === null ? null : options?.alnScreenerDate || '2025-06-18',
   ...validAuditFields(options),
 })
 

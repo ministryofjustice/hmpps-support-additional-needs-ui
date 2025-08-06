@@ -20,6 +20,7 @@ const aValidStrengthDto = (
     howIdentifiedOther?: string
     active?: boolean
     fromALNScreener?: boolean
+    alnScreenerDate?: Date
   },
 ): StrengthDto => ({
   prisonNumber: options?.prisonNumber === null ? null : options?.prisonNumber || 'A1234BC',
@@ -35,6 +36,7 @@ const aValidStrengthDto = (
       : options?.howIdentifiedOther || `John's reading strength was discovered during a poetry recital evening`,
   active: options?.active == null ? true : options?.active,
   fromALNScreener: options?.fromALNScreener == null ? true : options?.fromALNScreener,
+  alnScreenerDate: options?.alnScreenerDate === null ? null : options?.alnScreenerDate,
   ...validDtoAuditFields(options),
 })
 

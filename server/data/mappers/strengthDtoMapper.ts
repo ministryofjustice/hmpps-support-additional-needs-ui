@@ -1,3 +1,4 @@
+import { parseISO } from 'date-fns'
 import type { StrengthDto, StrengthsList } from 'dto'
 import type { StrengthListResponse, StrengthResponse } from 'supportAdditionalNeedsApiClient'
 import toReferenceAndAuditable from './referencedAndAuditableMapper'
@@ -16,6 +17,7 @@ const toStrengthDto = (strengthResponse: StrengthResponse): StrengthDto => ({
   howIdentifiedOther: strengthResponse.howIdentifiedOther,
   active: strengthResponse.active,
   fromALNScreener: strengthResponse.fromALNScreener,
+  alnScreenerDate: strengthResponse.alnScreenerDate ? parseISO(strengthResponse.alnScreenerDate) : null,
 })
 
 export { toStrengthsList, toStrengthDto }
