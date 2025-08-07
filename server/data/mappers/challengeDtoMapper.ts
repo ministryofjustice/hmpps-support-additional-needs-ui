@@ -11,6 +11,7 @@ const toChallengeDto = (prisonNumber: string, apiResponse: ChallengeListResponse
         prisonNumber,
         fromALNScreener: challenge.fromALNScreener,
         challengeType: toReferenceDataItem(challenge.challengeType),
+        challengeCategory: challenge.challengeType.categoryCode,
         symptoms: challenge.symptoms,
         howIdentified: challenge.howIdentified,
         active: challenge.active,

@@ -6,6 +6,7 @@ declare module 'dto' {
   import StrengthIdentificationSource from '../../enums/strengthIdentificationSource'
   import ChallengeType from '../../enums/challengeType'
   import StrengthType from '../../enums/strengthType'
+  import ChallengeCategory from '../../enums/challengeCategory'
   import StrengthCategory from '../../enums/strengthCategory'
 
   /**
@@ -74,6 +75,7 @@ declare module 'dto' {
     prisonNumber: string
     fromALNScreener: boolean
     challengeType: ReferenceDataItemDto
+    challengeCategory: ChallengeCategory
     active: boolean
     symptoms?: string
     howIdentified?: (
