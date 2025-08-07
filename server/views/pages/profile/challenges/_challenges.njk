@@ -1,8 +1,63 @@
-<div class="govuk-summary-card" data-qa="challenges-summary-card">
-  <div class="govuk-summary-card__content">
-    <p class="govuk-body">
-      No challenges recorded
-    </p>
-    <a class="govuk-link govuk-!-font-weight-regular" href="#" data-qa="add-challenge-button">Add challenge</a>
-  </div>
-</div>
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% if groupedChallenges %}
+  {% for groupName, challenges in groupedChallenges %}
+    <div class="govuk-summary-card" data-qa="challenges-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">{{ groupName | formatChallengeCategoryScreenValue }}</h2>
+      </div>
+
+      <div class="govuk-summary-card__content govuk-!-padding-top-0">
+        <div class="govuk-summary-list">
+          {% for challenge in challenges %}
+              {% if challenge.fromALNScreener %}
+                <div class="govuk-summary-list__row">
+                    {{ govukDetails({
+                      summaryText: challenge.challengeTypeCode | formatChallengeTypeScreenValue,
+                      text: "We will look up some supporting information in here ",
+                      classes: "govuk-!-margin-top-3",
+                      attributes: {
+                        "data-qa": "non-aln-challenge-how-identified"
+                      }
+                    }) }}
+                    <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-challenge-audit">
+                      From Additional Learning Needs Screener completed on {{ challenge.updatedAt | formatDate('d MMMM yyyy') }}<span
+                        class="govuk-!-display-none-print"> by {{ challenge.updatedByDisplayName }}</span>
+                    </p>
+               </div>
+            {% else %}
+            <div class="govuk-summary-list__row">
+              <p class="govuk-body govuk-!-margin-top-3"
+                 data-qa="non-aln-challenge-symptoms">{{ challenge.symptoms }}</p>
+
+              {% set howIdentifiedContent %}
+                <ul class="govuk-list govuk-!-font-size-16">
+                  {% for challengeIdentificationSource in challenge.howIdentified %}
+                    <li>{{ challengeIdentificationSource | formatStrengthIdentificationSourceScreenValue if challengeIdentificationSource != 'OTHER' else challenge.howIdentifiedOther }}</li>
+                  {% endfor %}
+                </ul>
+              {% endset %}
+
+              {{ govukDetails({
+                summaryText: "How was this identified",
+                html: howIdentifiedContent,
+                attributes: {
+                  "data-qa": "non-aln-challenge-how-identified"
+                }
+              }) }}
+
+              <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="non-aln-challenge-audit">
+                Added on {{ challenge.updatedAt | formatDate('d MMMM yyyy') }}<span
+                  class="govuk-!-display-none-print"> by {{ challenge.updatedByDisplayName }}</span>
+              </p>
+            </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+{% endif %}
+<a class="govuk-link govuk-!-font-weight-regular" href="#" data-qa="add-challenge-button">Add challenge</a>
+
+

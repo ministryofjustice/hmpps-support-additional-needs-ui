@@ -3,7 +3,7 @@ import ChallengeService from './challengeService'
 import aValidChallengeDto from '../testsupport/challengeDtoTestDataBuilder'
 import { aValidCreateChallengesRequest } from '../testsupport/challengeRequestTestDataBuilder'
 import { aValidChallengeListResponse, aValidChallengeResponse } from '../testsupport/challengeResponseTestDataBuilder'
-import toChallengeDto from '../data/mappers/challengeDtoMapper'
+import { toChallengeDto } from '../data/mappers/challengeDtoMapper'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 

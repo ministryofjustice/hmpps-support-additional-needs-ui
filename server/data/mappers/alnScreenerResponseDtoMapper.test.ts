@@ -50,6 +50,10 @@ describe('alnScreenerResponseDtoMapper', () => {
             {
               challengeTypeCode: ChallengeType.LITERACY_SKILLS_DEFAULT,
               challengeCategory: ChallengeCategory.LITERACY_SKILLS,
+              prisonNumber: 'A12345',
+              fromALNScreener: false,
+              challengeType: { code: 'LITERACY_SKILLS_DEFAULT', areaCode: 'LITERACY_SKILLS' },
+              active: false,
             },
           ],
           strengths: [

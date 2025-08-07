@@ -5,6 +5,7 @@ import StrengthType from '../enums/strengthType'
 import ChallengeCategory from '../enums/challengeCategory'
 import { DtoAuditFields, validDtoAuditFields } from './auditFieldsTestDataBuilder'
 import { aValidStrengthResponseDto } from './strengthResponseDtoTestDataBuilder'
+import { aValidChallengeResponse } from './challengeResponseTestDataBuilder'
 
 const aValidAlnScreenerList = (options?: {
   prisonNumber?: string
@@ -22,9 +23,7 @@ const aValidAlnScreenerResponseDto = (
   },
 ): AlnScreenerResponseDto => ({
   screenerDate: options?.screenerDate || subDays(startOfToday(), 1),
-  challenges: options?.challenges || [
-    { challengeTypeCode: ChallengeType.LITERACY_SKILLS_DEFAULT, challengeCategory: ChallengeCategory.LITERACY_SKILLS },
-  ],
+  challenges: options?.challenges || aValidChallengeResponse(),
   strengths: options?.strengths || [aValidStrengthResponseDto()],
   ...validDtoAuditFields(options),
 })

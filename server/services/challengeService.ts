@@ -2,7 +2,7 @@ import type { ChallengeDto, ChallengeResponseDto } from 'dto'
 import { SupportAdditionalNeedsApiClient } from '../data'
 import { toCreateChallengesRequest } from '../data/mappers/createChallengesRequestMapper'
 import logger from '../../logger'
-import toChallengeDto from '../data/mappers/challengeDtoMapper'
+import { toChallengeDto } from '../data/mappers/challengeDtoMapper'
 
 export default class ChallengeService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
