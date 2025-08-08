@@ -9,11 +9,12 @@ describe('conditionsController', () => {
 
   const prisonerSummary = aValidPrisonerSummary()
   const conditions = Result.fulfilled(aValidConditionsList())
+  const prisonNamesById = { BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' }
 
   const req = {} as unknown as Request
   const res = {
     render: jest.fn(),
-    locals: { prisonerSummary, conditions },
+    locals: { prisonerSummary, conditions, prisonNamesById },
   } as unknown as Response
   const next = jest.fn()
 
@@ -27,6 +28,7 @@ describe('conditionsController', () => {
     const expectedViewModel = {
       prisonerSummary,
       conditions,
+      prisonNamesById,
       tab: 'conditions',
     }
 

@@ -3,10 +3,11 @@
 Data supplied to this marco:
   params: {
     conditions: Array<ConditionDto> - Pre-filtered array of conditions to render
+    prisonNamesById: Object of key value pairs, where the key is the prison ID, and the value is the prison name
     title: string - Summary Card title
     id: string
     classes: string
-    attributes: Map<string, string>
+    attributes: Object of key value pairs of additonal attributes to add the to the component
   }
 #}
 {% macro conditionsSummaryCard(params) %}
