@@ -29,7 +29,7 @@ beforeEach(() => {
 
   jest.resetAllMocks()
 
-  prisonService.getAllPrisonNamesById.mockResolvedValue(new Map([['BXI', 'Brixton (HMP)']]))
+  prisonService.getAllPrisonNamesById.mockResolvedValue({ BXI: 'Brixton (HMP)' })
 })
 
 describe('auditMiddleware', () => {
