@@ -31,6 +31,9 @@ declare module 'supportAdditionalNeedsApiClient' {
   export type ReferenceDataListResponse = components['schemas']['ReferenceDataListResponse']
   export type ReferenceData = components['schemas']['ReferenceData']
 
+  export type ALNScreeners = components['schemas']['ALNScreeners']
+  export type ALNScreenerResponse = components['schemas']['ALNScreenerResponse']
+
   export type AlnScreenerRequest = components['schemas']['ALNScreenerRequest']
   export type AlnChallenge = components['schemas']['ALNChallenge']
   export type AlnStrength = components['schemas']['ALNStrength']

@@ -219,7 +219,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    get?: never
+    get: operations['getALNScreener']
     put?: never
     post: operations['createALNScreener']
     delete?: never
@@ -1562,6 +1562,79 @@ export interface components {
        */
       reviewSchedules: components['schemas']['ReviewScheduleResponse'][]
     }
+    ALNScreenerResponse: {
+      /**
+       * Format: uuid
+       * @description The unique reference of this ALN screener
+       * @example c88a6c48-97e2-4c04-93b5-98619966447b
+       */
+      reference: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing the date the screener was carried out.
+       * @example 2023-11-19
+       */
+      screenerDate: string
+      /**
+       * @description A List containing zero or more challenges.
+       * @example null
+       */
+      challenges: components['schemas']['ChallengeResponse'][]
+      /**
+       * @description A List containing zero or more strengths.
+       * @example null
+       */
+      strengths: components['schemas']['StrengthResponse'][]
+      /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
+    }
+    ALNScreeners: {
+      /**
+       * @description A List containing zero or more ALNScreener.
+       * @example null
+       */
+      screeners: components['schemas']['ALNScreenerResponse'][]
+    }
   }
   responses: never
   parameters: never
@@ -2005,6 +2078,28 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['ChallengeListResponse']
+        }
+      }
+    }
+  }
+  getALNScreener: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ALNScreeners']
         }
       }
     }

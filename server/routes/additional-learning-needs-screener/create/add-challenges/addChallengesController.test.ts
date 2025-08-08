@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import aValidAlnScreenerDto from '../../../../testsupport/alnScreenerDtoTestDataBuilder'
+import { aValidAlnScreenerDto } from '../../../../testsupport/alnScreenerDtoTestDataBuilder'
 import AddChallengesController from './addChallengesController'
 import ChallengeType from '../../../../enums/challengeType'
 

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import checkAlnScreenerDtoExistsInJourneyData from './checkAlnScreenerDtoExistsInJourneyData'
-import aValidAlnScreenerDto from '../../../../testsupport/alnScreenerDtoTestDataBuilder'
+import { aValidAlnScreenerDto } from '../../../../testsupport/alnScreenerDtoTestDataBuilder'
 
 describe('checkAlnScreenerDtoExistsInJourneyData', () => {
   const prisonNumber = 'A1234BC'

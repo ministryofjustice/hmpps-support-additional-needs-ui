@@ -2,6 +2,7 @@ import { asSystem, RestClient } from '@ministryofjustice/hmpps-rest-client'
 import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import type {
   AlnScreenerRequest,
+  ALNScreeners,
   ChallengeListResponse,
   ConditionListResponse,
   CreateChallengesRequest,
@@ -192,6 +193,16 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/aln-screener`,
         data: alnScreenerRequest,
+      },
+      asSystem(username),
+    )
+  }
+
+  async getAdditionalLearningNeedsScreeners(prisonNumber: string, username: string): Promise<ALNScreeners> {
+    return this.get<ALNScreeners>(
+      {
+        path: `/profile/${prisonNumber}/aln-screener`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
       },
       asSystem(username),
     )

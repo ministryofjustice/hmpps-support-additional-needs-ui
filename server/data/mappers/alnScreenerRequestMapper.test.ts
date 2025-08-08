@@ -1,5 +1,5 @@
 import { startOfToday } from 'date-fns'
-import aValidAlnScreenerDto from '../../testsupport/alnScreenerDtoTestDataBuilder'
+import { aValidAlnScreenerDto } from '../../testsupport/alnScreenerDtoTestDataBuilder'
 import { aValidAlnScreenerRequest } from '../../testsupport/alnScreenerRequestTestDataBuilder'
 import toAlnScreenerRequest from './alnScreenerRequestMapper'
 import ChallengeType from '../../enums/challengeType'
