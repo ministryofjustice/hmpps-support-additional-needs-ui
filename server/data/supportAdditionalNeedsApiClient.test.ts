@@ -20,6 +20,7 @@ import { aValidStrengthListResponse } from '../testsupport/strengthResponseTestD
 import { aValidCreateStrengthsRequest } from '../testsupport/strengthRequestTestDataBuilder'
 import ReferenceDataDomain from '../enums/referenceDataDomain'
 import { aValidAlnScreenerRequest } from '../testsupport/alnScreenerRequestTestDataBuilder'
+import { aValidAlnScreeners } from '../testsupport/alnScreenerResponseTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -830,6 +831,73 @@ describe('supportAdditionalNeedsApiClient', () => {
       // When
       const actual = await supportAdditionalNeedsApiClient
         .createAdditionalLearningNeedsScreener(prisonNumber, username, createAlnScreenerRequest)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('getAdditionalLearningNeedsScreeners', () => {
+    it('should get a prisoners Additional Learning Needs screeners', async () => {
+      // Given
+      const expectedResponse = aValidAlnScreeners()
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/aln-screener`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, expectedResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getAdditionalLearningNeedsScreeners(prisonNumber, username)
+
+      // Then
+      expect(actual).toEqual(expectedResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should return null given API returns a not found error', async () => {
+      // Given
+      const apiErrorResponse = {
+        status: 404,
+        userMessage: 'Not found',
+        developerMessage: 'Not found',
+      }
+
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/aln-screener`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(404, apiErrorResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getAdditionalLearningNeedsScreeners(prisonNumber, username)
+
+      // Then
+      expect(actual).toBeNull()
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/aln-screener`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .thrice()
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .getAdditionalLearningNeedsScreeners(prisonNumber, username)
         .catch(e => e)
 
       // Then

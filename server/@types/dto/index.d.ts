@@ -7,6 +7,7 @@ declare module 'dto' {
   import ChallengeType from '../../enums/challengeType'
   import StrengthType from '../../enums/strengthType'
   import StrengthCategory from '../../enums/strengthCategory'
+  import ChallengeCategory from '../../enums/challengeCategory'
 
   /**
    * Interface defining common reference and audit related properties that DTO types can inherit through extension.
@@ -124,6 +125,17 @@ declare module 'dto' {
   export interface ReferenceDataItemDto {
     code: string
     areaCode?: string
+  }
+
+  export interface AlnScreenerList {
+    prisonNumber: string
+    screeners: Array<AlnScreenerResponseDto>
+  }
+
+  export interface AlnScreenerResponseDto extends ReferencedAndAuditable {
+    screenerDate: Date
+    challenges: Array<{ challengeTypeCode: ChallengeType; challengeCategory: ChallengeCategory }>
+    strengths: Array<{ strengthTypeCode: StrengthType; strengthCategory: StrengthCategory }>
   }
 
   export interface AlnScreenerDto {

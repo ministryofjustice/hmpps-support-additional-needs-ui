@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { parseISO } from 'date-fns'
 import ScreenerDateController from './screenerDateController'
-import aValidAlnScreenerDto from '../../../../testsupport/alnScreenerDtoTestDataBuilder'
+import { aValidAlnScreenerDto } from '../../../../testsupport/alnScreenerDtoTestDataBuilder'
 
 describe('screenerDateController', () => {
   const controller = new ScreenerDateController()

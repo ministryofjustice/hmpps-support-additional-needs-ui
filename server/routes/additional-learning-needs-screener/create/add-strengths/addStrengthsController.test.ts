@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import aValidAlnScreenerDto from '../../../../testsupport/alnScreenerDtoTestDataBuilder'
+import { aValidAlnScreenerDto } from '../../../../testsupport/alnScreenerDtoTestDataBuilder'
 import AddStrengthsController from './addStrengthsController'
 import StrengthType from '../../../../enums/strengthType'
 

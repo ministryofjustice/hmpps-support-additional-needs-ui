@@ -1,10 +1,19 @@
-import { startOfToday } from 'date-fns'
+import { format, startOfToday } from 'date-fns'
 import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiClient'
 import AdditionalLearningNeedsScreenerService from './additionalLearningNeedsScreenerService'
-import aValidAlnScreenerDto from '../testsupport/alnScreenerDtoTestDataBuilder'
+import {
+  aValidAlnScreenerDto,
+  aValidAlnScreenerList,
+  aValidAlnScreenerResponseDto,
+} from '../testsupport/alnScreenerDtoTestDataBuilder'
 import ChallengeType from '../enums/challengeType'
 import StrengthType from '../enums/strengthType'
 import { aValidAlnScreenerRequest } from '../testsupport/alnScreenerRequestTestDataBuilder'
+import { aValidAlnScreenerResponse, aValidAlnScreeners } from '../testsupport/alnScreenerResponseTestDataBuilder'
+import { aValidChallengeResponse } from '../testsupport/challengeResponseTestDataBuilder'
+import { aValidStrengthResponse } from '../testsupport/strengthResponseTestDataBuilder'
+import ChallengeCategory from '../enums/challengeCategory'
+import StrengthCategory from '../enums/strengthCategory'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -83,6 +92,96 @@ describe('additionalLearningNeedsScreenerService', () => {
         prisonNumber,
         username,
         expectedAlnScreenerRequest,
+      )
+    })
+  })
+
+  describe('getAlnScreeners', () => {
+    it('should get ALN Screeners', async () => {
+      // Given
+      const challenge = aValidChallengeResponse()
+      challenge.challengeType.code = 'LITERACY_SKILLS_DEFAULT'
+      challenge.challengeType.categoryCode = 'LITERACY_SKILLS'
+      const strength = aValidStrengthResponse()
+      strength.strengthType.code = 'NUMERACY_SKILLS_DEFAULT'
+      strength.strengthType.categoryCode = 'NUMERACY_SKILLS'
+      const screenerDate = startOfToday()
+
+      const alnScreeners = aValidAlnScreeners({
+        screeners: [
+          aValidAlnScreenerResponse({
+            screenerDate: format(screenerDate, 'yyyy-MM-dd'),
+            challenges: [challenge],
+            strengths: [strength],
+          }),
+        ],
+      })
+      supportAdditionalNeedsApiClient.getAdditionalLearningNeedsScreeners.mockResolvedValue(alnScreeners)
+
+      const expectedAlnScreenerList = aValidAlnScreenerList({
+        prisonNumber,
+        screeners: [
+          aValidAlnScreenerResponseDto({
+            screenerDate,
+            challenges: [
+              {
+                challengeTypeCode: ChallengeType.LITERACY_SKILLS_DEFAULT,
+                challengeCategory: ChallengeCategory.LITERACY_SKILLS,
+              },
+            ],
+            strengths: [
+              {
+                strengthTypeCode: StrengthType.NUMERACY_SKILLS_DEFAULT,
+                strengthCategory: StrengthCategory.NUMERACY_SKILLS,
+              },
+            ],
+          }),
+        ],
+      })
+      // When
+      const actual = await service.getAlnScreeners(username, prisonNumber)
+
+      // Then
+      expect(actual).toEqual(expectedAlnScreenerList)
+      expect(supportAdditionalNeedsApiClient.getAdditionalLearningNeedsScreeners).toHaveBeenCalledWith(
+        prisonNumber,
+        username,
+      )
+    })
+
+    it('should return empty AlnScreenerList given API returns null', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.getAdditionalLearningNeedsScreeners.mockResolvedValue(null)
+
+      const expectedAlnScreenerList = aValidAlnScreenerList({
+        prisonNumber,
+        screeners: [],
+      })
+
+      // When
+      const actual = await service.getAlnScreeners(username, prisonNumber)
+
+      // Then
+      expect(actual).toEqual(expectedAlnScreenerList)
+      expect(supportAdditionalNeedsApiClient.getAdditionalLearningNeedsScreeners).toHaveBeenCalledWith(
+        prisonNumber,
+        username,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.getAdditionalLearningNeedsScreeners.mockRejectedValue(expectedError)
+
+      // When
+      const actual = await service.getAlnScreeners(username, prisonNumber).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.getAdditionalLearningNeedsScreeners).toHaveBeenCalledWith(
+        prisonNumber,
+        username,
       )
     })
   })
