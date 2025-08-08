@@ -12,11 +12,12 @@
 
       {% if conditions.isFulfilled() %}
         {% set activeConditions = conditions.value.conditions | filterArrayOnProperty('active', true) %}
-
+        {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
         {% if activeConditions | length %}
 
           {{ conditionsSummaryCard({
             conditions: activeConditions | filterArrayOnProperty('source', 'CONFIRMED_DIAGNOSIS'),
+            prisonNamesById: prisonNamesById,
             title: 'Confirmed diagnoses',
             attributes: {
               'data-qa': 'diagnosed-conditions-summary-card'
@@ -25,6 +26,7 @@
 
           {{ conditionsSummaryCard({
             conditions: activeConditions | filterArrayOnProperty('source', 'SELF_DECLARED'),
+            prisonNamesById: prisonNamesById,
             title: 'Self-declared conditions',
             attributes: {
               'data-qa': 'self-declared-conditions-summary-card'

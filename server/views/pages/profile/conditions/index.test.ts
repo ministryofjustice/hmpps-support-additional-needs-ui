@@ -32,6 +32,10 @@ const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',
   lastName: 'PEIGH',
 })
+const prisonNamesById = {
+  BXI: 'Brixton (HMP)',
+  LEI: 'Leeds (HMP)',
+}
 const template = 'index.njk'
 
 const userHasPermissionTo = jest.fn()
@@ -40,6 +44,7 @@ const templateParams = {
   userHasPermissionTo,
   tab: 'conditions',
   conditions: Result.fulfilled(aValidConditionsList()),
+  prisonNamesById: Result.fulfilled(prisonNamesById),
   pageHasApiErrors: false,
 }
 
