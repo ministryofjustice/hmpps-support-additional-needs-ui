@@ -15,15 +15,18 @@ export default class PrisonService {
   ) {}
 
   /**
-   * Returns a Map of prison id to prison name
+   * Returns a simple object of prison id to prison name
    */
-  async getAllPrisonNamesById(username: string): Promise<Map<string, string>> {
+  async getAllPrisonNamesById(username: string): Promise<Record<string, string>> {
     try {
       const prisons = (await this.getCachedPrisons()) || (await this.retrieveAndCacheActivePrisons(username))
-      return new Map(prisons.map(obj => [obj.prisonId, obj.prisonName]))
+      return prisons.reduce((acc, prison) => {
+        acc[prison.prisonId] = prison.prisonName
+        return acc
+      }, {})
     } catch (e) {
       logger.error(`Error looking up prisons`, e)
-      return new Map<string, string>()
+      return {}
     }
   }
 
