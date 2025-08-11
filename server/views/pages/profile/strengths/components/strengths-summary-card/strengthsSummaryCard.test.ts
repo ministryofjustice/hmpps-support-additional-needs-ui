@@ -1,8 +1,8 @@
 import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
 import { parseISO } from 'date-fns'
-import type { StrengthDto } from 'dto'
-import { aValidStrengthDto } from '../../../../../../testsupport/strengthDtoTestDataBuilder'
+import type { StrengthResponseDto } from 'dto'
+import { aValidStrengthResponseDto } from '../../../../../../testsupport/strengthResponseDtoTestDataBuilder'
 import formatDateFilter from '../../../../../../filters/formatDateFilter'
 import { formatStrengthTypeScreenValueFilter } from '../../../../../../filters/formatStrengthTypeFilter'
 import StrengthType from '../../../../../../enums/strengthType'
@@ -26,7 +26,7 @@ njkEnv //
 
 const templateParams = {
   title: 'Literacy skills',
-  strengths: [aValidStrengthDto()],
+  strengths: [aValidStrengthResponseDto()],
 }
 
 const template = 'strengthsSummaryCard.test.njk'
@@ -37,7 +37,7 @@ describe('Tests for Strengths Summary Card component', () => {
     const params = {
       ...templateParams,
       strengths: [
-        aValidStrengthDto({
+        aValidStrengthResponseDto({
           strengthTypeCode: StrengthType.READING,
           strengthCategory: StrengthCategory.LITERACY_SKILLS,
           symptoms: 'Can read at speed',
@@ -48,7 +48,7 @@ describe('Tests for Strengths Summary Card component', () => {
           updatedAtPrison: 'LEI',
           updatedAt: parseISO('2025-02-10T09:00:00'),
         }),
-        aValidStrengthDto({
+        aValidStrengthResponseDto({
           strengthTypeCode: StrengthType.WRITING,
           strengthCategory: StrengthCategory.LITERACY_SKILLS,
           symptoms: 'Hand-written text is well written and easy to read',
@@ -59,7 +59,7 @@ describe('Tests for Strengths Summary Card component', () => {
           updatedAtPrison: 'LEI',
           updatedAt: parseISO('2025-02-10T09:01:00'),
         }),
-        aValidStrengthDto({
+        aValidStrengthResponseDto({
           strengthTypeCode: StrengthType.LANGUAGE_COMM_SKILLS_DEFAULT,
           strengthCategory: StrengthCategory.LANGUAGE_COMM_SKILLS,
           symptoms: null,
@@ -115,7 +115,7 @@ describe('Tests for Strengths Summary Card component', () => {
 
   it('should not render the component given no strengths', () => {
     // Given
-    const params = { ...templateParams, strengths: [] as Array<StrengthDto> }
+    const params = { ...templateParams, strengths: [] as Array<StrengthResponseDto> }
 
     // When
     const content = njkEnv.render(template, params)

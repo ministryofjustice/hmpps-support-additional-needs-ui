@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import SelectCategoryController from './selectCategoryController'
-import { aValidStrengthDto } from '../../../../testsupport/strengthDtoTestDataBuilder'
+import aValidStrengthDto from '../../../../testsupport/strengthDtoTestDataBuilder'
 
 describe('selectCategoryController', () => {
   const controller = new SelectCategoryController()

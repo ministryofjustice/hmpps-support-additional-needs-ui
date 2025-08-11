@@ -4,7 +4,10 @@ import formatDate from '../../../../filters/formatDateFilter'
 import formatPrisonerNameFilter, { NameFormat } from '../../../../filters/formatPrisonerNameFilter'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import { Result } from '../../../../utils/result/result'
-import { aValidStrengthDto, aValidStrengthsList } from '../../../../testsupport/strengthDtoTestDataBuilder'
+import {
+  aValidStrengthResponseDto,
+  aValidStrengthsList,
+} from '../../../../testsupport/strengthResponseDtoTestDataBuilder'
 import filterArrayOnPropertyFilter from '../../../../filters/filterArrayOnPropertyFilter'
 import StrengthType from '../../../../enums/strengthType'
 
@@ -50,9 +53,9 @@ describe('Profile strengths page', () => {
     // Given
     const strengthList = aValidStrengthsList({
       strengths: [
-        aValidStrengthDto({ strengthTypeCode: StrengthType.ARITHMETIC, active: false }),
-        aValidStrengthDto({ strengthTypeCode: StrengthType.WRITING, active: false }),
-        aValidStrengthDto({ strengthTypeCode: StrengthType.READING, active: false }),
+        aValidStrengthResponseDto({ strengthTypeCode: StrengthType.ARITHMETIC, active: false }),
+        aValidStrengthResponseDto({ strengthTypeCode: StrengthType.WRITING, active: false }),
+        aValidStrengthResponseDto({ strengthTypeCode: StrengthType.READING, active: false }),
       ],
     })
     const params = {
