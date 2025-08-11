@@ -22,7 +22,7 @@ describe('roleBasedAccessControl', () => {
       expect(actual).toEqual(expected)
     })
 
-    it('should return the actions a user with ROLE_SAN_MANAGER can perform', () => {
+    it('should return the actions a user with ROLE_SAN_EDUCATION_MANAGER can perform', () => {
       // Given
       const expected = [
         ApplicationAction.SEARCH,
@@ -36,7 +36,25 @@ describe('roleBasedAccessControl', () => {
       ]
 
       // When
-      const actual = userWithRoleCan(ApplicationRole.ROLE_SAN_MANAGER)
+      const actual = userWithRoleCan(ApplicationRole.ROLE_SAN_EDUCATION_MANAGER)
+
+      // Then
+      expect(actual).toEqual(expected)
+    })
+
+    it('should return the actions a user with ROLE_SAN_EDITOR can perform', () => {
+      // Given
+      const expected = [
+        ApplicationAction.SEARCH,
+        ApplicationAction.VIEW_PROFILE,
+        ApplicationAction.RECORD_CHALLENGES,
+        ApplicationAction.RECORD_STRENGTHS,
+        ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS,
+        ApplicationAction.RECORD_DIAGNOSED_CONDITIONS,
+      ]
+
+      // When
+      const actual = userWithRoleCan(ApplicationRole.ROLE_SAN_EDITOR)
 
       // Then
       expect(actual).toEqual(expected)

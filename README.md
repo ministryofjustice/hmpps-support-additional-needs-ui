@@ -9,133 +9,9 @@ Staff can record a prisoner's challenges, strengths, conditions and support reco
 Education departments can use the service to create and review the prisoner's education support plan which is contractually required, to better support prisoners with additional needs in education.
 This contractual information links to Curious, the contract management system for Education.
 
-# Instructions
+# Development and maintenance
 
-If this is a HMPPS project then the project will be created as part of bootstrapping -
-see https://github.com/ministryofjustice/hmpps-project-bootstrap. You are able to specify a template application using
-the `github_template_repo` attribute to clone without the need to manually do this yourself within GitHub.
-
-This project is community managed by the mojdt `#typescript` slack channel.
-Please raise any questions or queries there. Contributions welcome!
-
-Our security policy is located [here](https://github.com/ministryofjustice/hmpps-support-additional-needs-ui/security/policy).
-
-More information about the template project including features can be
-found [here](https://dsdmoj.atlassian.net/wiki/spaces/NDSS/pages/3488677932/Typescript+template+project).
-
-Documentation to create new service is located [here](https://tech-docs.hmpps.service.justice.gov.uk/applicationplatform/newservice-GHA/).
-
-## Creating a Cloud Platform namespace
-
-When deploying to a new namespace, you may wish to use the
-[templates project namespace](https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-templates-dev)
-as the basis for your new namespace. This namespace contains both the kotlin and typescript template projects, which
-is the usual way that projects are setup. This namespace includes an AWS elasticache setup - which is required by this
-template project.
-
-Copy this folder and update all the existing namespace references. If you only need the typescript configuration then
-remove all kotlin references. Submit a PR to the Cloud Platform team in #ask-cloud-platform. Further instructions from
-the Cloud Platform team can be found in
-the [Cloud Platform User Guide](https://user-guide.cloud-platform.service.justice.gov.uk/#cloud-platform-user-guide)
-
-## Renaming from HMPPS Template Typescript - github Actions
-
-Once the new repository is deployed. Navigate to the repository in github, and select the `Actions` tab.
-Click the link to `Enable Actions on this repository`.
-
-Find the Action workflow named: `rename-project-create-pr` and click `Run workflow`. This workflow will
-execute the `rename-project.bash` and create Pull Request for you to review. Review the PR and merge.
-
-Note: ideally this workflow would run automatically however due to a recent change github Actions are not
-enabled by default on newly created repos. There is no way to enable Actions other then to click the button in the UI.
-If this situation changes we will update this project so that the workflow is triggered during the bootstrap project.
-Further reading: <https://github.community/t/workflow-isnt-enabled-in-repos-generated-from-template/136421>
-
-The script takes six arguments:
-
-### New project name
-
-This should start with `hmpps-` e.g. `hmpps-prison-visits` so that it can be easily distinguished in github from
-other departments projects. Try to avoid using abbreviations so that others can understand easily what your project is.
-
-### Slack channel for release notifications
-
-By default, release notifications are only enabled for production. The github pipeline configuration can be amended to send
-release notifications for deployments to other environments if required. Note that if the configuration is amended,
-the slack channel should then be amended to your own team's channel as `hmpps-releases` (previously called `dps-releases`) is strictly for production release
-notifications. If the slack channel is set to something other than `hmpps-releases`, production release notifications
-will still automatically go to `hmpps-releases` as well. This is configured by by setting a github actions environment variable called `RELEASE_NOTIFICATIONS_SLACK_CHANNEL_ID`.
-
-### Slack channel for pipeline security notifications
-
-Ths channel should be specific to your team and is for daily / weekly security scanning job results. It is your team's
-responsibility to keep up-to-date with security issues and update your application so that these jobs pass. You will
-only be notified if the jobs fail. The scan results can always be found in github actions and results are sent to the github security tab. This is
-configured by setting github actions environment variable called `SECURITY_ALERTS_SLACK_CHANNEL_ID`.
-
-### Non production kubernetes alerts
-
-By default Prometheus alerts are created in the application namespaces to monitor your application e.g. if your
-application is crash looping, there are a significant number of errors from the ingress. Since Prometheus runs in
-cloud platform AlertManager needs to be setup first with your channel. Please see
-[Create your own custom alerts](https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html)
-in the Cloud Platform user guide. Once that is setup then the `custom severity label` can be used for
-`alertSeverity` in the `helm_deploy/values-*.yaml` configuration.
-
-Normally it is worth setting up two separate labels and therefore two separate slack channels - one for your production
-alerts and one for your non-production alerts. Using the same channel can mean that production alerts are sometimes
-lost within non-production issues.
-
-### Production kubernetes alerts
-
-This is the severity label for production, determined by the `custom severity label`. See the above
-#non-production-kubernetes-alerts for more information. This is configured in `helm_deploy/values-prod.yaml`.
-
-### Product ID
-
-This is so that we can link a component to a product and thus provide team and product information in the Developer
-Portal. Refer to the developer portal at https://developer-portal.hmpps.service.justice.gov.uk/products to find your
-product id. This is configured in `helm_deploy/<project_name>/values.yaml`.
-
-## Manually branding from template app
-
-Run the `rename-project.bash` without any arguments. This will prompt for the six required parameters and create a PR.
-The script requires a recent version of `bash` to be installed, as well as GNU `sed` in the path.
-
-## Oauth2 Credentials
-
-The template project is set up to run with two sets of credentials, each one support a different oauth2 flows.
-These need to be requested from the auth team by filling in
-this [template](https://dsdmoj.atlassian.net/browse/HAAR-140) and raising on their slack channel.
-
-### Auth Code flow
-
-These are used to allow authenticated users to access the application. After the user is redirected from auth back to
-the application, the typescript app will use the returned auth code to request a JWT token for that user containing the
-user's roles. The JWT token will be verified and then stored in the user's session.
-
-These credentials are configured using the following env variables:
-
-- AUTH_CODE_CLIENT_ID
-- AUTH_CODE_CLIENT_SECRET
-
-### Client Credentials flow
-
-These are used by the application to request tokens to make calls to APIs. These are system accounts that will have
-their own sets of roles.
-
-Most API calls that occur as part of the request/response cycle will be on behalf of a user.
-To make a call on behalf of a user, a username should be passed when requesting a system token. The username will then
-become part of the JWT and can be used downstream for auditing purposes.
-
-These tokens are cached until expiration.
-
-These credentials are configured using the following env variables:
-
-- CLIENT_CREDS_CLIENT_ID
-- CLIENT_CREDS_CLIENT_SECRET
-
-### Imported Types
+## Imported Types
 Some types are imported from the Open API docs for support-additional-needs-api, manage-users-api, prisoner-search-api,
 curious-api and prison-register-api.
 You will need to install the node module `openapi-typescript` globally with the following command:
@@ -165,21 +41,9 @@ large specs such as Prisoner Search.
 ### Dependencies
 
 ### HMPPS Auth
-
-To allow authenticated users to access your application you need to point it to a running instance of `hmpps-auth`.
-By default the application is configured to run against an instance running in docker that can be started
-via `docker-compose`.
-
-**NB:** It's common for developers to run against the instance of auth running in the development/T3 environment for
-local development.
-Most APIs don't have images with cached data that you can run with docker: setting up realistic stubbed data in sync
-across a variety of services is very difficult.
-
-### REDIS
-
-When deployed to an environment with multiple pods we run applications with an instance of REDIS/Elasticache to provide
-a distributed cache of sessions.
-The template app is, by default, configured not to use REDIS when running locally.
+The app requires:
+* hmpps-auth - for authentication
+* redis - session store and token caching
 
 ## Running the app via docker-compose
 
@@ -207,6 +71,34 @@ and the github pipeline build config.
 And then, to build the assets and start the app with esbuild:
 
 `npm run start:dev`
+
+
+### Auth Code flow
+
+These are used to allow authenticated users to access the application. After the user is redirected from auth back to
+the application, the typescript app will use the returned auth code to request a JWT token for that user containing the
+user's roles. The JWT token will be verified and then stored in the user's session.
+
+These credentials are configured using the following env variables:
+
+- `AUTH_CODE_CLIENT_ID`
+- `AUTH_CODE_CLIENT_SECRET`
+
+### Client Credentials flow
+The client creds environment variables are `CLIENT_CREDS_CLIENT_ID` and `CLIENT_CREDS_CLIENT_ID`. The client requires the following roles:
+
+* `ROLE_SUPPORT_ADDITIONAL_NEEDS__SEARCH__RO` - to be able to call the Support Additional Needs API; search endpoint
+* `ROLE_SUPPORT_ADDITIONAL_NEEDS__ELSP__RW` - to be able to call the Support Additional Needs API; plan, conditions, challenges, strengths endpoint
+
+In addition a specific client for accessing the Curious REST API is required. The env vars are `CURIOUS_API_CLIENT_ID` and `CURIOUS_API_CLIENT_SECRET`.
+This client should only carry the role `ROLE_CURIOUS_API` and no others.
+
+### User Roles
+Once the UI is running users will need to authenticate with `hmpps-auth` using a valid DPS user. The DPS roles that the user
+has determines the functionality they will be able to access:
+
+* `ROLE_SAN_EDITOR`
+* `ROLE_SAN_EDUCATION_MANAGER`
 
 ### Run linter
 
