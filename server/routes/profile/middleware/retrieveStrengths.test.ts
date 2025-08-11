@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import StrengthService from '../../../services/strengthService'
 import retrieveStrengths from './retrieveStrengths'
-import { aValidStrengthsList } from '../../../testsupport/strengthDtoTestDataBuilder'
+import { aValidStrengthsList } from '../../../testsupport/strengthResponseDtoTestDataBuilder'
 
 jest.mock('../../../services/strengthService')
 

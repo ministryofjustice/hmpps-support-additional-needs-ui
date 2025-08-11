@@ -1,12 +1,8 @@
 import { parseISO } from 'date-fns'
 import type { AlnScreenerList, AlnScreenerResponseDto } from 'dto'
-import type {
-  ALNScreenerResponse,
-  ALNScreeners,
-  ChallengeResponse,
-  StrengthResponse,
-} from 'supportAdditionalNeedsApiClient'
+import type { ALNScreenerResponse, ALNScreeners, ChallengeResponse } from 'supportAdditionalNeedsApiClient'
 import toReferenceAndAuditable from './referencedAndAuditableMapper'
+import { toStrengthResponseDto } from './strengthResponseDtoMapper'
 
 const toAlnScreenerList = (alnScreeners: ALNScreeners, prisonNumber: string): AlnScreenerList => ({
   prisonNumber,
@@ -20,10 +16,7 @@ const toAlnScreenerResponseDto = (alnScreenerResponse: ALNScreenerResponse): Aln
     challengeTypeCode: challenge.challengeType.code,
     challengeCategory: challenge.challengeType.categoryCode,
   })),
-  strengths: (alnScreenerResponse.strengths as Array<StrengthResponse>).map(strength => ({
-    strengthTypeCode: strength.strengthType.code,
-    strengthCategory: strength.strengthType.categoryCode,
-  })),
+  strengths: alnScreenerResponse.strengths.map(toStrengthResponseDto),
 })
 
 export { toAlnScreenerList, toAlnScreenerResponseDto }

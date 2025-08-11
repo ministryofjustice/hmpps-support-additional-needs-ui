@@ -62,6 +62,9 @@ declare module 'dto' {
     details?: string
   }
 
+  /**
+   * DTO representing a Challenge that has not yet been recorded for the person. IE. this DTO does not hold data about Challenges that the API has returned for this person.
+   */
   export interface ChallengeDto {
     prisonNumber: string
     prisonId: string
@@ -71,6 +74,9 @@ declare module 'dto' {
     howIdentifiedOther?: string
   }
 
+  /**
+   * DTO representing a Challenge that the person has. IE. this DTO does not hold data about Challenges that will be passed to the API to create.
+   */
   export interface ChallengeResponseDto extends ReferencedAndAuditable {
     prisonNumber: string
     fromALNScreener: boolean
@@ -104,21 +110,34 @@ declare module 'dto' {
     active?: boolean
   }
 
-  export interface StrengthsList {
+  /**
+   * DTO representing a Strength that has not yet been recorded for the person. IE. this DTO does not hold data about Strengths that the API has returned for this person.
+   */
+  export interface StrengthDto {
     prisonNumber: string
-    strengths: Array<StrengthDto>
+    prisonId: string
+    strengthTypeCode: StrengthType
+    symptoms?: string
+    howIdentified?: Array<StrengthIdentificationSource>
+    howIdentifiedOther?: string
   }
 
-  export interface StrengthDto extends ReferencedAndAuditable {
-    prisonId?: string
-    prisonNumber?: string
+  export interface StrengthsList {
+    prisonNumber: string
+    strengths: Array<StrengthResponseDto>
+  }
+
+  /**
+   * DTO representing a Strength that the person has. IE. this DTO does not hold data about Strengths that will be passed to the API to create.
+   */
+  export interface StrengthResponseDto extends ReferencedAndAuditable {
     strengthTypeCode: StrengthType
     strengthCategory: StrengthCategory
     symptoms?: string
     howIdentified?: Array<StrengthIdentificationSource>
     howIdentifiedOther?: string
-    active?: boolean
-    fromALNScreener?: boolean
+    active: boolean
+    fromALNScreener: boolean
     alnScreenerDate?: Date
   }
 
@@ -132,12 +151,18 @@ declare module 'dto' {
     screeners: Array<AlnScreenerResponseDto>
   }
 
+  /**
+   * DTO representing an ALN Screener that has already been recorded. IE. this DTO does not hold data about an ALN Screener that will be passed to the API to create.
+   */
   export interface AlnScreenerResponseDto extends ReferencedAndAuditable {
     screenerDate: Date
     challenges: Array<{ challengeTypeCode: ChallengeType; challengeCategory: ChallengeCategory }>
-    strengths: Array<{ strengthTypeCode: StrengthType; strengthCategory: StrengthCategory }>
+    strengths: Array<StrengthResponseDto>
   }
 
+  /**
+   * DTO representing an ALN Screener that has not yet been recorded for the person. IE. this DTO does not hold data about ALN Screeners that the API has returned for this person.
+   */
   export interface AlnScreenerDto {
     prisonNumber: string
     prisonId: string

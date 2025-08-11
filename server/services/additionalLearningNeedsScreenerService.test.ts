@@ -14,6 +14,7 @@ import { aValidChallengeResponse } from '../testsupport/challengeResponseTestDat
 import { aValidStrengthResponse } from '../testsupport/strengthResponseTestDataBuilder'
 import ChallengeCategory from '../enums/challengeCategory'
 import StrengthCategory from '../enums/strengthCategory'
+import { aValidStrengthResponseDto } from '../testsupport/strengthResponseDtoTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -99,13 +100,16 @@ describe('additionalLearningNeedsScreenerService', () => {
   describe('getAlnScreeners', () => {
     it('should get ALN Screeners', async () => {
       // Given
+      const screenerDate = startOfToday()
       const challenge = aValidChallengeResponse()
       challenge.challengeType.code = 'LITERACY_SKILLS_DEFAULT'
       challenge.challengeType.categoryCode = 'LITERACY_SKILLS'
-      const strength = aValidStrengthResponse()
+      const strength = aValidStrengthResponse({
+        fromALNScreener: true,
+        alnScreenerDate: format(screenerDate, 'yyyy-MM-dd'),
+      })
       strength.strengthType.code = 'NUMERACY_SKILLS_DEFAULT'
       strength.strengthType.categoryCode = 'NUMERACY_SKILLS'
-      const screenerDate = startOfToday()
 
       const alnScreeners = aValidAlnScreeners({
         screeners: [
@@ -130,10 +134,12 @@ describe('additionalLearningNeedsScreenerService', () => {
               },
             ],
             strengths: [
-              {
+              aValidStrengthResponseDto({
                 strengthTypeCode: StrengthType.NUMERACY_SKILLS_DEFAULT,
                 strengthCategory: StrengthCategory.NUMERACY_SKILLS,
-              },
+                fromALNScreener: true,
+                alnScreenerDate: screenerDate,
+              }),
             ],
           }),
         ],

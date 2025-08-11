@@ -8,6 +8,7 @@ import ChallengeType from '../../enums/challengeType'
 import ChallengeCategory from '../../enums/challengeCategory'
 import StrengthType from '../../enums/strengthType'
 import StrengthCategory from '../../enums/strengthCategory'
+import { aValidStrengthResponseDto } from '../../testsupport/strengthResponseDtoTestDataBuilder'
 
 describe('alnScreenerResponseDtoMapper', () => {
   it('should map ALNScreeners to an AlnScreenerList', () => {
@@ -17,7 +18,7 @@ describe('alnScreenerResponseDtoMapper', () => {
     const challenge = aValidChallengeResponse()
     challenge.challengeType.code = 'LITERACY_SKILLS_DEFAULT'
     challenge.challengeType.categoryCode = 'LITERACY_SKILLS'
-    const strength = aValidStrengthResponse()
+    const strength = aValidStrengthResponse({ fromALNScreener: true, alnScreenerDate: '2025-05-13' })
     strength.strengthType.code = 'NUMERACY_SKILLS_DEFAULT'
     strength.strengthType.categoryCode = 'NUMERACY_SKILLS'
 
@@ -52,10 +53,12 @@ describe('alnScreenerResponseDtoMapper', () => {
             },
           ],
           strengths: [
-            {
+            aValidStrengthResponseDto({
               strengthTypeCode: StrengthType.NUMERACY_SKILLS_DEFAULT,
               strengthCategory: StrengthCategory.NUMERACY_SKILLS,
-            },
+              fromALNScreener: true,
+              alnScreenerDate: parseISO('2025-05-13'),
+            }),
           ],
           reference: 'c88a6c48-97e2-4c04-93b5-98619966447b',
           createdAt: parseISO('2023-06-19T09:39:44Z'),

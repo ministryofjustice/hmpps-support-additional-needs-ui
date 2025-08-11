@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import StrengthsController from './strengthsController'
 import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
-import { aValidStrengthsList } from '../../../testsupport/strengthDtoTestDataBuilder'
+import { aValidStrengthsList } from '../../../testsupport/strengthResponseDtoTestDataBuilder'
 import { Result } from '../../../utils/result/result'
 import { aValidAlnScreenerList } from '../../../testsupport/alnScreenerDtoTestDataBuilder'
 

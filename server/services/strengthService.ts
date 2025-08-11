@@ -2,7 +2,7 @@ import type { StrengthDto, StrengthsList } from 'dto'
 import { SupportAdditionalNeedsApiClient } from '../data'
 import { toCreateStrengthsRequest } from '../data/mappers/createStrengthsRequestMapper'
 import logger from '../../logger'
-import { toStrengthsList } from '../data/mappers/strengthDtoMapper'
+import { toStrengthsList } from '../data/mappers/strengthResponseDtoMapper'
 
 export default class StrengthService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
