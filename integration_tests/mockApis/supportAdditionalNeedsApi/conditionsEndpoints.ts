@@ -71,7 +71,7 @@ const stubGetConditions = (
       urlPattern: `/support-additional-needs-api/profile/${options.prisonNumber}/conditions`,
     },
     response: {
-      status: 201,
+      status: 200,
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       jsonBody: {
         conditions: options.conditions ?? [
@@ -105,6 +105,24 @@ const stubGetConditions = (
     },
   })
 
+const stubGetConditions404Error = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: `/support-additional-needs-api/profile/${prisonNumber}/conditions`,
+    },
+    response: {
+      status: 404,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        jsonBody: {
+          status: 404,
+          developerMessage: `Conditions for ${prisonNumber} not found`,
+        },
+      },
+    },
+  })
+
 const stubGetConditions500Error = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
   stubFor({
     request: {
@@ -124,4 +142,10 @@ const stubGetConditions500Error = (prisonNumber = 'G6115VJ'): SuperAgentRequest 
     },
   })
 
-export default { stubCreateConditions, stubCreateConditions500Error, stubGetConditions, stubGetConditions500Error }
+export default {
+  stubCreateConditions,
+  stubCreateConditions500Error,
+  stubGetConditions,
+  stubGetConditions404Error,
+  stubGetConditions500Error,
+}

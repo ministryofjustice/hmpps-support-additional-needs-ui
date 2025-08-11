@@ -15,9 +15,10 @@ context('Profile Strengths Page', () => {
     cy.task('getPrisonerById', prisonNumber)
   })
 
-  it('should render the strengths page given the prisoner has no Strengths', () => {
+  it('should render the strengths page given the prisoner has no manually recorded Strengths or Strengths on an ALN Screener', () => {
     // Given
-    cy.task('stubGetStrengths', { prisonNumber, strengths: [] })
+    cy.task('stubGetStrengths404Error', { prisonNumber })
+    cy.task('stubGetAlnScreeners404Error', { prisonNumber })
 
     // When
     cy.visit(`/profile/${prisonNumber}/strengths`)

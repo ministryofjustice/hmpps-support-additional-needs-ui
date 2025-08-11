@@ -71,7 +71,7 @@ const stubGetStrengths = (
       urlPattern: `/support-additional-needs-api/profile/${options.prisonNumber}/strengths`,
     },
     response: {
-      status: 201,
+      status: 200,
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       jsonBody: {
         strengths: options.strengths ?? [
@@ -105,6 +105,24 @@ const stubGetStrengths = (
     },
   })
 
+const stubGetStrengths404Error = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: `/support-additional-needs-api/profile/${prisonNumber}/strengths`,
+    },
+    response: {
+      status: 404,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        jsonBody: {
+          status: 404,
+          developerMessage: `Strengths for ${prisonNumber} not found`,
+        },
+      },
+    },
+  })
+
 const stubGetStrengths500Error = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
   stubFor({
     request: {
@@ -124,4 +142,10 @@ const stubGetStrengths500Error = (prisonNumber = 'G6115VJ'): SuperAgentRequest =
     },
   })
 
-export default { stubCreateStrengths, stubCreateStrengths500Error, stubGetStrengths, stubGetStrengths500Error }
+export default {
+  stubCreateStrengths,
+  stubCreateStrengths500Error,
+  stubGetStrengths,
+  stubGetStrengths404Error,
+  stubGetStrengths500Error,
+}
