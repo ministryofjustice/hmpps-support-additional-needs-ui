@@ -56,7 +56,7 @@ context('Profile Conditions Page', () => {
 
   it('should render the conditions page given the prisoner has no Conditions', () => {
     // Given
-    cy.task('stubGetConditions', { prisonNumber, conditions: [] })
+    cy.task('stubGetConditions404Error', { prisonNumber })
 
     // When
     cy.visit(`/profile/${prisonNumber}/conditions`)
