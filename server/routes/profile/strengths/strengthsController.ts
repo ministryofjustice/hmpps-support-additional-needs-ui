@@ -34,7 +34,14 @@ export default class StrengthsController {
       const groupedStrengths: GroupedStrengths = {}
       addNonAlnStrengthsToGroupedStrengths(groupedStrengths, nonAlnStrengths, screenerDate)
       addAlnStrengthsToGroupedStrengths(groupedStrengths, strengthsFromLatestAlnScreener, screenerDate)
-      groupedStrengthsPromise = Result.fulfilled(groupedStrengths)
+
+      const groupedStrengthsSortedByCategory = Object.keys(groupedStrengths)
+        .sort(enumComparator)
+        .reduce((acc, category) => {
+          acc[category] = groupedStrengths[category]
+          return acc
+        }, {} as GroupedStrengths)
+      groupedStrengthsPromise = Result.fulfilled(groupedStrengthsSortedByCategory)
     } else {
       // At least one of the API calls has failed; we need data from both APIs in order to properly render the Strengths page
       // Set the groupedStrengths to be a rejected Result containing the error message(s) from the original rejected promise(s)

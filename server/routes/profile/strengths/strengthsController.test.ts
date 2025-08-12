@@ -42,9 +42,10 @@ describe('strengthsController', () => {
     }),
   )
 
+  const render = jest.fn()
   const req = {} as unknown as Request
   const res = {
-    render: jest.fn(),
+    render,
     locals: { prisonerSummary, strengths, alnScreeners },
   } as unknown as Response
   const next = jest.fn()
@@ -89,6 +90,12 @@ describe('strengthsController', () => {
         },
       },
     }
+    const expectedCategoryOrder = [
+      'ATTENTION_ORGANISING_TIME',
+      'LANGUAGE_COMM_SKILLS',
+      'LITERACY_SKILLS',
+      'NUMERACY_SKILLS',
+    ]
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
@@ -105,7 +112,10 @@ describe('strengthsController', () => {
     await controller.getStrengthsView(req, res, next)
 
     // Then
-    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    const actualGroupedStrengths = render.mock.calls[0][1].groupedStrengths.value
+    const actualCategoryOrder = Object.keys(actualGroupedStrengths)
+    expect(actualCategoryOrder).toEqual(expectedCategoryOrder)
   })
 
   it('should render the view given the strengths promise is not resolved', async () => {
@@ -131,7 +141,7 @@ describe('strengthsController', () => {
     await controller.getStrengthsView(req, res, next)
 
     // Then
-    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
   it('should render the view given the ALN Screeners promise is not resolved', async () => {
@@ -157,7 +167,7 @@ describe('strengthsController', () => {
     await controller.getStrengthsView(req, res, next)
 
     // Then
-    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
   it('should render the view given both the Strengths and ALN Screeners promises are not resolved', async () => {
@@ -187,7 +197,7 @@ describe('strengthsController', () => {
     await controller.getStrengthsView(req, res, next)
 
     // Then
-    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 })
 
