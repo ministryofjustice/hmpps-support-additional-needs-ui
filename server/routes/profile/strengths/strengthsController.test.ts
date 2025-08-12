@@ -8,12 +8,13 @@ import { aValidAlnScreenerList, aValidAlnScreenerResponseDto } from '../../../te
 import StrengthType from '../../../enums/strengthType'
 import StrengthCategory from '../../../enums/strengthCategory'
 
+const today = startOfToday()
+
 describe('strengthsController', () => {
   const controller = new StrengthsController()
 
   const prisonerSummary = aValidPrisonerSummary()
 
-  const today = startOfToday()
   const screenerDate = today
 
   // Non-ALN strengths
@@ -23,14 +24,15 @@ describe('strengthsController', () => {
   )
 
   // Latest ALN strengths
-  const { reading, writing, wordFindingNonActive, arithmetic, focussing, tidiness } = setupAlnStrengths()
+  const { reading, writing, alphabetOrdering, wordFindingNonActive, arithmetic, focussing, tidiness } =
+    setupAlnStrengths()
   const alnScreeners = Result.fulfilled(
     aValidAlnScreenerList({
       screeners: [
         // Latest screener
         aValidAlnScreenerResponseDto({
           screenerDate,
-          strengths: [reading, writing, wordFindingNonActive, arithmetic, focussing, tidiness],
+          strengths: [reading, writing, wordFindingNonActive, arithmetic, focussing, tidiness, alphabetOrdering],
         }),
         // Screener from yesterday
         aValidAlnScreenerResponseDto({ screenerDate: subDays(today, 1) }),
@@ -40,9 +42,10 @@ describe('strengthsController', () => {
     }),
   )
 
+  const render = jest.fn()
   const req = {} as unknown as Request
   const res = {
-    render: jest.fn(),
+    render,
     locals: { prisonerSummary, strengths, alnScreeners },
   } as unknown as Response
   const next = jest.fn()
@@ -69,11 +72,11 @@ describe('strengthsController', () => {
         nonAlnStrengths: [literacy],
         latestAlnScreener: {
           screenerDate,
-          strengths: [reading, writing],
+          strengths: [alphabetOrdering, reading, writing],
         },
       },
       NUMERACY_SKILLS: {
-        nonAlnStrengths: [numeracy, numeracy2],
+        nonAlnStrengths: [numeracy2, numeracy],
         latestAlnScreener: {
           screenerDate,
           strengths: [arithmetic],
@@ -87,6 +90,12 @@ describe('strengthsController', () => {
         },
       },
     }
+    const expectedCategoryOrder = [
+      'ATTENTION_ORGANISING_TIME',
+      'LANGUAGE_COMM_SKILLS',
+      'LITERACY_SKILLS',
+      'NUMERACY_SKILLS',
+    ]
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
@@ -103,7 +112,10 @@ describe('strengthsController', () => {
     await controller.getStrengthsView(req, res, next)
 
     // Then
-    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    const actualGroupedStrengths = render.mock.calls[0][1].groupedStrengths.value
+    const actualCategoryOrder = Object.keys(actualGroupedStrengths)
+    expect(actualCategoryOrder).toEqual(expectedCategoryOrder)
   })
 
   it('should render the view given the strengths promise is not resolved', async () => {
@@ -129,7 +141,7 @@ describe('strengthsController', () => {
     await controller.getStrengthsView(req, res, next)
 
     // Then
-    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
   it('should render the view given the ALN Screeners promise is not resolved', async () => {
@@ -155,7 +167,7 @@ describe('strengthsController', () => {
     await controller.getStrengthsView(req, res, next)
 
     // Then
-    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
   it('should render the view given both the Strengths and ALN Screeners promises are not resolved', async () => {
@@ -185,7 +197,7 @@ describe('strengthsController', () => {
     await controller.getStrengthsView(req, res, next)
 
     // Then
-    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 })
 
@@ -196,6 +208,7 @@ export function setupNonAlnStrengths() {
     symptoms: 'Can add up really well',
     fromALNScreener: false,
     active: true,
+    updatedAt: subDays(today, 5),
   })
   const numeracy2 = aValidStrengthResponseDto({
     strengthTypeCode: StrengthType.NUMERACY_SKILLS_DEFAULT,
@@ -203,30 +216,35 @@ export function setupNonAlnStrengths() {
     symptoms: 'Can subtract really well',
     fromALNScreener: false,
     active: true,
+    updatedAt: subDays(today, 3),
   })
   const literacy = aValidStrengthResponseDto({
     strengthTypeCode: StrengthType.LITERACY_SKILLS_DEFAULT,
     strengthCategory: StrengthCategory.LITERACY_SKILLS,
     fromALNScreener: false,
     active: true,
+    updatedAt: subDays(today, 1),
   })
   const emotionsNonActive = aValidStrengthResponseDto({
     strengthTypeCode: StrengthType.EMOTIONS_FEELINGS_DEFAULT,
     strengthCategory: StrengthCategory.EMOTIONS_FEELINGS,
     fromALNScreener: false,
     active: false,
+    updatedAt: subDays(today, 1),
   })
   const attention = aValidStrengthResponseDto({
     strengthTypeCode: StrengthType.ATTENTION_ORGANISING_TIME_DEFAULT,
     strengthCategory: StrengthCategory.ATTENTION_ORGANISING_TIME,
     fromALNScreener: false,
     active: true,
+    updatedAt: subDays(today, 10),
   })
   const speaking = aValidStrengthResponseDto({
     strengthTypeCode: StrengthType.SPEAKING,
     strengthCategory: StrengthCategory.LANGUAGE_COMM_SKILLS,
     fromALNScreener: false,
     active: true,
+    updatedAt: subDays(today, 2),
   })
 
   return { numeracy, numeracy2, literacy, emotionsNonActive, attention, speaking }
@@ -241,6 +259,12 @@ export function setupAlnStrengths() {
   })
   const writing = aValidStrengthResponseDto({
     strengthTypeCode: StrengthType.WRITING,
+    strengthCategory: StrengthCategory.LITERACY_SKILLS,
+    fromALNScreener: true,
+    active: true,
+  })
+  const alphabetOrdering = aValidStrengthResponseDto({
+    strengthTypeCode: StrengthType.ALPHABET_ORDERING,
     strengthCategory: StrengthCategory.LITERACY_SKILLS,
     fromALNScreener: true,
     active: true,
@@ -270,5 +294,5 @@ export function setupAlnStrengths() {
     active: true,
   })
 
-  return { reading, writing, wordFindingNonActive, arithmetic, focussing, tidiness }
+  return { reading, writing, alphabetOrdering, wordFindingNonActive, arithmetic, focussing, tidiness }
 }
