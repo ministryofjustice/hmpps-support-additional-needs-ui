@@ -28,7 +28,6 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.SEARCH,
         ApplicationAction.VIEW_PROFILE,
         ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN,
-        ApplicationAction.UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN,
         ApplicationAction.RECORD_CHALLENGES,
         ApplicationAction.RECORD_STRENGTHS,
         ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS,
