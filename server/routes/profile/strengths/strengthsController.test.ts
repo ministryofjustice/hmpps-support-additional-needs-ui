@@ -16,6 +16,7 @@ describe('strengthsController', () => {
   const prisonerSummary = aValidPrisonerSummary()
 
   const screenerDate = today
+  const prisonId = 'MDI'
 
   // Non-ALN strengths
   const { numeracy, numeracy2, literacy, emotionsNonActive, attention, speaking } = setupNonAlnStrengths()
@@ -32,6 +33,7 @@ describe('strengthsController', () => {
         // Latest screener
         aValidAlnScreenerResponseDto({
           screenerDate,
+          createdAtPrison: prisonId,
           strengths: [reading, writing, wordFindingNonActive, arithmetic, focussing, tidiness, alphabetOrdering],
         }),
         // Screener from yesterday
@@ -65,6 +67,7 @@ describe('strengthsController', () => {
         nonAlnStrengths: [attention],
         latestAlnScreener: {
           screenerDate,
+          createdAtPrison: prisonId,
           strengths: [focussing, tidiness],
         },
       },
@@ -72,6 +75,7 @@ describe('strengthsController', () => {
         nonAlnStrengths: [literacy],
         latestAlnScreener: {
           screenerDate,
+          createdAtPrison: prisonId,
           strengths: [alphabetOrdering, reading, writing],
         },
       },
@@ -79,6 +83,7 @@ describe('strengthsController', () => {
         nonAlnStrengths: [numeracy2, numeracy],
         latestAlnScreener: {
           screenerDate,
+          createdAtPrison: prisonId,
           strengths: [arithmetic],
         },
       },
@@ -86,6 +91,7 @@ describe('strengthsController', () => {
         nonAlnStrengths: [speaking],
         latestAlnScreener: {
           screenerDate,
+          createdAtPrison: prisonId,
           strengths: [],
         },
       },
@@ -99,8 +105,6 @@ describe('strengthsController', () => {
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
-      strengths,
-      alnScreeners,
       tab: 'strengths',
       groupedStrengths: expect.objectContaining({
         status: 'fulfilled',
@@ -123,13 +127,10 @@ describe('strengthsController', () => {
     const expectedViewTemplate = 'pages/profile/strengths/index'
 
     const expectedError = new Error('Some error retrieving strengths')
-    const strengthsPromise = Result.rejected(expectedError)
-    res.locals.strengths = strengthsPromise
+    res.locals.strengths = Result.rejected(expectedError)
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
-      strengths: strengthsPromise,
-      alnScreeners,
       tab: 'strengths',
       groupedStrengths: expect.objectContaining({
         status: 'rejected',
@@ -149,13 +150,10 @@ describe('strengthsController', () => {
     const expectedViewTemplate = 'pages/profile/strengths/index'
 
     const expectedError = new Error('Some error retrieving ALN Screeners')
-    const alnScreenersPromise = Result.rejected(expectedError)
-    res.locals.alnScreeners = alnScreenersPromise
+    res.locals.alnScreeners = Result.rejected(expectedError)
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
-      strengths,
-      alnScreeners: alnScreenersPromise,
       tab: 'strengths',
       groupedStrengths: expect.objectContaining({
         status: 'rejected',
@@ -174,18 +172,13 @@ describe('strengthsController', () => {
     // Given
     const expectedViewTemplate = 'pages/profile/strengths/index'
 
-    const strengthsPromise = Result.rejected(new Error('Some error retrieving strengths'))
-    res.locals.strengths = strengthsPromise
-
-    const alnScreenersPromise = Result.rejected(new Error('Some error retrieving ALN Screeners'))
-    res.locals.alnScreeners = alnScreenersPromise
+    res.locals.strengths = Result.rejected(new Error('Some error retrieving strengths'))
+    res.locals.alnScreeners = Result.rejected(new Error('Some error retrieving ALN Screeners'))
 
     const expectedError = new Error('Some error retrieving ALN Screeners, Some error retrieving strengths')
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
-      strengths: strengthsPromise,
-      alnScreeners: alnScreenersPromise,
       tab: 'strengths',
       groupedStrengths: expect.objectContaining({
         status: 'rejected',

@@ -10,22 +10,23 @@
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
       <h2 class="govuk-heading-m">Strengths</h2>
 
-      {% if strengths.isFulfilled() %}
-        {% set activeStrengths = strengths.value.strengths | filterArrayOnProperty('active', true) %}
-        {% if activeStrengths | length %}
+      {% if groupedStrengths.isFulfilled() %}
+        {% set groupedStrengths = groupedStrengths.value %}
 
-          {% for strengthCategory, activeStrengthsInCategory in activeStrengths | groupby('strengthCategory') %}
-             {{ strengthsSummaryCard({
-               title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
-               strengths: activeStrengthsInCategory,
-               attributes: {
-                 'data-qa': strengthCategory
-               }
+        {% if groupedStrengths | length == 0 %}
+          {% include './_noStrengthsSummaryCard.njk' %}
+
+        {% else %}
+          {% for strengthCategory, strengthsData in groupedStrengths %}
+            {{ strengthsSummaryCard({
+              title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
+              strengthsData: strengthsData,
+              attributes: {
+                'data-qa': 'strengths-summary-card_' + strengthCategory
+              }
             }) }}
           {% endfor %}
 
-        {% else %}
-          {% include './_noStrengthsSummaryCard.njk' %}
         {% endif %}
       {% else %}
         <h3 class="govuk-heading-s" data-qa="strengths-unavailable-message">We cannot show these details right now</h3>

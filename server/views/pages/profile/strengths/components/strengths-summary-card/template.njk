@@ -10,7 +10,11 @@
 {#- Define component attributes #}
 {%- set componentAttributes %} class="{{ classNames }}" {{- govukAttributes(params.attributes) -}} {% if params.id %} id="{{ params.id }}"{% endif %}{% endset %}
 
-{% if params.strengths | length %}
+{% set nonAlnStrengths = params.strengthsData.nonAlnStrengths %}
+{% set latestAlnScreener = params.strengthsData.latestAlnScreener %}
+{% set strengthsFromMostRecentAlnScreener = latestAlnScreener.strengths %}
+
+{% if nonAlnStrengths | length or strengthsFromMostRecentAlnScreener | length %}
   <div {{ componentAttributes | safe }}>
     <div class="govuk-summary-card__title-wrapper">
       <h2 class="govuk-summary-card__title">{{ params.title }}</h2>
@@ -20,7 +24,6 @@
       <div class="govuk-summary-list">
 
         {# Render non-ALN strengths first #}
-        {% set nonAlnStrengths = params.strengths | filterArrayOnProperty('fromALNScreener', false) | sort(true, false, 'updatedAt') %}
         {% for strength in nonAlnStrengths %}
           <div class="govuk-summary-list__row non-aln-strength" data-qa="{{ strength.strengthTypeCode }}">
             <p class="govuk-body govuk-!-margin-top-3" data-qa="non-aln-strength-symptoms">{{ strength.symptoms }}</p>
@@ -48,7 +51,6 @@
         {% endfor %}
 
         {# Render strengths from the most recent ALN Screener #}
-        {% set strengthsFromMostRecentAlnScreener = params.strengths | filterArrayOnProperty('fromALNScreener', true) %}
         {% if strengthsFromMostRecentAlnScreener | length %}
           <div class="govuk-summary-list__row aln-strengths">
             <ul class="govuk-list govuk-!-margin-top-3">
@@ -58,7 +60,7 @@
             </ul>
 
             <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-strengths-audit">
-              From Additional Learning Needs Screener completed on {{ strengthsFromMostRecentAlnScreener[0].alnScreenerDate | formatDate('d MMMM yyyy') }}, {{ strengthsFromMostRecentAlnScreener[0].createdAtPrison }}
+              From Additional Learning Needs Screener completed on {{ latestAlnScreener.screenerDate | formatDate('d MMMM yyyy') }}, {{ latestAlnScreener.createdAtPrison }}
             </p>
           </div>
         {% endif %}

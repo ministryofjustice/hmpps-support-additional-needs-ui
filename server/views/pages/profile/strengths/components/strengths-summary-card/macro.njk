@@ -2,11 +2,18 @@
 
 Data supplied to this marco:
   params: {
-    strengths: Array<StrengthDto>
+    strengthsData: {
+      nonAlnStrengths: Array<StrengthResponseDto> - Array of non-ALN Screener strengths
+      latestAlnScreener: {
+        screenerDate: Date - the Date of the latest ALN Screener
+        createdAtPrison: string - the prisonId where the latest ALN Screener was recorded
+        strengths: Array<StrengthResponseDto> - Array of strengths on the latest ALN Screener
+      }
+    }
     title: string - Summary Card title
     id: string
     classes: string
-    attributes: Map<string, string>
+    attributes: Object
   }
 #}
 {% macro strengthsSummaryCard(params) %}
