@@ -1,6 +1,5 @@
 import type { StrengthListResponse, StrengthResponse } from 'supportAdditionalNeedsApiClient'
 import { validAuditFields, AuditFields } from './auditFieldsTestDataBuilder'
-import StrengthIdentificationSource from '../enums/strengthIdentificationSource'
 
 const aValidStrengthListResponse = (options?: { strengths?: Array<StrengthResponse> }): StrengthListResponse => ({
   strengths: options?.strengths || [aValidStrengthResponse()],
@@ -13,7 +12,7 @@ const aValidStrengthResponse = (
     strengthTypeCode?: string
     strengthCategory?: string
     symptoms?: string
-    howIdentified?: Array<StrengthIdentificationSource>
+    howIdentified?: Array<string>
     howIdentifiedOther?: string
     alnScreenerDate?: string
   },
@@ -22,7 +21,7 @@ const aValidStrengthResponse = (
   fromALNScreener: options?.fromALNScreener == null ? true : options?.fromALNScreener,
   symptoms:
     options?.symptoms === null ? null : options?.symptoms || 'John can read and understand written language very well',
-  howIdentified: options?.howIdentified || [StrengthIdentificationSource.CONVERSATIONS],
+  howIdentified: options?.howIdentified || ['CONVERSATIONS'],
   howIdentifiedOther:
     options?.howIdentifiedOther === null
       ? null
