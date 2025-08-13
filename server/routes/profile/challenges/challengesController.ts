@@ -36,15 +36,11 @@ export default class ChallengesController {
     const allChallenges = [...activeNonAlnChallenges, ...latestAlnScreenerChallenges].sort((a, b) => {
       return a.challengeCategory.localeCompare(b.challengeCategory)
     })
+    const grouped = this.groupChallengesByCategory(allChallenges)
+    return this.sortChallengeGroups(grouped)
+  }
 
-    const grouped = allChallenges.reduce((grouped, challenge) => {
-      const type = challenge.challengeCategory
-      return {
-        ...grouped,
-        [type]: [...(grouped[type] || []), challenge],
-      }
-    }, {} as GroupedChallenges)
-
+  private sortChallengeGroups(grouped: { [p: string]: ChallengeResponseDto[] }) {
     const sortedEntries = Object.entries(grouped)
       .sort(([categoryA], [categoryB]) => {
         return categoryA.localeCompare(categoryB)
@@ -57,12 +53,20 @@ export default class ChallengesController {
           .filter(challenge => challenge.fromALNScreener)
           .sort((a, b) => a.challengeTypeCode.localeCompare(b.challengeTypeCode))
 
-        return [
-          category,
-          [...nonAlnChallengesSortedByDate, ...alnChallenges]
-        ]
+        return [category, [...nonAlnChallengesSortedByDate, ...alnChallenges]]
       })
 
     return Object.fromEntries(sortedEntries)
+  }
+
+  private groupChallengesByCategory(allChallenges: ChallengeResponseDto[]) {
+    const grouped = allChallenges.reduce((grouped, challenge) => {
+      const type = challenge.challengeCategory
+      return {
+        ...grouped,
+        [type]: [...(grouped[type] || []), challenge],
+      }
+    }, {} as GroupedChallenges)
+    return grouped
   }
 }
