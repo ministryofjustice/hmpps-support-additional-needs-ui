@@ -17,10 +17,12 @@
           {% include './_noStrengthsSummaryCard.njk' %}
 
         {% else %}
+          {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
           {% for strengthCategory, strengthsData in groupedStrengths %}
             {{ strengthsSummaryCard({
               title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
               strengthsData: strengthsData,
+              prisonNamesById: prisonNamesById,
               attributes: {
                 'data-qa': 'strengths-summary-card_' + strengthCategory
               }

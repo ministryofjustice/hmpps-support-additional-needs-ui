@@ -10,10 +10,11 @@ Data supplied to this marco:
         strengths: Array<StrengthResponseDto> - Array of strengths on the latest ALN Screener
       }
     }
+    prisonNamesById: Object of key value pairs, where the key is the prison ID, and the value is the prison name
     title: string - Summary Card title
     id: string
     classes: string
-    attributes: Object
+    attributes: Object of key value pairs of additonal attributes to add the to the component
   }
 #}
 {% macro strengthsSummaryCard(params) %}

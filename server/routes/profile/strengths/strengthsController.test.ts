@@ -17,6 +17,7 @@ describe('strengthsController', () => {
 
   const screenerDate = today
   const prisonId = 'MDI'
+  const prisonNamesById = { BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' }
 
   // Non-ALN strengths
   const { numeracy, numeracy2, literacy, emotionsNonActive, attention, speaking } = setupNonAlnStrengths()
@@ -48,7 +49,7 @@ describe('strengthsController', () => {
   const req = {} as unknown as Request
   const res = {
     render,
-    locals: { prisonerSummary, strengths, alnScreeners },
+    locals: { prisonerSummary, strengths, alnScreeners, prisonNamesById },
   } as unknown as Response
   const next = jest.fn()
 
@@ -105,6 +106,7 @@ describe('strengthsController', () => {
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
+      prisonNamesById,
       tab: 'strengths',
       groupedStrengths: expect.objectContaining({
         status: 'fulfilled',
@@ -131,6 +133,7 @@ describe('strengthsController', () => {
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
+      prisonNamesById,
       tab: 'strengths',
       groupedStrengths: expect.objectContaining({
         status: 'rejected',
@@ -154,6 +157,7 @@ describe('strengthsController', () => {
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
+      prisonNamesById,
       tab: 'strengths',
       groupedStrengths: expect.objectContaining({
         status: 'rejected',
@@ -179,6 +183,7 @@ describe('strengthsController', () => {
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
+      prisonNamesById,
       tab: 'strengths',
       groupedStrengths: expect.objectContaining({
         status: 'rejected',
