@@ -18,7 +18,7 @@ export type GroupedStrengths = Record<
 
 export default class StrengthsController {
   getStrengthsView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    const { alnScreeners, prisonerSummary, strengths } = res.locals
+    const { alnScreeners, prisonerSummary, prisonNamesById, strengths } = res.locals
 
     let groupedStrengthsPromise: Result<GroupedStrengths, Error>
     if (alnScreeners.isFulfilled() && strengths.isFulfilled()) {
@@ -55,7 +55,12 @@ export default class StrengthsController {
       groupedStrengthsPromise = reWrapRejectedPromises(alnScreeners, strengths)
     }
 
-    const viewRenderArgs = { prisonerSummary, groupedStrengths: groupedStrengthsPromise, tab: 'strengths' }
+    const viewRenderArgs = {
+      prisonerSummary,
+      prisonNamesById,
+      groupedStrengths: groupedStrengthsPromise,
+      tab: 'strengths',
+    }
     return res.render('pages/profile/strengths/index', viewRenderArgs)
   }
 }

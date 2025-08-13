@@ -60,7 +60,8 @@
             </ul>
 
             <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-strengths-audit">
-              From Additional Learning Needs Screener completed on {{ latestAlnScreener.screenerDate | formatDate('d MMMM yyyy') }}, {{ latestAlnScreener.createdAtPrison }}
+              {% set prisonName = params.prisonNamesById[latestAlnScreener.createdAtPrison] | default(latestAlnScreener.createdAtPrison) %}
+              From Additional Learning Needs Screener completed on {{ latestAlnScreener.screenerDate | formatDate('d MMMM yyyy') }}, {{ prisonName }}
             </p>
           </div>
         {% endif %}

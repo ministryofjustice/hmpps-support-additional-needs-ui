@@ -35,6 +35,10 @@ const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',
   lastName: 'PEIGH',
 })
+const prisonNamesById = {
+  BXI: 'Brixton (HMP)',
+  LEI: 'Leeds (HMP)',
+}
 const template = 'index.njk'
 
 const userHasPermissionTo = jest.fn()
@@ -43,6 +47,7 @@ const templateParams = {
   userHasPermissionTo,
   tab: 'strengths',
   groupedStrengths: Result.fulfilled({}),
+  prisonNamesById: Result.fulfilled(prisonNamesById),
   pageHasApiErrors: false,
 }
 

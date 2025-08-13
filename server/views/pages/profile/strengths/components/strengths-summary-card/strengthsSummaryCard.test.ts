@@ -22,6 +22,10 @@ njkEnv //
   .addFilter('formatStrengthTypeScreenValue', formatStrengthTypeScreenValueFilter)
   .addFilter('formatStrengthIdentificationSourceScreenValue', formatStrengthIdentificationSourceScreenValueFilter)
 
+const prisonNamesById = {
+  BXI: 'Brixton (HMP)',
+  LEI: 'Leeds (HMP)',
+}
 const templateParams = {
   title: 'Literacy skills',
   strengthsData: {
@@ -32,6 +36,7 @@ const templateParams = {
       strengths: [aValidStrengthResponseDto()],
     },
   },
+  prisonNamesById,
 }
 
 const template = 'strengthsSummaryCard.test.njk'
@@ -124,6 +129,9 @@ describe('Tests for Strengths Summary Card component', () => {
     const alnStrengths = $('.govuk-summary-list__row.aln-strengths li')
     expect(alnStrengths.length).toEqual(1)
     expect(alnStrengths.eq(0).text().trim()).toEqual('Language and communication skills') // LANGUAGE_COMM_SKILLS_DEFAULT
+    expect($('[data-qa=aln-strengths-audit]').text().trim()).toEqual(
+      'From Additional Learning Needs Screener completed on 13 June 2025, Brixton (HMP)',
+    )
   })
 
   it('should render the component given only non-ALN strengths and no ALN Screener at all', () => {
@@ -218,6 +226,56 @@ describe('Tests for Strengths Summary Card component', () => {
     const alnStrengths = $('.govuk-summary-list__row.aln-strengths li')
     expect(alnStrengths.length).toEqual(1)
     expect(alnStrengths.eq(0).text().trim()).toEqual('Language and communication skills') // LANGUAGE_COMM_SKILLS_DEFAULT
+    expect($('[data-qa=aln-strengths-audit]').text().trim()).toEqual(
+      'From Additional Learning Needs Screener completed on 13 June 2025, Brixton (HMP)',
+    )
+  })
+
+  it('should render the component given prisonNamesById does not contain the prison', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      strengthsData: {
+        nonAlnStrengths: [] as Array<StrengthResponseDto>,
+        latestAlnScreener: {
+          createdAtPrison: 'BXI',
+          screenerDate: parseISO('2025-06-13'),
+          strengths: [
+            aValidStrengthResponseDto({
+              strengthTypeCode: StrengthType.LANGUAGE_COMM_SKILLS_DEFAULT,
+              strengthCategory: StrengthCategory.LANGUAGE_COMM_SKILLS,
+              symptoms: null,
+              howIdentified: null,
+              howIdentifiedOther: null,
+              fromALNScreener: true,
+              createdByDisplayName: 'Person 3',
+              createdAtPrison: 'BXI',
+              createdAt: parseISO('2025-06-13'),
+            }),
+          ],
+        },
+      },
+      prisonNamesById: {},
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('.govuk-summary-card__title').text().trim()).toEqual('Literacy skills')
+
+    // assert non-ALN strengths
+    const nonAlnStrengths = $('.govuk-summary-list__row.non-aln-strength')
+    expect(nonAlnStrengths.length).toEqual(0)
+
+    // assert ALN strengths
+    const alnStrengths = $('.govuk-summary-list__row.aln-strengths li')
+    expect(alnStrengths.length).toEqual(1)
+    expect(alnStrengths.eq(0).text().trim()).toEqual('Language and communication skills') // LANGUAGE_COMM_SKILLS_DEFAULT
+    expect($('[data-qa=aln-strengths-audit]').text().trim()).toEqual(
+      'From Additional Learning Needs Screener completed on 13 June 2025, BXI',
+    )
   })
 
   it('should not render the component given no strengths', () => {
