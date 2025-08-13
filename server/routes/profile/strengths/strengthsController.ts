@@ -77,7 +77,10 @@ const addNonAlnStrengthsToGroupedStrengths = (
       nonAlnStrengths: [],
       latestAlnScreener: { screenerDate, createdAtPrison, strengths: [] },
     }
-    currentEntry.nonAlnStrengths.push(strength)
+    currentEntry.nonAlnStrengths.push({
+      ...strength,
+      howIdentified: strength.howIdentified?.sort(enumComparator),
+    })
     acc[category] = currentEntry
     return acc
   }, groupedStrengths)
