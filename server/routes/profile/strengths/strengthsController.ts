@@ -10,6 +10,7 @@ export type GroupedStrengths = Record<
     nonAlnStrengths: Array<StrengthResponseDto>
     latestAlnScreener: {
       screenerDate: Date
+      createdAtPrison: string
       strengths: Array<StrengthResponseDto>
     }
   }
@@ -30,10 +31,16 @@ export default class StrengthsController {
         enumComparator(left.strengthTypeCode, right.strengthTypeCode),
       )
       const screenerDate = latestAlnScreener?.screenerDate
+      const prisonScreenerConductedAt = latestAlnScreener?.createdAtPrison
 
       const groupedStrengths: GroupedStrengths = {}
-      addNonAlnStrengthsToGroupedStrengths(groupedStrengths, nonAlnStrengths, screenerDate)
-      addAlnStrengthsToGroupedStrengths(groupedStrengths, strengthsFromLatestAlnScreener, screenerDate)
+      addNonAlnStrengthsToGroupedStrengths(groupedStrengths, nonAlnStrengths, screenerDate, prisonScreenerConductedAt)
+      addAlnStrengthsToGroupedStrengths(
+        groupedStrengths,
+        strengthsFromLatestAlnScreener,
+        screenerDate,
+        prisonScreenerConductedAt,
+      )
 
       const groupedStrengthsSortedByCategory = Object.keys(groupedStrengths)
         .sort(enumComparator)
@@ -48,13 +55,7 @@ export default class StrengthsController {
       groupedStrengthsPromise = reWrapRejectedPromises(alnScreeners, strengths)
     }
 
-    const viewRenderArgs = {
-      prisonerSummary,
-      alnScreeners, // TODO remove when the view uses the new groupedStrengths property
-      strengths, // TODO remove when the view uses the new groupedStrengths property
-      groupedStrengths: groupedStrengthsPromise,
-      tab: 'strengths',
-    }
+    const viewRenderArgs = { prisonerSummary, groupedStrengths: groupedStrengthsPromise, tab: 'strengths' }
     return res.render('pages/profile/strengths/index', viewRenderArgs)
   }
 }
@@ -63,10 +64,14 @@ const addNonAlnStrengthsToGroupedStrengths = (
   groupedStrengths: GroupedStrengths,
   nonAlnStrengths: Array<StrengthResponseDto>,
   screenerDate: Date,
+  createdAtPrison: string,
 ) => {
   nonAlnStrengths.reduce((acc, strength) => {
     const category = strength.strengthCategory
-    const currentEntry = acc[category] ?? { nonAlnStrengths: [], latestAlnScreener: { screenerDate, strengths: [] } }
+    const currentEntry = acc[category] ?? {
+      nonAlnStrengths: [],
+      latestAlnScreener: { screenerDate, createdAtPrison, strengths: [] },
+    }
     currentEntry.nonAlnStrengths.push(strength)
     acc[category] = currentEntry
     return acc
@@ -77,11 +82,15 @@ const addAlnStrengthsToGroupedStrengths = (
   groupedStrengths: GroupedStrengths,
   alnStrengths: Array<StrengthResponseDto>,
   screenerDate: Date,
+  createdAtPrison: string,
 ) => {
   alnStrengths.reduce((acc, strength) => {
     const category = strength.strengthCategory
-    const currentEntry = acc[category] ?? { nonAlnStrengths: [], latestAlnScreener: { screenerDate, strengths: [] } }
-    currentEntry.latestAlnScreener = currentEntry.latestAlnScreener || { screenerDate, strengths: [] }
+    const currentEntry = acc[category] ?? {
+      nonAlnStrengths: [],
+      latestAlnScreener: { screenerDate, createdAtPrison, strengths: [] },
+    }
+    currentEntry.latestAlnScreener = currentEntry.latestAlnScreener || { screenerDate, createdAtPrison, strengths: [] }
     currentEntry.latestAlnScreener.strengths.push(strength)
     acc[category] = currentEntry
     return acc
