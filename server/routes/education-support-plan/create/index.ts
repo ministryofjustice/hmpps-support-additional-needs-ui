@@ -31,6 +31,8 @@ import wereOtherPeopleConsultedSchema from '../validationSchemas/wereOtherPeople
 import addPersonConsultedSchema from '../validationSchemas/addPersonConsultedSchema'
 import additionalInformationSchema from '../validationSchemas/additionalInformationSchema'
 import individualSupportRequirementsSchema from '../validationSchemas/individualSupportRequirementsSchema'
+import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
+import ApplicationAction from '../../../enums/applicationAction'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const { educationSupportPlanService, journeyDataService } = services
@@ -52,8 +54,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const checkYourAnswersController = new CheckYourAnswersController(educationSupportPlanService)
 
   router.use('/', [
-    // TODO - enable this line when we understand the RBAC roles and permissions
-    // checkUserHasPermissionTo(ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN),
+    checkUserHasPermissionTo(ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN),
     insertJourneyIdentifier({ insertIdAfterElement: 3 }), // insert journey ID immediately after '/education-support-plan/:prisonNumber/create' - eg: '/education-support-plan/A1234BC/create/473e9ee4-37d6-4afb-92a2-5729b10cc60f/who-created-the-plan'
   ])
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])

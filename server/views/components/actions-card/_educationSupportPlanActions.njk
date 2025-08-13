@@ -6,8 +6,7 @@
 
   <ul class="govuk-list govuk-!-margin-0" data-qa="education-support-plan-action-items">
 
-    {# TODO - enable this if logic when RBAC is implemented #}
-    {# if params.userHasPermissionTo('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN') #}
+    {% if params.userHasPermissionTo('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN') %}
       {% if planCreationScheduleStatus === 'SCHEDULED' %}
         <li class="govuk-!-margin-0 govuk-!-padding-bottom-3 govuk-!-padding-top-3">
           <a class="govuk-link" data-qa="create-education-support-plan-button" href="/education-support-plan/{{ params.prisonerSummary.prisonNumber }}/create/who-created-the-plan">
@@ -18,7 +17,7 @@
           </a>
         </li>
       {% endif %}
-    {# endif #}
+    {% endif %}
 
     {# if params.userHasPermissionTo('EXEMPT_EDUCATION_LEARNER_SUPPORT_PLAN') #}
       {% if planCreationScheduleStatus === 'SCHEDULED' %}

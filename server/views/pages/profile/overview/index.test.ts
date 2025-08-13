@@ -28,12 +28,25 @@ const prisonerSummary = aValidPrisonerSummary({
 })
 const template = 'index.njk'
 
+const userHasPermissionTo = jest.fn()
+const templateParams = {
+  prisonerSummary,
+  tab: 'overview',
+  educationSupportPlanCreationSchedule: Result.fulfilled(aValidPlanCreationScheduleDto()),
+  pageHasApiErrors: false,
+  userHasPermissionTo,
+}
+
 describe('Profile overview page', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+    userHasPermissionTo.mockReturnValue(true)
+  })
+
   it('should render the profile overview page given all service API promises are resolved', () => {
     // Given
     const pageViewModel = {
-      prisonerSummary,
-      tab: 'overview',
+      ...templateParams,
       educationSupportPlanCreationSchedule: Result.fulfilled(aValidPlanCreationScheduleDto()),
       pageHasApiErrors: false,
     }
@@ -57,8 +70,7 @@ describe('Profile overview page', () => {
   it('should render the profile overview page given the plan creation schedule service API promise is not resolved', () => {
     // Given
     const pageViewModel = {
-      prisonerSummary,
-      tab: 'overview',
+      ...templateParams,
       educationSupportPlanCreationSchedule: Result.rejected(new Error('Failed to get plan creation schedule')),
       pageHasApiErrors: true,
     }

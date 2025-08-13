@@ -19,14 +19,13 @@ import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
 import AdditionalInformationPage from '../../../pages/education-support-plan/additionalInformationPage'
 import IndividualSupportRequirementsPage from '../../../pages/education-support-plan/individualSupportRequirementsPage'
+import AuthorisationErrorPage from '../../../pages/authorisationError'
 
 context('Create an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
 
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
     cy.task('stubCreateEducationSupportPlan', prisonNumber)
@@ -34,6 +33,8 @@ context('Create an Education Support Plan', () => {
 
   it('should be able to navigate directly to the create Education Support Plan page', () => {
     // Given
+    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] }) // user has the role that gives them permission to create ELSPs)
+    cy.signIn()
 
     // When
     cy.visit(`/education-support-plan/${prisonNumber}/create/who-created-the-plan`)
@@ -44,6 +45,9 @@ context('Create an Education Support Plan', () => {
 
   it('should create a prisoners Education Support Plan, triggering validation on every screen', () => {
     // Given
+    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] }) // user has the role that gives them permission to create ELSPs)
+    cy.signIn()
+
     const reviewDate = addWeeks(startOfToday(), 10)
 
     cy.visit(`/profile/${prisonNumber}/overview`)
@@ -246,6 +250,8 @@ Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. M
 
   it('should not create a prisoners Education Support Plan given API returns an error response', () => {
     // Given
+    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] }) // user has the role that gives them permission to create ELSPs)
+    cy.signIn()
     cy.task('stubCreateEducationSupportPlan500Error', prisonNumber)
 
     cy.createEducationSupportPlanToArriveOnCheckYourAnswers({ prisonNumber })
@@ -259,5 +265,17 @@ Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. M
     // Then
     Page.verifyOnPage(CheckYourAnswersPage) //
       .apiErrorBannerIsDisplayed()
+  })
+
+  it('should not be able to navigate directly to the create Education Support Plan page given user does not have the required role', () => {
+    // Given
+    cy.task('stubSignIn', { roles: ['ROLE_SOME_OTHER_ROLE'] }) // user has some DPS roles, but not the specific role that gives them permission to create ELSPs
+    cy.signIn()
+
+    // When
+    cy.visit(`/education-support-plan/${prisonNumber}/create/who-created-the-plan`, { failOnStatusCode: false })
+
+    // Then
+    Page.verifyOnPage(AuthorisationErrorPage)
   })
 })
