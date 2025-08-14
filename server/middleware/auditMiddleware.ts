@@ -62,6 +62,10 @@ const pageViewEventMap: Record<string, Page> = {
   '/conditions/:prisonNumber/create/:journeyId/select-conditions': Page.CREATE_CONDITIONS_SELECT_CONDITIONS,
   '/conditions/:prisonNumber/create/:journeyId/details': Page.CREATE_CONDITIONS_DETAILS,
 
+  // Create Support Strategies routes
+  '/support-strategies/:prisonNumber/create/:journeyId/select-category': Page.CREATE_SUPPORT_STRATEGY_CATEGORY,
+  '/support-strategies/:prisonNumber/create/:journeyId/detail': Page.CREATE_SUPPORT_STRATEGY_DETAILS,
+
   // Non audit routes. These routes do not raise an audit event
   '/': null,
   '/education-support-plan/:prisonNumber/create/who-created-the-plan': null,
@@ -70,6 +74,7 @@ const pageViewEventMap: Record<string, Page> = {
   '/challenges/:prisonNumber/create/select-category': null,
   '/aln-screener/:prisonNumber/create/screener-date': null,
   '/conditions/:prisonNumber/create/select-conditions': null,
+  '/support-strategies/:prisonNumber/create/select-category': null,
 }
 
 export default function auditMiddleware({ auditService }: Services) {

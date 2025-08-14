@@ -94,6 +94,23 @@ describe('Tests for actions card component', () => {
     expect($('[data-qa=record-screener-results-button]').length).toEqual(0)
   })
 
+  it('should render the actions card component based on support-strategies menu type', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      actionMenuType: 'support-strategies',
+    }
+
+    // When
+    const content = nunjucks.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=support-strategies-actions]').length).toEqual(1)
+    expect($('[data-qa=add-support-strategy-button]').length).toEqual(1)
+    expect($('[data-qa=record-screener-results-button]').length).toEqual(0)
+  })
+
   it('should render the actions card component based on menu type, default to esp actions', () => {
     // Given
     const params = {
