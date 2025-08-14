@@ -16,6 +16,9 @@ describe('educationSupportPlanDtoMapper', () => {
         specificTeachingSkills: 'Teacher with BSL proficiency required',
         examAccessArrangements: 'Escort to the exam room 10 minutes before everyone else',
         lnspSupport: 'Chris will need text reading to him as he cannot read himself',
+        lnspSupportHours: 20,
+        individualSupport: 'Chris has asked that he is not sat with disruptive people as he is keen to learn',
+        detail: 'Chris is happy with his plan',
       })
 
       const expected = aValidEducationSupportPlanDto({
@@ -27,6 +30,9 @@ describe('educationSupportPlanDtoMapper', () => {
         specificTeachingSkills: 'Teacher with BSL proficiency required',
         examArrangements: 'Escort to the exam room 10 minutes before everyone else',
         lnspSupport: 'Chris will need text reading to him as he cannot read himself',
+        lnspSupportHours: 20,
+        individualSupport: 'Chris has asked that he is not sat with disruptive people as he is keen to learn',
+        additionalInformation: 'Chris is happy with his plan',
         prisonId: null,
         reviewDate: null,
       })
@@ -51,6 +57,7 @@ describe('educationSupportPlanDtoMapper', () => {
         examAccessArrangements: null,
         lnspSupport: null,
         detail: null,
+        individualSupport: 'Chris has asked that he is not sat with disruptive people as he is keen to learn', // This is not a nullable/optional field
       })
 
       const expected = aValidEducationSupportPlanDto({
@@ -63,6 +70,7 @@ describe('educationSupportPlanDtoMapper', () => {
         examArrangements: null,
         lnspSupport: null,
         additionalInformation: null,
+        individualSupport: 'Chris has asked that he is not sat with disruptive people as he is keen to learn',
         prisonId: null,
         reviewDate: null,
       })

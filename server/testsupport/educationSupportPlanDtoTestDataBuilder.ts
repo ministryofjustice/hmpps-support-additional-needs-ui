@@ -18,6 +18,7 @@ const aValidEducationSupportPlanDto = (options?: {
   specificTeachingSkills?: string
   examArrangements?: string
   lnspSupport?: string
+  lnspSupportHours?: number
   reviewDate?: Date
   individualSupport?: string
   additionalInformation?: string
@@ -52,6 +53,7 @@ const aValidEducationSupportPlanDto = (options?: {
     options?.lnspSupport === null
       ? null
       : options?.lnspSupport || 'Chris will need text reading to him as he cannot read himself',
+  lnspSupportHours: options?.lnspSupport === null ? null : (options?.lnspSupportHours ?? 10),
   reviewDate: options?.reviewDate === null ? null : options?.reviewDate || addMonths(startOfToday(), 2),
   individualSupport:
     options?.individualSupport || 'Chris has asked that he is not sat with disruptive people as he is keen to learn',

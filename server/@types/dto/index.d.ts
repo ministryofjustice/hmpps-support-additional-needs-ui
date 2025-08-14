@@ -44,6 +44,7 @@ declare module 'dto' {
     hasCurrentEhcp?: boolean
     lnspSupportNeeded?: boolean
     lnspSupport?: string
+    lnspSupportHours?: number
     reviewDate?: Date
     individualSupport?: string
     additionalInformation?: string

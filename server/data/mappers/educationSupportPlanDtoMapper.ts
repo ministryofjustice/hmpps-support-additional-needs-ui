@@ -24,6 +24,7 @@ const toEducationSupportPlanDto = (
   examArrangements: educationSupportPlanResponse.examAccessArrangements,
   lnspSupportNeeded: educationSupportPlanResponse.lnspSupport != null,
   lnspSupport: educationSupportPlanResponse.lnspSupport,
+  lnspSupportHours: educationSupportPlanResponse.lnspSupportHours,
   individualSupport: educationSupportPlanResponse.individualSupport,
   additionalInformation: educationSupportPlanResponse.detail,
   prisonId: null,
