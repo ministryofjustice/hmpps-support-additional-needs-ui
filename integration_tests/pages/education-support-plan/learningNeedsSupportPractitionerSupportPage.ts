@@ -21,7 +21,14 @@ export default class LearningNeedsSupportPractitionerSupportPage extends Page {
     return this
   }
 
+  enterNumberOfHoursSupport(value: number): LearningNeedsSupportPractitionerSupportPage {
+    this.supportHoursField().clear().type(String(value), { delay: 0 })
+    return this
+  }
+
   private radio = (value: YesNoValue): PageElement => cy.get(`.govuk-radios__input[value='${value}']`)
 
   private detailsField = (): PageElement => cy.get('textarea[name=details]')
+
+  private supportHoursField = (): PageElement => cy.get('input[name=supportHours]')
 }

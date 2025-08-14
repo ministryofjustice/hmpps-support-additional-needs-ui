@@ -52,8 +52,12 @@ context(`Change links on the Check Your Answers page when creating an Education 
       .clickLearningNeedsSupportPractitionerSupportChangeLink()
       .selectLnspSupportRequired()
       .enterDetails('Chris will need text reading to him as he cannot read himself')
+      .enterNumberOfHoursSupport(40)
       .submitPageTo(CheckYourAnswersPage)
-      .requiresLearningNeedsSupportPractitionerSupport('Chris will need text reading to him as he cannot read himself')
+      .requiresLearningNeedsSupportPractitionerSupport(
+        'Chris will need text reading to him as he cannot read himself',
+        40,
+      )
 
       // check and updated exam access requirements
       .doesNotRequireExamArrangements()
@@ -156,6 +160,7 @@ context(`Change links on the Check Your Answers page when creating an Education 
               "@.specificTeachingSkills == 'Teacher with BSL proficiency required' && " +
               "@.examAccessArrangements == 'Escorting to the exam room 10 minutes before everyone else' && " +
               "@.lnspSupport == 'Chris will need text reading to him as he cannot read himself' && " +
+              '@.lnspSupportHours == 40 && ' +
               "@.individualSupport == 'Chris has requested that he is sat at the front of the class, and for large print books to help with reading. He is keen to learn and does not want to be distracted by other disruptive people in the classroom environment.' && " +
               "@.detail == 'Chris is feeling positive and is looking forward to starting education' && " +
               `@.reviewDate == '${format(updatedReviewDate, 'yyyy-MM-dd')}'` +

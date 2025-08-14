@@ -20,9 +20,9 @@ describe('learningNeedsSupportPractitionerSupportSchema', () => {
   })
 
   it.each([
-    { supportRequired: 'NO', details: '' },
-    { supportRequired: 'NO', details: undefined },
-    { supportRequired: 'YES', details: 'Chris will need passages of text read to him' },
+    { supportRequired: 'NO', details: '', supportHours: null },
+    { supportRequired: 'NO', details: undefined, supportHours: null },
+    { supportRequired: 'YES', details: 'Chris will need passages of text read to him', supportHours: '10' },
   ])('happy path - validation passes - supportRequired: $supportRequired, details: $details', async requestBody => {
     // Given
     req.body = requestBody
@@ -73,9 +73,9 @@ describe('learningNeedsSupportPractitionerSupportSchema', () => {
   )
 
   it.each([
-    { supportRequired: 'YES', details: '' },
-    { supportRequired: 'YES', details: undefined },
-    { supportRequired: 'YES', details: null },
+    { supportRequired: 'YES', details: '', supportHours: '10' },
+    { supportRequired: 'YES', details: undefined, supportHours: '10' },
+    { supportRequired: 'YES', details: null, supportHours: '10' },
   ])(
     'sad path - validation of details field fails - supportRequired: $supportRequired, details: $details',
     async requestBody => {
@@ -99,13 +99,67 @@ describe('learningNeedsSupportPractitionerSupportSchema', () => {
     },
   )
 
+  it.each([
+    { supportRequired: 'YES', details: 'Some support is required', supportHours: null },
+    { supportRequired: 'YES', details: 'Some support is required', supportHours: undefined },
+    { supportRequired: 'YES', details: 'Some support is required', supportHours: '-1' },
+    { supportRequired: 'YES', details: 'Some support is required', supportHours: 'two' },
+  ])(
+    'sad path - validation of supportHours field fails - supportRequired: $supportRequired, supportHours: $supportHours',
+    async requestBody => {
+      // Given
+      req.body = requestBody
+
+      const expectedErrors: Array<Error> = [
+        { href: '#supportHours', text: 'You must enter a number of hours of support even if that number is 0' },
+      ]
+      const expectedInvalidForm = JSON.stringify(requestBody)
+
+      // When
+      await validate(learningNeedsSupportPractitionerSupportSchema)(req, res, next)
+
+      // Then
+      expect(req.body).toEqual(requestBody)
+      expect(next).not.toHaveBeenCalled()
+      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+      expect(res.redirectWithErrors).toHaveBeenCalledWith(
+        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
+        expectedErrors,
+      )
+    },
+  )
+
   it('sad path - validation of details field length validation fails', async () => {
     // Given
-    const requestBody = { supportRequired: 'YES', details: 'a'.repeat(4001) }
+    const requestBody = { supportRequired: 'YES', details: 'a'.repeat(4001), supportHours: '10' }
     req.body = requestBody
 
     const expectedErrors: Array<Error> = [
       { href: '#details', text: 'Details of required support must be 4000 characters or less' },
+    ]
+    const expectedInvalidForm = JSON.stringify(requestBody)
+
+    // When
+    await validate(learningNeedsSupportPractitionerSupportSchema)(req, res, next)
+
+    // Then
+    expect(req.body).toEqual(requestBody)
+    expect(next).not.toHaveBeenCalled()
+    expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+    expect(res.redirectWithErrors).toHaveBeenCalledWith(
+      '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
+      expectedErrors,
+    )
+  })
+
+  it('sad path - validation of both details and supportHours fields fails', async () => {
+    // Given
+    const requestBody = { supportRequired: 'YES', details: '', supportHours: '-1' }
+    req.body = requestBody
+
+    const expectedErrors: Array<Error> = [
+      { href: '#details', text: 'Enter details of any support required' },
+      { href: '#supportHours', text: 'You must enter a number of hours of support even if that number is 0' },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
 

@@ -38,7 +38,7 @@ export default class LearningNeedsSupportPractitionerSupportController {
     const { educationSupportPlanDto } = req.journeyData
     educationSupportPlanDto.lnspSupportNeeded = form.supportRequired === YesNoValue.YES
     educationSupportPlanDto.lnspSupport = form.details
-    educationSupportPlanDto.lnspSupportHours = Number(form.supportHours)
+    educationSupportPlanDto.lnspSupportHours = form.supportHours ? Number(form.supportHours) : undefined
     req.journeyData.educationSupportPlanDto = educationSupportPlanDto
   }
 }

@@ -5,10 +5,12 @@ import { isEmpty, textValueExceedsLength } from '../../../utils/validation/textV
 
 const learningNeedsSupportPractitionerSupportSchema = async () => {
   const MAX_DETAILS_LENGTH = 4000
+  const MIN_SUPPORT_HOURS = 0
 
   const supportRequiredMandatoryMessage = 'Select whether any support from an LNSP is required'
   const detailsMandatoryMessage = 'Enter details of any support required'
   const detailsMaxLengthMessage = `Details of required support must be ${MAX_DETAILS_LENGTH} characters or less`
+  const supportHoursMessage = `You must enter a number of hours of support even if that number is 0`
 
   return createSchema({
     supportRequired: z //
@@ -18,30 +20,45 @@ const learningNeedsSupportPractitionerSupportSchema = async () => {
       .trim()
       .nullable()
       .optional(),
-    supportHours: z //
+    supportHours: z.coerce //
       .string()
       .trim()
       .nullable()
       .optional(),
+  }).check(ctx => {
+    const { supportRequired, details, supportHours } = ctx.value
+    if (supportRequired === YesNoValue.YES) {
+      if (isEmpty(details)) {
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value,
+          path: ['details'],
+          message: detailsMandatoryMessage,
+        })
+      } else if (textValueExceedsLength(details, MAX_DETAILS_LENGTH)) {
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value,
+          path: ['details'],
+          message: detailsMaxLengthMessage,
+        })
+      }
+
+      if (
+        supportHours == null ||
+        supportHours === '' ||
+        Number.isNaN(Number(supportHours)) ||
+        Number(supportHours) < MIN_SUPPORT_HOURS
+      ) {
+        ctx.issues.push({
+          code: 'custom',
+          input: ctx.value,
+          path: ['supportHours'],
+          message: supportHoursMessage,
+        })
+      }
+    }
   })
-    .refine(
-      ({ supportRequired, details }) => {
-        if (supportRequired === YesNoValue.YES) {
-          return !isEmpty(details)
-        }
-        return true
-      },
-      { path: ['details'], message: detailsMandatoryMessage },
-    )
-    .refine(
-      ({ supportRequired, details }) => {
-        if (supportRequired === YesNoValue.YES) {
-          return !textValueExceedsLength(details, MAX_DETAILS_LENGTH)
-        }
-        return true
-      },
-      { path: ['details'], message: detailsMaxLengthMessage },
-    )
 }
 
 export default learningNeedsSupportPractitionerSupportSchema

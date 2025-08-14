@@ -173,13 +173,20 @@ context('Create an Education Support Plan', () => {
       .submitPageTo(LearningNeedsSupportPractitionerSupportPage)
       .hasErrorCount(1)
       .hasFieldInError('supportRequired')
-      // submit the page without the details, triggering different validation
+      // submit the page without the details and support hours, triggering different validation
       .selectLnspSupportRequired()
       .submitPageTo(LearningNeedsSupportPractitionerSupportPage)
-      .hasErrorCount(1)
+      .hasErrorCount(2)
       .hasFieldInError('details')
-      // enter the fields and submit the form to the next page
+      .hasFieldInError('supportHours')
+      // enter the details field and invalid support hours field and submit the form to trigger a validation error
       .enterDetails('Chris will need the text reading to him as he cannot read himself')
+      .enterNumberOfHoursSupport(-1)
+      .submitPageTo(LearningNeedsSupportPractitionerSupportPage)
+      .hasErrorCount(1)
+      .hasFieldInError('supportHours')
+      // enter the fields and submit the form to the next page
+      .enterNumberOfHoursSupport(20)
       .submitPageTo(AdditionalInformationPage)
 
     Page.verifyOnPage(AdditionalInformationPage) //
@@ -239,6 +246,7 @@ Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. M
               "@.specificTeachingSkills == 'Adopt a more inclusive approach to teaching' && " +
               "@.examAccessArrangements == 'Chris needs escorting to the exam room 10 minutes before everyone else' && " +
               "@.lnspSupport == 'Chris will need the text reading to him as he cannot read himself' && " +
+              '@.lnspSupportHours == 20 && ' +
               "@.individualSupport == 'Chris has asked that he is sat at the front of the class' && " +
               "@.detail == 'Chris was a pleasure to meet with today' && " +
               `@.reviewDate == '${format(reviewDate, 'yyyy-MM-dd')}'` +
