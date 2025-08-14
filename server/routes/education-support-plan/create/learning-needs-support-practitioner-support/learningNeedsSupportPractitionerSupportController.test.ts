@@ -30,6 +30,7 @@ describe('learningNeedsSupportPractitionerSupportController', () => {
         ...aValidEducationSupportPlanDto(),
         lnspSupportNeeded: true,
         lnspSupport: 'Will need to read all text to Chris',
+        lnspSupportHours: 15,
       },
     }
   })
@@ -44,6 +45,7 @@ describe('learningNeedsSupportPractitionerSupportController', () => {
       form: {
         supportRequired: YesNoValue.YES,
         details: 'Will need to read all text to Chris',
+        supportHours: 15,
       },
     }
 
@@ -78,6 +80,7 @@ describe('learningNeedsSupportPractitionerSupportController', () => {
     req.body = {
       supportRequired: YesNoValue.YES,
       details: 'Will need to read all text to Chris',
+      supportHours: '25', // the form submission will be a string
     }
 
     const expectedNextRoute = 'additional-information'
@@ -85,6 +88,7 @@ describe('learningNeedsSupportPractitionerSupportController', () => {
       ...aValidEducationSupportPlanDto(),
       lnspSupportNeeded: true,
       lnspSupport: 'Will need to read all text to Chris',
+      lnspSupportHours: 25, // the value mapped to the DTO is expected to be a Number
     }
 
     // When
@@ -104,6 +108,7 @@ describe('learningNeedsSupportPractitionerSupportController', () => {
     req.body = {
       supportRequired: YesNoValue.YES,
       details: 'Will need to read all text to Chris',
+      supportHours: '10',
     }
 
     const expectedNextRoute = 'check-your-answers'
@@ -111,6 +116,7 @@ describe('learningNeedsSupportPractitionerSupportController', () => {
       ...aValidEducationSupportPlanDto(),
       lnspSupportNeeded: true,
       lnspSupport: 'Will need to read all text to Chris',
+      lnspSupportHours: 10,
     }
 
     // When

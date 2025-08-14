@@ -18,6 +18,11 @@ const learningNeedsSupportPractitionerSupportSchema = async () => {
       .trim()
       .nullable()
       .optional(),
+    supportHours: z //
+      .string()
+      .trim()
+      .nullable()
+      .optional(),
   })
     .refine(
       ({ supportRequired, details }) => {

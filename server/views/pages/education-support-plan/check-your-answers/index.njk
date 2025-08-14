@@ -172,6 +172,7 @@
                 {{ dto.lnspSupportNeeded | formatYesNo }}
                 {% if dto.lnspSupportNeeded %}
                   <span class="app-u-multiline-text">{{ dto.lnspSupport }}</span>
+                  Recommended hours: {{ dto.lnspSupportHours }}
                 {% endif %}
               </dd>
               <dd class="govuk-summary-list__actions">
