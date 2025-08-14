@@ -45,7 +45,8 @@
             }) }}
 
             <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="non-aln-strength-audit">
-              Added on {{ strength.updatedAt | formatDate('d MMMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ strength.updatedByDisplayName }}</span>
+              {% set prisonName = params.prisonNamesById[strength.updatedAtPrison] | default(strength.updatedAtPrison) %}
+              Added on {{ strength.updatedAt | formatDate('d MMMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ strength.updatedByDisplayName }}, {{ prisonName }}</span>
             </p>
           </div>
         {% endfor %}
