@@ -27,13 +27,18 @@ export default class LearningNeedsSupportPractitionerSupportController {
     return {
       supportRequired: dto.lnspSupportNeeded ? YesNoValue.YES : YesNoValue.NO,
       details: dto.lnspSupport,
+      supportHours: dto.lnspSupportHours,
     }
   }
 
-  private updateDtoFromForm = (req: Request, form: { supportRequired: YesNoValue; details?: string }) => {
+  private updateDtoFromForm = (
+    req: Request,
+    form: { supportRequired: YesNoValue; details?: string; supportHours?: number },
+  ) => {
     const { educationSupportPlanDto } = req.journeyData
     educationSupportPlanDto.lnspSupportNeeded = form.supportRequired === YesNoValue.YES
     educationSupportPlanDto.lnspSupport = form.details
+    educationSupportPlanDto.lnspSupportHours = Number(form.supportHours)
     req.journeyData.educationSupportPlanDto = educationSupportPlanDto
   }
 }

@@ -19,15 +19,30 @@
               value: form.details,
               type: "text",
               label: {
-                text: "Add details",
+                text: "Add recommended support details for each course and the roles needed",
                 attributes: { "aria-live": "polite" }
-              },
-              hint: {
-                text: 'Add support needs including number of hours needed'
               },
               attributes: { "aria-label" : "Give details of any support an LNSP is expected to provide" },
               errorMessage: errors | findError('details')
             }) }}
+
+            {{ govukInput({
+              id: "supportHours",
+              name: "supportHours",
+              value: form.supportHours,
+              maxlength: 4,
+              type: "number",
+              label: {
+                text: "For prison learning support staff only, add the total recommended hours needed for all their current courses",
+                attributes: { "aria-live": "polite" }
+              },
+              hint: {
+                text: "This can be an estimate, for example 0 or 2"
+              },
+              classes: 'govuk-input--width-4',
+              errorMessage: errors | findError('supportHours')
+            }) }}
+
           {% endset %}
 
           {{ govukRadios({
