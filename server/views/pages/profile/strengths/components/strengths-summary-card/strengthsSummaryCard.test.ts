@@ -112,7 +112,7 @@ describe('Tests for Strengths Summary Card component', () => {
       `I have seen and experienced John's written text before`,
     ) // 'other' text
     expect(firstStrength.find('[data-qa=non-aln-strength-audit]').text().trim()).toEqual(
-      'Added on 10 February 2025 by Person 1',
+      'Added on 10 February 2025 by Person 1, Leeds (HMP)',
     )
 
     const secondStrength = nonAlnStrengths.eq(1)
@@ -122,7 +122,7 @@ describe('Tests for Strengths Summary Card component', () => {
       'Direct observation in education, skills and work',
     ) // EDUCATION_SKILLS_WORK
     expect(secondStrength.find('[data-qa=non-aln-strength-audit]').text().trim()).toEqual(
-      'Added on 10 February 2025 by Person 1',
+      'Added on 10 February 2025 by Person 1, Leeds (HMP)',
     )
 
     // assert ALN strengths
@@ -177,7 +177,7 @@ describe('Tests for Strengths Summary Card component', () => {
       `I have seen and experienced John's written text before`,
     ) // 'other' text
     expect(firstStrength.find('[data-qa=non-aln-strength-audit]').text().trim()).toEqual(
-      'Added on 10 February 2025 by Person 1',
+      'Added on 10 February 2025 by Person 1, Leeds (HMP)',
     )
 
     // assert ALN strengths
