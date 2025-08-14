@@ -11,6 +11,7 @@ import strengthsRoutes from './strengths'
 import challengesRoutes from './challenges'
 import alnScreenerRoutes from './additional-learning-needs-screener'
 import conditionsRoutes from './conditions'
+import supportStrategiesRoutes from './support-strategies'
 
 export default function routes(services: Services): Router {
   const router = Router({ mergeParams: true })
@@ -38,6 +39,7 @@ export default function routes(services: Services): Router {
   router.use('/strengths/:prisonNumber', strengthsRoutes(services))
   router.use('/challenges/:prisonNumber', challengesRoutes(services))
   router.use('/conditions/:prisonNumber', conditionsRoutes(services))
+  router.use('/support-strategies/:prisonNumber', supportStrategiesRoutes(services))
   router.use('/aln-screener/:prisonNumber', alnScreenerRoutes(services))
 
   return router

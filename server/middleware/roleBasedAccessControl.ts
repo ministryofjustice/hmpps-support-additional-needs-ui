@@ -13,6 +13,7 @@ const rolesForAction = (): Record<ApplicationAction, Array<ApplicationRole>> => 
   [ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_CHALLENGES]: [],
   [ApplicationAction.RECORD_STRENGTHS]: [],
+  [ApplicationAction.RECORD_SUPPORT_STRATEGIES]: [],
   [ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS]: [],
   [ApplicationAction.RECORD_DIAGNOSED_CONDITIONS]: [
     ApplicationRole.ROLE_SAN_EDITOR,
