@@ -154,9 +154,13 @@ export default class CheckYourAnswersPage extends Page {
     return this
   }
 
-  requiresLearningNeedsSupportPractitionerSupport(expected: string): CheckYourAnswersPage {
+  requiresLearningNeedsSupportPractitionerSupport(
+    expectedSupport: string,
+    expectedSupportHours: number,
+  ): CheckYourAnswersPage {
     this.lnspSupportValue().should('contain.text', 'Yes')
-    this.lnspSupportValue().find('span').should('be.visible').should('contain.text', expected)
+    this.lnspSupportValue().find('span').should('be.visible').should('contain.text', expectedSupport)
+    this.lnspSupportValue().should('contain.text', 'Recommended hours: ', expectedSupportHours)
     return this
   }
 
