@@ -838,6 +838,8 @@ export interface components {
       prisonNumber: string
       /** Format: date */
       deadlineDate?: string
+      /** Format: date */
+      earliestStartDate?: string
       /** @enum {string} */
       status:
         | 'SCHEDULED'
@@ -927,6 +929,12 @@ export interface components {
        * @example An LNSP is required for approx 1 hour per week to read and explain passages of text to Chris.
        */
       lnspSupport?: string
+      /**
+       * Format: int32
+       * @description Recommended number of additional support hours per week to meet the individual's educational needs.   Mandatory when `lnspSupport` is populated.
+       * @example 4
+       */
+      lnspSupportHours?: number
       /**
        * @description Optional Additional information about the plan that is not covered in the other questions.
        * @example Chris is very open about his issues and is a pleasure to talk to.
@@ -1022,6 +1030,12 @@ export interface components {
        * @example An LNSP is required for approx 1 hour per week to read and explain passages of text to Chris.
        */
       lnspSupport?: string
+      /**
+       * Format: int32
+       * @description Recommended number of Learning Needs Support Practitioner support hours per week to meet the individual's educational needs.   Will be present when `lnspSupport` is populated.
+       * @example 4
+       */
+      lnspSupportHours?: number
       /**
        * @description Optional Additional information about the plan that is not covered in the other questions.
        * @example Chris is very open about his issues and is a pleasure to talk to.
@@ -1245,7 +1259,13 @@ export interface components {
       updatedAtPrison: string
       /**
        * Format: date
-       * @description An ISO-8601 date representing date that the plan creation is due.
+       * @description An ISO-8601 date representing earliest date that the plan can be created.  If this date is null then there is no restriction. eg when a person has a need identified  after they are enrolled in education.
+       * @example 2023-11-19
+       */
+      earliestStartDate?: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the plan creation is due.  If this date is null then there is no dead line date. eg when a person has a need identified  after they are enrolled in education.
        * @example 2023-11-19
        */
       deadlineDate?: string
@@ -1459,12 +1479,6 @@ export interface components {
        */
       reference: string
       /**
-       * Format: date
-       * @description An ISO-8601 date representing date that the Review is due.
-       * @example 2023-11-19
-       */
-      deadlineDate: string
-      /**
        * @example null
        * @enum {string}
        */
@@ -1522,6 +1536,12 @@ export interface components {
        * @example BXI
        */
       updatedAtPrison: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the Review is due. This date can be null. For example the person was in education and had a cataract which meant they had a visual support need.  The ELSP was created for the person. At some point in the future the cataract was removed and  so the plan was updated removing this need education ends for this person.  Then the person is enrolled in education once again. After enrolling a new need is identified (say)  ADHD then the plan will have a review schedule generated but because the person had already started  education the deadline date will be blank and therefore the review is optional and not subject to  the KPI requirements.
+       * @example 2023-11-19
+       */
+      deadlineDate?: string
       /**
        * Format: date
        * @description If the status of this Review Schedule is COMPLETED, this field is an ISO-8601 date representing  date that the Review was created. This field will only have a value when the status of the  Review Schedule is COMPLETED, and reflects the date the Review was completed.

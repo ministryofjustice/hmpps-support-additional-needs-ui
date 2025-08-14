@@ -12,6 +12,7 @@ const aValidEducationSupportPlanResponse = (
     specificTeachingSkills?: string
     examAccessArrangements?: string
     lnspSupport?: string
+    lnspSupportHours?: number
     individualSupport?: string
     detail?: string
   },
@@ -42,6 +43,7 @@ const aValidEducationSupportPlanResponse = (
     options?.lnspSupport === null
       ? null
       : options?.lnspSupport || 'Chris will need text reading to him as he cannot read himself',
+  lnspSupportHours: options?.lnspSupport === null ? null : (options?.lnspSupportHours ?? 10),
   individualSupport:
     options?.individualSupport || 'Chris has asked that he is not sat with disruptive people as he is keen to learn',
   detail:

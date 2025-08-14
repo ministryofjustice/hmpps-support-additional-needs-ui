@@ -14,6 +14,7 @@ const toCreateEducationSupportPlanRequest = (dto: EducationSupportPlanDto): Crea
   specificTeachingSkills: dto.specificTeachingSkillsNeeded ? dto.specificTeachingSkills : null,
   examAccessArrangements: dto.examArrangementsNeeded ? dto.examArrangements : null,
   lnspSupport: dto.lnspSupportNeeded ? dto.lnspSupport : null,
+  lnspSupportHours: dto.lnspSupportNeeded ? dto.lnspSupportHours : null,
   individualSupport: dto.individualSupport,
   detail: dto.additionalInformation ? dto.additionalInformation : null,
 })
