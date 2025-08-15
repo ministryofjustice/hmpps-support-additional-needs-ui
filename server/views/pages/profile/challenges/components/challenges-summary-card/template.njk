@@ -1,0 +1,44 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% if challenge %}
+      <div class="govuk-summary-list__row" data-qa="challenge-summary-list-row">
+        {% if challenge.fromALNScreener %}
+          {{ govukDetails({
+            summaryText: challenge.challengeTypeCode | formatChallengeTypeScreenValue,
+            text: "We will look up some supporting information in here",
+            classes: "govuk-!-margin-top-3",
+            attributes: {
+              "data-qa": "non-aln-challenge-how-identified"
+            }
+          }) }}
+          <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-challenge-audit">
+            From Additional Learning Needs Screener completed on {{ challenge.updatedAt | formatDate('d MMMM yyyy') }}<span
+              class="govuk-!-display-none-print">, {{ challenge.createdAtPrison}}</span>
+          </p>
+        {% else %}
+            <p class="govuk-body govuk-!-margin-top-3"
+               data-qa="non-aln-challenge-symptoms">{{ challenge.symptoms }}</p>
+
+            {% set howIdentifiedContent %}
+              <ul class="govuk-list govuk-!-font-size-16">
+                {% for challengeIdentificationSource in challenge.howIdentified %}
+                  <li>{{ challengeIdentificationSource | formatStrengthIdentificationSourceScreenValue if challengeIdentificationSource != 'OTHER' else challenge.howIdentifiedOther }}</li>
+                {% endfor %}
+              </ul>
+            {% endset %}
+
+            {{ govukDetails({
+              summaryText: "How was this identified",
+              html: howIdentifiedContent,
+              attributes: {
+                "data-qa": "non-aln-challenge-how-identified"
+              }
+            }) }}
+
+            <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="non-aln-challenge-audit">
+              Added on {{ challenge.updatedAt | formatDate('d MMMM yyyy') }}<span
+                class="govuk-!-display-none-print"> by {{ challenge.updatedByDisplayName }}</span>
+            </p>
+        {% endif %}
+    </div>
+{% endif %}

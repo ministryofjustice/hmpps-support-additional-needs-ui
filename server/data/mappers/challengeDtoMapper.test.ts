@@ -2,7 +2,7 @@ import { parseISO } from 'date-fns'
 
 import type { ChallengeListResponse, ReferenceData } from 'supportAdditionalNeedsApiClient'
 import type { ChallengeResponseDto, ReferenceDataItemDto } from 'dto'
-import toChallengeDto from './challengeDtoMapper'
+import { toChallengeDto } from './challengeDtoMapper'
 
 describe('toChallengeDto', () => {
   it('should map a single challenge correctly', () => {
@@ -16,7 +16,7 @@ describe('toChallengeDto', () => {
           createdAtPrison: 'PR001',
           categoryCode: 'CC001',
           detail: 'Test detail',
-          challengeType: { code: 'TYPE001' } as ReferenceData,
+          challengeType: { code: 'TYPE001', categoryCode: 'EMOTIONS_FEELINGS' } as ReferenceData,
           createdAt: '2025-07-25T12:00:00.000Z',
           createdBy: 'user1',
           createdByDisplayName: 'Bob Martin',
@@ -29,6 +29,7 @@ describe('toChallengeDto', () => {
           howIdentifiedOther: '',
           symptoms: 'Some varying symptoms',
           updatedAtPrison: 'BXI',
+          alnScreenerDate: '2025-07-23T12:00:00.000Z',
         },
       ],
     }
@@ -40,6 +41,7 @@ describe('toChallengeDto', () => {
       prisonNumber: 'A1234BC',
       createdAtPrison: 'PR001',
       challengeType: { code: 'TYPE001', areaCode: undefined } as ReferenceDataItemDto,
+      challengeCategory: 'EMOTIONS_FEELINGS',
       createdAt: parseISO('2025-07-25T12:00:00.000Z'),
       createdBy: 'user1',
       updatedAt: parseISO('2025-07-26T12:00:00.000Z'),
@@ -53,6 +55,8 @@ describe('toChallengeDto', () => {
       howIdentified: ['EDUCATION_SKILLS_WORK'],
       howIdentifiedOther: '',
       symptoms: 'Some varying symptoms',
+      alnScreenerDate: parseISO('2025-07-23T12:00:00.000Z'),
+      challengeTypeCode: 'TYPE001',
     })
   })
 
@@ -68,7 +72,7 @@ describe('toChallengeDto', () => {
           createdAtPrison: 'PR001',
           categoryCode: 'CC001',
           detail: 'Test detail',
-          challengeType: { code: 'TYPE001' } as ReferenceData,
+          challengeType: { code: 'TYPE001', categoryCode: 'EMOTIONS_FEELINGS' } as ReferenceData,
           createdAt: '2025-07-25T12:00:00.000Z',
           createdBy: 'user1',
           createdByDisplayName: 'Bob Martin',
@@ -81,6 +85,7 @@ describe('toChallengeDto', () => {
           howIdentifiedOther: '',
           symptoms: 'Some varying symptoms',
           updatedAtPrison: 'BXI',
+          alnScreenerDate: '2025-07-23T12:00:00.000Z',
         },
         {
           reference: testRef2,
@@ -88,7 +93,7 @@ describe('toChallengeDto', () => {
           createdAtPrison: 'PR001',
           categoryCode: 'CC001',
           detail: 'Test detail',
-          challengeType: { code: 'TYPE001' } as ReferenceData,
+          challengeType: { code: 'TYPE001', categoryCode: 'EMOTIONS_FEELINGS' } as ReferenceData,
           createdAt: '2025-07-25T12:00:00.000Z',
           createdBy: 'user1',
           createdByDisplayName: 'Bob Martin 2',
@@ -101,6 +106,7 @@ describe('toChallengeDto', () => {
           howIdentifiedOther: '',
           symptoms: 'Some varying symptoms',
           updatedAtPrison: 'BXI',
+          alnScreenerDate: '2025-07-23T12:00:00.000Z',
         },
       ],
     }
@@ -112,6 +118,7 @@ describe('toChallengeDto', () => {
       prisonNumber: 'A1234BC',
       createdAtPrison: 'PR001',
       challengeType: { code: 'TYPE001', areaCode: undefined } as ReferenceDataItemDto,
+      challengeCategory: 'EMOTIONS_FEELINGS',
       createdAt: parseISO('2025-07-25T12:00:00.000Z'),
       createdBy: 'user1',
       updatedAt: parseISO('2025-07-26T12:00:00.000Z'),
@@ -125,11 +132,14 @@ describe('toChallengeDto', () => {
       howIdentified: ['EDUCATION_SKILLS_WORK'],
       howIdentifiedOther: '',
       symptoms: 'Some varying symptoms',
+      alnScreenerDate: parseISO('2025-07-23T12:00:00.000Z'),
+      challengeTypeCode: 'TYPE001',
     })
     expect(result[1]).toEqual<ChallengeResponseDto>({
       prisonNumber: 'A1234BC',
       createdAtPrison: 'PR001',
       challengeType: { code: 'TYPE001', areaCode: undefined } as ReferenceDataItemDto,
+      challengeCategory: 'EMOTIONS_FEELINGS',
       createdAt: parseISO('2025-07-25T12:00:00.000Z'),
       createdBy: 'user1',
       updatedAt: parseISO('2025-07-26T12:00:00.000Z'),
@@ -143,6 +153,8 @@ describe('toChallengeDto', () => {
       howIdentified: ['WIDER_PRISON'],
       howIdentifiedOther: '',
       symptoms: 'Some varying symptoms',
+      alnScreenerDate: parseISO('2025-07-23T12:00:00.000Z'),
+      challengeTypeCode: 'TYPE001',
     })
   })
 

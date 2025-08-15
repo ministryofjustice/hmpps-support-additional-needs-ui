@@ -1,8 +1,28 @@
-<div class="govuk-summary-card" data-qa="challenges-summary-card">
-  <div class="govuk-summary-card__content">
-    <p class="govuk-body">
-      No challenges recorded
-    </p>
-    <a class="govuk-link govuk-!-font-weight-regular" href="#" data-qa="add-challenge-button">Add challenge</a>
-  </div>
-</div>
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "./components/challenges-summary-card/macro.njk" import challengesSummaryCard %}
+{% from "./components/challenges-summary-card/macro.njk" import alnChallengesSummaryCard %}
+
+{% if groupedChallenges %}
+  {% for groupName, challengesData in groupedChallenges %}
+
+    <div class="govuk-summary-card" data-qa="challenges-summary-card">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">{{ groupName | formatChallengeCategoryScreenValue }}</h2>
+      </div>
+
+      <div class="govuk-summary-card__content govuk-!-padding-top-0">
+        <div class="govuk-summary-list">
+          {% for challenge in challengesData.nonAlnChallenges %}
+                {{  challengesSummaryCard(challenge) }}
+          {% endfor %}
+          {% if challengesData.alnChallenges | length %}
+            {{  alnChallengesSummaryCard(challengesData.alnChallenges) }}
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+{% endif %}
+
+

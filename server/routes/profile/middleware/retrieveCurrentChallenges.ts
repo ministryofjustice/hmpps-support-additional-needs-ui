@@ -8,10 +8,13 @@ import { Result } from '../../../utils/result/result'
 const retrieveCurrentChallenges = (challengeService: ChallengeService): RequestHandler => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const { prisonNumber } = req.params
+
     const { apiErrorCallback } = res.locals
-    res.locals.challenges = (
-      await Result.wrap(challengeService.getChallenges(req.user.username, prisonNumber), apiErrorCallback)
-    ).getOrNull()
+    res.locals.challenges = await Result.wrap(
+      challengeService.getChallenges(req.user.username, prisonNumber),
+      apiErrorCallback,
+    )
+
     return next()
   }
 }

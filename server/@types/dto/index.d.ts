@@ -6,8 +6,8 @@ declare module 'dto' {
   import StrengthIdentificationSource from '../../enums/strengthIdentificationSource'
   import ChallengeType from '../../enums/challengeType'
   import StrengthType from '../../enums/strengthType'
-  import StrengthCategory from '../../enums/strengthCategory'
   import ChallengeCategory from '../../enums/challengeCategory'
+  import StrengthCategory from '../../enums/strengthCategory'
 
   /**
    * Interface defining common reference and audit related properties that DTO types can inherit through extension.
@@ -82,19 +82,13 @@ declare module 'dto' {
     prisonNumber: string
     fromALNScreener: boolean
     challengeType: ReferenceDataItemDto
+    challengeTypeCode: ChallengeType
+    challengeCategory: ChallengeCategory
     active: boolean
     symptoms?: string
-    howIdentified?: (
-      | 'EDUCATION_SKILLS_WORK'
-      | 'WIDER_PRISON'
-      | 'CONVERSATIONS'
-      | 'COLLEAGUE_INFO'
-      | 'FORMAL_PROCESSES'
-      | 'SELF_DISCLOSURE'
-      | 'OTHER_SCREENING_TOOL'
-      | 'OTHER'
-    )[]
+    howIdentified?: Array<ChallengeIdentificationSource>
     howIdentifiedOther?: string
+    alnScreenerDate?: Date
   }
 
   export interface ConditionsList {
@@ -157,7 +151,7 @@ declare module 'dto' {
    */
   export interface AlnScreenerResponseDto extends ReferencedAndAuditable {
     screenerDate: Date
-    challenges: Array<{ challengeTypeCode: ChallengeType; challengeCategory: ChallengeCategory }>
+    challenges: Array<ChallengeResponseDto>
     strengths: Array<StrengthResponseDto>
   }
 
