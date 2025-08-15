@@ -1,7 +1,7 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% if challenge %}
-      <div class="govuk-summary-list__row">
+      <div class="govuk-summary-list__row" data-qa="challenge-summary-list-row">
         {% if challenge.fromALNScreener %}
           {{ govukDetails({
             summaryText: challenge.challengeTypeCode | formatChallengeTypeScreenValue,

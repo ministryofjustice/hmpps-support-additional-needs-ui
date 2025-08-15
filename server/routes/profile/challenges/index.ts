@@ -9,9 +9,11 @@ const challengesRoutes = (services: Services): Router => {
   const controller = new ChallengesController()
 
   return Router({ mergeParams: true }) //
-    .get('/', [retrieveCurrentChallenges(services.challengeService),
+    .get('/', [
+      retrieveCurrentChallenges(services.challengeService),
       retrieveAlnScreeners(services.additionalLearningNeedsService),
-      asyncMiddleware(controller.getChallengesView)])
+      asyncMiddleware(controller.getChallengesView),
+    ])
 }
 
 export default challengesRoutes

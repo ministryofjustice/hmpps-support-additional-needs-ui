@@ -8,7 +8,10 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
       <h2 class="govuk-heading-m">Challenges</h2>
-      {% include "./_challenges.njk" %}
+        {% if groupedChallenges.isFulfilled() %}
+          {% set groupedChallenges = groupedChallenges.value %}
+          {% include "./_challenges.njk" %}
+      {% endif %}
     </div>
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">

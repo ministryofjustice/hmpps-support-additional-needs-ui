@@ -8,7 +8,6 @@ declare module 'dto' {
   import StrengthType from '../../enums/strengthType'
   import ChallengeCategory from '../../enums/challengeCategory'
   import StrengthCategory from '../../enums/strengthCategory'
-  import ChallengeCategory from '../../enums/challengeCategory'
 
   /**
    * Interface defining common reference and audit related properties that DTO types can inherit through extension.

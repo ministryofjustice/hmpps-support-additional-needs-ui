@@ -1,6 +1,6 @@
 import { parseISO } from 'date-fns'
 import type { AlnScreenerList, AlnScreenerResponseDto } from 'dto'
-import type { ALNScreenerResponse, ALNScreeners, ChallengeResponse } from 'supportAdditionalNeedsApiClient'
+import type { ALNScreenerResponse, ALNScreeners } from 'supportAdditionalNeedsApiClient'
 import toReferenceAndAuditable from './referencedAndAuditableMapper'
 import { toStrengthResponseDto } from './strengthResponseDtoMapper'
 import { toChallengeResponseDto } from './challengeDtoMapper'

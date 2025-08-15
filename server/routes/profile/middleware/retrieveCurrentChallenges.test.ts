@@ -30,20 +30,21 @@ describe('retrieveCurrentChallenges', () => {
 
   it('should retrieve current challenges and store in res.locals', async () => {
     // Given
-    const expectedChallenge = aValidChallengeResponse()
+    const expectedChallenge = [aValidChallengeResponse()]
     mockedChallengeService.getChallenges.mockResolvedValue(expectedChallenge)
 
     // When
     await requestHandler(req, res, next)
 
     // Then
-    expect(res.locals.challenges).toEqual(expectedChallenge)
+    expect(res.locals.challenges.isFulfilled()).toEqual(true)
+    expect(res.locals.challenges.value).toEqual(expectedChallenge)
     expect(mockedChallengeService.getChallenges).toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
     expect(apiErrorCallback).not.toHaveBeenCalled()
   })
 
-  it('should store null on res.locals given service returns an error', async () => {
+  it('should store unfulfilled result on res.locals given service returns an error', async () => {
     // Given
     const error = new Error('An error occurred')
     mockedChallengeService.getChallenges.mockRejectedValue(error)
@@ -52,8 +53,8 @@ describe('retrieveCurrentChallenges', () => {
     await requestHandler(req, res, next)
 
     // Then
-    expect(res.locals.challenges).toEqual(null)
-    expect(mockedChallengeService.getChallenges).toHaveBeenCalled()
+    expect(res.locals.challenges.isFulfilled()).toEqual(false)
+    expect(mockedChallengeService.getChallenges).toHaveBeenCalledWith(username, prisonNumber)
     expect(next).toHaveBeenCalled()
     expect(apiErrorCallback).toHaveBeenCalledWith(error)
   })

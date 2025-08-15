@@ -1,0 +1,24 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% if alnChallenges %}
+      <div class="govuk-summary-list__row" data-qa="aln-challenge-summary-list-row">
+        <ul class="govuk-list govuk-!-margin-top-3">
+          {% for challenge in alnChallenges %}
+            <li>
+              {{ govukDetails({
+                summaryText: challenge.challengeTypeCode | formatChallengeTypeScreenValue,
+                text: "We will look up some supporting information in here",
+                classes: "govuk-!-margin-top-3",
+                attributes: {
+                  "data-qa": "aln-challenge-detail"
+                }
+              }) }}
+            </li>
+          {% endfor %}
+        </ul>
+        <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-challenge-audit">
+          From Additional Learning Needs Screener completed on {{ alnChallenges[0].updatedAt | formatDate('d MMMM yyyy') }}<span
+            class="govuk-!-display-none-print">, {{ alnChallenges[0].createdAtPrison}}</span>
+        </p>
+    </div>
+{% endif %}
