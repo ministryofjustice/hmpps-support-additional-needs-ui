@@ -4,7 +4,6 @@ import { aValidAlnScreenerList } from '../../testsupport/alnScreenerDtoTestDataB
 import { aValidAlnScreeners } from '../../testsupport/alnScreenerResponseTestDataBuilder'
 import { aValidChallengeResponse } from '../../testsupport/challengeResponseTestDataBuilder'
 import { aValidStrengthResponse } from '../../testsupport/strengthResponseTestDataBuilder'
-import ChallengeType from '../../enums/challengeType'
 import ChallengeCategory from '../../enums/challengeCategory'
 import StrengthType from '../../enums/strengthType'
 import StrengthCategory from '../../enums/strengthCategory'

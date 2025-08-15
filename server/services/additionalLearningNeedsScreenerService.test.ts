@@ -7,6 +7,7 @@ import {
   aValidAlnScreenerResponseDto,
 } from '../testsupport/alnScreenerDtoTestDataBuilder'
 import ChallengeType from '../enums/challengeType'
+import challengeType from '../enums/challengeType'
 import StrengthType from '../enums/strengthType'
 import { aValidAlnScreenerRequest } from '../testsupport/alnScreenerRequestTestDataBuilder'
 import { aValidAlnScreenerResponse, aValidAlnScreeners } from '../testsupport/alnScreenerResponseTestDataBuilder'
@@ -16,7 +17,6 @@ import ChallengeCategory from '../enums/challengeCategory'
 import StrengthCategory from '../enums/strengthCategory'
 import { aValidStrengthResponseDto } from '../testsupport/strengthResponseDtoTestDataBuilder'
 import aValidChallengeResponseDto from '../testsupport/challengeResponseDtoTestDataBuilder'
-import challengeType from '../enums/challengeType'
 import ChallengeIdentificationSource from '../enums/challengeIdentificationSource'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
