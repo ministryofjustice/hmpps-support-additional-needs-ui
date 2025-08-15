@@ -7,7 +7,6 @@ import {
   aValidAlnScreenerResponseDto,
 } from '../testsupport/alnScreenerDtoTestDataBuilder'
 import ChallengeType from '../enums/challengeType'
-import challengeType from '../enums/challengeType'
 import StrengthType from '../enums/strengthType'
 import { aValidAlnScreenerRequest } from '../testsupport/alnScreenerRequestTestDataBuilder'
 import { aValidAlnScreenerResponse, aValidAlnScreeners } from '../testsupport/alnScreenerResponseTestDataBuilder'
@@ -132,7 +131,7 @@ describe('additionalLearningNeedsScreenerService', () => {
       })
       supportAdditionalNeedsApiClient.getAdditionalLearningNeedsScreeners.mockResolvedValue(alnScreeners)
       const expectedChallengeResponseDto = aValidChallengeResponseDto({
-        challengeTypeCode: challengeType.LITERACY_SKILLS_DEFAULT,
+        challengeTypeCode: ChallengeType.LITERACY_SKILLS_DEFAULT,
         challengeCategory: ChallengeCategory.LITERACY_SKILLS,
         symptoms: 'John struggles to read text on white background',
         howIdentified: [ChallengeIdentificationSource.CONVERSATIONS],
