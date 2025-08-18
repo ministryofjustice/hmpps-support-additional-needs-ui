@@ -8,6 +8,7 @@ declare module 'dto' {
   import StrengthType from '../../enums/strengthType'
   import ChallengeCategory from '../../enums/challengeCategory'
   import StrengthCategory from '../../enums/strengthCategory'
+  import SupportStrategyType from '../../enums/supportStrategyType'
 
   /**
    * Interface defining common reference and audit related properties that DTO types can inherit through extension.
@@ -134,6 +135,16 @@ declare module 'dto' {
     active: boolean
     fromALNScreener: boolean
     alnScreenerDate?: Date
+  }
+
+  /**
+   * DTO representing a Support Strategy that has not yet been recorded for the person. IE. this DTO does not hold data about Support Strategies that the API has returned for this person.
+   */
+  export interface SupportStrategyDto {
+    prisonNumber: string
+    prisonId: string
+    supportStrategyTypeCode?: SupportStrategyType
+    supportStrategyDetails?: string
   }
 
   export interface ReferenceDataItemDto {

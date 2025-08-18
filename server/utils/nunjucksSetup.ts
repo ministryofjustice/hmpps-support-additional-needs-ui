@@ -25,6 +25,10 @@ import {
 } from '../filters/formatStrengthTypeFilter'
 import formatConditionTypeScreenValueFilter from '../filters/formatConditionTypeFilter'
 import filterArrayOnPropertyFilter from '../filters/filterArrayOnPropertyFilter'
+import {
+  formatSupportStrategyTypeHintTextFilter,
+  formatSupportStrategyTypeScreenValueFilter,
+} from '../filters/formatSupportStrategyTypeFilter'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -73,6 +77,8 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatChallengeTypeScreenValue', formatChallengeTypeScreenValueFilter)
   njkEnv.addFilter('formatChallengeTypeHintText', formatChallengeTypeHintTextFilter)
   njkEnv.addFilter('formatConditionTypeScreenValue', formatConditionTypeScreenValueFilter)
+  njkEnv.addFilter('formatSupportStrategyTypeScreenValue', formatSupportStrategyTypeScreenValueFilter)
+  njkEnv.addFilter('formatSupportStrategyTypeHintText', formatSupportStrategyTypeHintTextFilter)
   njkEnv.addFilter('filterArrayOnProperty', filterArrayOnPropertyFilter)
 
   // Name format filters

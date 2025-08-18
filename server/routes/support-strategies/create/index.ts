@@ -4,10 +4,15 @@ import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
+import createEmptySupportStrategyDtoIfNotInJourneyData from './middleware/createEmptySupportStrategyDtoIfNotInJourneyData'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import SelectCategoryController from './select-category/selectCategoryController'
 
 const createSupportStrategiesRoutes = (services: Services): Router => {
   const { journeyDataService } = services
   const router = Router({ mergeParams: true })
+
+  const selectCategoryController = new SelectCategoryController()
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.RECORD_SUPPORT_STRATEGIES),
@@ -16,9 +21,8 @@ const createSupportStrategiesRoutes = (services: Services): Router => {
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
 
   router.get('/:journeyId/select-category', [
-    async (req: Request, res: Response) => {
-      res.send('Support Strategies - Select Category page')
-    },
+    createEmptySupportStrategyDtoIfNotInJourneyData,
+    asyncMiddleware(selectCategoryController.getSelectCategoryView),
   ])
 
   router.get('/:journeyId/detail', [

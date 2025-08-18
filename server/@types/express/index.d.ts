@@ -2,6 +2,7 @@ import type {
   ChallengeDto,
   EducationSupportPlanDto,
   StrengthDto,
+  SupportStrategyDto,
   RefuseEducationSupportPlanDto,
   AlnScreenerDto,
 } from 'dto'
@@ -29,6 +30,7 @@ export declare global {
       challengeDto?: ChallengeDto
       conditionsList?: ConditionsList
       strengthDto?: StrengthDto
+      supportStrategyDto?: SupportStrategyDto
       alnScreenerDto?: AlnScreenerDto
     }
 
