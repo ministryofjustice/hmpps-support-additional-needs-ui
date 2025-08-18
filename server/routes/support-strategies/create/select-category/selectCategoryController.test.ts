@@ -63,4 +63,30 @@ describe('selectCategoryController', () => {
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
+
+  it('should submit form and redirect to next route', async () => {
+    // Given
+    req.journeyData = {
+      supportStrategyDto: {
+        ...aValidSupportStrategyDto(),
+        supportStrategyTypeCode: null,
+      },
+    }
+    req.body = {
+      category: 'MEMORY',
+    }
+
+    const expectedNextRoute = 'detail'
+    const expectedSupportStrategyDto = {
+      ...aValidSupportStrategyDto(),
+      supportStrategyTypeCode: 'MEMORY',
+    }
+
+    // When
+    await controller.submitSelectCategoryForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.supportStrategyDto).toEqual(expectedSupportStrategyDto)
+  })
 })
