@@ -12,6 +12,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.VIEW_PROFILE,
         ApplicationAction.RECORD_CHALLENGES,
         ApplicationAction.RECORD_STRENGTHS,
+        ApplicationAction.RECORD_SUPPORT_STRATEGIES,
         ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS,
       ]
 
@@ -30,6 +31,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN,
         ApplicationAction.RECORD_CHALLENGES,
         ApplicationAction.RECORD_STRENGTHS,
+        ApplicationAction.RECORD_SUPPORT_STRATEGIES,
         ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS,
         ApplicationAction.RECORD_DIAGNOSED_CONDITIONS,
       ]
@@ -48,6 +50,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.VIEW_PROFILE,
         ApplicationAction.RECORD_CHALLENGES,
         ApplicationAction.RECORD_STRENGTHS,
+        ApplicationAction.RECORD_SUPPORT_STRATEGIES,
         ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS,
         ApplicationAction.RECORD_DIAGNOSED_CONDITIONS,
       ]
