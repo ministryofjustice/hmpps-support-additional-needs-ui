@@ -1,0 +1,44 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'create-support-strategy-detail' %}
+{% set pageTitle = "Add support strategy - Description of support strategy category" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukTextarea({
+            id: "description",
+            name: "description",
+            rows: "4",
+            value: form.description,
+            type: "text",
+            label: {
+              text: "Description of " + category | formatSupportStrategyTypeScreenValue | lower + " support strategy",
+              classes: "govuk-label--l",
+              isPageHeading: true,
+              attributes: { "aria-live": "polite" }
+            },
+            hint: {
+              text: category | formatSupportStrategyTypeHintText
+            },
+            attributes: { "aria-label" : "Enter the description of the support strategy" },
+            errorMessage: errors | findError('description')
+          }) }}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Add support strategy",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
