@@ -10,10 +10,10 @@
         <div class="govuk-summary-card__content govuk-!-padding-top-0">
           <div class="govuk-summary-list">
             {% for challenge in challengesData.nonAlnChallenges %}
-                  {{  challengesSummaryCard(challenge) }}
+                  {{  challengesSummaryCard(challenge, prisonNamesById) }}
             {% endfor %}
             {% if challengesData.alnChallenges | length %}
-              {{  alnChallengesSummaryCard(challengesData.alnChallenges) }}
+              {{  alnChallengesSummaryCard(challengesData.alnChallenges, prisonNamesById) }}
             {% endif %}
           </div>
         </div>

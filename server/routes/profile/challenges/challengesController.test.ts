@@ -34,11 +34,12 @@ describe('challengesController', () => {
       ],
     }),
   )
+  const prisonNamesById = Result.fulfilled({ BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' })
 
   const req = {} as unknown as Request
   const res = {
     render: jest.fn(),
-    locals: { prisonerSummary, challenges, alnScreeners },
+    locals: { prisonerSummary, challenges, alnScreeners, prisonNamesById },
   } as unknown as Response
   const next = jest.fn()
 
@@ -51,6 +52,7 @@ describe('challengesController', () => {
     const expectedViewTemplate = 'pages/profile/challenges/index'
 
     const expectedViewModel = expect.objectContaining({
+      prisonNamesById,
       prisonerSummary,
       tab: 'challenges',
       groupedChallenges: expect.objectContaining({
