@@ -13,6 +13,7 @@
           {% if groupedChallenges | length == 0 %}
             {% include "./components/_noChallengesSummaryCard.njk" %}
           {% else %}
+            {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
             {% include "./_challenges.njk" %}
           {% endif %}
       {% else %}

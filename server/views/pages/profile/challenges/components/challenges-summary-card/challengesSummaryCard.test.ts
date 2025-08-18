@@ -40,10 +40,11 @@ describe('Tests for Challenges Summary Card component', () => {
       createdAt: parseISO('2025-02-13'),
       updatedAt: parseISO('2025-02-15'),
       updatedByDisplayName: 'Person 3',
+      updatedAtPrison: 'BXI',
     })
 
     // When
-    const content = njkEnv.render(template, { challenge })
+    const content = njkEnv.render(template, { challenge, prisonNamesById: { BXI: 'Brixton (HMP)' } })
     const $ = cheerio.load(content)
 
     // Then
@@ -58,7 +59,7 @@ describe('Tests for Challenges Summary Card component', () => {
       'Through conversations with the individual',
     ) // CONVERSATIONS
     expect(challengeRowElement.find('[data-qa=non-aln-challenge-audit]').text().trim()).toEqual(
-      'Added on 15 February 2025 by Person 3',
+      'Added on 15 February 2025 by Person 3, Brixton (HMP)',
     )
   })
 
@@ -102,11 +103,12 @@ describe('Tests for Challenges Summary Card component', () => {
         createdAt: parseISO('2025-02-13'),
         updatedAt: parseISO('2025-02-15'),
         updatedByDisplayName: 'Person 3',
+        updatedAtPrison: 'BXI',
       }),
     ]
 
     // When
-    const content = njkEnv.render(alnTemplate, { alnChallenges })
+    const content = njkEnv.render(alnTemplate, { alnChallenges, prisonNamesById: { BXI: 'Brixton (HMP)' } })
     const $ = cheerio.load(content)
 
     // Then
@@ -121,6 +123,9 @@ describe('Tests for Challenges Summary Card component', () => {
     )
     expect(challengeRowElement.find('[data-qa=aln-challenge-detail] div').eq(0).text().trim()).toEqual(
       'We will look up some supporting information in here',
+    )
+    expect(challengeRowElement.find('[data-qa=aln-challenge-audit]').text().trim()).toEqual(
+      'From Additional Learning Needs Screener completed on 15 February 2025, Brixton (HMP)',
     )
   })
 

@@ -35,9 +35,9 @@
               }
             }) }}
 
+          {% set prisonName = prisonNamesById[challenge.updatedAtPrison] | default(challenge.updatedAtPrison) %}
             <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="non-aln-challenge-audit">
-              Added on {{ challenge.updatedAt | formatDate('d MMMM yyyy') }}<span
-                class="govuk-!-display-none-print"> by {{ challenge.updatedByDisplayName }}</span>
+              Added on {{ challenge.updatedAt | formatDate('d MMMM yyyy') }} by {{ challenge.updatedByDisplayName }}, {{ prisonName }}
             </p>
         {% endif %}
     </div>

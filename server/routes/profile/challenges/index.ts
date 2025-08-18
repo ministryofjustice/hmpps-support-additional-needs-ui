@@ -4,12 +4,14 @@ import ChallengesController from './challengesController'
 import { Services } from '../../../services'
 import retrieveCurrentChallenges from '../middleware/retrieveCurrentChallenges'
 import retrieveAlnScreeners from '../middleware/retrieveAlnScreeners'
+import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
 
 const challengesRoutes = (services: Services): Router => {
   const controller = new ChallengesController()
 
   return Router({ mergeParams: true }) //
     .get('/', [
+      retrievePrisonsLookup(services.prisonService),
       retrieveCurrentChallenges(services.challengeService),
       retrieveAlnScreeners(services.additionalLearningNeedsService),
       asyncMiddleware(controller.getChallengesView),
