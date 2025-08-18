@@ -9,11 +9,13 @@ import type {
   CreateConditionsRequest,
   CreateEducationSupportPlanRequest,
   CreateStrengthsRequest,
+  CreateSupportStrategiesRequest,
   EducationSupportPlanResponse,
   PlanCreationSchedulesResponse,
   ReferenceDataListResponse,
   SearchByPrisonResponse,
   StrengthListResponse,
+  SupportStrategyListResponse,
   UpdatePlanCreationStatusRequest,
 } from 'supportAdditionalNeedsApiClient'
 import config from '../config'
@@ -178,6 +180,30 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     return this.get<StrengthListResponse>(
       {
         path: `/profile/${prisonNumber}/strengths`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async createSupportStrategies(
+    prisonNumber: string,
+    username: string,
+    createSupportStrategiesRequest: CreateSupportStrategiesRequest,
+  ): Promise<SupportStrategyListResponse> {
+    return this.post<SupportStrategyListResponse>(
+      {
+        path: `/profile/${prisonNumber}/support-strategies`,
+        data: createSupportStrategiesRequest,
+      },
+      asSystem(username),
+    )
+  }
+
+  async getSupportStrategies(prisonNumber: string, username: string): Promise<SupportStrategyListResponse> {
+    return this.get<SupportStrategyListResponse>(
+      {
+        path: `/profile/${prisonNumber}/support-strategies`,
         errorHandler: restClientErrorHandler({ ignore404: true }),
       },
       asSystem(username),
