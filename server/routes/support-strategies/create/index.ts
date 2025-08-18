@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
@@ -10,12 +10,14 @@ import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import SelectCategoryController from './select-category/selectCategoryController'
 import { validate } from '../../../middleware/validationMiddleware'
 import selectCategorySchema from '../validationSchemas/selectCategorySchema'
+import DetailController from './detail/detailController'
 
 const createSupportStrategiesRoutes = (services: Services): Router => {
   const { journeyDataService } = services
   const router = Router({ mergeParams: true })
 
   const selectCategoryController = new SelectCategoryController()
+  const detailController = new DetailController()
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.RECORD_SUPPORT_STRATEGIES),
@@ -34,9 +36,8 @@ const createSupportStrategiesRoutes = (services: Services): Router => {
   ])
 
   router.get('/:journeyId/detail', [
-    async (req: Request, res: Response) => {
-      res.send('Support Strategies - Details page')
-    },
+    checkSupportStrategyDtoExistsInJourneyData,
+    asyncMiddleware(detailController.getDetailView),
   ])
 
   return router
