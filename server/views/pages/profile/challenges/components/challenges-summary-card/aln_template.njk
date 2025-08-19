@@ -4,10 +4,13 @@
       <div class="govuk-summary-list__row" data-qa="aln-challenge-summary-list-row">
         <ul class="govuk-list govuk-!-margin-top-3">
           {% for challenge in alnChallenges %}
+            {% set expanderContent %}
+              <p class="app-u-multiline-text">{{ challenge.challengeTypeCode | challengeSupportTextLookup | default("Support strategy guidance not available") }}</p>
+            {% endset %}
             <li>
               {{ govukDetails({
                 summaryText: challenge.challengeTypeCode | formatChallengeTypeScreenValue,
-                text: "We will look up some supporting information in here",
+                html: expanderContent,
                 classes: "govuk-!-margin-top-3",
                 attributes: {
                   "data-qa": "aln-challenge-detail"

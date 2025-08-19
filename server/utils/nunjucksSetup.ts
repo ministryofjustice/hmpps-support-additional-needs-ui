@@ -29,6 +29,7 @@ import {
   formatSupportStrategyTypeHintTextFilter,
   formatSupportStrategyTypeScreenValueFilter,
 } from '../filters/formatSupportStrategyTypeFilter'
+import challengeStaffSupportTextLookupFilter from '../filters/challengeStaffSupportTextLookupFilter'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -80,6 +81,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatSupportStrategyTypeScreenValue', formatSupportStrategyTypeScreenValueFilter)
   njkEnv.addFilter('formatSupportStrategyTypeHintText', formatSupportStrategyTypeHintTextFilter)
   njkEnv.addFilter('filterArrayOnProperty', filterArrayOnPropertyFilter)
+  njkEnv.addFilter('challengeSupportTextLookup', challengeStaffSupportTextLookupFilter)
 
   // Name format filters
   njkEnv.addFilter('formatFIRST_NAME_ONLY', formatPrisonerNameFilter(NameFormat.FIRST_NAME_ONLY))
