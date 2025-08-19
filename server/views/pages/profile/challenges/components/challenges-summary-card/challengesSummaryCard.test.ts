@@ -9,6 +9,7 @@ import aValidChallengeResponseDto from '../../../../../../testsupport/challengeR
 import ChallengeType from '../../../../../../enums/challengeType'
 import ChallengeCategory from '../../../../../../enums/challengeCategory'
 import ChallengeIdentificationSource from '../../../../../../enums/challengeIdentificationSource'
+import challengeStaffSupportTextLookupFilter from '../../../../../../filters/challengeStaffSupportTextLookupFilter'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/dist/',
@@ -21,6 +22,7 @@ njkEnv //
   .addFilter('formatDate', formatDateFilter)
   .addFilter('formatChallengeTypeScreenValue', formatChallengeTypeScreenValueFilter)
   .addFilter('formatStrengthIdentificationSourceScreenValue', formatStrengthIdentificationSourceScreenValueFilter)
+  .addFilter('challengeSupportTextLookup', challengeStaffSupportTextLookupFilter)
 
 const template = 'challengesSummaryCard.test.njk'
 const alnTemplate = 'alnChallengesSummaryCard.test.njk'
@@ -122,7 +124,7 @@ describe('Tests for Challenges Summary Card component', () => {
       'Communication',
     )
     expect(challengeRowElement.find('[data-qa=aln-challenge-detail] div').eq(0).text().trim()).toEqual(
-      'We will look up some supporting information in here',
+      challengeStaffSupportTextLookupFilter(ChallengeType.COMMUNICATION),
     )
     expect(challengeRowElement.find('[data-qa=aln-challenge-audit]').text().trim()).toEqual(
       'From Additional Learning Needs Screener completed on 15 February 2025, Brixton (HMP)',
@@ -175,14 +177,14 @@ describe('Tests for Challenges Summary Card component', () => {
       'Communication',
     )
     expect(challengeRowElement.find('[data-qa=aln-challenge-detail] div').eq(0).text().trim()).toEqual(
-      'We will look up some supporting information in here',
+      challengeStaffSupportTextLookupFilter(ChallengeType.COMMUNICATION),
     )
     // Verify the second details for the second challenge
     expect(challengeRowElement.find('[data-qa=aln-challenge-detail] summary').eq(1).text().trim()).toEqual(
       'Handwriting',
     )
     expect(challengeRowElement.find('[data-qa=aln-challenge-detail] div').eq(1).text().trim()).toEqual(
-      'We will look up some supporting information in here',
+      challengeStaffSupportTextLookupFilter(ChallengeType.HANDWRITING),
     )
   })
 })
