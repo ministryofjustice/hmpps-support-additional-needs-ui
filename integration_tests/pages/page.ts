@@ -104,7 +104,9 @@ export default abstract class Page {
   headerUserName = (): PageElement => cy.get('[data-qa=header-user-name]')
 
   hasPageHeading(expected: string) {
-    this.mainPageHeading().should('have.text', expected)
+    this.mainPageHeading().then(s => {
+      cy.wrap(s.text().trim()).should('equal', expected)
+    })
     return this
   }
 
