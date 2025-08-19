@@ -11,13 +11,14 @@ import SelectCategoryController from './select-category/selectCategoryController
 import { validate } from '../../../middleware/validationMiddleware'
 import selectCategorySchema from '../validationSchemas/selectCategorySchema'
 import DetailController from './detail/detailController'
+import detailSchema from '../validationSchemas/detailSchema'
 
 const createSupportStrategiesRoutes = (services: Services): Router => {
-  const { journeyDataService } = services
+  const { journeyDataService, supportStrategyService } = services
   const router = Router({ mergeParams: true })
 
   const selectCategoryController = new SelectCategoryController()
-  const detailController = new DetailController()
+  const detailController = new DetailController(supportStrategyService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.RECORD_SUPPORT_STRATEGIES),
@@ -38,6 +39,11 @@ const createSupportStrategiesRoutes = (services: Services): Router => {
   router.get('/:journeyId/detail', [
     checkSupportStrategyDtoExistsInJourneyData,
     asyncMiddleware(detailController.getDetailView),
+  ])
+  router.post('/:journeyId/detail', [
+    checkSupportStrategyDtoExistsInJourneyData,
+    validate(detailSchema),
+    asyncMiddleware(detailController.submitDetailForm),
   ])
 
   return router
