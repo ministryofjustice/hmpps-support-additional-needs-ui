@@ -1,12 +1,11 @@
 import { parseISO } from 'date-fns'
 
 import type { ChallengeListResponse, ReferenceData } from 'supportAdditionalNeedsApiClient'
-import type { ChallengeResponseDto, ReferenceDataItemDto } from 'dto'
+import type { ChallengeResponseDto } from 'dto'
 import { toChallengeDto } from './challengeDtoMapper'
 
 describe('toChallengeDto', () => {
   it('should map a single challenge correctly', () => {
-    const prisonNumber = 'A1234BC'
     const testRef = 'abcdef'
     const apiResponse: ChallengeListResponse = {
       challenges: [
@@ -34,13 +33,11 @@ describe('toChallengeDto', () => {
       ],
     }
 
-    const result = toChallengeDto(prisonNumber, apiResponse)
+    const result = toChallengeDto(apiResponse)
 
     expect(result).toHaveLength(1)
     expect(result[0]).toEqual<ChallengeResponseDto>({
-      prisonNumber: 'A1234BC',
       createdAtPrison: 'PR001',
-      challengeType: { code: 'TYPE001', areaCode: undefined } as ReferenceDataItemDto,
       challengeCategory: 'EMOTIONS_FEELINGS',
       createdAt: parseISO('2025-07-25T12:00:00.000Z'),
       createdBy: 'user1',
@@ -61,7 +58,6 @@ describe('toChallengeDto', () => {
   })
 
   it('should map a multiple challenges correctly', () => {
-    const prisonNumber = 'A1234BC'
     const testRef1 = 'abcdef'
     const testRef2 = 'xyz789'
     const apiResponse: ChallengeListResponse = {
@@ -111,13 +107,11 @@ describe('toChallengeDto', () => {
       ],
     }
 
-    const result = toChallengeDto(prisonNumber, apiResponse)
+    const result = toChallengeDto(apiResponse)
 
     expect(result).toHaveLength(2)
     expect(result[0]).toEqual<ChallengeResponseDto>({
-      prisonNumber: 'A1234BC',
       createdAtPrison: 'PR001',
-      challengeType: { code: 'TYPE001', areaCode: undefined } as ReferenceDataItemDto,
       challengeCategory: 'EMOTIONS_FEELINGS',
       createdAt: parseISO('2025-07-25T12:00:00.000Z'),
       createdBy: 'user1',
@@ -136,9 +130,7 @@ describe('toChallengeDto', () => {
       challengeTypeCode: 'TYPE001',
     })
     expect(result[1]).toEqual<ChallengeResponseDto>({
-      prisonNumber: 'A1234BC',
       createdAtPrison: 'PR001',
-      challengeType: { code: 'TYPE001', areaCode: undefined } as ReferenceDataItemDto,
       challengeCategory: 'EMOTIONS_FEELINGS',
       createdAt: parseISO('2025-07-25T12:00:00.000Z'),
       createdBy: 'user1',
@@ -159,9 +151,8 @@ describe('toChallengeDto', () => {
   })
 
   it('should handle empty `challenges` array', () => {
-    const prisonNumber = 'C9012EF'
     const apiResponse: ChallengeListResponse = { challenges: [] }
-    const result = toChallengeDto(prisonNumber, apiResponse)
+    const result = toChallengeDto(apiResponse)
 
     expect(result).toHaveLength(0)
   })

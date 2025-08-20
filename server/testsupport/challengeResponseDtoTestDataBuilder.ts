@@ -29,8 +29,6 @@ const aValidChallengeResponseDto = (
   fromALNScreener: options?.fromALNScreener == null ? true : options?.fromALNScreener,
   alnScreenerDate: options?.alnScreenerDate === null ? null : options?.alnScreenerDate,
   ...validDtoAuditFields(options),
-  prisonNumber: '',
-  challengeType: undefined,
 })
 
 export default aValidChallengeResponseDto

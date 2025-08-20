@@ -1,6 +1,7 @@
 import { format, startOfToday, subMonths } from 'date-fns'
 import type { ChallengeListResponse, ChallengeResponse } from 'supportAdditionalNeedsApiClient'
-import { validAuditFields, AuditFields } from './auditFieldsTestDataBuilder'
+import { AuditFields, validAuditFields } from './auditFieldsTestDataBuilder'
+import ChallengeIdentificationSource from '../enums/challengeIdentificationSource'
 
 const aValidChallengeListResponse = (options?: {
   challengeResponses?: Array<ChallengeResponse>
@@ -15,8 +16,10 @@ const aValidChallengeResponse = (
     screeningDate?: Date
     challengeTypeCode?: string
     symptoms?: string
-    howIdentified?: string
+    howIdentified?: Array<ChallengeIdentificationSource>
+    howIdentifiedOther?: string
     alnScreenerDate?: string
+    challengeCategory?: string
   },
 ): ChallengeResponse => ({
   active: options?.active == null ? true : options?.active,
@@ -27,11 +30,14 @@ const aValidChallengeResponse = (
       : format(options?.screeningDate || subMonths(startOfToday(), 1), 'yyyy-MM-dd'),
   symptoms: options?.symptoms === null ? null : options?.symptoms || 'John struggles to read text on white background',
   howIdentified:
-    options?.howIdentified === null
+    options?.howIdentified === null ? null : options?.howIdentified || [ChallengeIdentificationSource.CONVERSATIONS],
+  howIdentifiedOther:
+    options?.howIdentifiedOther === null
       ? null
-      : options?.howIdentified || 'The trainer noticed that John could read better on a cream background',
+      : options?.howIdentifiedOther || 'John was seen to have other challenges',
   challengeType: {
     code: options?.challengeTypeCode || 'READING_COMPREHENSION',
+    categoryCode: options?.challengeCategory || 'LITERACY_SKILLS',
   },
   alnScreenerDate: options?.alnScreenerDate === null ? null : options?.alnScreenerDate || '2025-06-18',
   ...validAuditFields(options),
