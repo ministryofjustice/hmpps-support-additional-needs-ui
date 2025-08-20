@@ -16,7 +16,6 @@ describe('alnScreenerResponseDtoMapper', () => {
     // Given
     const prisonNumber = 'A1234BC'
 
-
     const challenge = aValidChallengeResponse({
       challengeCategory: ChallengeCategory.LITERACY_SKILLS,
       challengeTypeCode: ChallengeType.READING,

@@ -58,7 +58,6 @@ describe('toChallengeDto', () => {
   })
 
   it('should map a multiple challenges correctly', () => {
-    const prisonNumber = 'A1234BC'
     const testRef1 = 'abcdef'
     const testRef2 = 'xyz789'
     const apiResponse: ChallengeListResponse = {
@@ -152,7 +151,6 @@ describe('toChallengeDto', () => {
   })
 
   it('should handle empty `challenges` array', () => {
-    const prisonNumber = 'C9012EF'
     const apiResponse: ChallengeListResponse = { challenges: [] }
     const result = toChallengeDto(apiResponse)
 

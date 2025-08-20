@@ -32,7 +32,9 @@ const aValidChallengeResponse = (
   howIdentified:
     options?.howIdentified === null ? null : options?.howIdentified || [ChallengeIdentificationSource.CONVERSATIONS],
   howIdentifiedOther:
-    options?.howIdentifiedOther === null ? null : options?.howIdentifiedOther || 'John was seen to have other challenges',
+    options?.howIdentifiedOther === null
+      ? null
+      : options?.howIdentifiedOther || 'John was seen to have other challenges',
   challengeType: {
     code: options?.challengeTypeCode || 'READING_COMPREHENSION',
     categoryCode: options?.challengeCategory || 'LITERACY_SKILLS',
