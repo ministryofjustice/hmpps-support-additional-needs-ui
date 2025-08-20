@@ -1,7 +1,7 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% if challenge %}
-      <div class="govuk-summary-list__row" data-qa="challenge-summary-list-row">
+      <div class="govuk-summary-list__row" data-qa="challenge-summary-list-row-non-aln-{{ challenge.challengeTypeCode }}">
         {% if challenge.fromALNScreener %}
           {{ govukDetails({
             summaryText: challenge.challengeTypeCode | formatChallengeTypeScreenValue,
@@ -13,7 +13,7 @@
           }) }}
           <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-challenge-audit">
             From Additional Learning Needs Screener completed on {{ challenge.updatedAt | formatDate('d MMMM yyyy') }}<span
-              class="govuk-!-display-none-print">, {{ challenge.createdAtPrison}}</span>
+              class="govuk-!-display-none-print">, {{ challenge.createdAtPrison }}</span>
           </p>
         {% else %}
             <p class="govuk-body govuk-!-margin-top-3"
