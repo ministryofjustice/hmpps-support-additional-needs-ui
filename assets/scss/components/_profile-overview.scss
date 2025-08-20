@@ -1,0 +1,15 @@
+.profile-overview {
+
+  .two-column-summary-cards {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 30px;
+
+    .govuk-summary-card {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+  }
+}

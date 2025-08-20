@@ -1,15 +1,46 @@
+{% if strengthCategories.isFulfilled() %}
+  {% set categories = strengthCategories.value %}
+{% endif %}
+
 <div class="govuk-summary-card" data-qa="strengths-summary-card">
   <div class="govuk-summary-card__title-wrapper">
     <h2 class="govuk-summary-card__title">Strengths</h2>
     <ul class="govuk-summary-card__actions govuk-!-display-none-print">
-      <li class="govuk-summary-card__action">
-        <a class="govuk-link govuk-!-font-weight-regular" href="#" data-qa="add-strength-button">Add strength</a>
-      </li>
+      {% if strengthCategories.isFulfilled() %}
+        {% if categories.length === 0 %}
+          {% if userHasPermissionTo('RECORD_STRENGTHS') %}
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category" data-qa="add-strength-button">Add strengths</a>
+            </li>
+          {% endif %}
+        {% else %}
+          <li class="govuk-summary-card__action">
+            <a class="govuk-link govuk-!-font-weight-regular" href="/profile/{{ prisonerSummary.prisonNumber }}/strengths" data-qa="view-strengths-button">View strengths</a>
+          </li>
+        {% endif %}
+      {% endif %}
     </ul>
   </div>
+
   <div class="govuk-summary-card__content">
-    <p class="govuk-body">
-      No strengths recorded
-    </p>
+    {% if strengthCategories.isFulfilled() %}
+
+      {% if categories | length %}
+        <ul class="govuk-list">
+          {% for category in categories %}
+            <li data-qa="strength_{{ category }}">{{ category | formatStrengthCategoryScreenValue | default(category, true) }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+          <p class="govuk-body" data-qa="no-strengths-recorded-message">
+            No strengths recorded
+          </p>
+      {% endif %}
+
+    {% else %}
+        <h3 class="govuk-heading-s" data-qa="strengths-unavailable-message">We cannot show these details right now</h3>
+        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+    {% endif %}
   </div>
+
 </div>
