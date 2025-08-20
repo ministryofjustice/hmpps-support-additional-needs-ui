@@ -16,6 +16,25 @@ export default class OverviewPage extends ProfilePage {
 
   hasNoStrengthsRecorded(): OverviewPage {
     this.strengthsSummaryCardContent().should('contain', 'No strengths recorded')
+    this.strengthsUnavailableMessage().should('not.exist')
+    return this
+  }
+
+  hasStrengthsRecorded(...expected: Array<string>): OverviewPage {
+    this.strengthsSummaryCardContent()
+      .find('li')
+      .then(listItems => {
+        cy.wrap(listItems).should('have.length', expected.length)
+        listItems.each((index, element) => {
+          cy.wrap(element).should('contain.text', expected[index])
+        })
+      })
+    this.strengthsUnavailableMessage().should('not.exist')
+    return this
+  }
+
+  hasConditionsUnavailableMessage(): OverviewPage {
+    this.conditionsUnavailableMessage().should('be.visible')
     return this
   }
 
@@ -38,8 +57,8 @@ export default class OverviewPage extends ProfilePage {
     return this
   }
 
-  hasConditionsUnavailableMessage(): OverviewPage {
-    this.conditionsUnavailableMessage().should('be.visible')
+  hasStrengthsUnavailableMessage(): OverviewPage {
+    this.strengthsUnavailableMessage().should('be.visible')
     return this
   }
 
@@ -87,6 +106,8 @@ export default class OverviewPage extends ProfilePage {
 
   private strengthsSummaryCardContent = (): PageElement =>
     cy.get('[data-qa=strengths-summary-card] .govuk-summary-card__content')
+
+  private strengthsUnavailableMessage = (): PageElement => cy.get('[data-qa=strengths-unavailable-message]')
 
   private addStrengthButton = (): PageElement => cy.get('[data-qa=add-strength-button]')
 

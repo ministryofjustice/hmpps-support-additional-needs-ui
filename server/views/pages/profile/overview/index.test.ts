@@ -8,6 +8,8 @@ import aValidPlanCreationScheduleDto from '../../../../testsupport/planCreationS
 import { aValidConditionsList } from '../../../../testsupport/conditionDtoTestDataBuilder'
 import filterArrayOnPropertyFilter from '../../../../filters/filterArrayOnPropertyFilter'
 import formatConditionTypeScreenValueFilter from '../../../../filters/formatConditionTypeFilter'
+import StrengthCategory from '../../../../enums/strengthCategory'
+import formatStrengthCategoryScreenValueFilter from '../../../../filters/formatStrengthCategoryFilter'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -26,6 +28,7 @@ njkEnv //
   .addFilter('formatLast_name_comma_First_name', formatPrisonerNameFilter(NameFormat.Last_name_comma_First_name))
   .addFilter('filterArrayOnProperty', filterArrayOnPropertyFilter)
   .addFilter('formatConditionTypeScreenValue', formatConditionTypeScreenValueFilter)
+  .addFilter('formatStrengthCategoryScreenValue', formatStrengthCategoryScreenValueFilter)
 
 const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',
@@ -39,6 +42,7 @@ const templateParams = {
   tab: 'overview',
   educationSupportPlanCreationSchedule: Result.fulfilled(aValidPlanCreationScheduleDto()),
   conditions: Result.fulfilled(aValidConditionsList()),
+  strengthCategories: Result.fulfilled([StrengthCategory.LITERACY_SKILLS, StrengthCategory.NUMERACY_SKILLS]),
   pageHasApiErrors: false,
   userHasPermissionTo,
 }

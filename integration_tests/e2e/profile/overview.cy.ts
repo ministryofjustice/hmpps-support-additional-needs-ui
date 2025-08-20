@@ -36,7 +36,7 @@ context('Profile Overview Page', () => {
     Page.verifyOnPage(OverviewPage) //
       .hasNoAdditionalNeedsRecorded()
       .hasConditionsRecorded('Acquired brain injury')
-      .hasNoStrengthsRecorded()
+      .hasStrengthsRecorded('Numeracy skills')
       .hasNoSupportRecommendationsRecorded()
       .actionsCardContainsEducationSupportPlanActions()
       .apiErrorBannerIsNotDisplayed()
@@ -140,6 +140,32 @@ context('Profile Overview Page', () => {
     // Then
     Page.verifyOnPage(OverviewPage) //
       .hasConditionsUnavailableMessage()
+      .apiErrorBannerIsDisplayed()
+  })
+
+  it('should display overview page given retrieving the prisoners Strengths returns an error', () => {
+    // Given
+    cy.task('stubGetStrengths500Error', prisonNumber)
+
+    // When
+    cy.visit(`/profile/${prisonNumber}/overview`)
+
+    // Then
+    Page.verifyOnPage(OverviewPage) //
+      .hasStrengthsUnavailableMessage()
+      .apiErrorBannerIsDisplayed()
+  })
+
+  it('should display overview page given retrieving the prisoners ALN Screeners returns an error', () => {
+    // Given
+    cy.task('stubGetAlnScreeners500Error', prisonNumber)
+
+    // When
+    cy.visit(`/profile/${prisonNumber}/overview`)
+
+    // Then
+    Page.verifyOnPage(OverviewPage) //
+      .hasStrengthsUnavailableMessage()
       .apiErrorBannerIsDisplayed()
   })
 })
