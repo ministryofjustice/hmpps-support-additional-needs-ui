@@ -3,7 +3,7 @@
 {% from "./components/challenges-summary-card/macro.njk" import alnChallengesSummaryCard %}
 
   {% for groupName, challengesData in groupedChallenges %}
-      <div class="govuk-summary-card" data-qa="challenges-summary-card">
+      <div class="govuk-summary-card" data-qa="challenges-summary-card-{{ groupName }}">
         <div class="govuk-summary-card__title-wrapper">
           <h2 class="govuk-summary-card__title">{{ groupName | formatChallengeCategoryScreenValue }}</h2>
         </div>
