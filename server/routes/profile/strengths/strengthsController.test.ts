@@ -1,49 +1,40 @@
 import { Request, Response } from 'express'
-import { startOfToday, subDays } from 'date-fns'
+import { startOfToday } from 'date-fns'
 import StrengthsController, { GroupedStrengths } from './strengthsController'
 import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
-import { aValidStrengthResponseDto, aValidStrengthsList } from '../../../testsupport/strengthResponseDtoTestDataBuilder'
 import { Result } from '../../../utils/result/result'
-import { aValidAlnScreenerList, aValidAlnScreenerResponseDto } from '../../../testsupport/alnScreenerDtoTestDataBuilder'
-import StrengthType from '../../../enums/strengthType'
-import StrengthCategory from '../../../enums/strengthCategory'
-
-const today = startOfToday()
+import {
+  setupAlnScreenersPromise,
+  setupAlnStrengths,
+  setupNonAlnStrengths,
+  setupNonAlnStrengthsPromise,
+} from '../profileTestSupportFunctions'
+import { aValidAlnScreenerResponseDto } from '../../../testsupport/alnScreenerDtoTestDataBuilder'
 
 describe('strengthsController', () => {
   const controller = new StrengthsController()
 
   const prisonerSummary = aValidPrisonerSummary()
 
-  const screenerDate = today
   const prisonId = 'MDI'
   const prisonNamesById = { BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' }
 
   // Non-ALN strengths
   const { numeracy, numeracy2, literacy, emotionsNonActive, attention, speaking } = setupNonAlnStrengths()
-  const strengths = Result.fulfilled(
-    aValidStrengthsList({ strengths: [numeracy, numeracy2, literacy, emotionsNonActive, attention, speaking] }),
-  )
+  const strengths = setupNonAlnStrengthsPromise({
+    strengths: [numeracy, numeracy2, literacy, emotionsNonActive, attention, speaking],
+  })
 
   // Latest ALN strengths
   const { reading, writing, alphabetOrdering, wordFindingNonActive, arithmetic, focussing, tidiness } =
     setupAlnStrengths()
-  const alnScreeners = Result.fulfilled(
-    aValidAlnScreenerList({
-      screeners: [
-        // Latest screener
-        aValidAlnScreenerResponseDto({
-          screenerDate,
-          createdAtPrison: prisonId,
-          strengths: [reading, writing, wordFindingNonActive, arithmetic, focussing, tidiness, alphabetOrdering],
-        }),
-        // Screener from yesterday
-        aValidAlnScreenerResponseDto({ screenerDate: subDays(today, 1) }),
-        // Screener from the day before yesterday
-        aValidAlnScreenerResponseDto({ screenerDate: subDays(today, 2) }),
-      ],
-    }),
-  )
+  const screenerDate = startOfToday()
+  const latestScreener = aValidAlnScreenerResponseDto({
+    screenerDate,
+    createdAtPrison: prisonId,
+    strengths: [reading, writing, wordFindingNonActive, arithmetic, focussing, tidiness, alphabetOrdering],
+  })
+  const alnScreeners = setupAlnScreenersPromise({ latestScreener })
 
   const render = jest.fn()
   const req = {} as unknown as Request
@@ -198,99 +189,3 @@ describe('strengthsController', () => {
     expect(render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 })
-
-export function setupNonAlnStrengths() {
-  const numeracy = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.NUMERACY_SKILLS_DEFAULT,
-    strengthCategory: StrengthCategory.NUMERACY_SKILLS,
-    symptoms: 'Can add up really well',
-    fromALNScreener: false,
-    active: true,
-    updatedAt: subDays(today, 5),
-  })
-  const numeracy2 = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.NUMERACY_SKILLS_DEFAULT,
-    strengthCategory: StrengthCategory.NUMERACY_SKILLS,
-    symptoms: 'Can subtract really well',
-    fromALNScreener: false,
-    active: true,
-    updatedAt: subDays(today, 3),
-  })
-  const literacy = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.LITERACY_SKILLS_DEFAULT,
-    strengthCategory: StrengthCategory.LITERACY_SKILLS,
-    fromALNScreener: false,
-    active: true,
-    updatedAt: subDays(today, 1),
-  })
-  const emotionsNonActive = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.EMOTIONS_FEELINGS_DEFAULT,
-    strengthCategory: StrengthCategory.EMOTIONS_FEELINGS,
-    fromALNScreener: false,
-    active: false,
-    updatedAt: subDays(today, 1),
-  })
-  const attention = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.ATTENTION_ORGANISING_TIME_DEFAULT,
-    strengthCategory: StrengthCategory.ATTENTION_ORGANISING_TIME,
-    fromALNScreener: false,
-    active: true,
-    updatedAt: subDays(today, 10),
-  })
-  const speaking = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.SPEAKING,
-    strengthCategory: StrengthCategory.LANGUAGE_COMM_SKILLS,
-    fromALNScreener: false,
-    active: true,
-    updatedAt: subDays(today, 2),
-  })
-
-  return { numeracy, numeracy2, literacy, emotionsNonActive, attention, speaking }
-}
-
-export function setupAlnStrengths() {
-  const reading = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.READING,
-    strengthCategory: StrengthCategory.LITERACY_SKILLS,
-    fromALNScreener: true,
-    active: true,
-  })
-  const writing = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.WRITING,
-    strengthCategory: StrengthCategory.LITERACY_SKILLS,
-    fromALNScreener: true,
-    active: true,
-  })
-  const alphabetOrdering = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.ALPHABET_ORDERING,
-    strengthCategory: StrengthCategory.LITERACY_SKILLS,
-    fromALNScreener: true,
-    active: true,
-  })
-  const wordFindingNonActive = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.WORD_FINDING,
-    strengthCategory: StrengthCategory.LITERACY_SKILLS,
-    fromALNScreener: true,
-    active: false,
-  })
-  const arithmetic = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.ARITHMETIC,
-    strengthCategory: StrengthCategory.NUMERACY_SKILLS,
-    fromALNScreener: true,
-    active: true,
-  })
-  const focussing = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.FOCUSING,
-    strengthCategory: StrengthCategory.ATTENTION_ORGANISING_TIME,
-    fromALNScreener: true,
-    active: true,
-  })
-  const tidiness = aValidStrengthResponseDto({
-    strengthTypeCode: StrengthType.TIDINESS,
-    strengthCategory: StrengthCategory.ATTENTION_ORGANISING_TIME,
-    fromALNScreener: true,
-    active: true,
-  })
-
-  return { reading, writing, alphabetOrdering, wordFindingNonActive, arithmetic, focussing, tidiness }
-}
