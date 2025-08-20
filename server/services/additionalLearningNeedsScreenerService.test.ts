@@ -100,18 +100,18 @@ describe('additionalLearningNeedsScreenerService', () => {
   })
 
   describe('getAlnScreeners', () => {
-    it.skip('should get ALN Screeners', async () => {
+    it('should get ALN Screeners', async () => {
       // Given
       const screenerDate = startOfToday()
       const challenge = aValidChallengeResponse({
         symptoms: 'John struggles to read text on white background',
         fromALNScreener: true,
-        challengeTypeCode: 'LITERACY_SKILLS_DEFAULT',
-        howIdentified: ChallengeIdentificationSource.CONVERSATIONS,
+        challengeTypeCode: 'WRITING',
+        howIdentified: [ChallengeIdentificationSource.CONVERSATIONS],
+        howIdentifiedOther: null,
         alnScreenerDate: format(screenerDate, 'yyyy-MM-dd'),
+        challengeCategory: 'LITERACY_SKILLS',
       })
-      challenge.challengeType.categoryCode = 'LITERACY_SKILLS'
-      challenge.howIdentifiedOther = '123'
 
       const strength = aValidStrengthResponse({
         fromALNScreener: true,
@@ -131,14 +131,14 @@ describe('additionalLearningNeedsScreenerService', () => {
       })
       supportAdditionalNeedsApiClient.getAdditionalLearningNeedsScreeners.mockResolvedValue(alnScreeners)
       const expectedChallengeResponseDto = aValidChallengeResponseDto({
-        challengeTypeCode: ChallengeType.LITERACY_SKILLS_DEFAULT,
-        challengeCategory: ChallengeCategory.LITERACY_SKILLS,
         symptoms: 'John struggles to read text on white background',
+        fromALNScreener: true,
+        challengeTypeCode: ChallengeType.WRITING,
         howIdentified: [ChallengeIdentificationSource.CONVERSATIONS],
-        howIdentifiedOther: '123',
+        howIdentifiedOther: null,
         alnScreenerDate: screenerDate,
+        challengeCategory: ChallengeCategory.LITERACY_SKILLS,
       })
-      expectedChallengeResponseDto.challengeType = { code: 'LITERACY_SKILLS_DEFAULT', areaCode: undefined }
 
       const expectedAlnScreenerList = aValidAlnScreenerList({
         prisonNumber,

@@ -75,7 +75,7 @@ describe('challengeService', () => {
       // Then
       expect(supportAdditionalNeedsApiClient.getChallenges).toHaveBeenCalledWith('A1234BC', username)
       expect(result).toHaveLength(1)
-      expect(result).toEqual(toChallengeDto(prisonNumber, expectedChallengeListResponse))
+      expect(result).toEqual(toChallengeDto(expectedChallengeListResponse))
     })
   })
 })

@@ -80,9 +80,7 @@ declare module 'dto' {
    * DTO representing a Challenge that the person has. IE. this DTO does not hold data about Challenges that will be passed to the API to create.
    */
   export interface ChallengeResponseDto extends ReferencedAndAuditable {
-    prisonNumber: string
     fromALNScreener: boolean
-    challengeType: ReferenceDataItemDto
     challengeTypeCode: ChallengeType
     challengeCategory: ChallengeCategory
     active: boolean

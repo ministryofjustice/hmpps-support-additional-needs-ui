@@ -9,15 +9,21 @@ import StrengthType from '../../enums/strengthType'
 import StrengthCategory from '../../enums/strengthCategory'
 import { aValidStrengthResponseDto } from '../../testsupport/strengthResponseDtoTestDataBuilder'
 import aValidChallengeResponseDto from '../../testsupport/challengeResponseDtoTestDataBuilder'
+import ChallengeType from '../../enums/challengeType'
 
 describe('alnScreenerResponseDtoMapper', () => {
-  it.skip('should map ALNScreeners to an AlnScreenerList', () => {
+  it('should map ALNScreeners to an AlnScreenerList', () => {
     // Given
     const prisonNumber = 'A1234BC'
 
-    const challenge = aValidChallengeResponse()
-    challenge.challengeType.code = 'LITERACY_SKILLS_DEFAULT'
-    challenge.challengeType.categoryCode = 'LITERACY_SKILLS'
+
+    const challenge = aValidChallengeResponse({
+      challengeCategory: ChallengeCategory.LITERACY_SKILLS,
+      challengeTypeCode: ChallengeType.READING,
+      alnScreenerDate: '2025-05-13',
+      howIdentifiedOther: null,
+      symptoms: "John can't read long words",
+    })
     const strength = aValidStrengthResponse({ fromALNScreener: true, alnScreenerDate: '2025-05-13' })
     strength.strengthType.code = 'NUMERACY_SKILLS_DEFAULT'
     strength.strengthType.categoryCode = 'NUMERACY_SKILLS'
@@ -49,6 +55,11 @@ describe('alnScreenerResponseDtoMapper', () => {
           challenges: [
             aValidChallengeResponseDto({
               challengeCategory: ChallengeCategory.LITERACY_SKILLS,
+              challengeTypeCode: ChallengeType.READING,
+              alnScreenerDate: parseISO('2025-05-13'),
+              fromALNScreener: true,
+              howIdentifiedOther: null,
+              symptoms: "John can't read long words",
             }),
           ],
           strengths: [

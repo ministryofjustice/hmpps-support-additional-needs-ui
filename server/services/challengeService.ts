@@ -22,7 +22,7 @@ export default class ChallengeService {
   async getChallenges(username: string, prisonNumber: string): Promise<Array<ChallengeResponseDto>> {
     try {
       const challengeListResponse = await this.supportAdditionalNeedsApiClient.getChallenges(prisonNumber, username)
-      return toChallengeDto(prisonNumber, challengeListResponse)
+      return toChallengeDto(challengeListResponse)
     } catch (e) {
       logger.error(`Error getting Challenges for [${prisonNumber}]`, e)
       throw e
