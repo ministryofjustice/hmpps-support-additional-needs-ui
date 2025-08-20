@@ -21,6 +21,25 @@ export default class OverviewPage extends ProfilePage {
 
   hasNoConditionsRecorded(): OverviewPage {
     this.conditionsSummaryCardContent().should('contain', 'No conditions recorded')
+    this.conditionsUnavailableMessage().should('not.exist')
+    return this
+  }
+
+  hasConditionsRecorded(...expected: Array<string>): OverviewPage {
+    this.conditionsSummaryCardContent()
+      .find('.govuk-summary-list__row')
+      .then(listItems => {
+        cy.wrap(listItems).should('have.length', expected.length)
+        listItems.each((index, element) => {
+          cy.wrap(element).should('contain.text', expected[index])
+        })
+      })
+    this.conditionsUnavailableMessage().should('not.exist')
+    return this
+  }
+
+  hasConditionsUnavailableMessage(): OverviewPage {
+    this.conditionsUnavailableMessage().should('be.visible')
     return this
   }
 
@@ -61,6 +80,8 @@ export default class OverviewPage extends ProfilePage {
 
   private conditionsSummaryCardContent = (): PageElement =>
     cy.get('[data-qa=conditions-summary-card] .govuk-summary-card__content')
+
+  private conditionsUnavailableMessage = (): PageElement => cy.get('[data-qa=conditions-unavailable-message]')
 
   private addConditionButton = (): PageElement => cy.get('[data-qa=add-condition-button]')
 

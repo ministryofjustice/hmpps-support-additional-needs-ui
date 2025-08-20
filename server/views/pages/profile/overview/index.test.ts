@@ -5,6 +5,9 @@ import formatDate from '../../../../filters/formatDateFilter'
 import formatPrisonerNameFilter, { NameFormat } from '../../../../filters/formatPrisonerNameFilter'
 import { Result } from '../../../../utils/result/result'
 import aValidPlanCreationScheduleDto from '../../../../testsupport/planCreationScheduleDtoTestDataBuilder'
+import { aValidConditionsList } from '../../../../testsupport/conditionDtoTestDataBuilder'
+import filterArrayOnPropertyFilter from '../../../../filters/filterArrayOnPropertyFilter'
+import formatConditionTypeScreenValueFilter from '../../../../filters/formatConditionTypeFilter'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -21,6 +24,8 @@ njkEnv //
   .addFilter('formatDate', formatDate)
   .addFilter('formatFirst_name_Last_name', formatPrisonerNameFilter(NameFormat.First_name_Last_name))
   .addFilter('formatLast_name_comma_First_name', formatPrisonerNameFilter(NameFormat.Last_name_comma_First_name))
+  .addFilter('filterArrayOnProperty', filterArrayOnPropertyFilter)
+  .addFilter('formatConditionTypeScreenValue', formatConditionTypeScreenValueFilter)
 
 const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',
@@ -33,6 +38,7 @@ const templateParams = {
   prisonerSummary,
   tab: 'overview',
   educationSupportPlanCreationSchedule: Result.fulfilled(aValidPlanCreationScheduleDto()),
+  conditions: Result.fulfilled(aValidConditionsList()),
   pageHasApiErrors: false,
   userHasPermissionTo,
 }

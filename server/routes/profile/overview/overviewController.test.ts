@@ -3,17 +3,19 @@ import OverviewController from './overviewController'
 import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
 import aValidPlanCreationScheduleDto from '../../../testsupport/planCreationScheduleDtoTestDataBuilder'
 import { Result } from '../../../utils/result/result'
+import { aValidConditionsList } from '../../../testsupport/conditionDtoTestDataBuilder'
 
 describe('overviewController', () => {
   const controller = new OverviewController()
 
   const prisonerSummary = aValidPrisonerSummary()
   const educationSupportPlanCreationSchedule = Result.fulfilled(aValidPlanCreationScheduleDto())
+  const conditions = Result.fulfilled(aValidConditionsList())
 
   const req = {} as unknown as Request
   const res = {
     render: jest.fn(),
-    locals: { prisonerSummary, educationSupportPlanCreationSchedule },
+    locals: { prisonerSummary, educationSupportPlanCreationSchedule, conditions },
   } as unknown as Response
   const next = jest.fn()
 
@@ -27,6 +29,7 @@ describe('overviewController', () => {
     const expectedViewModel = {
       prisonerSummary,
       educationSupportPlanCreationSchedule,
+      conditions,
       tab: 'overview',
     }
 

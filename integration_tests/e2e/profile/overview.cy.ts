@@ -13,17 +13,21 @@ import StrengthsPage from '../../pages/profile/strengthsPage'
 import ChallengesPage from '../../pages/profile/challengesPage'
 
 context('Profile Overview Page', () => {
+  const prisonNumber = 'H4115SD'
+
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.signIn()
+    cy.task('getPrisonerById', prisonNumber)
+    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetConditions', { prisonNumber })
+    cy.task('stubGetChallenges', { prisonNumber })
+    cy.task('stubGetStrengths', { prisonNumber })
   })
 
   it('should be able to navigate directly to the profile overview page', () => {
     // Given
-    const prisonNumber = 'H4115SD'
-    cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
 
     // When
     cy.visit(`/profile/${prisonNumber}/overview`)
@@ -31,17 +35,28 @@ context('Profile Overview Page', () => {
     // Then
     Page.verifyOnPage(OverviewPage) //
       .hasNoAdditionalNeedsRecorded()
-      .hasNoConditionsRecorded()
+      .hasConditionsRecorded('Acquired brain injury')
       .hasNoStrengthsRecorded()
       .hasNoSupportRecommendationsRecorded()
       .actionsCardContainsEducationSupportPlanActions()
       .apiErrorBannerIsNotDisplayed()
   })
 
+  it('should display overview page given the prisoner has no Conditions recorded', () => {
+    // Given
+    cy.task('stubGetConditions404Error', prisonNumber)
+
+    // When
+    cy.visit(`/profile/${prisonNumber}/overview`)
+
+    // Then
+    Page.verifyOnPage(OverviewPage) //
+      .hasNoConditionsRecorded()
+      .apiErrorBannerIsNotDisplayed()
+  })
+
   it('should display overview page given prisoner already has an Education Support Plan', () => {
     // Given
-    const prisonNumber = 'H4115SD'
-    cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetEducationSupportPlanCreationSchedules', {
       prisonNumber,
       status: PlanCreationScheduleStatus.COMPLETED,
@@ -58,8 +73,6 @@ context('Profile Overview Page', () => {
 
   it('should display overview page given retrieving the prisoners plan creation schedule returns an error', () => {
     // Given
-    const prisonNumber = 'H4115SD'
-    cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetEducationSupportPlanCreationSchedules500Error', { prisonNumber })
 
     // When
@@ -73,11 +86,11 @@ context('Profile Overview Page', () => {
 
   it('should display 404 page given requesting the overview page for a prisoner that does not exist', () => {
     // Given
-    const prisonNumber = 'A9999ZZ'
-    cy.task('stubPrisonerById404Error', prisonNumber)
+    const nonExistentPrisoner = 'A9999ZZ'
+    cy.task('stubPrisonerById404Error', nonExistentPrisoner)
 
     // When
-    cy.visit(`/profile/${prisonNumber}/overview`, { failOnStatusCode: false })
+    cy.visit(`/profile/${nonExistentPrisoner}/overview`, { failOnStatusCode: false })
 
     // Then
     Page.verifyOnPage(Error404Page)
@@ -85,11 +98,11 @@ context('Profile Overview Page', () => {
 
   it('should display 404 page given requesting the overview page for a prisoner not in the user caseloads', () => {
     // Given
-    const prisonNumber = 'A9404DY' // Prisoner is in Pentonville (PVI) which is not one of the user's caseloads
-    cy.task('getPrisonerById', prisonNumber)
+    const prisonerNotInCaseload = 'A9404DY' // Prisoner is in Pentonville (PVI) which is not one of the user's caseloads
+    cy.task('getPrisonerById', prisonerNotInCaseload)
 
     // When
-    cy.visit(`/profile/${prisonNumber}/overview`, { failOnStatusCode: false })
+    cy.visit(`/profile/${prisonerNotInCaseload}/overview`, { failOnStatusCode: false })
 
     // Then
     Page.verifyOnPage(Error404Page)
@@ -97,12 +110,6 @@ context('Profile Overview Page', () => {
 
   it('should be able to use the tab bar to navigate between the different profile pages', () => {
     // Given
-    const prisonNumber = 'H4115SD'
-    cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
-    cy.task('stubGetConditions', { prisonNumber })
-    cy.task('stubGetStrengths', { prisonNumber })
-
     cy.visit(`/profile/${prisonNumber}/overview`)
 
     // When
@@ -121,5 +128,18 @@ context('Profile Overview Page', () => {
 
     // Then
     Page.verifyOnPage(OverviewPage)
+  })
+
+  it('should display overview page given retrieving the prisoners Conditions returns an error', () => {
+    // Given
+    cy.task('stubGetConditions500Error', prisonNumber)
+
+    // When
+    cy.visit(`/profile/${prisonNumber}/overview`)
+
+    // Then
+    Page.verifyOnPage(OverviewPage) //
+      .hasConditionsUnavailableMessage()
+      .apiErrorBannerIsDisplayed()
   })
 })

@@ -1,15 +1,68 @@
+{% macro renderConditionRow(condition, type) %}
+  <div class="govuk-summary-list__row" data-qa="{{ 'confirmed-diagnosis' if type === 'CONFIRMED_DIAGNOSIS' else 'self-declared' }}-condition_{{ condition.conditionTypeCode }}">
+    <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-top-3 govuk-!-margin-bottom-2">
+      {{ condition.conditionTypeCode | formatConditionTypeScreenValue | default(condition.conditionTypeCode, true) }} <span class="govuk-!-font-weight-regular">{{ '(Confirmed diagnosis)' if type === 'CONFIRMED_DIAGNOSIS' else '(Self-declared)' }}</span>
+    </p>
+    {% if condition.conditionName %}
+      <p class="govuk-body govuk-!-margin-bottom-2">{{ condition.conditionName }}</p>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% if conditions.isFulfilled() %}
+  {% set activeConditions = conditions.value.conditions | filterArrayOnProperty('active', true) %}
+  {% set confirmedDiagnisisConditions = activeConditions | filterArrayOnProperty('source', 'CONFIRMED_DIAGNOSIS') %}
+  {% set selfDeclaredConditions = activeConditions | filterArrayOnProperty('source', 'SELF_DECLARED') %}
+{% endif %}
+
 <div class="govuk-summary-card" data-qa="conditions-summary-card">
   <div class="govuk-summary-card__title-wrapper">
     <h2 class="govuk-summary-card__title">Conditions</h2>
     <ul class="govuk-summary-card__actions govuk-!-display-none-print">
-      <li class="govuk-summary-card__action">
-        <a class="govuk-link govuk-!-font-weight-regular" href="#" data-qa="add-condition-button">Add condition</a>
-      </li>
+      {% if conditions.isFulfilled() %}
+        {% if activeConditions.length === 0 %}
+          {% if userHasPermissionTo('RECORD_SELF_DECLARED_CONDITIONS') %}
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link govuk-!-font-weight-regular" href="/conditions/{{ prisonerSummary.prisonNumber }}/create/select-conditions" data-qa="add-condition-button">Add condition</a>
+            </li>
+          {% endif %}
+        {% else %}
+          <li class="govuk-summary-card__action">
+            <a class="govuk-link govuk-!-font-weight-regular" href="/profile/{{ prisonerSummary.prisonNumber }}/conditions" data-qa="view-conditions-button">View conditions</a>
+          </li>
+        {% endif %}
+      {% endif %}
     </ul>
   </div>
-  <div class="govuk-summary-card__content">
-    <p class="govuk-body">
-      No conditions recorded
-    </p>
-  </div>
+
+  {% if conditions.isFulfilled() %}
+
+    {% if activeConditions | length %}
+      <div class="govuk-summary-card__content govuk-!-padding-top-0">
+        <div class="govuk-summary-list">
+          {% for condition in confirmedDiagnisisConditions %}
+            {{ renderConditionRow(condition, 'CONFIRMED_DIAGNOSIS') }}
+          {% endfor %}
+
+          {% for condition in selfDeclaredConditions %}
+            {{ renderConditionRow(condition, 'SELF_DECLARED') }}
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="govuk-summary-card__content">
+        <p class="govuk-body" data-qa="no-conditions-recorded-message">
+          No conditions recorded
+        </p>
+      </div>
+    {% endif %}
+
+  {% else %}
+    <div class="govuk-summary-card__content">
+      <h3 class="govuk-heading-s" data-qa="conditions-unavailable-message">We cannot show these details right now</h3>
+      <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+    </div>
+  {% endif %}
+
 </div>
+
