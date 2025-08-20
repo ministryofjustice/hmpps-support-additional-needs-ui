@@ -1,8 +1,14 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import type { AlnScreenerList, AlnScreenerResponseDto, StrengthResponseDto, StrengthsList } from 'dto'
+import type { StrengthResponseDto } from 'dto'
 import dateComparator from '../../dateComparator'
 import enumComparator from '../../enumComparator'
 import { Result } from '../../../utils/result/result'
+import {
+  getActiveStrengthsFromAlnScreener,
+  getLatestAlnScreener,
+  getNonAlnActiveStrengths,
+  reWrapRejectedPromises,
+} from '../profileStrengthsFunctions'
 
 export type GroupedStrengths = Record<
   string,
@@ -103,29 +109,4 @@ const addAlnStrengthsToGroupedStrengths = (
     acc[category] = currentEntry
     return acc
   }, groupedStrengths)
-}
-
-const getNonAlnActiveStrengths = (strengths: Result<StrengthsList>): Array<StrengthResponseDto> =>
-  strengths.getOrNull()?.strengths.filter(strength => strength.active && !strength.fromALNScreener) ?? []
-
-const getLatestAlnScreener = (screeners: Result<AlnScreenerList>): AlnScreenerResponseDto =>
-  screeners
-    .getOrNull()
-    .screeners.sort((left: AlnScreenerResponseDto, right: AlnScreenerResponseDto) =>
-      dateComparator(left.screenerDate, right.screenerDate, 'DESC'),
-    )[0]
-
-const getActiveStrengthsFromAlnScreener = (alnScreener: AlnScreenerResponseDto): Array<StrengthResponseDto> =>
-  alnScreener?.strengths.filter(strength => strength.active && strength.fromALNScreener) ?? []
-
-const reWrapRejectedPromises = (
-  alnScreeners: Result<AlnScreenerList>,
-  strengths: Result<StrengthsList>,
-): Result<GroupedStrengths> => {
-  const apiErrorMessages = [alnScreeners, strengths]
-    .map(result => (!result.isFulfilled() ? result : null))
-    .filter(result => result != null)
-    .map(result => result.getOrHandle(error => error.message))
-    .join(', ')
-  return Result.rejected(new Error(apiErrorMessages))
 }
