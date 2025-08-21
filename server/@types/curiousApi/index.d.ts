@@ -265,7 +265,7 @@ export interface components {
   schemas: {
     /** AllAssessmentDTO */
     AllAssessmentDTO: {
-      v1?: components['schemas']['LearnerLatestAssessmentDTO'][]
+      v1?: components['schemas']['LearnerLatestAssessmentV1DTO'][]
       v2?: components['schemas']['LearnerAssessmentV2DTO']
     }
     /** AllQualificationsDTO */
@@ -275,6 +275,25 @@ export interface components {
     }
     /** AssessmentDTO */
     AssessmentDTO: {
+      /**
+       * Format: date
+       * @description The date the assessment has been taken
+       */
+      assessmentDate?: string
+      /**
+       * @description Assessment Grade
+       * @example Level 1
+       */
+      qualificationGrade?: string
+      /**
+       * @description Assessment Type
+       * @example English
+       * @enum {string}
+       */
+      qualificationType?: 'English, Maths, Digital Literacy'
+    }
+    /** AssessmentV1DTO */
+    AssessmentV1DTO: {
       /**
        * Format: date
        * @description The date the assessment has been taken
@@ -373,11 +392,11 @@ export interface components {
     }
     /** ExternalAssessmentsDTO */
     ExternalAssessmentsDTO: {
-      aln?: components['schemas']['LearnerAssessmentsDTO'][]
-      digitalSkillsFunctionalSkills?: components['schemas']['LearnerAssessmentsDTO'][]
-      englishFunctionalSkills?: components['schemas']['LearnerAssessmentsDTO'][]
+      aln?: components['schemas']['LearnerAssessmentsAlnDTO'][]
+      digitalSkillsFunctionalSkills?: components['schemas']['LearnerAssessmentsFunctionalSkillsDTO'][]
+      englishFunctionalSkills?: components['schemas']['LearnerAssessmentsFunctionalSkillsDTO'][]
       esol?: components['schemas']['LearnerAssessmentsDTO'][]
-      mathsFunctionalSkills?: components['schemas']['LearnerAssessmentsDTO'][]
+      mathsFunctionalSkills?: components['schemas']['LearnerAssessmentsFunctionalSkillsDTO'][]
       reading?: components['schemas']['LearnerAssessmentsDTO'][]
     }
     /** JobsPrisonLeaversDTO */
@@ -521,6 +540,14 @@ export interface components {
       establishmentName?: string
       qualification?: components['schemas']['AssessmentDTO']
     }
+    /** LearnerAssessmentV1DTO */
+    LearnerAssessmentV1DTO: {
+      /** @description Establishment (prison) identifier */
+      establishmentId?: string
+      /** @description Establishment (prison) name */
+      establishmentName?: string
+      qualification?: components['schemas']['AssessmentV1DTO']
+    }
     /** LearnerAssessmentV2DTO */
     LearnerAssessmentV2DTO: {
       assessments?: components['schemas']['ExternalAssessmentsDTO']
@@ -529,6 +556,24 @@ export interface components {
        * @example A1234AA
        */
       prn?: string
+    }
+    /** LearnerAssessmentsAlnDTO */
+    LearnerAssessmentsAlnDTO: {
+      /**
+       * Format: date
+       * @description The date the assessment has been taken
+       */
+      assessmentDate?: string
+      /** @description Assessment Outcome Value */
+      assessmentOutcome?: string
+      /** @description Establishment (prison) identifier */
+      establishmentId?: string
+      /** @description Establishment (prison) name */
+      establishmentName?: string
+      /** @description Has Prisoner Consent Value */
+      hasPrisonerConsent?: string
+      /** @description Stakeholder Referral Value */
+      stakeholderReferral?: string
     }
     /** LearnerAssessmentsDTO */
     LearnerAssessmentsDTO: {
@@ -545,8 +590,32 @@ export interface components {
       establishmentId?: string
       /** @description Establishment (prison) name */
       establishmentName?: string
-      /** @description Stackholder Referral Value */
-      stackholderReferral?: string
+      /** @description Has Prisoner Consent Value */
+      hasPrisonerConsent?: string
+      /** @description Stakeholder Referral Value */
+      stakeholderReferral?: string
+    }
+    /** LearnerAssessmentsFunctionalSkillsDTO */
+    LearnerAssessmentsFunctionalSkillsDTO: {
+      /**
+       * Format: date
+       * @description The date the assessment has been taken
+       */
+      assessmentDate?: string
+      /** @description Assessment Next Step Value */
+      assessmentNextStep?: string
+      /** @description Establishment (prison) identifier */
+      establishmentId?: string
+      /** @description Establishment (prison) name */
+      establishmentName?: string
+      /** @description Has Prisoner Consent Value */
+      hasPrisonerConsent?: string
+      /** @description Assessment Level Branding Value */
+      levelBranding?: string
+      /** @description Stakeholder Referral Value */
+      stakeholderReferral?: string
+      /** @description Assessment Working Towards Level Value */
+      workingTowardsLevel?: string
     }
     /** LearnerEducationDTO */
     LearnerEducationDTO: {
@@ -793,6 +862,27 @@ export interface components {
       prn?: string
       qualifications?: components['schemas']['LearnerAssessmentDTO'][]
     }
+    /** LearnerLatestAssessmentV1DTO */
+    LearnerLatestAssessmentV1DTO: {
+      ldd?: components['schemas']['LearnerLddInfoExternalV1DTO'][]
+      /**
+       * @description NOMIS Assigned Offender Number (Prisoner Identifier)
+       * @example A1234AA
+       */
+      prn?: string
+      qualifications?: components['schemas']['LearnerAssessmentV1DTO'][]
+    }
+    /** LearnerLddInfoExternalV1DTO */
+    LearnerLddInfoExternalV1DTO: {
+      establishmentId?: string
+      establishmentName?: string
+      /** Format: date */
+      inDepthAssessmentDate?: string
+      lddPrimaryName?: string
+      lddSecondaryNames?: string[]
+      /** Format: date */
+      rapidAssessmentDate?: string
+    }
     /** LearnerNeurodivergenceDTO */
     LearnerNeurodivergenceDTO: {
       /**
@@ -888,7 +978,7 @@ export interface components {
       establishmentName?: string
       /**
        * @description Funding type for a course
-       * @example DPS, PEF, The Clink, etc...
+       * @example DPS, PES, The Clink, Previous Contract etc...
        */
       fundingType?: string
       /**
