@@ -2,20 +2,7 @@
 
 {% if challenge %}
       <div class="govuk-summary-list__row" data-qa="challenge-summary-list-row-non-aln-{{ challenge.challengeTypeCode }}">
-        {% if challenge.fromALNScreener %}
-          {{ govukDetails({
-            summaryText: challenge.challengeTypeCode | formatChallengeTypeScreenValue,
-            text: "We will look up some supporting information in here",
-            classes: "govuk-!-margin-top-3",
-            attributes: {
-              "data-qa": "non-aln-challenge-how-identified"
-            }
-          }) }}
-          <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-challenge-audit">
-            From Additional Learning Needs Screener completed on {{ challenge.updatedAt | formatDate('d MMMM yyyy') }}<span
-              class="govuk-!-display-none-print">, {{ challenge.createdAtPrison }}</span>
-          </p>
-        {% else %}
+
             <p class="govuk-body govuk-!-margin-top-3"
                data-qa="non-aln-challenge-symptoms">{{ challenge.symptoms }}</p>
 
@@ -34,11 +21,9 @@
                 "data-qa": "non-aln-challenge-how-identified"
               }
             }) }}
-
           {% set prisonName = prisonNamesById[challenge.updatedAtPrison] | default(challenge.updatedAtPrison) %}
             <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="non-aln-challenge-audit">
               Added on {{ challenge.updatedAt | formatDate('d MMMM yyyy') }} by {{ challenge.updatedByDisplayName }}, {{ prisonName }}
             </p>
-        {% endif %}
-    </div>
+      </div>
 {% endif %}
