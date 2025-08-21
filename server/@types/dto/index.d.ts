@@ -9,6 +9,7 @@ declare module 'dto' {
   import ChallengeCategory from '../../enums/challengeCategory'
   import StrengthCategory from '../../enums/strengthCategory'
   import SupportStrategyType from '../../enums/supportStrategyType'
+  import AlnAssessmentReferral from '../../enums/alnAssessmentReferral'
 
   /**
    * Interface defining common reference and audit related properties that DTO types can inherit through extension.
@@ -173,5 +174,35 @@ declare module 'dto' {
     screenerDate?: Date
     challenges?: Array<ChallengeType>
     strengths?: Array<StrengthType>
+  }
+
+  /**
+   * DTO collating the Additional Learning Needs (ALN) and Learning Difficulties and Disabilities (LDD) assessments that have been recorded in Curious
+   */
+  export interface CuriousAlnAndLddAssessmentsDto {
+    lddAssessments: Array<CuriousLddAssessmentDto>
+    alnAssessments: Array<CuriousAlnAssessmentDto>
+  }
+
+  /**
+   * DTO representing a Learning Difficulties and Disabilities (LDD) assessment that has been recorded in Curious
+   */
+  export interface CuriousLddAssessmentDto {
+    prisonId: string
+    rapidAssessmentDate: Date
+    inDepthAssessmentDate: Date
+    primaryLddAndHealthNeed: string
+    additionalLddAndHealthNeeds: Array<string>
+  }
+
+  /**
+   * DTO representing an Additional Learning Needs (ALN) assessment that has been recorded in Curious
+   */
+  export interface CuriousAlnAssessmentDto {
+    prisonId: string
+    assessmentDate: Date
+    referral: AlnAssessmentReferral
+    supportPlanRequired: boolean // TODO - come up with a better name. This is Curious' view on whether a support plan is required, not ours. It does not account for whether the prisoner is in education and/or has other needs
+    hasPrisonerConsent: boolean // TODO - come up with a better name. Consent for what?
   }
 }
