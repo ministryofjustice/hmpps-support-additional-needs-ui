@@ -11,7 +11,14 @@ import enumComparator from '../../enumComparator'
 
 export default class OverviewController {
   getOverviewView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    const { prisonerSummary, alnScreeners, conditions, educationSupportPlanCreationSchedule, strengths } = res.locals
+    const {
+      prisonerSummary,
+      alnScreeners,
+      conditions,
+      curiousAlnAndLddAssessments,
+      educationSupportPlanCreationSchedule,
+      strengths,
+    } = res.locals
 
     let strengthCategoriesPromise: Result<Array<StrengthCategory>, Error>
     if (alnScreeners.isFulfilled() && strengths.isFulfilled()) {
@@ -34,6 +41,7 @@ export default class OverviewController {
       conditions,
       educationSupportPlanCreationSchedule,
       strengthCategories: strengthCategoriesPromise,
+      curiousAlnAndLddAssessments,
       tab: 'overview',
     }
     return res.render('pages/profile/overview/index', viewRenderArgs)

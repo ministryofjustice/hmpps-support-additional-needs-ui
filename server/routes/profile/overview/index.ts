@@ -6,10 +6,16 @@ import retrieveCurrentEducationSupportPlanCreationSchedule from '../middleware/r
 import retrieveConditions from '../middleware/retrieveConditions'
 import retrieveStrengths from '../middleware/retrieveStrengths'
 import retrieveAlnScreeners from '../middleware/retrieveAlnScreeners'
+import retrieveCuriousAlnAndLddAssessments from '../middleware/retrieveCuriousAlnAndLddAssessments'
 
 const overviewRoutes = (services: Services): Router => {
-  const { additionalLearningNeedsService, conditionService, educationSupportPlanScheduleService, strengthService } =
-    services
+  const {
+    additionalLearningNeedsService,
+    conditionService,
+    curiousService,
+    educationSupportPlanScheduleService,
+    strengthService,
+  } = services
   const controller = new OverviewController()
 
   return Router({ mergeParams: true }) //
@@ -18,6 +24,7 @@ const overviewRoutes = (services: Services): Router => {
       retrieveAlnScreeners(additionalLearningNeedsService),
       retrieveConditions(conditionService),
       retrieveStrengths(strengthService),
+      retrieveCuriousAlnAndLddAssessments(curiousService),
       asyncMiddleware(controller.getOverviewView),
     ])
 }
