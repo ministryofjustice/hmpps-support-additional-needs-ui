@@ -35,7 +35,7 @@ context('Profile Overview Page', () => {
 
     // Then
     Page.verifyOnPage(OverviewPage) //
-      .hasNoAdditionalNeedsRecorded()
+      .hasNoScreeningAndAssessmentsRecorded()
       .hasConditionsRecorded('Acquired brain injury')
       .hasStrengthsRecorded('Numeracy skills')
       .hasNoSupportRecommendationsRecorded()
@@ -141,6 +141,19 @@ context('Profile Overview Page', () => {
     // Then
     Page.verifyOnPage(OverviewPage) //
       .hasConditionsUnavailableMessage()
+      .apiErrorBannerIsDisplayed()
+  })
+
+  it('should display overview page given retrieving the prisoners Curious assessments returns an error', () => {
+    // Given
+    cy.task('stubGetCuriousV2Assessments500Error', prisonNumber)
+
+    // When
+    cy.visit(`/profile/${prisonNumber}/overview`)
+
+    // Then
+    Page.verifyOnPage(OverviewPage) //
+      .hasCuriousScreenersUnavailableMessage()
       .apiErrorBannerIsDisplayed()
   })
 

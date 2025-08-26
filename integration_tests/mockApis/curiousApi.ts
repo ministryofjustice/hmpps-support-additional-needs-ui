@@ -5,7 +5,7 @@ const stubGetCuriousV2Assessments = (prisonNumber = 'G6115VJ'): SuperAgentReques
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: `/curious-api//learnerAssessments/v2/${prisonNumber}`,
+      urlPattern: `/curious-api/learnerAssessments/v2/${prisonNumber}`,
     },
     response: {
       status: 200,
@@ -82,7 +82,7 @@ const stubGetCuriousV2Assessments404Error = (prisonNumber = 'G6115VJ'): SuperAge
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: `/curious-api//learnerAssessments/v2/${prisonNumber}`,
+      urlPattern: `/curious-api/learnerAssessments/v2/${prisonNumber}`,
     },
     response: {
       status: 404,
@@ -98,10 +98,10 @@ const stubGetCuriousV2Assessments500Error = (prisonNumber = 'G6115VJ'): SuperAge
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: `/curious-api//learnerAssessments/v2/${prisonNumber}`,
+      urlPattern: `/curious-api/learnerAssessments/v2/${prisonNumber}`,
     },
     response: {
-      status: 404,
+      status: 500,
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       jsonBody: {
         status: 500,

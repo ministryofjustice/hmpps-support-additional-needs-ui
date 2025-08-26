@@ -12,6 +12,7 @@ import StrengthCategory from '../../../../enums/strengthCategory'
 import formatStrengthCategoryScreenValueFilter from '../../../../filters/formatStrengthCategoryFilter'
 import ChallengeCategory from '../../../../enums/challengeCategory'
 import formatChallengeCategoryScreenValueFilter from '../../../../filters/formatChallengeCategoryFilter'
+import { aCuriousAlnAndLddAssessmentsDto } from '../../../../testsupport/curiousAlnAndLddAssessmentsDtoTestDataBuilder'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -47,6 +48,7 @@ const templateParams = {
   conditions: Result.fulfilled(aValidConditionsList()),
   strengthCategories: Result.fulfilled([StrengthCategory.LITERACY_SKILLS, StrengthCategory.NUMERACY_SKILLS]),
   challengeCategories: Result.fulfilled([ChallengeCategory.LITERACY_SKILLS, ChallengeCategory.NUMERACY_SKILLS]),
+  curiousAlnAndLddAssessments: Result.fulfilled(aCuriousAlnAndLddAssessmentsDto()),
   pageHasApiErrors: false,
   userHasPermissionTo,
 }
@@ -72,7 +74,7 @@ describe('Profile overview page', () => {
     // Then
     expect($('h1').text().trim()).toEqual(`Ifereeca Peigh's support for additional needs`)
     expect($('.prisoner-summary-banner').length).toEqual(1)
-    expect($('[data-qa=additional-needs-summary-card]').length).toEqual(1)
+    expect($('[data-qa=screening-and-assessment-summary-card]').length).toEqual(1)
     expect($('[data-qa=conditions-summary-card]').length).toEqual(1)
     expect($('[data-qa=strengths-summary-card]').length).toEqual(1)
     expect($('[data-qa=challenges-summary-card]').length).toEqual(1)
@@ -97,7 +99,7 @@ describe('Profile overview page', () => {
     // Then
     expect($('h1').text().trim()).toEqual(`Ifereeca Peigh's support for additional needs`)
     expect($('.prisoner-summary-banner').length).toEqual(1)
-    expect($('[data-qa=additional-needs-summary-card]').length).toEqual(1)
+    expect($('[data-qa=screening-and-assessment-summary-card]').length).toEqual(1)
     expect($('[data-qa=conditions-summary-card]').length).toEqual(1)
     expect($('[data-qa=strengths-summary-card]').length).toEqual(1)
     expect($('[data-qa=challenges-summary-card]').length).toEqual(1)

@@ -9,8 +9,13 @@ export default class OverviewPage extends ProfilePage {
     this.activeTabIs('Overview')
   }
 
-  hasNoAdditionalNeedsRecorded(): OverviewPage {
-    this.additionalNeedsSummaryCardContent().should('contain', 'No additional needs recorded')
+  hasNoScreeningAndAssessmentsRecorded(): OverviewPage {
+    this.screeningAndAssessmentSummaryCardContent().should('contain', 'No additional learning needs screener recorded')
+    return this
+  }
+
+  hasCuriousScreenersUnavailableMessage(): OverviewPage {
+    this.curiousScreenersUnavailableMessage().should('be.visible')
     return this
   }
 
@@ -92,10 +97,13 @@ export default class OverviewPage extends ProfilePage {
     return Page.verifyOnPage(ReasonPage)
   }
 
-  private additionalNeedsSummaryCardContent = (): PageElement =>
-    cy.get('[data-qa=additional-needs-summary-card] .govuk-summary-card__content')
+  private screeningAndAssessmentSummaryCardContent = (): PageElement =>
+    cy.get('[data-qa=screening-and-assessment-summary-card] .govuk-summary-card__content')
 
-  private addAdditionalNeedButton = (): PageElement => cy.get('[data-qa=add-additional-need-button]')
+  private curiousScreenersUnavailableMessage = (): PageElement =>
+    cy.get('[data-qa=curious-screeners-unavailable-message]')
+
+  private recordAlnScreenerButton = (): PageElement => cy.get('[data-qa=record-screener-results-button]')
 
   private conditionsSummaryCardContent = (): PageElement =>
     cy.get('[data-qa=conditions-summary-card] .govuk-summary-card__content')

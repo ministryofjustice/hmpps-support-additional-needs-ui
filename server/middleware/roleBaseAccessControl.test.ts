@@ -14,6 +14,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.RECORD_STRENGTHS,
         ApplicationAction.RECORD_SUPPORT_STRATEGIES,
         ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS,
+        ApplicationAction.RECORD_ALN_SCREENER,
       ]
 
       // When
@@ -34,6 +35,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.RECORD_SUPPORT_STRATEGIES,
         ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS,
         ApplicationAction.RECORD_DIAGNOSED_CONDITIONS,
+        ApplicationAction.RECORD_ALN_SCREENER,
       ]
 
       // When
@@ -53,6 +55,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.RECORD_SUPPORT_STRATEGIES,
         ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS,
         ApplicationAction.RECORD_DIAGNOSED_CONDITIONS,
+        ApplicationAction.RECORD_ALN_SCREENER,
       ]
 
       // When

@@ -19,6 +19,7 @@ const rolesForAction = (): Record<ApplicationAction, Array<ApplicationRole>> => 
     ApplicationRole.ROLE_SAN_EDITOR,
     ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
   ],
+  [ApplicationAction.RECORD_ALN_SCREENER]: [],
 })
 
 /**
