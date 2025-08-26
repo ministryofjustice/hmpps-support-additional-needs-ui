@@ -1,15 +1,44 @@
+{% if challengeCategories.isFulfilled() %}
+  {% set categories = challengeCategories.value %}
+{% endif %}
+
 <div class="govuk-summary-card" data-qa="challenges-summary-card">
   <div class="govuk-summary-card__title-wrapper">
     <h2 class="govuk-summary-card__title">Challenges</h2>
     <ul class="govuk-summary-card__actions govuk-!-display-none-print">
-      <li class="govuk-summary-card__action">
-        <a class="govuk-link govuk-!-font-weight-regular" href="#" data-qa="add-strength-button">Add challenges</a>
-      </li>
+      {% if categories %}
+        {% if categories.length === 0 %}
+          {% if userHasPermissionTo('RECORD_CHALLENGES') %}
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link govuk-!-font-weight-regular" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category" data-qa="add-challenge-button">Add challenges</a>
+            </li>
+          {% endif %}
+        {% else %}
+          <li class="govuk-summary-card__action">
+            <a class="govuk-link govuk-!-font-weight-regular" href="/profile/{{ prisonerSummary.prisonNumber }}/challenges" data-qa="view-challenges-button">View challenges</a>
+          </li>
+        {% endif %}
+      {% endif %}
     </ul>
   </div>
   <div class="govuk-summary-card__content">
-    <p class="govuk-body">
-      No challenges recorded
-    </p>
+    {% if challengeCategories.isFulfilled() %}
+
+      {% if categories | length %}
+        <ul class="govuk-list">
+          {% for category in categories %}
+            <li data-qa="challenge_{{ category }}">{{ category | formatChallengeCategoryScreenValue | default(category, true) }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="govuk-body" data-qa="no-challenges-recorded-message">
+          No challenges recorded
+        </p>
+      {% endif %}
+
+    {% else %}
+      <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>
+      <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+    {% endif %}
   </div>
 </div>
