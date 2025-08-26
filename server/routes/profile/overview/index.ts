@@ -16,6 +16,7 @@ const overviewRoutes = (services: Services): Router => {
     educationSupportPlanScheduleService,
     strengthService,
     challengeService,
+    curiousService
   } = services
   const controller = new OverviewController()
 

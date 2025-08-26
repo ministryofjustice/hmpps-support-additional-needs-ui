@@ -5,13 +5,17 @@ import aValidPlanCreationScheduleDto from '../../../testsupport/planCreationSche
 import { Result } from '../../../utils/result/result'
 import { aValidConditionsList } from '../../../testsupport/conditionDtoTestDataBuilder'
 import {
+  setupAlnChallenges,
   setupAlnScreenersPromise,
   setupAlnStrengths,
+  setupNonAlnChallenges,
+  setupNonAlnChallengesPromise,
   setupNonAlnStrengths,
   setupNonAlnStrengthsPromise,
 } from '../profileTestSupportFunctions'
 import { aValidAlnScreenerResponseDto } from '../../../testsupport/alnScreenerDtoTestDataBuilder'
 import StrengthCategory from '../../../enums/strengthCategory'
+import ChallengeCategory from '../../../enums/challengeCategory'
 import { aCuriousAlnAndLddAssessmentsDto } from '../../../testsupport/curiousAlnAndLddAssessmentsDtoTestDataBuilder'
 
 describe('overviewController', () => {
@@ -27,11 +31,50 @@ describe('overviewController', () => {
     strengths: [numeracy, numeracy2, literacy, emotionsNonActive, attention, speaking],
   })
 
+  // Non-ALN Challenges
+  const {
+    numeracyChallenge,
+    numeracy2Challenge,
+    literacyChallenge,
+    emotionsNonActiveChallenge,
+    attentionChallenge,
+    speakingChallenge,
+  } = setupNonAlnChallenges()
+  const challenges = setupNonAlnChallengesPromise([
+    numeracyChallenge,
+    numeracy2Challenge,
+    literacyChallenge,
+    emotionsNonActiveChallenge,
+    attentionChallenge,
+    speakingChallenge,
+  ])
+
   // Latest ALN strengths
   const { reading, writing, alphabetOrdering, wordFindingNonActive, arithmetic, focussing, tidiness } =
     setupAlnStrengths()
+
+  // Latest ALN strengths
+  const {
+    readingChallenge,
+    writingChallenge,
+    alphabetOrderingChallenge,
+    wordFindingNonActiveChallenge,
+    arithmeticChallenge,
+    focussingChallenge,
+    tidinessChallenge,
+  } = setupAlnChallenges()
+
   const latestScreener = aValidAlnScreenerResponseDto({
     strengths: [reading, writing, wordFindingNonActive, arithmetic, focussing, tidiness, alphabetOrdering],
+    challenges: [
+      readingChallenge,
+      writingChallenge,
+      wordFindingNonActiveChallenge,
+      arithmeticChallenge,
+      focussingChallenge,
+      tidinessChallenge,
+      alphabetOrderingChallenge,
+    ],
   })
   const alnScreeners = setupAlnScreenersPromise({ latestScreener })
   const curiousAlnAndLddAssessments = Promise.resolve(Result.fulfilled(aCuriousAlnAndLddAssessmentsDto()))
@@ -46,6 +89,7 @@ describe('overviewController', () => {
       curiousAlnAndLddAssessments,
       strengths,
       alnScreeners,
+      challenges,
     },
   } as unknown as Response
   const next = jest.fn()
@@ -53,6 +97,7 @@ describe('overviewController', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     res.locals.strengths = strengths
+    res.locals.challenges = challenges
     res.locals.alnScreeners = alnScreeners
   })
 
@@ -72,6 +117,15 @@ describe('overviewController', () => {
           StrengthCategory.LANGUAGE_COMM_SKILLS,
           StrengthCategory.LITERACY_SKILLS,
           StrengthCategory.NUMERACY_SKILLS,
+        ],
+      }),
+      challengeCategories: expect.objectContaining({
+        status: 'fulfilled',
+        value: [
+          ChallengeCategory.ATTENTION_ORGANISING_TIME,
+          ChallengeCategory.LANGUAGE_COMM_SKILLS,
+          ChallengeCategory.LITERACY_SKILLS,
+          ChallengeCategory.NUMERACY_SKILLS,
         ],
       }),
     })
@@ -97,6 +151,31 @@ describe('overviewController', () => {
       curiousAlnAndLddAssessments,
       tab: 'overview',
       strengthCategories: expect.objectContaining({
+        status: 'rejected',
+        reason: expectedError,
+      }),
+    })
+
+    // When
+    await controller.getOverviewView(req, res, next)
+
+    // Then
+    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+  })
+
+  it('should render the view given the challenges promise is not resolved', async () => {
+    // Given
+    const expectedViewTemplate = 'pages/profile/overview/index'
+
+    const expectedError = new Error('Some error retrieving challenges')
+    res.locals.challenges = Result.rejected(expectedError)
+
+    const expectedViewModel = expect.objectContaining({
+      prisonerSummary,
+      educationSupportPlanCreationSchedule,
+      conditions,
+      tab: 'overview',
+      challengeCategories: expect.objectContaining({
         status: 'rejected',
         reason: expectedError,
       }),

@@ -92,4 +92,9 @@ export const Result = {
     getOrNull: () => null as T,
     toPromiseSettledResult: () => ({ status: 'rejected', reason: error }),
   }),
+
+  rewrapRejected: <T>(...results: Array<Result<unknown>>): Result<T> => {
+    const messages = results.filter(r => !r.isFulfilled()).map(r => r.getOrHandle(e => e?.message ?? String(e)))
+    return Result.rejected(new Error(messages.join(', ')))
+  },
 }
