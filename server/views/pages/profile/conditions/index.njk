@@ -11,7 +11,7 @@
       <h2 class="govuk-heading-m">Conditions</h2>
 
       {% if conditions.isFulfilled() %}
-        {% set activeConditions = conditions.value.conditions | filterArrayOnProperty('active', true) %}
+        {% set activeConditions = conditions.value.conditions | filterArrayOnProperty('active', true) | sort(attribute = 'updatedAt', reverse = true) %}
         {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
         {% if activeConditions | length %}
 

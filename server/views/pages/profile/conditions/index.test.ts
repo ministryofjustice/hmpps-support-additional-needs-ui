@@ -1,5 +1,6 @@
 import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
+import { startOfToday, subDays } from 'date-fns'
 import formatDate from '../../../../filters/formatDateFilter'
 import formatPrisonerNameFilter, { NameFormat } from '../../../../filters/formatPrisonerNameFilter'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
@@ -58,11 +59,25 @@ describe('Profile conditions page', () => {
     // Given
     const conditionList = aValidConditionsList({
       conditions: [
-        aValidConditionDto({ conditionTypeCode: ConditionType.ADHD, source: ConditionSource.CONFIRMED_DIAGNOSIS }),
-        aValidConditionDto({ conditionTypeCode: ConditionType.DYSLEXIA, source: ConditionSource.SELF_DECLARED }),
+        aValidConditionDto({
+          conditionTypeCode: ConditionType.ADHD,
+          source: ConditionSource.CONFIRMED_DIAGNOSIS,
+          updatedAt: startOfToday(),
+        }),
+        aValidConditionDto({
+          conditionTypeCode: ConditionType.DYSLEXIA,
+          source: ConditionSource.SELF_DECLARED,
+          updatedAt: subDays(startOfToday(), 5),
+        }),
+        aValidConditionDto({
+          conditionTypeCode: ConditionType.TOURETTES,
+          source: ConditionSource.SELF_DECLARED,
+          updatedAt: subDays(startOfToday(), 3),
+        }),
         aValidConditionDto({
           conditionTypeCode: ConditionType.VISUAL_IMPAIR,
           source: ConditionSource.CONFIRMED_DIAGNOSIS,
+          updatedAt: subDays(startOfToday(), 1),
         }),
       ],
     })
@@ -78,16 +93,21 @@ describe('Profile conditions page', () => {
     // Then
     expect($('[data-qa=diagnosed-conditions-summary-card]').length).toEqual(1)
     expect($('[data-qa=diagnosed-conditions-summary-card] .govuk-summary-list__row').length).toEqual(2) // Prisoner has 2 diagnosed conditions
-    expect($('[data-qa=diagnosed-conditions-summary-card] .govuk-summary-list__row').text()).toContain(
+    expect($('[data-qa=diagnosed-conditions-summary-card] .govuk-summary-list__row').eq(0).text()).toContain(
       'Attention deficit hyperactivity disorder (ADHD or ADD)',
-    )
-    expect($('[data-qa=diagnosed-conditions-summary-card] .govuk-summary-list__row').text()).toContain(
+    ) // expect ADHD to be the first row as it is the most recent based on it's updatedAt property
+    expect($('[data-qa=diagnosed-conditions-summary-card] .govuk-summary-list__row').eq(1).text()).toContain(
       'Visual impairment',
-    )
+    ) // expect Visual Impairment to be the 2nd row as it is older than ADHD based on it's updatedAt property.
 
     expect($('[data-qa=self-declared-conditions-summary-card]').length).toEqual(1)
-    expect($('[data-qa=self-declared-conditions-summary-card] .govuk-summary-list__row').length).toEqual(1) // Prisoner has 1 self-declared condition
-    expect($('[data-qa=self-declared-conditions-summary-card] .govuk-summary-list__row').text()).toContain('Dyslexia')
+    expect($('[data-qa=self-declared-conditions-summary-card] .govuk-summary-list__row').length).toEqual(2) // Prisoner has 2 self-declared conditions
+    expect($('[data-qa=self-declared-conditions-summary-card] .govuk-summary-list__row').eq(0).text()).toContain(
+      `Tourette's syndrome or tic disorder`,
+    ) // expect Tourettes to be the first row as it is the most recent based on it's updatedAt property
+    expect($('[data-qa=self-declared-conditions-summary-card] .govuk-summary-list__row').eq(1).text()).toContain(
+      'Dyslexia',
+    ) // expect Dyslexia to be the 2nd row as it is older than Tourettes based on it's updatedAt property.
 
     expect($('[data-qa=no-conditions-summary-card]').length).toEqual(0)
     expect($('[data-qa=no-conditions-summary-card] a').length).toEqual(0)
