@@ -1,6 +1,118 @@
 import { SuperAgentRequest } from 'superagent'
 import { stubFor } from './wiremock'
 
+const stubGetCuriousV2Assessments = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: `/curious-api//learnerAssessments/v2/${prisonNumber}`,
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        v1: [
+          {
+            prn: prisonNumber,
+            qualifications: [
+              {
+                establishmentId: 'WDI',
+                establishmentName: 'WAKEFIELD (HMP)',
+                qualification: {
+                  qualificationType: 'English',
+                  qualificationGrade: 'Level 1',
+                  assessmentDate: '2021-05-03',
+                },
+              },
+              {
+                establishmentId: 'MDI',
+                establishmentName: 'MOORLAND (HMP & YOI)',
+                qualification: {
+                  qualificationType: 'Maths',
+                  qualificationGrade: 'Entry Level 1',
+                  assessmentDate: '2021-07-01',
+                },
+              },
+              {
+                establishmentId: 'MDI',
+                establishmentName: 'MOORLAND (HMP & YOI)',
+                qualification: {
+                  qualificationType: 'Digital Literacy',
+                  qualificationGrade: 'Entry Level 3',
+                  assessmentDate: '2021-07-01',
+                },
+              },
+            ],
+            ldd: [
+              {
+                establishmentName: 'MOORLAND (HMP & YOI)',
+                establishmentId: 'MDI',
+                rapidAssessmentDate: null,
+                inDepthAssessmentDate: null,
+                lddPrimaryName: null,
+                lddSecondaryNames: null,
+              },
+              {
+                establishmentName: 'WAKEFIELD (HMP)',
+                establishmentId: 'WDI',
+                rapidAssessmentDate: null,
+                inDepthAssessmentDate: null,
+                lddPrimaryName: null,
+                lddSecondaryNames: null,
+              },
+            ],
+          },
+        ],
+        v2: {
+          prn: prisonNumber,
+          assessments: {
+            englishFunctionalSkills: null,
+            mathsFunctionalSkills: null,
+            digitalSkillsFunctionalSkills: null,
+            aln: null,
+            esol: null,
+            reading: null,
+          },
+        },
+      },
+    },
+  })
+
+const stubGetCuriousV2Assessments404Error = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: `/curious-api//learnerAssessments/v2/${prisonNumber}`,
+    },
+    response: {
+      status: 404,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        status: 404,
+        developerMessage: `Challenges for ${prisonNumber} not found`,
+      },
+    },
+  })
+
+const stubGetCuriousV2Assessments500Error = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: `/curious-api//learnerAssessments/v2/${prisonNumber}`,
+    },
+    response: {
+      status: 404,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        status: 500,
+        errorCode: null,
+        userMessage: 'An unexpected error occurred',
+        developerMessage: 'An unexpected error occurred',
+        moreInfo: null,
+      },
+    },
+  })
+
 const stubCuriousApiPing = (): SuperAgentRequest =>
   stubFor({
     request: {
@@ -14,4 +126,9 @@ const stubCuriousApiPing = (): SuperAgentRequest =>
     },
   })
 
-export default { stubCuriousApiPing }
+export default {
+  stubGetCuriousV2Assessments,
+  stubGetCuriousV2Assessments404Error,
+  stubGetCuriousV2Assessments500Error,
+  stubCuriousApiPing,
+}

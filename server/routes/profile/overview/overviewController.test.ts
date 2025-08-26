@@ -12,6 +12,7 @@ import {
 } from '../profileTestSupportFunctions'
 import { aValidAlnScreenerResponseDto } from '../../../testsupport/alnScreenerDtoTestDataBuilder'
 import StrengthCategory from '../../../enums/strengthCategory'
+import { aCuriousAlnAndLddAssessmentsDto } from '../../../testsupport/curiousAlnAndLddAssessmentsDtoTestDataBuilder'
 
 describe('overviewController', () => {
   const controller = new OverviewController()
@@ -33,11 +34,19 @@ describe('overviewController', () => {
     strengths: [reading, writing, wordFindingNonActive, arithmetic, focussing, tidiness, alphabetOrdering],
   })
   const alnScreeners = setupAlnScreenersPromise({ latestScreener })
+  const curiousAlnAndLddAssessments = Promise.resolve(Result.fulfilled(aCuriousAlnAndLddAssessmentsDto()))
 
   const req = {} as unknown as Request
   const res = {
     render: jest.fn(),
-    locals: { prisonerSummary, educationSupportPlanCreationSchedule, conditions, strengths, alnScreeners },
+    locals: {
+      prisonerSummary,
+      educationSupportPlanCreationSchedule,
+      conditions,
+      curiousAlnAndLddAssessments,
+      strengths,
+      alnScreeners,
+    },
   } as unknown as Response
   const next = jest.fn()
 
@@ -54,6 +63,7 @@ describe('overviewController', () => {
       prisonerSummary,
       educationSupportPlanCreationSchedule,
       conditions,
+      curiousAlnAndLddAssessments,
       tab: 'overview',
       strengthCategories: expect.objectContaining({
         status: 'fulfilled',
@@ -84,6 +94,7 @@ describe('overviewController', () => {
       prisonerSummary,
       educationSupportPlanCreationSchedule,
       conditions,
+      curiousAlnAndLddAssessments,
       tab: 'overview',
       strengthCategories: expect.objectContaining({
         status: 'rejected',
@@ -109,6 +120,7 @@ describe('overviewController', () => {
       prisonerSummary,
       educationSupportPlanCreationSchedule,
       conditions,
+      curiousAlnAndLddAssessments,
       tab: 'overview',
       strengthCategories: expect.objectContaining({
         status: 'rejected',
@@ -136,6 +148,7 @@ describe('overviewController', () => {
       prisonerSummary,
       educationSupportPlanCreationSchedule,
       conditions,
+      curiousAlnAndLddAssessments,
       tab: 'overview',
       strengthCategories: expect.objectContaining({
         status: 'rejected',

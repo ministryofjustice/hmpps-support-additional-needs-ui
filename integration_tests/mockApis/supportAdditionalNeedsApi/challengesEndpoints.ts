@@ -115,10 +115,8 @@ const stubGetChallenges404Error = (prisonNumber = 'G6115VJ'): SuperAgentRequest 
       status: 404,
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       jsonBody: {
-        jsonBody: {
-          status: 404,
-          developerMessage: `Challenges for ${prisonNumber} not found`,
-        },
+        status: 404,
+        developerMessage: `Challenges for ${prisonNumber} not found`,
       },
     },
   })

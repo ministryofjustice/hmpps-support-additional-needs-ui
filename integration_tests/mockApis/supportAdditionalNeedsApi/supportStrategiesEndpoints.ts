@@ -111,10 +111,8 @@ const stubGetSupportStrategies404Error = (prisonNumber = 'G6115VJ'): SuperAgentR
       status: 404,
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       jsonBody: {
-        jsonBody: {
-          status: 404,
-          developerMessage: `Support Strategies for ${prisonNumber} not found`,
-        },
+        status: 404,
+        developerMessage: `Support Strategies for ${prisonNumber} not found`,
       },
     },
   })

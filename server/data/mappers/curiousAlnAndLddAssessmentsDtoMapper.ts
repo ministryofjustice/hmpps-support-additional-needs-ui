@@ -9,8 +9,8 @@ import type { CuriousAlnAndLddAssessmentsDto, CuriousAlnAssessmentDto, CuriousLd
 import AlnAssessmentReferral from '../../enums/alnAssessmentReferral'
 
 const toCuriousAlnAndLddAssessmentsDto = (apiResponse: AllAssessmentDTO): CuriousAlnAndLddAssessmentsDto => ({
-  lddAssessments: apiResponse.v1?.flatMap(toCuriousLddAssessmentDtos) || [],
-  alnAssessments: apiResponse.v2?.assessments?.aln?.map(toCuriousAlnAssessmentDto) || [],
+  lddAssessments: apiResponse?.v1?.flatMap(toCuriousLddAssessmentDtos) || [],
+  alnAssessments: apiResponse?.v2?.assessments?.aln?.map(toCuriousAlnAssessmentDto) || [],
 })
 
 const toCuriousLddAssessmentDtos = (apiResponse: LearnerLatestAssessmentV1DTO): Array<CuriousLddAssessmentDto> => {
