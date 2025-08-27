@@ -16,10 +16,11 @@ export default class OverviewController {
       prisonerSummary,
       alnScreeners,
       conditions,
+      challenges,
       curiousAlnAndLddAssessments,
       educationSupportPlanCreationSchedule,
+      prisonNamesById,
       strengths,
-      challenges,
     } = res.locals
 
     let strengthCategoriesPromise: Result<Array<StrengthCategory>, Error>
@@ -64,6 +65,7 @@ export default class OverviewController {
       strengthCategories: strengthCategoriesPromise,
       challengeCategories: challengeCategoriesPromise,
       curiousAlnAndLddAssessments,
+      prisonNamesById,
       tab: 'overview',
     }
     return res.render('pages/profile/overview/index', viewRenderArgs)

@@ -1,0 +1,77 @@
+{% from "govuk/macros/attributes.njk" import govukAttributes %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{#- Set classes for this component #}
+{%- set classNames = "" -%}
+{%- if params.classes %}
+  {% set classNames = classNames + " " + params.classes %}
+{% endif %}
+
+{#- Define component attributes #}
+{%- set componentAttributes %} class="{{ classNames }}" {{- govukAttributes(params.attributes) -}} {% if params.id %} id="{{ params.id }}"{% endif %}{% endset %}
+
+{% if params.lddAssessments | length  %}
+
+  {% set lddDetailsContent %}
+    <p>This information is from the education team entered in Curious and is not a medical diagnosis.</p>
+    {% for lddAssessment in params.lddAssessments %}
+      <section class="govuk-!-margin-bottom-6" data-qa="ldd-assessment-from-{{ lddAssessment.prisonId }}">
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-2">
+          {% set prisonName = params.prisonNamesById[lddAssessment.prisonId] | default(lddAssessment.prisonId) %}
+          <span class="govuk-visually-hidden">{{ params.prisonerSummary | formatFirst_name_Last_name }}'s learning difficulties, disabilities and health needs recorded whilst at</span>
+          {{ prisonName }}
+        </h3>
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-width-one-half">
+              Rapid screener from induction
+            </dt>
+            <dd class="govuk-summary-list__value" data-qa="rapid-assessment-date">
+              {{ lddAssessment.rapidAssessmentDate | formatDate('d MMMM yyyy') | default('Not recorded in Curious') }}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              In-depth assessment by education
+            </dt>
+            <dd class="govuk-summary-list__value" data-qa="in-depth-assessment-date">
+              {{ lddAssessment.inDepthAssessmentDate | formatDate('D MMMM YYYY') | default('Not recorded in Curious') }}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Primary area of need identified
+            </dt>
+            <dd class="govuk-summary-list__value" data-qa="primary-ldd-need">
+              {{ lddAssessment.primaryLddAndHealthNeed | default('Not recorded in Curious') }}
+            </dd>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+              Other areas of need identified
+            </dt>
+            <dd class="govuk-summary-list__value" data-qa="additional-ldd-needs">
+              {% if lddAssessment.additionalLddAndHealthNeeds.length > 0 %}
+                <ul class="govuk-list">
+                  {% for additionalLddAndHealthNeed in lddAssessment.additionalLddAndHealthNeeds | sort %}
+                    <li>{{ additionalLddAndHealthNeed }}</li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                Not recorded in Curious
+              {% endif %}
+            </dd>
+          </div>
+        </dl>
+      </section>
+    {% endfor %}
+  {% endset %}
+
+  <section {{ componentAttributes | safe }}>
+    {{ govukDetails({
+      summaryText: "Historic screener results",
+      html: lddDetailsContent
+    }) }}
+  </section>
+
+{% endif %}

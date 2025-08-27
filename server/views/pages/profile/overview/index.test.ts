@@ -38,6 +38,10 @@ const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',
   lastName: 'PEIGH',
 })
+const prisonNamesById = {
+  BXI: 'Brixton (HMP)',
+  LEI: 'Leeds (HMP)',
+}
 const template = 'index.njk'
 
 const userHasPermissionTo = jest.fn()
@@ -49,6 +53,7 @@ const templateParams = {
   strengthCategories: Result.fulfilled([StrengthCategory.LITERACY_SKILLS, StrengthCategory.NUMERACY_SKILLS]),
   challengeCategories: Result.fulfilled([ChallengeCategory.LITERACY_SKILLS, ChallengeCategory.NUMERACY_SKILLS]),
   curiousAlnAndLddAssessments: Result.fulfilled(aCuriousAlnAndLddAssessmentsDto()),
+  prisonNamesById: Result.fulfilled(prisonNamesById),
   pageHasApiErrors: false,
   userHasPermissionTo,
 }
