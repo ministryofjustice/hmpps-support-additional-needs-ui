@@ -80,6 +80,15 @@ export default {
       agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
+    componentApi: {
+      url: get('COMPONENT_API_URL', 'http://localhost:8082', requiredInProduction),
+      healthPath: null,
+      timeout: {
+        response: Number(get('COMPONENT_TIMEOUT_RESPONSE', 5000)),
+        deadline: Number(get('COMPONENT_TIMEOUT_DEADLINE', 5000)),
+      },
+      agent: new AgentConfig(Number(get('COMPONENT_TIMEOUT_DEADLINE', 5000))),
+    },
     prisonerSearch: {
       url: get('PRISONER_SEARCH_API_URL', 'http://localhost:8083', requiredInProduction),
       healthPath: '/health/ping',
