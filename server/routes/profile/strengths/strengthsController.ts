@@ -7,7 +7,6 @@ import {
   getActiveStrengthsFromAlnScreener,
   getLatestAlnScreener,
   getNonAlnActiveStrengths,
-  reWrapRejectedPromises,
 } from '../profileStrengthsFunctions'
 
 export type GroupedStrengths = Record<
@@ -58,7 +57,7 @@ export default class StrengthsController {
     } else {
       // At least one of the API calls has failed; we need data from both APIs in order to properly render the Strengths page
       // Set the groupedStrengths to be a rejected Result containing the error message(s) from the original rejected promise(s)
-      groupedStrengthsPromise = reWrapRejectedPromises(alnScreeners, strengths)
+      groupedStrengthsPromise = Result.rewrapRejected(alnScreeners, strengths)
     }
 
     const viewRenderArgs = {

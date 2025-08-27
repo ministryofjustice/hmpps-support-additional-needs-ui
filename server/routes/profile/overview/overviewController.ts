@@ -5,9 +5,10 @@ import {
   getActiveStrengthsFromAlnScreener,
   getLatestAlnScreener,
   getNonAlnActiveStrengths,
-  reWrapRejectedPromises,
 } from '../profileStrengthsFunctions'
 import enumComparator from '../../enumComparator'
+import ChallengeCategory from '../../../enums/challengeCategory'
+import { getActiveChallengesFromAlnScreener, getNonAlnActiveChallenges } from '../profileChallengesFunctions'
 
 export default class OverviewController {
   getOverviewView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -18,22 +19,33 @@ export default class OverviewController {
       curiousAlnAndLddAssessments,
       educationSupportPlanCreationSchedule,
       strengths,
+      challenges,
     } = res.locals
 
     let strengthCategoriesPromise: Result<Array<StrengthCategory>, Error>
-    if (alnScreeners.isFulfilled() && strengths.isFulfilled()) {
+    let challengeCategoriesPromise: Result<Array<ChallengeCategory>, Error>
+
+    if (alnScreeners.isFulfilled() && strengths.isFulfilled() && challenges.isFulfilled()) {
       const nonAlnStrengths = getNonAlnActiveStrengths(strengths)
       const latestAlnScreener = getLatestAlnScreener(alnScreeners)
       const strengthsFromLatestAlnScreener = getActiveStrengthsFromAlnScreener(latestAlnScreener)
+      const nonAlnChallenges = getNonAlnActiveChallenges(challenges)
+      const challengesFromLatestAlnScreener = getActiveChallengesFromAlnScreener(latestAlnScreener)
 
       const strengthCategories = Array.from(
         new Set(nonAlnStrengths.concat(strengthsFromLatestAlnScreener).map(strength => strength.strengthCategory)),
       ).sort(enumComparator)
       strengthCategoriesPromise = Result.fulfilled(strengthCategories)
+
+      const challengeCategories = Array.from(
+        new Set(nonAlnChallenges.concat(challengesFromLatestAlnScreener).map(challenge => challenge.challengeCategory)),
+      ).sort(enumComparator)
+      challengeCategoriesPromise = Result.fulfilled(challengeCategories)
     } else {
-      // At least one of the API calls has failed; we need data from both APIs in order to properly render the Strengths page
-      // Set the groupedStrengths to be a rejected Result containing the error message(s) from the original rejected promise(s)
-      strengthCategoriesPromise = reWrapRejectedPromises(alnScreeners, strengths)
+      // At least one of the API calls has failed; we need data from all APIs in order to properly render the data on the overview page
+      // Set the strengths and challenges result to be a rejected Result containing the error message(s) from the original rejected promise(s)
+      strengthCategoriesPromise = Result.rewrapRejected(alnScreeners, strengths)
+      challengeCategoriesPromise = Result.rewrapRejected(alnScreeners, challenges)
     }
 
     const viewRenderArgs = {
@@ -41,6 +53,7 @@ export default class OverviewController {
       conditions,
       educationSupportPlanCreationSchedule,
       strengthCategories: strengthCategoriesPromise,
+      challengeCategories: challengeCategoriesPromise,
       curiousAlnAndLddAssessments,
       tab: 'overview',
     }

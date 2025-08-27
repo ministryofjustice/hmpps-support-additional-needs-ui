@@ -15,16 +15,4 @@ const getLatestAlnScreener = (screeners: Result<AlnScreenerList>): AlnScreenerRe
 const getActiveStrengthsFromAlnScreener = (alnScreener: AlnScreenerResponseDto): Array<StrengthResponseDto> =>
   alnScreener?.strengths.filter(strength => strength.active && strength.fromALNScreener) ?? []
 
-const reWrapRejectedPromises = <T>(
-  alnScreeners: Result<AlnScreenerList>,
-  strengths: Result<StrengthsList>,
-): Result<T> => {
-  const apiErrorMessages = [alnScreeners, strengths]
-    .map(result => (!result.isFulfilled() ? result : null))
-    .filter(result => result != null)
-    .map(result => result.getOrHandle(error => error.message))
-    .join(', ')
-  return Result.rejected(new Error(apiErrorMessages))
-}
-
-export { getNonAlnActiveStrengths, getLatestAlnScreener, getActiveStrengthsFromAlnScreener, reWrapRejectedPromises }
+export { getNonAlnActiveStrengths, getLatestAlnScreener, getActiveStrengthsFromAlnScreener }

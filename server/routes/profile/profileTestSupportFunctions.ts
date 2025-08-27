@@ -1,10 +1,13 @@
 import { startOfToday, subDays } from 'date-fns'
-import type { AlnScreenerResponseDto, StrengthResponseDto } from 'dto'
+import type { AlnScreenerResponseDto, ChallengeResponseDto, StrengthResponseDto } from 'dto'
 import { aValidStrengthResponseDto, aValidStrengthsList } from '../../testsupport/strengthResponseDtoTestDataBuilder'
 import StrengthType from '../../enums/strengthType'
 import StrengthCategory from '../../enums/strengthCategory'
 import { Result } from '../../utils/result/result'
 import { aValidAlnScreenerList, aValidAlnScreenerResponseDto } from '../../testsupport/alnScreenerDtoTestDataBuilder'
+import aValidChallengeResponseDto from '../../testsupport/challengeResponseDtoTestDataBuilder'
+import ChallengeType from '../../enums/challengeType'
+import ChallengeCategory from '../../enums/challengeCategory'
 
 const today = startOfToday()
 
@@ -136,4 +139,120 @@ export function setupAlnScreenersPromise(
       ],
     }),
   )
+}
+export function setupNonAlnChallenges() {
+  const numeracyChallenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.NUMERACY_SKILLS_DEFAULT,
+    challengeCategory: ChallengeCategory.NUMERACY_SKILLS,
+    symptoms: 'Has problems adding up',
+    fromALNScreener: false,
+    active: true,
+    updatedAt: subDays(today, 5),
+  })
+  const numeracy2Challenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.NUMERACY_SKILLS_DEFAULT,
+    challengeCategory: ChallengeCategory.NUMERACY_SKILLS,
+    symptoms: 'Has problems with subtraction',
+    fromALNScreener: false,
+    active: true,
+    updatedAt: subDays(today, 3),
+  })
+  const literacyChallenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.LITERACY_SKILLS_DEFAULT,
+    challengeCategory: ChallengeCategory.LITERACY_SKILLS,
+    fromALNScreener: false,
+    active: true,
+    updatedAt: subDays(today, 1),
+  })
+  const emotionsNonActiveChallenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.EMOTIONS_FEELINGS_DEFAULT,
+    challengeCategory: ChallengeCategory.EMOTIONS_FEELINGS,
+    fromALNScreener: false,
+    active: false,
+    updatedAt: subDays(today, 1),
+  })
+  const attentionChallenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.ATTENTION_ORGANISING_TIME_DEFAULT,
+    challengeCategory: ChallengeCategory.ATTENTION_ORGANISING_TIME,
+    fromALNScreener: false,
+    active: true,
+    updatedAt: subDays(today, 10),
+  })
+  const speakingChallenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.SPEAKING,
+    challengeCategory: ChallengeCategory.LANGUAGE_COMM_SKILLS,
+    fromALNScreener: false,
+    active: true,
+    updatedAt: subDays(today, 2),
+  })
+
+  return {
+    numeracyChallenge,
+    numeracy2Challenge,
+    literacyChallenge,
+    emotionsNonActiveChallenge,
+    attentionChallenge,
+    speakingChallenge,
+  }
+}
+
+export function setupNonAlnChallengesPromise(
+  challenges: Array<ChallengeResponseDto> = Object.values(setupNonAlnChallenges()),
+) {
+  return Result.fulfilled(challenges)
+}
+
+export function setupAlnChallenges() {
+  const readingChallenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.READING,
+    challengeCategory: ChallengeCategory.LITERACY_SKILLS,
+    fromALNScreener: true,
+    active: true,
+  })
+  const writingChallenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.WRITING,
+    challengeCategory: ChallengeCategory.LITERACY_SKILLS,
+    fromALNScreener: true,
+    active: true,
+  })
+  const alphabetOrderingChallenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.ALPHABET_ORDERING,
+    challengeCategory: ChallengeCategory.LITERACY_SKILLS,
+    fromALNScreener: true,
+    active: true,
+  })
+  const wordFindingNonActiveChallenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.WORD_FINDING,
+    challengeCategory: ChallengeCategory.LITERACY_SKILLS,
+    fromALNScreener: true,
+    active: false,
+  })
+  const arithmeticChallenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.ARITHMETIC,
+    challengeCategory: ChallengeCategory.NUMERACY_SKILLS,
+    fromALNScreener: true,
+    active: true,
+  })
+  const focussingChallenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.FOCUSING,
+    challengeCategory: ChallengeCategory.ATTENTION_ORGANISING_TIME,
+    fromALNScreener: true,
+    active: true,
+  })
+  const tidinessChallenge = aValidChallengeResponseDto({
+    challengeTypeCode: ChallengeType.TIDINESS,
+    challengeCategory: ChallengeCategory.ATTENTION_ORGANISING_TIME,
+    fromALNScreener: true,
+    active: true,
+  })
+
+  return {
+    readingChallenge,
+    writingChallenge,
+    alphabetOrderingChallenge,
+    wordFindingNonActiveChallenge,
+    arithmeticChallenge,
+    focussingChallenge,
+    tidinessChallenge,
+  }
 }
