@@ -21,7 +21,7 @@
         </ul>
         {% set prisonName = prisonNamesById[alnChallenges[0].updatedAtPrison] | default(alnChallenges[0].updatedAtPrison) %}
         <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-challenge-audit">
-          From Additional Learning Needs Screener completed on {{ alnChallenges[0].updatedAt | formatDate('d MMMM yyyy') }}, {{ prisonName }}
+          From Additional Learning Needs Screener completed on {{ alnChallenges[0].alnScreenerDate | formatDate('d MMMM yyyy') }}, {{ prisonName }}
         </p>
     </div>
 {% endif %}
