@@ -106,6 +106,7 @@ describe('Tests for Challenges Summary Card component', () => {
         updatedAt: parseISO('2025-02-15'),
         updatedByDisplayName: 'Person 3',
         updatedAtPrison: 'BXI',
+        alnScreenerDate: parseISO('2025-02-12'),
       }),
     ]
 
@@ -127,7 +128,7 @@ describe('Tests for Challenges Summary Card component', () => {
       challengeStaffSupportTextLookupFilter(ChallengeType.COMMUNICATION),
     )
     expect(challengeRowElement.find('[data-qa=aln-challenge-audit]').text().trim()).toEqual(
-      'From Additional Learning Needs Screener completed on 15 February 2025, Brixton (HMP)',
+      'From Additional Learning Needs Screener completed on 12 February 2025, Brixton (HMP)',
     )
   })
 
