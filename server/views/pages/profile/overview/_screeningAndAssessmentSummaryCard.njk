@@ -1,0 +1,33 @@
+{% if curiousAlnAndLddAssessments.isFulfilled() %}
+  {% set lddAssessments = curiousAlnAndLddAssessments.value.lddAssessments %}
+  {% set alnAssessments = curiousAlnAndLddAssessments.value.alnAssessments %}
+{% endif %}
+
+<div class="govuk-summary-card" data-qa="screening-and-assessment-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">Screening and assessment</h2>
+    <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+      {% if userHasPermissionTo('RECORD_ALN_SCREENER') %}
+        <li class="govuk-summary-card__action">
+          <a class="govuk-link govuk-!-font-weight-regular" data-qa="record-screener-results-button" href="/aln-screener/{{ prisonerSummary.prisonNumber }}/create/screener-date">Record screener results</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+  <div class="govuk-summary-card__content">
+    {% if curiousAlnAndLddAssessments.isFulfilled() %}
+
+      {% if lddAssessments | length or alnAssessments | length %}
+        {# TODO - render the assessments here #}
+      {% else %}
+        <p class="govuk-body" data-qa="no-screeners-in-curious-message">
+          No additional learning needs screener recorded in Curious.
+        </p>
+      {% endif %}
+
+    {% else %}
+      <h3 class="govuk-heading-s" data-qa="curious-screeners-unavailable-message">We cannot show these details right now</h3>
+      <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+    {% endif %}
+  </div>
+</div>

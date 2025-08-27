@@ -35,13 +35,17 @@ describe('_challengesActions', () => {
 
     // Then
     expect($('[data-qa=challenges-actions]').length).toEqual(1) // expect the containing div to be present
-    expect($('[data-qa=challenges-action-items] li').length).toEqual(2) // expect there to be 2 actions within; 1 for creating challenges, 1 for creating the ELSP
+    expect($('[data-qa=challenges-action-items] li').length).toEqual(2) // expect there to be 2 actions within; 1 for creating challenges, 1 for recording ALN screener results
+    expect($('[data-qa=add-challenge-button]').length).toEqual(1)
+    expect($('[data-qa=record-screener-results-button]').length).toEqual(1)
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_ALN_SCREENER')
   })
 
   it('should render the challenges actions section given user does not have permission to create challenges', () => {
     // Given
-    userHasPermissionTo.mockReturnValue(false)
+    userHasPermissionTo.mockReturnValueOnce(false)
+    userHasPermissionTo.mockReturnValueOnce(true)
 
     const params = { ...templateParams }
 
@@ -51,7 +55,30 @@ describe('_challengesActions', () => {
 
     // Then
     expect($('[data-qa=challenges-actions]').length).toEqual(1) // expect the containing div to be present
-    expect($('[data-qa=challenges-action-items] li').length).toEqual(1) // expect there to be 1 actions within; 1 for creating the ELSP
+    expect($('[data-qa=challenges-action-items] li').length).toEqual(1) // expect there to be 1 actions within; 1 for recording ALN screener results
+    expect($('[data-qa=add-challenge-button]').length).toEqual(0)
+    expect($('[data-qa=record-screener-results-button]').length).toEqual(1)
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_ALN_SCREENER')
+  })
+
+  it('should render the challenges actions section given user does not have permission to record ALN Screener results', () => {
+    // Given
+    userHasPermissionTo.mockReturnValueOnce(true)
+    userHasPermissionTo.mockReturnValueOnce(false)
+
+    const params = { ...templateParams }
+
+    // When
+    const content = nunjucks.render('_challengesActions.njk', { params })
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=challenges-actions]').length).toEqual(1) // expect the containing div to be present
+    expect($('[data-qa=challenges-action-items] li').length).toEqual(1) // expect there to be 1 action within; 1 for creating challenges
+    expect($('[data-qa=add-challenge-button]').length).toEqual(1)
+    expect($('[data-qa=record-screener-results-button]').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_ALN_SCREENER')
   })
 })

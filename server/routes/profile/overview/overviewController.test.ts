@@ -77,7 +77,7 @@ describe('overviewController', () => {
     ],
   })
   const alnScreeners = setupAlnScreenersPromise({ latestScreener })
-  const curiousAlnAndLddAssessments = Promise.resolve(Result.fulfilled(aCuriousAlnAndLddAssessmentsDto()))
+  const curiousAlnAndLddAssessments = Result.fulfilled(aCuriousAlnAndLddAssessmentsDto())
 
   const req = {} as unknown as Request
   const res = {
