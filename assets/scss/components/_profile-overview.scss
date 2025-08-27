@@ -12,4 +12,17 @@
       flex: 1;
     }
   }
+
+  [data-qa="screening-and-assessment-summary-card"] {
+    // The Screener & Assessment summary card has a particular design where if there are no ALN Assessments
+    // but there are one or more LDD assessments then the message saying there are no ALN Assessments and the LDD Assessments
+    // must be separated by a line/border. This only applies in this particular case.
+    // This selector works by looking for the no ALN Assessments message (`data-qa=no-aln-assessments`), and if it has
+    // an immediate sibling containing the LDD assessments (data-qa=ldd-assessments) then add the border and a little spacing
+    [data-qa="no-aln-assessments"]:has(+ [data-qa="ldd-assessments"]) {
+      @include govuk-responsive-margin(0, 'bottom');
+      @include govuk-responsive-padding(4, 'bottom');
+      @extend %govuk-section-break--visible;
+    }
+  }
 }

@@ -1,3 +1,5 @@
+{% from "./components/ldd-assessments-details/macro.njk" import lddAssessmentsDetails %}
+
 {% if curiousAlnAndLddAssessments.isFulfilled() %}
   {% set lddAssessments = curiousAlnAndLddAssessments.value.lddAssessments %}
   {% set alnAssessments = curiousAlnAndLddAssessments.value.alnAssessments %}
@@ -16,14 +18,26 @@
   </div>
   <div class="govuk-summary-card__content">
     {% if curiousAlnAndLddAssessments.isFulfilled() %}
+      {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
 
-      {% if lddAssessments | length or alnAssessments | length %}
-        {# TODO - render the assessments here #}
+      {% if alnAssessments | length %}
+        {# TODO - render the ALN assessments here #}
       {% else %}
-        <p class="govuk-body" data-qa="no-screeners-in-curious-message">
+        <p class="govuk-body" data-qa="no-aln-assessments">
           No additional learning needs screener recorded in Curious.
         </p>
       {% endif %}
+
+      {# The LDD Assessments are the old historic assessments that a prisoner may have from Curious 1. These are rendered separately to the ALN Assessments #}
+      {{ lddAssessmentsDetails({
+        lddAssessments: lddAssessments,
+        prisonerSummary: prisonerSummary,
+        prisonNamesById: prisonNamesById,
+        classes: "govuk-!-margin-top-4",
+        attributes: {
+          "data-qa": "ldd-assessments"
+        }
+      }) }}
 
     {% else %}
       <h3 class="govuk-heading-s" data-qa="curious-screeners-unavailable-message">We cannot show these details right now</h3>

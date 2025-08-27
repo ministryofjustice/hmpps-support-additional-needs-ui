@@ -78,6 +78,7 @@ describe('overviewController', () => {
   })
   const alnScreeners = setupAlnScreenersPromise({ latestScreener })
   const curiousAlnAndLddAssessments = Result.fulfilled(aCuriousAlnAndLddAssessmentsDto())
+  const prisonNamesById = Result.fulfilled({ BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' })
 
   const req = {} as unknown as Request
   const res = {
@@ -90,6 +91,7 @@ describe('overviewController', () => {
       strengths,
       alnScreeners,
       challenges,
+      prisonNamesById,
     },
   } as unknown as Response
   const next = jest.fn()
@@ -106,6 +108,7 @@ describe('overviewController', () => {
     const expectedViewTemplate = 'pages/profile/overview/index'
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
+      prisonNamesById,
       educationSupportPlanCreationSchedule,
       conditions,
       curiousAlnAndLddAssessments,
@@ -146,6 +149,7 @@ describe('overviewController', () => {
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
+      prisonNamesById,
       educationSupportPlanCreationSchedule,
       conditions,
       curiousAlnAndLddAssessments,
@@ -172,6 +176,7 @@ describe('overviewController', () => {
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
+      prisonNamesById,
       educationSupportPlanCreationSchedule,
       conditions,
       tab: 'overview',
@@ -197,6 +202,7 @@ describe('overviewController', () => {
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
+      prisonNamesById,
       educationSupportPlanCreationSchedule,
       conditions,
       curiousAlnAndLddAssessments,
@@ -225,6 +231,7 @@ describe('overviewController', () => {
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
+      prisonNamesById,
       educationSupportPlanCreationSchedule,
       conditions,
       curiousAlnAndLddAssessments,
@@ -253,6 +260,7 @@ describe('overviewController', () => {
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
+      prisonNamesById,
       educationSupportPlanCreationSchedule,
       conditions,
       curiousAlnAndLddAssessments,
@@ -290,6 +298,7 @@ describe('overviewController', () => {
 
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
+      prisonNamesById,
       educationSupportPlanCreationSchedule,
       conditions,
       curiousAlnAndLddAssessments,
