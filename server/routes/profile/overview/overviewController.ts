@@ -25,17 +25,27 @@ export default class OverviewController {
     let strengthCategoriesPromise: Result<Array<StrengthCategory>, Error>
     let challengeCategoriesPromise: Result<Array<ChallengeCategory>, Error>
 
-    if (alnScreeners.isFulfilled() && strengths.isFulfilled() && challenges.isFulfilled()) {
+    // Set Strengths categories or passthrough error if screener or strength api call has an error
+    if (alnScreeners.isFulfilled() && strengths.isFulfilled()) {
       const nonAlnStrengths = getNonAlnActiveStrengths(strengths)
       const latestAlnScreener = getLatestAlnScreener(alnScreeners)
       const strengthsFromLatestAlnScreener = getActiveStrengthsFromAlnScreener(latestAlnScreener)
-      const nonAlnChallenges = getNonAlnActiveChallenges(challenges)
-      const challengesFromLatestAlnScreener = getActiveChallengesFromAlnScreener(latestAlnScreener)
 
       const strengthCategories = Array.from(
         new Set(nonAlnStrengths.concat(strengthsFromLatestAlnScreener).map(strength => strength.strengthCategory)),
       ).sort(enumComparator)
       strengthCategoriesPromise = Result.fulfilled(strengthCategories)
+    } else {
+      // At least one of the API calls has failed; we need data from all APIs in order to properly render the data on the overview page
+      // Set the strength result to be a rejected Result containing the error message(s) from the original rejected promise(s)
+      strengthCategoriesPromise = Result.rewrapRejected(alnScreeners, strengths)
+    }
+
+    // Set Challenges categories or passthrough error if screener or challenges api call has an error
+    if (alnScreeners.isFulfilled() && challenges.isFulfilled()) {
+      const latestAlnScreener = getLatestAlnScreener(alnScreeners)
+      const nonAlnChallenges = getNonAlnActiveChallenges(challenges)
+      const challengesFromLatestAlnScreener = getActiveChallengesFromAlnScreener(latestAlnScreener)
 
       const challengeCategories = Array.from(
         new Set(nonAlnChallenges.concat(challengesFromLatestAlnScreener).map(challenge => challenge.challengeCategory)),
@@ -43,8 +53,7 @@ export default class OverviewController {
       challengeCategoriesPromise = Result.fulfilled(challengeCategories)
     } else {
       // At least one of the API calls has failed; we need data from all APIs in order to properly render the data on the overview page
-      // Set the strengths and challenges result to be a rejected Result containing the error message(s) from the original rejected promise(s)
-      strengthCategoriesPromise = Result.rewrapRejected(alnScreeners, strengths)
+      // Set the challenges result to be a rejected Result containing the error message(s) from the original rejected promise(s)
       challengeCategoriesPromise = Result.rewrapRejected(alnScreeners, challenges)
     }
 
