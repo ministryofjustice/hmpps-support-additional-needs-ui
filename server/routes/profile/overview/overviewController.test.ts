@@ -241,4 +241,78 @@ describe('overviewController', () => {
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
+
+  it('should render the view with challenges, when an error occurs with strengths', async () => {
+    // Given
+    const expectedViewTemplate = 'pages/profile/overview/index'
+
+    // Strengths has failed
+    res.locals.strengths = Result.rejected(new Error('Some error retrieving strengths'))
+
+    const expectedError = new Error('Some error retrieving strengths')
+
+    const expectedViewModel = expect.objectContaining({
+      prisonerSummary,
+      educationSupportPlanCreationSchedule,
+      conditions,
+      curiousAlnAndLddAssessments,
+      tab: 'overview',
+      strengthCategories: expect.objectContaining({
+        status: 'rejected',
+        reason: expectedError,
+      }),
+      challengeCategories: expect.objectContaining({
+        status: 'fulfilled',
+        value: [
+          ChallengeCategory.ATTENTION_ORGANISING_TIME,
+          ChallengeCategory.LANGUAGE_COMM_SKILLS,
+          ChallengeCategory.LITERACY_SKILLS,
+          ChallengeCategory.NUMERACY_SKILLS,
+        ],
+      }),
+    })
+
+    // When
+    await controller.getOverviewView(req, res, next)
+
+    // Then
+    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+  })
+
+  it('should render the view with strengths, when an error occurs with challenges', async () => {
+    // Given
+    const expectedViewTemplate = 'pages/profile/overview/index'
+
+    // Challenges has failed
+    res.locals.challenges = Result.rejected(new Error('Some error retrieving challenges'))
+
+    const expectedError = new Error('Some error retrieving challenges')
+
+    const expectedViewModel = expect.objectContaining({
+      prisonerSummary,
+      educationSupportPlanCreationSchedule,
+      conditions,
+      curiousAlnAndLddAssessments,
+      tab: 'overview',
+      challengeCategories: expect.objectContaining({
+        status: 'rejected',
+        reason: expectedError,
+      }),
+      strengthCategories: expect.objectContaining({
+        status: 'fulfilled',
+        value: [
+          ChallengeCategory.ATTENTION_ORGANISING_TIME,
+          ChallengeCategory.LANGUAGE_COMM_SKILLS,
+          ChallengeCategory.LITERACY_SKILLS,
+          ChallengeCategory.NUMERACY_SKILLS,
+        ],
+      }),
+    })
+
+    // When
+    await controller.getOverviewView(req, res, next)
+
+    // Then
+    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+  })
 })
