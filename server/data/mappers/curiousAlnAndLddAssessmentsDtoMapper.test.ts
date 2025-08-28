@@ -72,7 +72,6 @@ describe('curiousAlnAndLddAssessmentsDtoMapper', () => {
             assessmentDate: startOfDay('2025-10-01'),
             referral: AlnAssessmentReferral.EDUCATION_SPECIALIST,
             supportPlanRequired: true,
-            hasPrisonerConsent: true,
           }),
         ],
       })
@@ -327,36 +326,6 @@ describe('curiousAlnAndLddAssessmentsDtoMapper', () => {
 
         // Then
         expect(actual.alnAssessments[0].supportPlanRequired).toEqual(expected)
-      },
-    )
-
-    it.each([
-      { curiousValue: 'Yes', expected: true },
-      { curiousValue: 'No', expected: false },
-    ] as Array<{
-      curiousValue: 'Yes' | 'No'
-      expected: boolean
-    }>)(
-      'should correctly map Curious hasPrisonerConsent value "$curiousValue" to hasPrisonerConsent "$expected"',
-      ({ curiousValue, expected }) => {
-        // Given
-        const curiousApiResponse = anAllAssessmentDTO({
-          v2Assessments: aLearnerAssessmentV2DTO({
-            assessments: anExternalAssessmentsDTO({
-              alnAssessments: [
-                anAlnLearnerAssessmentsDTO({
-                  hasPrisonerConsent: curiousValue,
-                }),
-              ],
-            }),
-          }),
-        })
-
-        // When
-        const actual = toCuriousAlnAndLddAssessmentsDto(curiousApiResponse)
-
-        // Then
-        expect(actual.alnAssessments[0].hasPrisonerConsent).toEqual(expected)
       },
     )
   })

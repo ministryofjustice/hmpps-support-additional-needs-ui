@@ -85,7 +85,6 @@ describe('curiousService', () => {
             assessmentDate: startOfDay('2025-10-01'),
             referral: AlnAssessmentReferral.EDUCATION_SPECIALIST,
             supportPlanRequired: true,
-            hasPrisonerConsent: true,
           }),
         ],
       })

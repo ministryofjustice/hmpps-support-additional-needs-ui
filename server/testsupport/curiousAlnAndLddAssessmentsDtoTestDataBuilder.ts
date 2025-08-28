@@ -35,13 +35,11 @@ const aCuriousAlnAssessmentDto = (options?: {
   assessmentDate?: Date
   referral?: AlnAssessmentReferral
   supportPlanRequired?: boolean
-  hasPrisonerConsent?: boolean
 }): CuriousAlnAssessmentDto => ({
   prisonId: options?.prisonId || 'BXI',
   assessmentDate: options?.assessmentDate || startOfDay('2025-10-02'),
   referral: options?.referral || AlnAssessmentReferral.PSYCHOLOGY,
   supportPlanRequired: options?.supportPlanRequired === false ? false : options?.supportPlanRequired || true,
-  hasPrisonerConsent: options?.hasPrisonerConsent === false ? false : options?.hasPrisonerConsent || true,
 })
 
 export { aCuriousAlnAndLddAssessmentsDto, aCuriousLddAssessmentDto, aCuriousAlnAssessmentDto }
