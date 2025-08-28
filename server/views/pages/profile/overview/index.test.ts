@@ -13,6 +13,7 @@ import formatStrengthCategoryScreenValueFilter from '../../../../filters/formatS
 import ChallengeCategory from '../../../../enums/challengeCategory'
 import formatChallengeCategoryScreenValueFilter from '../../../../filters/formatChallengeCategoryFilter'
 import { aCuriousAlnAndLddAssessmentsDto } from '../../../../testsupport/curiousAlnAndLddAssessmentsDtoTestDataBuilder'
+import formatAlnAssessmentReferralScreenValueFilter from '../../../../filters/formatAlnAssessmentReferralFilter'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -33,6 +34,7 @@ njkEnv //
   .addFilter('formatConditionTypeScreenValue', formatConditionTypeScreenValueFilter)
   .addFilter('formatStrengthCategoryScreenValue', formatStrengthCategoryScreenValueFilter)
   .addFilter('formatChallengeCategoryScreenValue', formatChallengeCategoryScreenValueFilter)
+  .addFilter('formatAlnAssessmentReferralScreenValue', formatAlnAssessmentReferralScreenValueFilter)
 
 const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',

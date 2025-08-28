@@ -8,6 +8,7 @@ import {
 } from '../../../../testsupport/curiousAlnAndLddAssessmentsDtoTestDataBuilder'
 import formatPrisonerNameFilter, { NameFormat } from '../../../../filters/formatPrisonerNameFilter'
 import formatDateFilter from '../../../../filters/formatDateFilter'
+import formatAlnAssessmentReferralScreenValueFilter from '../../../../filters/formatAlnAssessmentReferralFilter'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -22,6 +23,7 @@ const njkEnv = nunjucks.configure([
 njkEnv //
   .addFilter('formatDate', formatDateFilter)
   .addFilter('formatFirst_name_Last_name', formatPrisonerNameFilter(NameFormat.First_name_Last_name))
+  .addFilter('formatAlnAssessmentReferralScreenValue', formatAlnAssessmentReferralScreenValueFilter)
 
 const prisonNumber = 'A1234BC'
 const prisonerSummary = aValidPrisonerSummary({ prisonNumber })

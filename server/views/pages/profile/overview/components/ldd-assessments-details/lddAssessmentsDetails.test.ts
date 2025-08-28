@@ -128,7 +128,7 @@ describe('Tests for the LDD Assessments Details component', () => {
     )
   })
 
-  it('should not render the component given no conditions', () => {
+  it('should not render the component given no LDD Assessments', () => {
     // Given
     const params = { ...templateParams, lddAssessments: [] as Array<CuriousLddAssessmentDto> }
 
