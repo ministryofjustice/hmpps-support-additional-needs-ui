@@ -1,11 +1,18 @@
 import { SuperAgentRequest } from 'superagent'
+import type { LearnerAssessmentsAlnDTO, LearnerLddInfoExternalV1DTO } from 'curiousApiClient'
 import { stubFor } from './wiremock'
 
-const stubGetCuriousV2Assessments = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
+const stubGetCuriousV2Assessments = (
+  options: {
+    prisonNumber?: string
+    lddAssessments?: Array<LearnerLddInfoExternalV1DTO>
+    alnAssessments?: Array<LearnerAssessmentsAlnDTO>
+  } = { prisonNumber: 'G6115VJ' },
+): SuperAgentRequest =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: `/curious-api/learnerAssessments/v2/${prisonNumber}`,
+      urlPattern: `/curious-api/learnerAssessments/v2/${options.prisonNumber}`,
     },
     response: {
       status: 200,
@@ -13,7 +20,7 @@ const stubGetCuriousV2Assessments = (prisonNumber = 'G6115VJ'): SuperAgentReques
       jsonBody: {
         v1: [
           {
-            prn: prisonNumber,
+            prn: options.prisonNumber,
             qualifications: [
               {
                 establishmentId: 'WDI',
@@ -43,33 +50,42 @@ const stubGetCuriousV2Assessments = (prisonNumber = 'G6115VJ'): SuperAgentReques
                 },
               },
             ],
-            ldd: [
+            ldd: options.lddAssessments ?? [
               {
                 establishmentName: 'MOORLAND (HMP & YOI)',
                 establishmentId: 'MDI',
                 rapidAssessmentDate: null,
-                inDepthAssessmentDate: null,
-                lddPrimaryName: null,
-                lddSecondaryNames: null,
+                inDepthAssessmentDate: '2023-08-13',
+                lddPrimaryName: 'Visual impairment',
+                lddSecondaryNames: ['Colour blindness'],
               },
               {
                 establishmentName: 'WAKEFIELD (HMP)',
                 establishmentId: 'WDI',
-                rapidAssessmentDate: null,
+                rapidAssessmentDate: '2020-03-28',
                 inDepthAssessmentDate: null,
-                lddPrimaryName: null,
+                lddPrimaryName: 'Dyslexia',
                 lddSecondaryNames: null,
               },
             ],
           },
         ],
         v2: {
-          prn: prisonNumber,
+          prn: options.prisonNumber,
           assessments: {
             englishFunctionalSkills: null,
             mathsFunctionalSkills: null,
             digitalSkillsFunctionalSkills: null,
-            aln: null,
+            aln: options.alnAssessments ?? [
+              {
+                establishmentId: 'MDI',
+                establishmentName: 'MOORLAND (HMP & YOI)',
+                assessmentDate: '2025-10-01',
+                assessmentOutcome: 'Yes',
+                hasPrisonerConsent: 'Yes',
+                stakeholderReferral: 'Education Specialist',
+              },
+            ],
             esol: null,
             reading: null,
           },
