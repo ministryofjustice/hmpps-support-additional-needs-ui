@@ -1,12 +1,14 @@
+import type { EducationSupportPlanResponse } from 'supportAdditionalNeedsApiClient'
 import toEducationSupportPlanDto from './educationSupportPlanDtoMapper'
 import aValidEducationSupportPlanResponse from '../../testsupport/educationSupportPlanResponseTestDataBuilder'
 import aValidEducationSupportPlanDto from '../../testsupport/educationSupportPlanDtoTestDataBuilder'
 
 describe('educationSupportPlanDtoMapper', () => {
+  const prisonNumber = 'A1234BC'
+
   describe('toEducationSupportPlanDto', () => {
     it('should map a fully populated EducationSupportPlanResponse to a EducationSupportPlanDto', () => {
       // Given
-      const prisonNumber = 'A1234BC'
       const apiResponse = aValidEducationSupportPlanResponse({
         planCreatedBy: { name: 'Person 1', jobRole: 'Job Role 1' },
         otherContributors: [{ name: 'Person 2', jobRole: 'Job Role 2' }],
@@ -46,7 +48,6 @@ describe('educationSupportPlanDtoMapper', () => {
 
     it('should map a minimally populated EducationSupportPlanResponse to a EducationSupportPlanDto', () => {
       // Given
-      const prisonNumber = 'A1234BC'
       const apiResponse = aValidEducationSupportPlanResponse({
         planCreatedBy: null,
         otherContributors: null,
@@ -80,6 +81,17 @@ describe('educationSupportPlanDtoMapper', () => {
 
       // Then
       expect(actual).toEqual(expected)
+    })
+
+    it('should not map a null EducationSupportPlanResponse to a EducationSupportPlanDto', () => {
+      // Given
+      const apiResponse: EducationSupportPlanResponse = null
+
+      // When
+      const actual = toEducationSupportPlanDto(prisonNumber, apiResponse)
+
+      // Then
+      expect(actual).toBeNull()
     })
   })
 })

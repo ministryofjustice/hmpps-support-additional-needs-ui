@@ -180,6 +180,71 @@ describe('supportAdditionalNeedsApiClient', () => {
     })
   })
 
+  describe('getEducationSupportPlan', () => {
+    it('should get a prisoners Education Support Plan', async () => {
+      // Given
+      const expectedResponse = aValidEducationSupportPlanResponse()
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/education-support-plan`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, expectedResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getEducationSupportPlan(prisonNumber, username)
+
+      // Then
+      expect(actual).toEqual(expectedResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should return null given API returns a not found error', async () => {
+      // Given
+      const apiErrorResponse = {
+        status: 404,
+        userMessage: 'Not found',
+        developerMessage: 'Not found',
+      }
+
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/education-support-plan`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(404, apiErrorResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getEducationSupportPlan(prisonNumber, username)
+
+      // Then
+      expect(actual).toBeNull()
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/education-support-plan`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .thrice()
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getEducationSupportPlan(prisonNumber, username).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
   describe('createEducationSupportPlan', () => {
     it('should create a prisoners education support plan', async () => {
       // Given

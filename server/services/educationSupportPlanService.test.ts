@@ -21,7 +21,7 @@ describe('educationSupportPlanService', () => {
   })
 
   describe('createEducationSupportPlan', () => {
-    it('should created education support plan', async () => {
+    it('should create education support plan', async () => {
       // Given
       const unPersistedEducationSupportPlanDto = aValidEducationSupportPlanDto({
         prisonNumber,
@@ -90,6 +90,52 @@ describe('educationSupportPlanService', () => {
         username,
         expectedCreateEducationSupportPlanRequest,
       )
+    })
+  })
+
+  describe('getEducationSupportPlan', () => {
+    it('should get education support plan', async () => {
+      // Given
+      const educationSupportPlanListResponse = aValidEducationSupportPlanResponse()
+      supportAdditionalNeedsApiClient.getEducationSupportPlan.mockResolvedValue(educationSupportPlanListResponse)
+
+      const expectedEducationSupportPlan = aValidEducationSupportPlanDto({
+        prisonId: null,
+        reviewDate: null,
+        planCreatedByOther: { name: 'Alan Teacher', jobRole: 'Education Instructor' },
+      })
+
+      // When
+      const actual = await service.getEducationSupportPlan(username, prisonNumber)
+
+      // Then
+      expect(actual).toEqual(expectedEducationSupportPlan)
+      expect(supportAdditionalNeedsApiClient.getEducationSupportPlan).toHaveBeenCalledWith(prisonNumber, username)
+    })
+
+    it('should return null given API returns null', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.getEducationSupportPlan.mockResolvedValue(null)
+
+      // When
+      const actual = await service.getEducationSupportPlan(username, prisonNumber)
+
+      // Then
+      expect(actual).toBeNull()
+      expect(supportAdditionalNeedsApiClient.getEducationSupportPlan).toHaveBeenCalledWith(prisonNumber, username)
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.getEducationSupportPlan.mockRejectedValue(expectedError)
+
+      // When
+      const actual = await service.getEducationSupportPlan(username, prisonNumber).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.getEducationSupportPlan).toHaveBeenCalledWith(prisonNumber, username)
     })
   })
 })

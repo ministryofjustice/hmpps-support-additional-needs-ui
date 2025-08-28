@@ -26,7 +26,7 @@ declare module 'dto' {
     updatedAtPrison?: string
   }
 
-  export interface EducationSupportPlanDto {
+  export interface EducationSupportPlanDto extends ReferencedAndAuditable {
     prisonNumber: string
     prisonId: string
     planCreatedByLoggedInUser?: boolean
