@@ -34,7 +34,6 @@ const toCuriousAlnAssessmentDto = (curiousV2AlnAssessment: LearnerAssessmentsAln
   assessmentDate: parseISO(curiousV2AlnAssessment.assessmentDate),
   referral: toAlnAssessmentReferral(curiousV2AlnAssessment.stakeholderReferral),
   supportPlanRequired: curiousV2AlnAssessment.assessmentOutcome?.toLowerCase().trim() === 'yes',
-  hasPrisonerConsent: curiousV2AlnAssessment.hasPrisonerConsent?.toLowerCase().trim() === 'yes',
 })
 
 const toAlnAssessmentReferral = (apiStakeholderReferral: string): AlnAssessmentReferral =>

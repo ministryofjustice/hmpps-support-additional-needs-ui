@@ -203,6 +203,5 @@ declare module 'dto' {
     assessmentDate: Date
     referral: AlnAssessmentReferral
     supportPlanRequired: boolean // TODO - come up with a better name. This is Curious' view on whether a support plan is required, not ours. It does not account for whether the prisoner is in education and/or has other needs
-    hasPrisonerConsent: boolean // TODO - come up with a better name. Consent for what?
   }
 }
