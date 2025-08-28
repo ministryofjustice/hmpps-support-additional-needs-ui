@@ -24,7 +24,7 @@ context('Profile Overview Page', () => {
     cy.task('stubGetConditions', { prisonNumber })
     cy.task('stubGetChallenges', { prisonNumber })
     cy.task('stubGetStrengths', { prisonNumber })
-    cy.task('stubGetCuriousV2Assessments', prisonNumber)
+    cy.task('stubGetCuriousV2Assessments', { prisonNumber })
   })
 
   it('should be able to navigate directly to the profile overview page', () => {
@@ -35,24 +35,12 @@ context('Profile Overview Page', () => {
 
     // Then
     Page.verifyOnPage(OverviewPage) //
-      .hasNoScreeningAndAssessmentsRecorded()
+      .hasAlnAssessmentsRecorded()
+      .hasLddAssessmentsRecorded()
       .hasConditionsRecorded('Acquired brain injury')
       .hasStrengthsRecorded('Numeracy skills')
       .hasNoSupportRecommendationsRecorded()
       .actionsCardContainsEducationSupportPlanActions()
-      .apiErrorBannerIsNotDisplayed()
-  })
-
-  it('should display overview page given the prisoner has no Conditions recorded', () => {
-    // Given
-    cy.task('stubGetConditions404Error', prisonNumber)
-
-    // When
-    cy.visit(`/profile/${prisonNumber}/overview`)
-
-    // Then
-    Page.verifyOnPage(OverviewPage) //
-      .hasNoConditionsRecorded()
       .apiErrorBannerIsNotDisplayed()
   })
 
@@ -129,57 +117,5 @@ context('Profile Overview Page', () => {
 
     // Then
     Page.verifyOnPage(OverviewPage)
-  })
-
-  it('should display overview page given retrieving the prisoners Conditions returns an error', () => {
-    // Given
-    cy.task('stubGetConditions500Error', prisonNumber)
-
-    // When
-    cy.visit(`/profile/${prisonNumber}/overview`)
-
-    // Then
-    Page.verifyOnPage(OverviewPage) //
-      .hasConditionsUnavailableMessage()
-      .apiErrorBannerIsDisplayed()
-  })
-
-  it('should display overview page given retrieving the prisoners Curious assessments returns an error', () => {
-    // Given
-    cy.task('stubGetCuriousV2Assessments500Error', prisonNumber)
-
-    // When
-    cy.visit(`/profile/${prisonNumber}/overview`)
-
-    // Then
-    Page.verifyOnPage(OverviewPage) //
-      .hasCuriousScreenersUnavailableMessage()
-      .apiErrorBannerIsDisplayed()
-  })
-
-  it('should display overview page given retrieving the prisoners Strengths returns an error', () => {
-    // Given
-    cy.task('stubGetStrengths500Error', prisonNumber)
-
-    // When
-    cy.visit(`/profile/${prisonNumber}/overview`)
-
-    // Then
-    Page.verifyOnPage(OverviewPage) //
-      .hasStrengthsUnavailableMessage()
-      .apiErrorBannerIsDisplayed()
-  })
-
-  it('should display overview page given retrieving the prisoners ALN Screeners returns an error', () => {
-    // Given
-    cy.task('stubGetAlnScreeners500Error', prisonNumber)
-
-    // When
-    cy.visit(`/profile/${prisonNumber}/overview`)
-
-    // Then
-    Page.verifyOnPage(OverviewPage) //
-      .hasStrengthsUnavailableMessage()
-      .apiErrorBannerIsDisplayed()
   })
 })

@@ -10,7 +10,28 @@ export default class OverviewPage extends ProfilePage {
   }
 
   hasNoScreeningAndAssessmentsRecorded(): OverviewPage {
-    this.screeningAndAssessmentSummaryCardContent().should('contain', 'No additional learning needs screener recorded')
+    this.hasNoAlnAssessmentsRecorded()
+    this.hasNoLddAssessmentsRecorded()
+    return this
+  }
+
+  hasNoAlnAssessmentsRecorded(): OverviewPage {
+    this.alnAssessments().should('not.exist')
+    return this
+  }
+
+  hasAlnAssessmentsRecorded(): OverviewPage {
+    this.alnAssessments().should('be.visible')
+    return this
+  }
+
+  hasNoLddAssessmentsRecorded(): OverviewPage {
+    this.lddAssessments().should('not.exist')
+    return this
+  }
+
+  hasLddAssessmentsRecorded(): OverviewPage {
+    this.lddAssessments().should('be.visible')
     return this
   }
 
@@ -72,6 +93,11 @@ export default class OverviewPage extends ProfilePage {
     return this
   }
 
+  hasChallengesUnavailableMessage(): OverviewPage {
+    this.challengesUnavailableMessage().should('be.visible')
+    return this
+  }
+
   actionsCardIsNotPresent(): OverviewPage {
     // Technically the action card as a HTML element is always present. If it contains no `li` elements then we use CSS to hide it
     // but because the runtime on CircleCI does not process/render the css we cannot use `.should('not.be.visible')`
@@ -97,8 +123,9 @@ export default class OverviewPage extends ProfilePage {
     return Page.verifyOnPage(ReasonPage)
   }
 
-  private screeningAndAssessmentSummaryCardContent = (): PageElement =>
-    cy.get('[data-qa=screening-and-assessment-summary-card] .govuk-summary-card__content')
+  private alnAssessments = (): PageElement => cy.get('[data-qa=aln-assessments]')
+
+  private lddAssessments = (): PageElement => cy.get('[data-qa=ldd-assessments]')
 
   private curiousScreenersUnavailableMessage = (): PageElement =>
     cy.get('[data-qa=curious-screeners-unavailable-message]')
@@ -134,4 +161,6 @@ export default class OverviewPage extends ProfilePage {
 
   private refuseEducationSupportPlanButton = (): PageElement =>
     this.educationSupportPlanActionItems().find('[data-qa=refuse-education-support-plan-button]')
+
+  private challengesUnavailableMessage = (): PageElement => cy.get('[data-qa=challenges-unavailable-message]')
 }
