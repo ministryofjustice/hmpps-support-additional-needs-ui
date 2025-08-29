@@ -14,7 +14,7 @@ const profileRoutes = (services: Services): Router => {
     .use('/challenges', challengesRoutes(services))
     .use('/strengths', strengthsRoutes(services))
     .use('/conditions', conditionsRoutes(services))
-    .use('/education-support-plan', educationSupportPlanRoutes())
+    .use('/education-support-plan', educationSupportPlanRoutes(services))
 }
 
 export default profileRoutes

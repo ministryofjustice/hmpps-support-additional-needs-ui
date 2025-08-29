@@ -1,16 +1,18 @@
 import { Request, Response } from 'express'
 import EducationSupportPlanController from './educationSupportPlanController'
 import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
+import aValidEducationSupportPlanDto from '../../../testsupport/educationSupportPlanDtoTestDataBuilder'
 
 describe('educationSupportPlanController', () => {
   const controller = new EducationSupportPlanController()
 
   const prisonerSummary = aValidPrisonerSummary()
+  const educationSupportPlan = aValidEducationSupportPlanDto()
 
   const req = {} as unknown as Request
   const res = {
     render: jest.fn(),
-    locals: { prisonerSummary },
+    locals: { prisonerSummary, educationSupportPlan },
   } as unknown as Response
   const next = jest.fn()
 
@@ -23,6 +25,7 @@ describe('educationSupportPlanController', () => {
     const expectedViewTemplate = 'pages/profile/education-support-plan/index'
     const expectedViewModel = {
       prisonerSummary,
+      educationSupportPlan,
       tab: 'education-support-plan',
     }
 
