@@ -25,6 +25,7 @@ context('Profile Overview Page', () => {
     cy.task('stubGetChallenges', { prisonNumber })
     cy.task('stubGetStrengths', { prisonNumber })
     cy.task('stubGetCuriousV2Assessments', { prisonNumber })
+    cy.task('stubGetEducationSupportPlan', prisonNumber)
   })
 
   it('should be able to navigate directly to the profile overview page', () => {
