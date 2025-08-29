@@ -70,6 +70,16 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     )
   }
 
+  async getEducationSupportPlan(prisonNumber: string, username: string): Promise<EducationSupportPlanResponse> {
+    return this.get<EducationSupportPlanResponse>(
+      {
+        path: `/profile/${prisonNumber}/education-support-plan`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
   async createEducationSupportPlan(
     prisonNumber: string,
     username: string,

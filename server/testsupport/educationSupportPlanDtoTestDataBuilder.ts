@@ -1,28 +1,31 @@
 import { addMonths, startOfToday } from 'date-fns'
 import type { EducationSupportPlanDto } from 'dto'
 import aValidPlanContributor from './planContributorTestDataBuilder'
+import { DtoAuditFields, validDtoAuditFields } from './auditFieldsTestDataBuilder'
 
-const aValidEducationSupportPlanDto = (options?: {
-  prisonNumber?: string
-  prisonId?: string
-  planCreatedByOther?: {
-    name: string
-    jobRole: string
-  }
-  otherPeopleConsulted?: Array<{
-    name: string
-    jobRole: string
-  }>
-  hasCurrentEhcp?: boolean
-  teachingAdjustments?: string
-  specificTeachingSkills?: string
-  examArrangements?: string
-  lnspSupport?: string
-  lnspSupportHours?: number
-  reviewDate?: Date
-  individualSupport?: string
-  additionalInformation?: string
-}): EducationSupportPlanDto => ({
+const aValidEducationSupportPlanDto = (
+  options?: DtoAuditFields & {
+    prisonNumber?: string
+    prisonId?: string
+    planCreatedByOther?: {
+      name: string
+      jobRole: string
+    }
+    otherPeopleConsulted?: Array<{
+      name: string
+      jobRole: string
+    }>
+    hasCurrentEhcp?: boolean
+    teachingAdjustments?: string
+    specificTeachingSkills?: string
+    examArrangements?: string
+    lnspSupport?: string
+    lnspSupportHours?: number
+    reviewDate?: Date
+    individualSupport?: string
+    additionalInformation?: string
+  },
+): EducationSupportPlanDto => ({
   prisonNumber: options?.prisonNumber ?? 'A1234BC',
   prisonId: options?.prisonId === null ? null : options?.prisonId || 'BXI',
   planCreatedByLoggedInUser: options?.planCreatedByOther == null,
@@ -61,6 +64,7 @@ const aValidEducationSupportPlanDto = (options?: {
     options?.additionalInformation === null
       ? null
       : options?.additionalInformation || 'Chris is very open about his issues and is a pleasure to talk to.',
+  ...validDtoAuditFields(options),
 })
 
 export default aValidEducationSupportPlanDto

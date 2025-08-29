@@ -22,4 +22,14 @@ export default class EducationSupportPlanService {
       throw e
     }
   }
+
+  async getEducationSupportPlan(username: string, prisonNumber: string): Promise<EducationSupportPlanDto> {
+    try {
+      const apiResponse = await this.supportAdditionalNeedsApiClient.getEducationSupportPlan(prisonNumber, username)
+      return toEducationSupportPlanDto(prisonNumber, apiResponse)
+    } catch (e) {
+      logger.error(`Error getting education support plan for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
 }
