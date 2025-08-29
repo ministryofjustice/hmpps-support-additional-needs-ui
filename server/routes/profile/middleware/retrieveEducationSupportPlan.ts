@@ -12,7 +12,7 @@ const retrieveEducationSupportPlan = (educationSupportPlanService: EducationSupp
     // Lookup the prisoner's ELSP and store in res.locals
     const { apiErrorCallback } = res.locals
     res.locals.educationSupportPlan = await Result.wrap(
-      educationSupportPlanService.getEducationSupportPlan(prisonNumber, req.user.username),
+      educationSupportPlanService.getEducationSupportPlan(req.user.username, prisonNumber),
       apiErrorCallback,
     )
 

@@ -4,9 +4,129 @@
 {% set pageTitle = "Support for additional needs - Education support plan" %}
 
 {% block content %}
-  <div class="govuk-grid-row">
+  <div class="govuk-grid-row profile-education-support-plan">
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
+      {% if educationSupportPlan.isFulfilled() %}
+        {% set educationSupportPlan = educationSupportPlan.value %}
 
+        {% if educationSupportPlan %}
+
+          <div class="govuk-summary-card" data-qa="education-support-plan-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+              <h2 class="govuk-summary-card__title">Education support plan</h2>
+            </div>
+            <div class="govuk-summary-card__content">
+              <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Adjustments to teaching, learning environment or materials
+                  </dt>
+                  <dd class="govuk-summary-list__value" data-qa="teaching-adjustments">
+                    <span class="app-u-multiline-text">{{ educationSupportPlan.teachingAdjustments if educationSupportPlan.teachingAdjustmentsNeeded else 'None' }}</span>
+                  </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Specific teacher knowledge or skills needed to support learner
+                  </dt>
+                  <dd class="govuk-summary-list__value" data-qa="specific-teaching-skills">
+                    <span class="app-u-multiline-text">{{ educationSupportPlan.specificTeachingSkills if educationSupportPlan.specificTeachingSkillsNeeded else 'None' }}</span>
+                  </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Exam access arrangements
+                  </dt>
+                  <dd class="govuk-summary-list__value" data-qa="exam-arrangements">
+                    <span class="app-u-multiline-text">{{ educationSupportPlan.examArrangements if educationSupportPlan.examArrangementsNeeded else 'None' }}</span>
+                  </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Learning needs support
+                  </dt>
+                  <dd class="govuk-summary-list__value" data-qa="lnsp-support">
+                    {% if educationSupportPlan.lnspSupportNeeded %}
+                      <span class="app-u-multiline-text">{{ educationSupportPlan.lnspSupport }}</span>
+                      Recommended hours: {{ educationSupportPlan.lnspSupportHours }}
+                    {% else %}
+                      None
+                    {% endif %}
+                  </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Other details
+                  </dt>
+                  <dd class="govuk-summary-list__value" data-qa="additional-information">
+                    <span class="app-u-multiline-text">{{ educationSupportPlan.additionalInformation | default("None", true) }}</span>
+                  </dd>
+                </div>
+
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Current EHCP
+                  </dt>
+                  <dd class="govuk-summary-list__value" data-qa="education-health-care-plan">
+                    {{ educationSupportPlan.hasCurrentEhcp | formatYesNo }}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+
+          <div class="govuk-summary-card" data-qa="education-support-plan-summary-card">
+            <div class="govuk-summary-card__content">
+              <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    {{ prisonerSummary | formatFirst_name_Last_name }}'s view on the support needed
+                  </dt>
+                  <dd class="govuk-summary-list__value" data-qa="individual-support-requirements">
+                    <span class="app-u-multiline-text">{{ educationSupportPlan.individualSupport | default('None', true) }}</span>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+
+        {% else %}
+
+          <div class="govuk-summary-card" data-qa="education-support-plan-summary-card">
+            <div class="govuk-summary-card__title-wrapper">
+              <h2 class="govuk-summary-card__title">Education support plan</h2>
+            </div>
+            <div class="govuk-summary-card__content">
+              <p class="govuk-body">
+                No education support plan recorded
+              </p>
+            </div>
+          </div>
+
+        {% endif %}
+
+
+    {% else %}
+      <div class="govuk-summary-card" data-qa="education-support-plan-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Education support plan</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <h3 class="govuk-heading-s" data-qa="elsp-unavailable-message">We cannot show these details right now</h3>
+          <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+        </div>
+      </div>
+    {% endif %}
+
+    </div>
+
+    {# TODO, we will need to make the actions menu conditional based on whether we successfully retrieved the Plan Statues, and possibly the ELSP itself #}
+    <div class="govuk-grid-column-one-third app-u-print-full-width">
+      {# column for the actions menu #}
     </div>
   </div>
 {% endblock %}
