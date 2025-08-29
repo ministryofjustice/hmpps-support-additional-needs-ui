@@ -39,7 +39,7 @@ describe('retrieveEducationSupportPlan', () => {
     // Then
     expect(res.locals.educationSupportPlan.isFulfilled()).toEqual(true)
     expect(res.locals.educationSupportPlan.value).toEqual(expectedEducationSupportPlan)
-    expect(educationSupportPlanService.getEducationSupportPlan).toHaveBeenCalledWith(prisonNumber, username)
+    expect(educationSupportPlanService.getEducationSupportPlan).toHaveBeenCalledWith(username, prisonNumber)
     expect(next).toHaveBeenCalled()
     expect(apiErrorCallback).not.toHaveBeenCalled()
   })
@@ -54,7 +54,7 @@ describe('retrieveEducationSupportPlan', () => {
     // Then
     expect(res.locals.educationSupportPlan.isFulfilled()).toEqual(true)
     expect(res.locals.educationSupportPlan.value).toBeNull()
-    expect(educationSupportPlanService.getEducationSupportPlan).toHaveBeenCalledWith(prisonNumber, username)
+    expect(educationSupportPlanService.getEducationSupportPlan).toHaveBeenCalledWith(username, prisonNumber)
     expect(next).toHaveBeenCalled()
     expect(apiErrorCallback).not.toHaveBeenCalled()
   })
@@ -69,7 +69,7 @@ describe('retrieveEducationSupportPlan', () => {
 
     // Then
     expect(res.locals.educationSupportPlan.isFulfilled()).toEqual(false)
-    expect(educationSupportPlanService.getEducationSupportPlan).toHaveBeenCalledWith(prisonNumber, username)
+    expect(educationSupportPlanService.getEducationSupportPlan).toHaveBeenCalledWith(username, prisonNumber)
     expect(next).toHaveBeenCalled()
     expect(apiErrorCallback).toHaveBeenCalledWith(error)
   })
