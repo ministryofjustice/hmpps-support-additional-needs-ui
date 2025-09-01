@@ -1,6 +1,6 @@
 .profile-education-support-plan {
 
-  [data-qa="education-support-plan-summary-card"] {
+  [data-qa="education-support-plan-summary-card"], [data-qa="education-support-plan-persons-view-summary-card"] {
     dt, dd {
       display: block;
       width: auto;

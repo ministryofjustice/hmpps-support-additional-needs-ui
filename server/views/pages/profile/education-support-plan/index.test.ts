@@ -70,6 +70,8 @@ describe('Profile education support plan page', () => {
           additionalInformation: null,
           hasCurrentEhcp: false,
           individualSupport: 'Ifereeca has asked that he is not sat with disruptive people as he is keen to learn', // this is the only mandatory text field in the Create ELSP journey
+          createdByDisplayName: 'Mr Plan CreatedBy',
+          createdAt: startOfDay('2025-11-03'),
         }),
       ),
     }
@@ -91,6 +93,10 @@ describe('Profile education support plan page', () => {
     expect($('[data-qa=individual-support-requirements]').text().trim()).toEqual(
       'Ifereeca has asked that he is not sat with disruptive people as he is keen to learn',
     )
+    expect($('[data-qa=plan-recorded-by]').text().trim()).toEqual('Mr Plan CreatedBy')
+    expect($('[data-qa=plan-created-by]').text().trim()).toEqual('Mr Plan CreatedBy')
+    expect($('[data-qa=plan-created-on]').text().trim()).toEqual('3 Nov 2025')
+    expect($('[data-qa=plan-people-consulted]').text().trim()).toEqual('No')
 
     expect($('[data-qa=elsp-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
@@ -102,7 +108,7 @@ describe('Profile education support plan page', () => {
       ...templateParams,
       educationSupportPlan: Result.fulfilled(
         aValidEducationSupportPlanDto({
-          planCreatedByOther: { name: 'Mr Plan CreatedBy', jobRole: 'Education Instructor' },
+          planCreatedByOther: { name: 'Mr Plan CreatedByOther', jobRole: 'Education Instructor' },
           otherPeopleConsulted: [
             { name: 'Person 1', jobRole: 'Teacher' },
             { name: 'Person 2', jobRole: 'Peer Mentor' },
@@ -115,6 +121,8 @@ describe('Profile education support plan page', () => {
           additionalInformation: 'Ifereeca is very open about his issues and is a pleasure to talk to.',
           hasCurrentEhcp: true,
           individualSupport: 'Ifereeca has asked that he is not sat with disruptive people as he is keen to learn', // this is the only mandatory text field in the Create ELSP journey
+          createdByDisplayName: 'Mr Plan CreatedBy',
+          createdAt: startOfDay('2025-11-03'),
         }),
       ),
     }
@@ -145,6 +153,11 @@ describe('Profile education support plan page', () => {
     expect($('[data-qa=individual-support-requirements]').text().trim()).toEqual(
       'Ifereeca has asked that he is not sat with disruptive people as he is keen to learn',
     )
+    expect($('[data-qa=plan-recorded-by]').text().trim()).toEqual('Mr Plan CreatedBy')
+    expect($('[data-qa=plan-created-by]').text().trim()).toEqual('Mr Plan CreatedByOther (Education Instructor)')
+    expect($('[data-qa=plan-created-on]').text().trim()).toEqual('3 Nov 2025')
+    expect($('[data-qa=plan-people-consulted] li').eq(0).text().trim()).toEqual('Person 1 (Teacher)')
+    expect($('[data-qa=plan-people-consulted] li').eq(1).text().trim()).toEqual('Person 2 (Peer Mentor)')
 
     expect($('[data-qa=elsp-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
