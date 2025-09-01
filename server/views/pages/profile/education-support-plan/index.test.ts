@@ -98,6 +98,8 @@ describe('Profile education support plan page', () => {
     expect($('[data-qa=plan-created-on]').text().trim()).toEqual('3 Nov 2025')
     expect($('[data-qa=plan-people-consulted]').text().trim()).toEqual('No')
 
+    expect($('[data-qa=inactive-plan-notification]').length).toEqual(0)
+
     expect($('[data-qa=elsp-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
@@ -159,6 +161,32 @@ describe('Profile education support plan page', () => {
     expect($('[data-qa=plan-people-consulted] li').eq(0).text().trim()).toEqual('Person 1 (Teacher)')
     expect($('[data-qa=plan-people-consulted] li').eq(1).text().trim()).toEqual('Person 2 (Peer Mentor)')
 
+    expect($('[data-qa=inactive-plan-notification]').length).toEqual(0)
+
+    expect($('[data-qa=elsp-unavailable-message]').length).toEqual(0)
+    expect($('[data-qa=api-error-banner]').length).toEqual(0)
+  })
+
+  it('should render the profile education and support plan page given the prisoner has an ELSP but the lifecycle status is INACTIVE_PLAN', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      educationSupportPlan: Result.fulfilled(aValidEducationSupportPlanDto()),
+      educationSupportPlanLifecycleStatus: Result.fulfilled(
+        aPlanLifecycleStatusDto({ status: PlanActionStatus.INACTIVE_PLAN }),
+      ),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=inactive-plan-notification]').length).toEqual(1)
+    expect($('[data-qa=inactive-plan-notification] .govuk-notification-banner__content').text().trim()).toEqual(
+      'Ifereeca Peigh is no longer eligible for an education support plan',
+    )
+    expect($('[data-qa=education-support-plan-summary-card]').length).toEqual(1)
     expect($('[data-qa=elsp-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
@@ -181,6 +209,7 @@ describe('Profile education support plan page', () => {
     const summaryCardContent = $('[data-qa=education-support-plan-summary-card] .govuk-summary-card__content')
     expect(summaryCardContent.text().trim()).toContain('No education support plan recorded')
     expect(summaryCardContent.text().trim()).not.toContain('Create an education support plan')
+    expect($('[data-qa=inactive-plan-notification]').length).toEqual(0)
     expect($('[data-qa=elsp-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
@@ -209,6 +238,7 @@ describe('Profile education support plan page', () => {
       const summaryCardContent = $('[data-qa=education-support-plan-summary-card] .govuk-summary-card__content')
       expect(summaryCardContent.text().trim()).toContain('No education support plan recorded')
       expect(summaryCardContent.text().trim()).toContain('Create an education support plan by 3 Nov 2025')
+      expect($('[data-qa=inactive-plan-notification]').length).toEqual(0)
       expect($('[data-qa=elsp-unavailable-message]').length).toEqual(0)
       expect($('[data-qa=api-error-banner]').length).toEqual(0)
     },
