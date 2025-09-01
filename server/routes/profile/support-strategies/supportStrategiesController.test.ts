@@ -1,16 +1,18 @@
 import { Request, Response } from 'express'
 import SupportStrategiesController from './supportStrategiesController'
 import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
+import { aValidSupportStrategyResponse } from '../../../testsupport/supportStrategyResponseTestDataBuilder'
 
 describe('supportStrategiesController', () => {
   const controller = new SupportStrategiesController()
 
   const prisonerSummary = aValidPrisonerSummary()
+  const supportStrategies = [aValidSupportStrategyResponse()]
 
   const req = {} as unknown as Request
   const res = {
     render: jest.fn(),
-    locals: { prisonerSummary },
+    locals: { prisonerSummary, supportStrategies },
   } as unknown as Response
   const next = jest.fn()
 
@@ -23,6 +25,7 @@ describe('supportStrategiesController', () => {
     const expectedViewTemplate = 'pages/profile/support-strategies/index'
     const expectedViewModel = {
       prisonerSummary,
+      supportStrategies,
       tab: 'support-strategies',
     }
 

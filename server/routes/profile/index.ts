@@ -10,7 +10,7 @@ import educationSupportPlanRoutes from './education-support-plan'
 const profileRoutes = (services: Services): Router => {
   return Router({ mergeParams: true }) //
     .use('/overview', overviewRoutes(services))
-    .use('/support-strategies', supportStrategiesRoutes())
+    .use('/support-strategies', supportStrategiesRoutes(services))
     .use('/challenges', challengesRoutes(services))
     .use('/strengths', strengthsRoutes(services))
     .use('/conditions', conditionsRoutes(services))

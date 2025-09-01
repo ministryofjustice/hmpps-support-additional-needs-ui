@@ -147,6 +147,16 @@ declare module 'dto' {
     supportStrategyDetails?: string
   }
 
+  /**
+   * Response DTO representing a Support Strategy that the person has.
+   */
+  export interface SupportStrategyResponseDto extends ReferencedAndAuditable {
+    supportStrategyTypeCode?: SupportStrategyType
+    supportStrategyDetails?: string
+    supportStrategyCategory?: string
+    active: boolean
+  }
+
   export interface ReferenceDataItemDto {
     code: string
     areaCode?: string
