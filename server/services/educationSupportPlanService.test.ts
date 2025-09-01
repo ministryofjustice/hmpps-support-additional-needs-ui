@@ -3,6 +3,8 @@ import EducationSupportPlanService from './educationSupportPlanService'
 import aValidEducationSupportPlanDto from '../testsupport/educationSupportPlanDtoTestDataBuilder'
 import aValidCreateEducationSupportPlanRequest from '../testsupport/createEducationSupportPlanRequestTestDataBuilder'
 import aValidEducationSupportPlanResponse from '../testsupport/educationSupportPlanResponseTestDataBuilder'
+import aPlanActionStatus from '../testsupport/planActionStatusTestDataBuilder'
+import aPlanLifecycleStatusDto from '../testsupport/planLifecycleStatusDtoTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -136,6 +138,36 @@ describe('educationSupportPlanService', () => {
       // Then
       expect(actual).toEqual(expectedError)
       expect(supportAdditionalNeedsApiClient.getEducationSupportPlan).toHaveBeenCalledWith(prisonNumber, username)
+    })
+  })
+
+  describe('getEducationSupportPlanLifecycleStatus', () => {
+    it('should get education support plan lifecycle status', async () => {
+      // Given
+      const apiResponse = aPlanActionStatus()
+      supportAdditionalNeedsApiClient.getPlanActionStatus.mockResolvedValue(apiResponse)
+
+      const expectedPlanLifecycleStatusDto = aPlanLifecycleStatusDto()
+
+      // When
+      const actual = await service.getEducationSupportPlanLifecycleStatus(username, prisonNumber)
+
+      // Then
+      expect(actual).toEqual(expectedPlanLifecycleStatusDto)
+      expect(supportAdditionalNeedsApiClient.getPlanActionStatus).toHaveBeenCalledWith(prisonNumber, username)
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.getPlanActionStatus.mockRejectedValue(expectedError)
+
+      // When
+      const actual = await service.getEducationSupportPlanLifecycleStatus(username, prisonNumber).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.getPlanActionStatus).toHaveBeenCalledWith(prisonNumber, username)
     })
   })
 })

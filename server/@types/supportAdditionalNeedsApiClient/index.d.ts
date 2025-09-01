@@ -42,4 +42,6 @@ declare module 'supportAdditionalNeedsApiClient' {
   export type AlnScreenerRequest = components['schemas']['ALNScreenerRequest']
   export type AlnChallenge = components['schemas']['ALNChallenge']
   export type AlnStrength = components['schemas']['ALNStrength']
+
+  export type PlanActionStatus = components['schemas']['PlanActionStatus']
 }
