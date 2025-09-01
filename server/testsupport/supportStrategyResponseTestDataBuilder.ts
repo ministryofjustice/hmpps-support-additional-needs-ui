@@ -10,7 +10,6 @@ const aValidSupportStrategyListResponse = (options?: {
 const aValidSupportStrategyResponse = (
   options?: AuditFields & {
     active?: boolean
-    fromALNScreener?: boolean
     supportStrategyType?: string
     supportStrategyCategory?: string
     detail?: string
