@@ -2,6 +2,8 @@ import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiCl
 import SupportStrategyService from './supportStrategyService'
 import aValidSupportStrategyDto from '../testsupport/supportStrategyDtoTestDataBuilder'
 import { aValidCreateSupportStrategiesRequest } from '../testsupport/supportStrategyRequestTestDataBuilder'
+import { aValidSupportStrategyListResponse } from '../testsupport/supportStrategyResponseTestDataBuilder'
+import { toSupportStrategyResponseDtos } from '../data/mappers/supportStrategyResponseDtoMapper'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -55,6 +57,23 @@ describe('supportStrategyService', () => {
         username,
         expectedCreateSupportStrategiesRequest,
       )
+    })
+  })
+  describe('getSupportStrategies', () => {
+    it('should get support strategies', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.createEducationSupportPlan.mockResolvedValue(null)
+      const expectedSupportStrategyListResponse = aValidSupportStrategyListResponse()
+
+      supportAdditionalNeedsApiClient.getSupportStrategies.mockResolvedValue(expectedSupportStrategyListResponse)
+
+      // When
+      const result = await service.getSupportStrategies(username, 'A1234BC')
+
+      // Then
+      expect(supportAdditionalNeedsApiClient.getSupportStrategies).toHaveBeenCalledWith('A1234BC', username)
+      expect(result).toHaveLength(1)
+      expect(result).toEqual(toSupportStrategyResponseDtos(expectedSupportStrategyListResponse))
     })
   })
 })
