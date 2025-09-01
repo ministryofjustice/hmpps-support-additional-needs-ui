@@ -1,11 +1,14 @@
 import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
+import { startOfDay } from 'date-fns'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import formatDate from '../../../../filters/formatDateFilter'
 import formatPrisonerNameFilter, { NameFormat } from '../../../../filters/formatPrisonerNameFilter'
 import { Result } from '../../../../utils/result/result'
 import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
 import formatYesNoFilter from '../../../../filters/formatYesNoFilter'
+import aPlanLifecycleStatusDto from '../../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
+import PlanActionStatus from '../../../../enums/planActionStatus'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -40,6 +43,7 @@ const templateParams = {
   tab: 'eucation-support-plan',
   prisonNamesById: Result.fulfilled(prisonNamesById),
   educationSupportPlan: Result.fulfilled(aValidEducationSupportPlanDto()),
+  educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
   pageHasApiErrors: false,
   userHasPermissionTo,
 }
@@ -146,11 +150,14 @@ describe('Profile education support plan page', () => {
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
-  it('should render the profile education and support plan page given the prisoner does not have an ELSP', () => {
+  it('should render the profile education and support plan page given the prisoner does not have an ELSP and the Plan Lifecycle status does not require a plan is created', () => {
     // Given
     const params = {
       ...templateParams,
       educationSupportPlan: Result.fulfilled(null),
+      educationSupportPlanLifecycleStatus: Result.fulfilled(
+        aPlanLifecycleStatusDto({ status: PlanActionStatus.NO_PLAN }),
+      ),
     }
 
     // When
@@ -158,18 +165,64 @@ describe('Profile education support plan page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('[data-qa=education-support-plan-summary-card] .govuk-summary-card__content').text().trim()).toEqual(
-      'No education support plan recorded',
-    )
+    const summaryCardContent = $('[data-qa=education-support-plan-summary-card] .govuk-summary-card__content')
+    expect(summaryCardContent.text().trim()).toContain('No education support plan recorded')
+    expect(summaryCardContent.text().trim()).not.toContain('Create an education support plan')
     expect($('[data-qa=elsp-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
-  it('should render the profile education and support plan page given the ESLP API promise is not resolved', () => {
+  it.each([
+    //
+    PlanActionStatus.PLAN_DUE,
+    PlanActionStatus.PLAN_OVERDUE,
+  ])(
+    'should render the profile education and support plan page given the prisoner does not have an ELSP and the Plan Lifecycle status requires a plan is created',
+    status => {
+      // Given
+      const params = {
+        ...templateParams,
+        educationSupportPlan: Result.fulfilled(null),
+        educationSupportPlanLifecycleStatus: Result.fulfilled(
+          aPlanLifecycleStatusDto({ status, planCreationDeadlineDate: startOfDay('2025-11-03') }),
+        ),
+      }
+
+      // When
+      const content = njkEnv.render(template, params)
+      const $ = cheerio.load(content)
+
+      // Then
+      const summaryCardContent = $('[data-qa=education-support-plan-summary-card] .govuk-summary-card__content')
+      expect(summaryCardContent.text().trim()).toContain('No education support plan recorded')
+      expect(summaryCardContent.text().trim()).toContain('Create an education support plan by 3 Nov 2025')
+      expect($('[data-qa=elsp-unavailable-message]').length).toEqual(0)
+      expect($('[data-qa=api-error-banner]').length).toEqual(0)
+    },
+  )
+
+  it('should render the profile education and support plan page given the ELSP promise is not resolved', () => {
     // Given
     const params = {
       ...templateParams,
       educationSupportPlan: Result.rejected(new Error('Failed to get ELSP')),
+      pageHasApiErrors: true,
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=elsp-unavailable-message]').length).toEqual(1)
+    expect($('[data-qa=api-error-banner]').length).toEqual(1)
+  })
+
+  it('should render the profile education and support plan page given the Plan Lifecycle Status promise is not resolved', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      educationSupportPlanLifecycleStatus: Result.rejected(new Error('Failed to get Plan Lifecycle Status')),
       pageHasApiErrors: true,
     }
 
