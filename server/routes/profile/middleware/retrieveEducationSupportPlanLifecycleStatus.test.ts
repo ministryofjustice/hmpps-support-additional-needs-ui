@@ -37,8 +37,8 @@ describe('retrieveEducationSupportPlanLifecycleStatus', () => {
     await requestHandler(req, res, next)
 
     // Then
-    expect(res.locals.educationSupportPlanlifecycleStatus.isFulfilled()).toEqual(true)
-    expect(res.locals.educationSupportPlanlifecycleStatus.value).toEqual(expectedPlanCreationSchedule)
+    expect(res.locals.educationSupportPlanLifecycleStatus.isFulfilled()).toEqual(true)
+    expect(res.locals.educationSupportPlanLifecycleStatus.value).toEqual(expectedPlanCreationSchedule)
     expect(educationSupportPlanService.getEducationSupportPlanLifecycleStatus).toHaveBeenCalledWith(
       username,
       prisonNumber,
@@ -56,7 +56,7 @@ describe('retrieveEducationSupportPlanLifecycleStatus', () => {
     await requestHandler(req, res, next)
 
     // Then
-    expect(res.locals.educationSupportPlanlifecycleStatus.isFulfilled()).toEqual(false)
+    expect(res.locals.educationSupportPlanLifecycleStatus.isFulfilled()).toEqual(false)
     expect(educationSupportPlanService.getEducationSupportPlanLifecycleStatus).toHaveBeenCalledWith(
       username,
       prisonNumber,
