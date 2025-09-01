@@ -10,6 +10,7 @@ declare module 'dto' {
   import StrengthCategory from '../../enums/strengthCategory'
   import SupportStrategyType from '../../enums/supportStrategyType'
   import AlnAssessmentReferral from '../../enums/alnAssessmentReferral'
+  import PlanActionStatus from '../../enums/planActionStatus'
 
   /**
    * Interface defining common reference and audit related properties that DTO types can inherit through extension.
@@ -203,5 +204,26 @@ declare module 'dto' {
     assessmentDate: Date
     referral: AlnAssessmentReferral
     supportPlanRequired: boolean // TODO - come up with a better name. This is Curious' view on whether a support plan is required, not ours. It does not account for whether the prisoner is in education and/or has other needs
+  }
+
+  /**
+   * DTO representing the status and supporting data of the Prisoner's Education Support Plan lifecycle.
+   * It does NOT represent the status of the plan itself (though there is an overlap), as the status property additionally
+   * describes the status of the review schedule if plan is at that point in its lifecycle.
+   *
+   * The primary use case of this DTO is to determine the ELSP actions applicable to the prisoner's plan for the purpose
+   * of the Actions menu.
+   */
+  export interface PlanLifecycleStatusDto {
+    status: PlanActionStatus
+    // Plan Creation Dateline Date - only set if the ELSP is due or overdue
+    planCreationDeadlineDate?: Date
+    // Review Dateline Date - only set if the ELSP has been created and therefore is in the Review cycle
+    reviewDeadlineDate?: Date
+    // If the creation of the ELSP was declibed by the prisoner, this object describes the reason. Only set if the status property is PLAN_DECLINED
+    planDeclined?: {
+      reason: PlanCreationScheduleExemptionReason
+      details: string
+    }
   }
 }

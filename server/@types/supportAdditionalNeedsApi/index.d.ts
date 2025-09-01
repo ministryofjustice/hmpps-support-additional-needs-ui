@@ -164,6 +164,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/profile/{prisonNumber}/education-trigger': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['educationTriggerSimulation']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/profile/{prisonNumber}/education-support-plan': {
     parameters: {
       query?: never
@@ -174,6 +190,22 @@ export interface paths {
     get: operations['getEducationSupportPlan']
     put?: never
     post: operations['createEducationSupportPlan']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/education-support-plan/review': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['createReview']
     delete?: never
     options?: never
     head?: never
@@ -206,6 +238,22 @@ export interface paths {
     get: operations['getChallenges']
     put?: never
     post: operations['createChallenges']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/aln-trigger': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post: operations['alnTriggerSimulation']
     delete?: never
     options?: never
     head?: never
@@ -332,6 +380,22 @@ export interface paths {
       cookie?: never
     }
     get: operations['getPlanCreationSchedules']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/plan-action-status': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getPlanActionStatus']
     put?: never
     post?: never
     delete?: never
@@ -1042,6 +1106,93 @@ export interface components {
        */
       detail?: string
     }
+    ReviewContributor: {
+      /** @example Joe Bloggs */
+      name: string
+      /** @example Education Instructor */
+      jobRole: string
+    }
+    SupportPlanReviewRequest: {
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the next review should be scheduled.
+       * @example 2023-11-19
+       */
+      nextReviewDate: string
+      /**
+       * @description whether or not the prisoner declined to be part of the review
+       * @example null
+       */
+      prisonerDeclinedFeedback: boolean
+      /**
+       * @description Details about how the reviewer feels the prisoner has progressed.
+       * @example Chris has really improved his concentration in lessons.
+       */
+      reviewerFeedback: string
+      /**
+       * @description Request object containing updates to the education support plan .
+       * @example null
+       */
+      updateEducationSupportPlan: components['schemas']['UpdateEducationSupportPlanRequest']
+      /**
+       * @description Optional details of who created the Education Support Plan review. If not specified the authenticated user is assumed to have created it.
+       * @example null
+       */
+      reviewCreatedBy?: components['schemas']['ReviewContributor']
+      /**
+       * @description Optional list of other people involved in the creation of the Education Support Plan Review.  If provided, the list must contain at least 1 contributor. The list must not be empty.
+       * @example null
+       */
+      otherContributors?: components['schemas']['ReviewContributor'][]
+      /**
+       * @description Details about how the prisoner feels they are progressing. This is mandatory if the prisonerDeclinedFeedback is false.
+       * @example The education support changes have really helped me to concentrate in lessons.
+       */
+      prisonerFeedback?: string
+    }
+    UpdateEducationSupportPlanRequest: {
+      /**
+       * @description If there are no changes to the plan then this is false and we ignore any updated fields. This maybe necessary for day one with a reduced review journey.
+       * @example null
+       */
+      anyChanges: boolean
+      /**
+       * @description Optional details of any adjustments that need to be made to the teaching or curriculum.
+       * @example Ensure simple, clear and relevant examples of used when explaining concepts.
+       */
+      teachingAdjustments?: string
+      /**
+       * @description Optional details of any specific teaching skills or knowledge that are required.
+       * @example British Sign Language.
+       */
+      specificTeachingSkills?: string
+      /**
+       * @description Optional details of any exam access arrangements that need to be made.
+       * @example Escort Chris to the exam hall 10 minutes before other students to allow him time to settle and collect his thoughts before the exam.
+       */
+      examAccessArrangements?: string
+      /**
+       * @description Optional details of any support that a Learning Needs Support Practitioner needs to provide.
+       * @example An LNSP is required for approx 1 hour per week to read and explain passages of text to Chris.
+       */
+      lnspSupport?: string
+      /**
+       * Format: int32
+       * @description Recommended number of additional support hours per week to meet the individual's educational needs.   Mandatory when `lnspSupport` is populated.
+       * @example 4
+       */
+      lnspSupportHours?: number
+      /**
+       * @description Optional Additional information about the plan that is not covered in the other questions.
+       * @example Chris is very open about his issues and is a pleasure to talk to.
+       */
+      detail?: string
+    }
     ConditionRequest: {
       /**
        * @example null
@@ -1582,6 +1733,44 @@ export interface components {
        */
       reviewSchedules: components['schemas']['ReviewScheduleResponse'][]
     }
+    PlanActionStatus: {
+      /**
+       * @example null
+       * @enum {string}
+       */
+      status:
+        | 'PLAN_OVERDUE'
+        | 'PLAN_DUE'
+        | 'REVIEW_OVERDUE'
+        | 'REVIEW_DUE'
+        | 'ACTIVE_PLAN'
+        | 'NEEDS_PLAN'
+        | 'INACTIVE_PLAN'
+        | 'PLAN_DECLINED'
+        | 'NO_PLAN'
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the plan creation is due.
+       * @example 2023-11-19
+       */
+      planCreationDeadlineDate?: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the next plan review is due.
+       * @example 2023-11-19
+       */
+      reviewDeadlineDate?: string
+      /**
+       * @example null
+       * @enum {string}
+       */
+      exemptionReason?: 'EXEMPT_REFUSED_TO_ENGAGE' | 'EXEMPT_NOT_REQUIRED' | 'EXEMPT_INACCURATE_IDENTIFICATION'
+      /**
+       * @description More detail about the reason for this exemption. This is mainly used for EXEMPT_PRISONER_NOT_COMPLY.
+       * @example null
+       */
+      exemptionDetail?: string
+    }
     ALNScreenerResponse: {
       /**
        * Format: uuid
@@ -1958,6 +2147,26 @@ export interface operations {
       }
     }
   }
+  educationTriggerSimulation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   getEducationSupportPlan: {
     parameters: {
       query?: never
@@ -2003,6 +2212,30 @@ export interface operations {
         content: {
           '*/*': components['schemas']['EducationSupportPlanResponse']
         }
+      }
+    }
+  }
+  createReview: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SupportPlanReviewRequest']
+      }
+    }
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
     }
   }
@@ -2099,6 +2332,26 @@ export interface operations {
         content: {
           '*/*': components['schemas']['ChallengeListResponse']
         }
+      }
+    }
+  }
+  alnTriggerSimulation: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
     }
   }
@@ -2320,6 +2573,28 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['PlanCreationSchedulesResponse']
+        }
+      }
+    }
+  }
+  getPlanActionStatus: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PlanActionStatus']
         }
       }
     }

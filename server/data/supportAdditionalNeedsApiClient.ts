@@ -11,6 +11,7 @@ import type {
   CreateStrengthsRequest,
   CreateSupportStrategiesRequest,
   EducationSupportPlanResponse,
+  PlanActionStatus,
   PlanCreationSchedulesResponse,
   ReferenceDataListResponse,
   SearchByPrisonResponse,
@@ -238,6 +239,16 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     return this.get<ALNScreeners>(
       {
         path: `/profile/${prisonNumber}/aln-screener`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async getPlanActionStatus(prisonNumber: string, username: string): Promise<PlanActionStatus> {
+    return this.get<PlanActionStatus>(
+      {
+        path: `/profile/${prisonNumber}/plan-action-status`,
         errorHandler: restClientErrorHandler({ ignore404: true }),
       },
       asSystem(username),
