@@ -45,6 +45,6 @@ const toAlnAssessmentReferral = (apiStakeholderReferral: string): AlnAssessmentR
     'substance misuse team': AlnAssessmentReferral.SUBSTANCE_MISUSE_TEAM,
     'safer custody': AlnAssessmentReferral.SAFER_CUSTODY,
     other: AlnAssessmentReferral.OTHER,
-  })[apiStakeholderReferral.toLowerCase().trim()]
+  })[apiStakeholderReferral?.toLowerCase().trim()]
 
 export default toCuriousAlnAndLddAssessmentsDto

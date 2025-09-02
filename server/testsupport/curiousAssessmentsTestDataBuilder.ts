@@ -114,7 +114,8 @@ const anAlnLearnerAssessmentsDTO = (options?: {
   assessmentDate: options?.assessmentDate || '2025-10-01',
   assessmentOutcome: options?.assessmentOutcome || 'Yes',
   hasPrisonerConsent: options?.hasPrisonerConsent || 'Yes',
-  stakeholderReferral: options?.stakeholderReferral || 'Education Specialist',
+  stakeholderReferral:
+    options?.stakeholderReferral === null ? null : options?.stakeholderReferral || 'Education Specialist',
 })
 
 const aReadingLearnerAssessmentsDTO = (options?: {
