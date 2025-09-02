@@ -1,0 +1,6 @@
+{% from "./macro.njk" import actionsCard %}
+
+{{ actionsCard({
+  prisonerSummary: prisonerSummary,
+  userHasPermissionTo: userHasPermissionTo
+}) }}

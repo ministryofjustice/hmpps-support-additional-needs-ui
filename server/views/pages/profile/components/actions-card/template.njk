@@ -1,0 +1,60 @@
+{% set userHasPermissionTo = params.userHasPermissionTo %}
+{% set prisonerSummary = params.prisonerSummary %}
+
+<div class="govuk-summary-card actions-card govuk-!-display-none-print" data-qa="actions-card">
+  <div class="govuk-summary-card__title-wrapper govuk-!-padding-bottom-2">
+    <h2 class="govuk-summary-card__title">Actions</h2>
+  </div>
+
+
+  <div class="govuk-summary-card__content" data-qa="screening-and-assessment-actions">
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Screening and assessment</h3>
+    <ul class="govuk-list" data-qa="screening-and-assessment-action-items">
+      {% if userHasPermissionTo('RECORD_ALN_SCREENER') %}
+        <li>
+          <a class="govuk-link" data-qa="record-screener-results-button" href="/aln-screener/{{ prisonerSummary.prisonNumber }}/create/screener-date">
+            <span>
+              <img src="/assets/images/icon-edit.svg" role="presentation" alt="" class="action-icon" />
+              Record screener results
+            </span>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+
+  <div class="govuk-summary-card__content" data-qa="additional-needs-actions">
+    <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Additional needs</h3>
+    <ul class="govuk-list" data-qa="additional-needs-action-items">
+      {% if userHasPermissionTo('RECORD_CHALLENGES') %}
+        <li>
+          <a class="govuk-link" data-qa="add-challenge-button" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category">
+            Add challenges
+          </a>
+        </li>
+      {% endif %}
+      {% if userHasPermissionTo('RECORD_STRENGTHS') %}
+        <li>
+          <a class="govuk-link" data-qa="add-strength-button" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category">
+            Add strengths
+          </a>
+        </li>
+      {% endif %}
+      {% if userHasPermissionTo('RECORD_SUPPORT_STRATEGIES') %}
+        <li>
+          <a class="govuk-link" data-qa="add-support-strategy-button" href="/support-strategies/{{ prisonerSummary.prisonNumber }}/create/select-category">
+            Add support strategies
+          </a>
+        </li>
+      {% endif %}
+      {% if userHasPermissionTo('RECORD_SELF_DECLARED_CONDITIONS') %}
+        <li>
+          <a class="govuk-link" data-qa="add-conditions-button" href="/conditions/{{ prisonerSummary.prisonNumber }}/create/select-conditions">
+            Add conditions
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+
+</div>
