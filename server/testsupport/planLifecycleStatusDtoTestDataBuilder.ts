@@ -1,4 +1,4 @@
-import { startOfDay } from 'date-fns'
+import { parseISO, startOfDay } from 'date-fns'
 import type { PlanLifecycleStatusDto } from 'dto'
 import PlanActionStatus from '../enums/planActionStatus'
 import PlanCreationScheduleExemptionReason from '../enums/planCreationScheduleExemptionReason'
@@ -10,6 +10,8 @@ const aPlanLifecycleStatusDto = (options?: {
   planDeclined?: {
     reason: PlanCreationScheduleExemptionReason
     details: string
+    recordedBy: string
+    recordedAt: Date
   }
 }): PlanLifecycleStatusDto => ({
   status: options?.status || PlanActionStatus.PLAN_DECLINED,
@@ -23,6 +25,8 @@ const aPlanLifecycleStatusDto = (options?: {
       : {
           reason: options?.planDeclined?.reason || PlanCreationScheduleExemptionReason.EXEMPT_REFUSED_TO_ENGAGE,
           details: options?.planDeclined?.details || 'Chris feels he does not need a support plan',
+          recordedBy: options?.planDeclined?.recordedBy || 'Alex Smith',
+          recordedAt: options?.planDeclined?.recordedAt || parseISO('2021-01-03T10:32:17.491Z'),
         },
 })
 

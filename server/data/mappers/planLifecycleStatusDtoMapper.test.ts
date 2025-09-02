@@ -1,4 +1,4 @@
-import { startOfDay } from 'date-fns'
+import { parseISO, startOfDay } from 'date-fns'
 import type { PlanActionStatus } from 'supportAdditionalNeedsApiClient'
 import toPlanLifecycleStatusDto from './planLifecycleStatusDtoMapper'
 import aPlanActionStatus from '../../testsupport/planActionStatusTestDataBuilder'
@@ -16,6 +16,8 @@ describe('planLifecycleStatusDtoMapper', () => {
         reviewDeadlineDate: null,
         exemptionReason: null,
         exemptionDetail: null,
+        exemptionRecordedBy: null,
+        exemptionRecordedAt: null,
       })
 
       const expected = aPlanLifecycleStatusDto({
@@ -40,6 +42,8 @@ describe('planLifecycleStatusDtoMapper', () => {
         reviewDeadlineDate: null,
         exemptionReason: 'EXEMPT_NOT_REQUIRED',
         exemptionDetail: 'Chris does not want a plan',
+        exemptionRecordedBy: 'Alex Smith',
+        exemptionRecordedAt: '2021-01-02T14:32:16.126Z',
       })
 
       const expected = aPlanLifecycleStatusDto({
@@ -49,6 +53,8 @@ describe('planLifecycleStatusDtoMapper', () => {
         planDeclined: {
           reason: PlanCreationScheduleExemptionReason.EXEMPT_NOT_REQUIRED,
           details: 'Chris does not want a plan',
+          recordedBy: 'Alex Smith',
+          recordedAt: parseISO('2021-01-02T14:32:16.126Z'),
         },
       })
 
@@ -67,6 +73,8 @@ describe('planLifecycleStatusDtoMapper', () => {
         reviewDeadlineDate: '2021-03-01',
         exemptionReason: null,
         exemptionDetail: null,
+        exemptionRecordedBy: null,
+        exemptionRecordedAt: null,
       })
 
       const expected = aPlanLifecycleStatusDto({

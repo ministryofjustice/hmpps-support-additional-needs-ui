@@ -15,6 +15,8 @@ const aPlanActionStatus = (options?: {
   reviewDeadlineDate?: string
   exemptionReason?: 'EXEMPT_REFUSED_TO_ENGAGE' | 'EXEMPT_NOT_REQUIRED' | 'EXEMPT_INACCURATE_IDENTIFICATION'
   exemptionDetail?: string
+  exemptionRecordedBy?: string
+  exemptionRecordedAt?: string
 }): PlanActionStatus => ({
   status: options?.status || 'PLAN_DECLINED',
   planCreationDeadlineDate:
@@ -25,6 +27,9 @@ const aPlanActionStatus = (options?: {
     options?.exemptionDetail === null
       ? null
       : options?.exemptionDetail || 'Chris feels he does not need a support plan',
+  exemptionRecordedBy: options?.exemptionRecordedBy === null ? null : options?.exemptionRecordedBy || 'Alex Smith',
+  exemptionRecordedAt:
+    options?.exemptionRecordedAt === null ? null : options?.exemptionRecordedAt || '2021-01-03T10:32:17.491Z',
 })
 
 export default aPlanActionStatus

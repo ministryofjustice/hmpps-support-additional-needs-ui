@@ -13,6 +13,8 @@ const toPlanLifecycleStatusDto = (planActionStatus: PlanActionStatus): PlanLifec
     ? {
         reason: planActionStatus.exemptionReason,
         details: planActionStatus.exemptionDetail,
+        recordedBy: planActionStatus.exemptionRecordedBy,
+        recordedAt: parseISO(planActionStatus.exemptionRecordedAt),
       }
     : null,
 })
