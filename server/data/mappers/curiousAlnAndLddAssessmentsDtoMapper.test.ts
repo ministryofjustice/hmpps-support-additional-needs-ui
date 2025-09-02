@@ -265,6 +265,7 @@ describe('curiousAlnAndLddAssessmentsDtoMapper', () => {
       { curiousValue: 'Substance Misuse Team', expected: AlnAssessmentReferral.SUBSTANCE_MISUSE_TEAM },
       { curiousValue: 'Safer Custody', expected: AlnAssessmentReferral.SAFER_CUSTODY },
       { curiousValue: 'Other', expected: AlnAssessmentReferral.OTHER },
+      { curiousValue: null, expected: undefined },
     ] as Array<{
       curiousValue:
         | 'Healthcare'
