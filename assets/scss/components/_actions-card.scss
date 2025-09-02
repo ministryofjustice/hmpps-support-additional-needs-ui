@@ -1,6 +1,5 @@
 .actions-card {
   display: none; // Hide the entire action card by default
-  position: relative;
 
   .govuk-summary-card__content {
     display: none; // Hide the action card content section by default
@@ -13,21 +12,27 @@
   .govuk-summary-card__title-wrapper {
     background: none;
     border-bottom: 2px solid $govuk-border-colour;
-  }
-  li {
-    border-bottom: 1px solid $govuk-border-colour;
-  }
-  li:last-of-type {
-    border: none;
+
+    .govuk-summary-card__title {
+      @extend .govuk-heading-m;
+      @extend .govuk-\!-margin-bottom-1;
+    }
   }
 
   ul {
-    border-bottom: 3px solid $govuk-border-colour;
+    border-bottom: 1px solid $govuk-border-colour;
+    margin: 0;
+    padding: 0;
+    @extend .govuk-\!-padding-bottom-4;
   }
   :last-of-type ul {
-      border: none;
+    border: none;
   }
 
+  li {
+    @extend .govuk-\!-padding-top-1;
+    @extend .govuk-\!-padding-bottom-1;
+  }
   .govuk-tag {
     max-width: fit-content;
   }
@@ -45,12 +50,3 @@
   display: block;
 }
 
-.actions-card:after {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 3px;
-  position: absolute;
-  bottom: 0;
-  background: white;
-}
