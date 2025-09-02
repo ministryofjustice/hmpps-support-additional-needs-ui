@@ -1,6 +1,6 @@
 import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
-import { startOfDay } from 'date-fns'
+import { parseISO, startOfDay } from 'date-fns'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import formatDate from '../../../../filters/formatDateFilter'
 import formatPrisonerNameFilter, { NameFormat } from '../../../../filters/formatPrisonerNameFilter'
@@ -9,6 +9,8 @@ import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupp
 import formatYesNoFilter from '../../../../filters/formatYesNoFilter'
 import aPlanLifecycleStatusDto from '../../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 import PlanActionStatus from '../../../../enums/planActionStatus'
+import PlanCreationScheduleExemptionReason from '../../../../enums/planCreationScheduleExemptionReason'
+import formatPlanRefusalReasonFilter from '../../../../filters/formatPlanRefusalReasonFilter'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -26,6 +28,7 @@ njkEnv //
   .addFilter('formatLast_name_comma_First_name', formatPrisonerNameFilter(NameFormat.Last_name_comma_First_name))
   .addFilter('formatFirst_name_Last_name', formatPrisonerNameFilter(NameFormat.First_name_Last_name))
   .addFilter('formatYesNo', formatYesNoFilter)
+  .addFilter('formatPlanRefusalReason', formatPlanRefusalReasonFilter)
 
 const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',
@@ -43,7 +46,9 @@ const templateParams = {
   tab: 'eucation-support-plan',
   prisonNamesById: Result.fulfilled(prisonNamesById),
   educationSupportPlan: Result.fulfilled(aValidEducationSupportPlanDto()),
-  educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
+  educationSupportPlanLifecycleStatus: Result.fulfilled(
+    aPlanLifecycleStatusDto({ status: PlanActionStatus.ACTIVE_PLAN }),
+  ),
   pageHasApiErrors: false,
   userHasPermissionTo,
 }
@@ -54,7 +59,7 @@ describe('Profile education support plan page', () => {
     userHasPermissionTo.mockReturnValue(true)
   })
 
-  it('should render the profile education and support plan page given the prisoner has an ELSP with answers that asked for no textual data', () => {
+  it('should render the profile education support plan page given the prisoner has an ELSP with answers that asked for no textual data', () => {
     // Given
     const params = {
       ...templateParams,
@@ -104,7 +109,7 @@ describe('Profile education support plan page', () => {
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
-  it('should render the profile education and support plan page given the prisoner has an ELSP with answers to all questions', () => {
+  it('should render the profile education support plan page given the prisoner has an ELSP with answers to all questions', () => {
     // Given
     const params = {
       ...templateParams,
@@ -167,7 +172,7 @@ describe('Profile education support plan page', () => {
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
-  it('should render the profile education and support plan page given the prisoner has an ELSP but the lifecycle status is INACTIVE_PLAN', () => {
+  it('should render the profile education support plan page given the prisoner has an ELSP but the lifecycle status is INACTIVE_PLAN', () => {
     // Given
     const params = {
       ...templateParams,
@@ -191,7 +196,7 @@ describe('Profile education support plan page', () => {
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
-  it('should render the profile education and support plan page given the prisoner does not have an ELSP and the Plan Lifecycle status does not require a plan is created', () => {
+  it('should render the profile education support plan page given the prisoner does not have an ELSP and the Plan Lifecycle status does not require a plan is created', () => {
     // Given
     const params = {
       ...templateParams,
@@ -219,7 +224,7 @@ describe('Profile education support plan page', () => {
     PlanActionStatus.PLAN_DUE,
     PlanActionStatus.PLAN_OVERDUE,
   ])(
-    'should render the profile education and support plan page given the prisoner does not have an ELSP and the Plan Lifecycle status requires a plan is created',
+    'should render the profile education support plan page given the prisoner does not have an ELSP and the Plan Lifecycle status requires a plan is created',
     status => {
       // Given
       const params = {
@@ -244,7 +249,46 @@ describe('Profile education support plan page', () => {
     },
   )
 
-  it('should render the profile education and support plan page given the ELSP promise is not resolved', () => {
+  it('should render the profile education support plan page given the prisoner has previously declined to create an ELSP', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      educationSupportPlan: Result.fulfilled(null),
+      educationSupportPlanLifecycleStatus: Result.fulfilled(
+        aPlanLifecycleStatusDto({
+          status: PlanActionStatus.PLAN_DECLINED,
+          planDeclined: {
+            reason: PlanCreationScheduleExemptionReason.EXEMPT_NOT_REQUIRED,
+            details: 'Ifereeca feels he does not need or want a plan',
+            recordedBy: 'Alex Smith',
+            recordedAt: parseISO('2025-11-02T09:18:42.016Z'),
+          },
+        }),
+      ),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=plan-declined-reason]').parent().find('dt').text().trim()).toEqual(
+      'Ifereeca Peigh declined an education support plan',
+    )
+    expect($('[data-qa=plan-declined-reason]').text().trim()).toContain('No support plan currently required')
+    expect($('[data-qa=plan-declined-reason]').text().trim()).toContain(
+      'Ifereeca feels he does not need or want a plan',
+    )
+    expect($('[data-qa=plan-declined-recorded-by]').text().trim()).toEqual('Alex Smith')
+    expect($('[data-qa=plan-declined-recorded-at]').text().trim()).toEqual('2 Nov 2025')
+
+    expect($('[data-qa=education-support-plan-summary-card]').length).toEqual(0)
+    expect($('[data-qa=inactive-plan-notification]').length).toEqual(0)
+    expect($('[data-qa=elsp-unavailable-message]').length).toEqual(0)
+    expect($('[data-qa=api-error-banner]').length).toEqual(0)
+  })
+
+  it('should render the profile education support plan page given the ELSP promise is not resolved', () => {
     // Given
     const params = {
       ...templateParams,
@@ -261,7 +305,7 @@ describe('Profile education support plan page', () => {
     expect($('[data-qa=api-error-banner]').length).toEqual(1)
   })
 
-  it('should render the profile education and support plan page given the Plan Lifecycle Status promise is not resolved', () => {
+  it('should render the profile education support plan page given the Plan Lifecycle Status promise is not resolved', () => {
     // Given
     const params = {
       ...templateParams,

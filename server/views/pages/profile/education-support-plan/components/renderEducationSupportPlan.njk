@@ -1,0 +1,135 @@
+{% set educationSupportPlan = params.educationSupportPlan %}
+{% set prisonerSummary = params.prisonerSummary %}
+
+<div class="govuk-summary-card" data-qa="education-support-plan-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">Education support plan</h2>
+  </div>
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Adjustments to teaching, learning environment or materials
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="teaching-adjustments">
+          <span class="app-u-multiline-text">{{ educationSupportPlan.teachingAdjustments if educationSupportPlan.teachingAdjustmentsNeeded else 'None' }}</span>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Specific teacher knowledge or skills needed to support learner
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="specific-teaching-skills">
+          <span class="app-u-multiline-text">{{ educationSupportPlan.specificTeachingSkills if educationSupportPlan.specificTeachingSkillsNeeded else 'None' }}</span>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Exam access arrangements
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="exam-arrangements">
+          <span class="app-u-multiline-text">{{ educationSupportPlan.examArrangements if educationSupportPlan.examArrangementsNeeded else 'None' }}</span>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Learning needs support
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="lnsp-support">
+          {% if educationSupportPlan.lnspSupportNeeded %}
+            <span class="app-u-multiline-text">{{ educationSupportPlan.lnspSupport }}</span>
+            Recommended hours: {{ educationSupportPlan.lnspSupportHours }}
+          {% else %}
+            None
+          {% endif %}
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Other details
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="additional-information">
+          <span class="app-u-multiline-text">{{ educationSupportPlan.additionalInformation | default("None", true) }}</span>
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Current EHCP
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="education-health-care-plan">
+          {{ educationSupportPlan.hasCurrentEhcp | formatYesNo }}
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>
+
+<div class="govuk-summary-card" data-qa="education-support-plan-persons-view-summary-card">
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          {{ prisonerSummary | formatFirst_name_Last_name }}'s view on the support needed
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="individual-support-requirements">
+          <span class="app-u-multiline-text">{{ educationSupportPlan.individualSupport | default('None', true) }}</span>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>
+
+<div class="govuk-summary-card" data-qa="education-support-plan-created-audit-fields-summary-card">
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Created by
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="plan-created-by">
+          {{ educationSupportPlan.createdByDisplayName if educationSupportPlan.planCreatedByLoggedInUser else educationSupportPlan.planCreatedByOtherFullName + ' (' + educationSupportPlan.planCreatedByOtherJobRole + ')' }}
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Created on
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="plan-created-on">
+          {{ educationSupportPlan.createdAt | formatDate('d MMM yyyy') }}
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Plan recorded by
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="plan-recorded-by">
+          {{ educationSupportPlan.createdByDisplayName }}
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Other people consulted or involved
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="plan-people-consulted">
+          {% if educationSupportPlan.wereOtherPeopleConsulted %}
+            <ul class="govuk-list">
+              {% for person in educationSupportPlan.otherPeopleConsulted %}
+                <li>{{ person.name }} {{ '(' + person.jobRole + ')' if person.jobRole != 'N/A' }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            No
+          {% endif %}
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>

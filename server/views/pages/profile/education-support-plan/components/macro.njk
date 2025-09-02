@@ -1,0 +1,50 @@
+{# Component to render the Education Support Plan
+
+   Data supplied to this component:
+   params: {
+     prisonerSummary
+     educationSupportPlan
+   }
+#}
+{% macro renderEducationSupportPlan(params) %}
+  {%- include "./renderEducationSupportPlan.njk" -%}
+{% endmacro %}
+
+
+{# Component for when the Education Support Plan has been declined; specifically the plan status is PLAN_DECLINED
+
+   Data supplied to this component:
+   params: {
+     prisonerSummary
+     planDeclined: {
+       reason
+       details
+       recordedBy
+       recordedAt
+     }
+   }
+#}
+{% macro declinedEducationSupportPlan(params) %}
+  {%- include "./declinedEducationSupportPlan.njk" -%}
+{% endmacro %}
+
+
+{# Component for when there is no Education Support Plan, optionally rendering the link to create a plan if the
+   plan status is DUE or OVERDUE
+
+   Data supplied to this component:
+   params: {
+     prisonerSummary
+     planStatus
+     planCreationDeadlineDate
+   }
+#}
+{% macro noEducationSupportPlan(params) %}
+  {%- include "./noEducationSupportPlan.njk" -%}
+{% endmacro %}
+
+
+{# Component for when there has been an error retrieving the API data #}
+{% macro errorRetrievingApiData() %}
+  {%- include "./errorRetrievingApiData.njk" -%}
+{% endmacro %}
