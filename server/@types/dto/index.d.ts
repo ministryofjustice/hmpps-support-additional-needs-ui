@@ -230,10 +230,12 @@ declare module 'dto' {
     planCreationDeadlineDate?: Date
     // Review Dateline Date - only set if the ELSP has been created and therefore is in the Review cycle
     reviewDeadlineDate?: Date
-    // If the creation of the ELSP was declibed by the prisoner, this object describes the reason. Only set if the status property is PLAN_DECLINED
+    // If the creation of the ELSP was declined by the prisoner, this object describes the reason. Only set if the status property is PLAN_DECLINED
     planDeclined?: {
       reason: PlanCreationScheduleExemptionReason
       details: string
+      recordedBy: string
+      recordedAt: Date
     }
   }
 }

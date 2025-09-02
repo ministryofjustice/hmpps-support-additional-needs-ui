@@ -1766,10 +1766,21 @@ export interface components {
        */
       exemptionReason?: 'EXEMPT_REFUSED_TO_ENGAGE' | 'EXEMPT_NOT_REQUIRED' | 'EXEMPT_INACCURATE_IDENTIFICATION'
       /**
-       * @description More detail about the reason for this exemption. This is mainly used for EXEMPT_PRISONER_NOT_COMPLY.
+       * @description More detail about the reason the plan was declined. This is mainly used for EXEMPT_PRISONER_NOT_COMPLY.
        * @example null
        */
       exemptionDetail?: string
+      /**
+       * @description If the plan was declined by the prisoner, the display name of the person who recorded the plan exemption.
+       * @example Alex Smith
+       */
+      exemptionRecordedBy?: string
+      /**
+       * Format: date-time
+       * @description If the plan was declined by the prisoner, the timestamp that the plan was exempted.
+       * @example 2025-10-04
+       */
+      exemptionRecordedAt?: string
     }
     ALNScreenerResponse: {
       /**
