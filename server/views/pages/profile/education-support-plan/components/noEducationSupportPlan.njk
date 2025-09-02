@@ -1,0 +1,15 @@
+<div class="govuk-summary-card" data-qa="education-support-plan-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">Education support plan</h2>
+  </div>
+  <div class="govuk-summary-card__content">
+    <p class="govuk-body">
+      No education support plan recorded
+    </p>
+    {% if params.planStatus === 'PLAN_DUE' or params.planStatus === 'PLAN_OVERDUE' %}
+      <p class="govuk-body">
+        <a class="govuk-link" href="/education-support-plan/{{ params.prisonerSummary.prisonNumber }}/create/who-created-the-plan">Create an education support plan</a> by {{ params.planCreationDeadlineDate | formatDate('d MMM yyyy') }}
+      </p>
+    {% endif %}
+  </div>
+</div>

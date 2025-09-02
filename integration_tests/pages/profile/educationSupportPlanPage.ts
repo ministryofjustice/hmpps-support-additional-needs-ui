@@ -59,6 +59,14 @@ export default class EducationSupportPlanPage extends ProfilePage {
     return this
   }
 
+  showsPlanDeclinedRecordedBy(expectedRecordedBy: string, expectedRecordedAt: string): EducationSupportPlanPage {
+    this.educationSupportPlanSummaryCard().should('not.exist')
+    this.declinedEducationSupportPlanSummaryCard().should('be.visible')
+    this.declinedPlanRecordedBy().should('contain.text', expectedRecordedBy)
+    this.declinedPlanRecordedAt().should('contain.text', expectedRecordedAt)
+    return this
+  }
+
   private educationSupportPlanSummaryCard = (): PageElement => cy.get('[data-qa=education-support-plan-summary-card]')
 
   private educationSupportPlanPersonsViewSummaryCard = (): PageElement =>
@@ -80,4 +88,11 @@ export default class EducationSupportPlanPage extends ProfilePage {
   private ehcp = (): PageElement => cy.get('[data-qa=education-health-care-plan]')
 
   private individualSupportRequirements = (): PageElement => cy.get('[data-qa=individual-support-requirements]')
+
+  private declinedEducationSupportPlanSummaryCard = (): PageElement =>
+    cy.get('[data-qa=declined-education-support-plan-summary-card]')
+
+  private declinedPlanRecordedBy = (): PageElement => cy.get('[data-qa=plan-declined-recorded-by]')
+
+  private declinedPlanRecordedAt = (): PageElement => cy.get('[data-qa=plan-declined-recorded-at]')
 }

@@ -1,0 +1,45 @@
+{% set planDeclined = params.planDeclined %}
+{% set prisonerSummary = params.prisonerSummary %}
+
+<div class="govuk-summary-card" data-qa="declined-education-support-plan-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">Education support plan</h2>
+  </div>
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          {{ prisonerSummary | formatFirst_name_Last_name }} declined an education support plan
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="plan-declined-reason">
+          <p class="govuk-body">{{ planDeclined.reason | formatPlanRefusalReason }}</p>
+          <span class="app-u-multiline-text">{{ planDeclined.details }}</span>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>
+
+<div class="govuk-summary-card" data-qa="declined-education-support-plan-created-audit-fields-summary-card">
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Plan declined recorded by
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="plan-declined-recorded-by">
+          {{ planDeclined.recordedBy }}
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">
+          Plan declined on
+        </dt>
+        <dd class="govuk-summary-list__value" data-qa="plan-declined-recorded-at">
+          {{ planDeclined.recordedAt | formatDate('d MMM yyyy') }}
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>

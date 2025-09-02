@@ -48,6 +48,29 @@ context('Profile Education Support Plan Page', () => {
       .apiErrorBannerIsNotDisplayed()
   })
 
+  it('should render the education support plan page given the prisoner has declined an Education Support Plan', () => {
+    // Given
+    cy.task('stubGetEducationSupportPlan404Error', prisonNumber)
+    cy.task('stubGetPlanActionStatus', {
+      prisonNumber,
+      planActionStatus: aPlanActionStatus({
+        status: 'PLAN_DECLINED',
+        exemptionReason: 'EXEMPT_REFUSED_TO_ENGAGE',
+        exemptionDetail: 'Chris has refused to engage in the plan',
+        exemptionRecordedBy: 'Alex Smith',
+        exemptionRecordedAt: format(lastWeek, 'yyyy-MM-dd'),
+      }),
+    })
+
+    // When
+    cy.visit(`/profile/${prisonNumber}/education-support-plan`)
+
+    // Then
+    Page.verifyOnPage(EducationSupportPlanPage) //
+      .showsPlanDeclinedRecordedBy('Alex Smith', format(lastWeek, 'd MMM yyyy'))
+      .apiErrorBannerIsNotDisplayed()
+  })
+
   it('should render the education support plan page given the prisoner has no plan yet and the schedule is overdue', () => {
     // Given
     cy.task('stubGetEducationSupportPlan404Error', prisonNumber)
