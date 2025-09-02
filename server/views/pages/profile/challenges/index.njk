@@ -1,32 +1,37 @@
 {% extends "../layout.njk" %}
-{% from "../../../components/actions-card/macro.njk" import actionsCard %}
+{% from "../components/actions-card/macro.njk" import actionsCard %}
 
 {% set pageId = 'profile-challenges' %}
 {% set pageTitle = "Support for additional needs - Challenges" %}
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds app-u-print-full-width">
+    <div class="govuk-grid-column-full">
       <h2 class="govuk-heading-m">Challenges</h2>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds app-u-print-full-width">
+
       {% if groupedChallenges.isFulfilled() %}
         {% set groupedChallenges = groupedChallenges.value %}
-          {% if groupedChallenges | length == 0 %}
-            {% include "./components/_noChallengesSummaryCard.njk" %}
-          {% else %}
-            {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
-            {% include "./_challenges.njk" %}
-          {% endif %}
+        {% if groupedChallenges | length == 0 %}
+          {% include "./components/_noChallengesSummaryCard.njk" %}
+        {% else %}
+          {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+          {% include "./_challenges.njk" %}
+        {% endif %}
       {% else %}
-            <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>
-            <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+        <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>
+        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
       {% endif %}
     </div>
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">
       {{ actionsCard({
-        prisonerSummary: prisonerSummary,
         userHasPermissionTo: userHasPermissionTo,
-        actionMenuType: 'challenges'
+        prisonerSummary: prisonerSummary
       }) }}
     </div>
   </div>

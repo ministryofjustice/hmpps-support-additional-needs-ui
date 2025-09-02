@@ -130,26 +130,18 @@ export default class OverviewPage extends ProfilePage {
   private curiousScreenersUnavailableMessage = (): PageElement =>
     cy.get('[data-qa=curious-screeners-unavailable-message]')
 
-  private recordAlnScreenerButton = (): PageElement => cy.get('[data-qa=record-screener-results-button]')
-
   private conditionsSummaryCardContent = (): PageElement =>
     cy.get('[data-qa=conditions-summary-card] .govuk-summary-card__content')
 
   private conditionsUnavailableMessage = (): PageElement => cy.get('[data-qa=conditions-unavailable-message]')
-
-  private addConditionButton = (): PageElement => cy.get('[data-qa=add-condition-button]')
 
   private strengthsSummaryCardContent = (): PageElement =>
     cy.get('[data-qa=strengths-summary-card] .govuk-summary-card__content')
 
   private strengthsUnavailableMessage = (): PageElement => cy.get('[data-qa=strengths-unavailable-message]')
 
-  private addStrengthButton = (): PageElement => cy.get('[data-qa=add-strength-button]')
-
   private supportRecommendationsSummaryCardContent = (): PageElement =>
     cy.get('[data-qa=support-recommendations-summary-card] .govuk-summary-card__content')
-
-  private addSupportRecommendationButton = (): PageElement => cy.get('[data-qa=add-support-recommendation-button]')
 
   private actionsCard = (): PageElement => cy.get('[data-qa=actions-card]')
 

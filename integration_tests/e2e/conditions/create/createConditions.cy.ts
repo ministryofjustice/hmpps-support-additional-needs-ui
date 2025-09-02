@@ -40,7 +40,7 @@ describe('Create Conditions', () => {
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
       .selectTab('Conditions', ConditionsPage)
-      .clickRecordConditionsButton()
+      .clickAddConditionsButton()
 
     // When
     Page.verifyOnPage(SelectConditionsPage) //
@@ -116,7 +116,7 @@ describe('Create Conditions', () => {
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
       .selectTab('Conditions', ConditionsPage)
-      .clickRecordConditionsButton()
+      .clickAddConditionsButton()
 
     // When
     Page.verifyOnPage(SelectConditionsPage) //

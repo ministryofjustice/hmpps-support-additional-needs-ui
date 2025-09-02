@@ -1,14 +1,19 @@
 {% extends "../layout.njk" %}
+{% from "../components/actions-card/macro.njk" import actionsCard %}
 {% from "./components/strengths-summary-card/macro.njk" import strengthsSummaryCard %}
-{% from "../../../components/actions-card/macro.njk" import actionsCard %}
 
 {% set pageId = 'profile-strengths' %}
 {% set pageTitle = "Support for additional needs - Strengths" %}
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds app-u-print-full-width">
+    <div class="govuk-grid-column-full">
       <h2 class="govuk-heading-m">Strengths</h2>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
       {% if groupedStrengths.isFulfilled() %}
         {% set groupedStrengths = groupedStrengths.value %}
@@ -38,9 +43,8 @@
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">
       {{ actionsCard({
-        prisonerSummary: prisonerSummary,
         userHasPermissionTo: userHasPermissionTo,
-        actionMenuType: 'strengths'
+        prisonerSummary: prisonerSummary
       }) }}
     </div>
   </div>
