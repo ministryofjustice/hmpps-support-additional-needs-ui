@@ -11,11 +11,14 @@
 {% block content %}
   <div class="govuk-grid-row profile-education-support-plan">
 
-    {% if educationSupportPlan.isFulfilled() and educationSupportPlanLifecycleStatus.isFulfilled() %}
-      {% set educationSupportPlan = educationSupportPlan.value %}
-      {% set educationSupportPlanLifecycleStatus = educationSupportPlanLifecycleStatus.value %}
+    {% set educationSupportPlanFulFilled = educationSupportPlan.isFulfilled() %}
+    {% set educationSupportPlan = educationSupportPlan.value if educationSupportPlanFulFilled else {} %}
+    {% set educationSupportPlanLifecycleStatusFulFilled = educationSupportPlanLifecycleStatus.isFulfilled() %}
+    {% set educationSupportPlanLifecycleStatus = educationSupportPlanLifecycleStatus.value if educationSupportPlanLifecycleStatusFulFilled else {} %}
 
-      <div class="govuk-grid-column-two-thirds app-u-print-full-width">
+    <div class="govuk-grid-column-two-thirds app-u-print-full-width">
+
+      {% if educationSupportPlanFulFilled and educationSupportPlanLifecycleStatusFulFilled %}
 
         {% if educationSupportPlanLifecycleStatus.status === 'PLAN_DECLINED' %}
 
@@ -53,19 +56,20 @@
           {% endif %}
 
         {% endif %}
-      </div>
-      <div class="govuk-grid-column-one-third app-u-print-full-width">
-        {{ actionsCard({
-          userHasPermissionTo: userHasPermissionTo,
-          prisonerSummary: prisonerSummary
-        }) }}
-      </div>
 
-    {% else %}
-      <div class="govuk-grid-column-two-thirds app-u-print-full-width">
+      {% else %}
         {{ errorRetrievingApiData() }}
-      </div>
-    {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="govuk-grid-column-one-third app-u-print-full-width">
+      {{ actionsCard({
+        userHasPermissionTo: userHasPermissionTo,
+        prisonerSummary: prisonerSummary,
+        planStatus: educationSupportPlanLifecycleStatus.status,
+        planCreationDeadlineDate: educationSupportPlanLifecycleStatus.planCreationDeadlineDate
+      }) }}
+    </div>
 
   </div>
 {% endblock %}
