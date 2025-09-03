@@ -1,6 +1,5 @@
 import ProfilePage from './profilePage'
-import Page, { PageElement } from '../page'
-import SelectConditionsPage from '../conditions/selectConditionsPage'
+import { PageElement } from '../page'
 import ConditionType from '../../../server/enums/conditionType'
 
 export default class ConditionsPage extends ProfilePage {
@@ -37,16 +36,6 @@ export default class ConditionsPage extends ProfilePage {
     this.diagnosedConditionsSummaryCard().should('not.exist')
     return this
   }
-
-  clickRecordConditionsButton(): SelectConditionsPage {
-    this.recordConditionsButton().click()
-    return Page.verifyOnPage(SelectConditionsPage)
-  }
-
-  private conditionsActionItems = (): PageElement => cy.get('[data-qa=conditions-actions] li')
-
-  private recordConditionsButton = (): PageElement =>
-    this.conditionsActionItems().find('[data-qa=record-conditions-button]')
 
   private diagnosedConditionsSummaryCard = (): PageElement => cy.get('[data-qa=diagnosed-conditions-summary-card]')
 
