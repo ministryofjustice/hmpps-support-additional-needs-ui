@@ -11,6 +11,7 @@ const rolesForAction = (): Record<ApplicationAction, Array<ApplicationRole>> => 
   [ApplicationAction.SEARCH]: [],
   [ApplicationAction.VIEW_PROFILE]: [],
   [ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_CHALLENGES]: [],
   [ApplicationAction.RECORD_STRENGTHS]: [],
   [ApplicationAction.RECORD_SUPPORT_STRATEGIES]: [],
@@ -20,6 +21,10 @@ const rolesForAction = (): Record<ApplicationAction, Array<ApplicationRole>> => 
     ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
   ],
   [ApplicationAction.RECORD_ALN_SCREENER]: [],
+  [ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES]: [
+    ApplicationRole.ROLE_SAN_EDITOR,
+    ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
+  ],
 })
 
 /**
