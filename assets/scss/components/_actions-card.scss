@@ -4,8 +4,9 @@
   .govuk-summary-card__content {
     display: none; // Hide the action card content section by default
   }
-  .govuk-summary-card__content:has(.govuk-list li) {
-    // Show the action card content section only if the list has at least one item within it
+  .govuk-summary-card__content:has(.govuk-list li),
+  .govuk-summary-card__content:has(.govuk-tag) {
+    // Show the action card content section only if it contains at least one item or tag within it
     display: block;
   }
 
@@ -19,14 +20,18 @@
     }
   }
 
-  ul {
+  section {
     border-bottom: 1px solid $govuk-border-colour;
     margin: 0;
     padding: 0;
-    @extend .govuk-\!-padding-bottom-4;
+    @extend .govuk-\!-padding-bottom-3;
   }
-  :last-of-type ul {
+  :last-of-type section {
     border: none;
+  }
+
+  ul {
+    margin: 0;
   }
 
   li {
@@ -45,8 +50,9 @@
   }
 }
 
-.actions-card:has(.govuk-summary-card__content .govuk-list li) {
-  // Show the entire action card only if any summary card has has at least one list item within it
+.actions-card:has(.govuk-summary-card__content .govuk-list li),
+.actions-card:has(.govuk-summary-card__content .govuk-tag){
+  // Show the entire action card only if any summary card has at least one list item or tag within it
   display: block;
 }
 

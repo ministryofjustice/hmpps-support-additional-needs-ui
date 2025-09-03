@@ -1,19 +1,28 @@
 import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
-import type { ActionsCardParams } from 'viewModels'
+import { startOfToday } from 'date-fns'
 import aValidPrisonerSummary from '../../../../../testsupport/prisonerSummaryTestDataBuilder'
+import PlanActionStatus from '../../../../../enums/planActionStatus'
+import formatDateFilter from '../../../../../filters/formatDateFilter'
 
-nunjucks.configure([
+const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/dist/',
   'node_modules/@ministryofjustice/frontend/',
   'server/views/',
   __dirname,
 ])
 
+njkEnv //
+  .addFilter('formatDate', formatDateFilter)
+
+const planCreationDeadlineDate = startOfToday()
+
 const userHasPermissionTo = jest.fn()
-const templateParams: ActionsCardParams = {
+const templateParams = {
   prisonerSummary: aValidPrisonerSummary(),
   userHasPermissionTo,
+  planStatus: PlanActionStatus.PLAN_DUE,
+  planCreationDeadlineDate,
 }
 
 const template = 'actionCards.test.njk'
@@ -48,6 +57,8 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
     expect($('[data-qa=add-conditions-button]').length).toEqual(1)
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SELF_DECLARED_CONDITIONS')
+    expect($('[data-qa=education-support-plan-actions] span').length).toEqual(1)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES')
   })
 
   it('should render the actions card component given the user has permissions for no actions', () => {
@@ -68,10 +79,13 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_STRENGTHS')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SELF_DECLARED_CONDITIONS')
+    expect($('[data-qa=education-support-plan-actions] span').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES')
   })
 
   it('should render the actions card component given the user only has permission to record ALN screeners', () => {
     // Given
+    userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(true)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
@@ -93,10 +107,40 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_STRENGTHS')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SELF_DECLARED_CONDITIONS')
+    expect($('[data-qa=education-support-plan-actions] span').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES')
+  })
+
+  it('should render the actions card component given the user only has permission to view deadlines and statuses', () => {
+    // Given
+    userHasPermissionTo.mockReturnValueOnce(true)
+    userHasPermissionTo.mockReturnValueOnce(false)
+    userHasPermissionTo.mockReturnValueOnce(false)
+    userHasPermissionTo.mockReturnValueOnce(false)
+    userHasPermissionTo.mockReturnValueOnce(false)
+    userHasPermissionTo.mockReturnValueOnce(false)
+    const params = {
+      ...templateParams,
+    }
+
+    // When
+    const content = nunjucks.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('li').length).toEqual(0) // expect no links to be present
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_ALN_SCREENER')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_STRENGTHS')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SELF_DECLARED_CONDITIONS')
+    expect($('[data-qa=education-support-plan-actions] span').length).toEqual(1)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES')
   })
 
   it('should render the actions card component given the user only has permission to record challenges', () => {
     // Given
+    userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(true)
     userHasPermissionTo.mockReturnValueOnce(false)
@@ -118,10 +162,13 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_STRENGTHS')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SELF_DECLARED_CONDITIONS')
+    expect($('[data-qa=education-support-plan-actions] span').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES')
   })
 
   it('should render the actions card component given the user only has permission to record strengths', () => {
     // Given
+    userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(true)
@@ -143,10 +190,13 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_STRENGTHS')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SELF_DECLARED_CONDITIONS')
+    expect($('[data-qa=education-support-plan-actions] span').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES')
   })
 
   it('should render the actions card component given the user only has permission to record support strategies', () => {
     // Given
+    userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
@@ -168,10 +218,13 @@ describe('Tests for Profile pages actions card component', () => {
     expect($('[data-qa=add-support-strategy-button]').length).toEqual(1)
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SELF_DECLARED_CONDITIONS')
+    expect($('[data-qa=education-support-plan-actions] span').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES')
   })
 
   it('should render the actions card component given the user only has permission to record conditions', () => {
     // Given
+    userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
@@ -193,5 +246,58 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
     expect($('[data-qa=add-conditions-button]').length).toEqual(1)
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SELF_DECLARED_CONDITIONS')
+    expect($('[data-qa=education-support-plan-actions] span').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES')
   })
+
+  it.each([
+    { planStatus: PlanActionStatus.NEEDS_PLAN, expectedElementSelector: 'needs-plan-tag' },
+    { planStatus: PlanActionStatus.PLAN_DUE, expectedElementSelector: 'plan-due-tag' },
+    { planStatus: PlanActionStatus.ACTIVE_PLAN, expectedElementSelector: 'active-plan-tag' },
+    { planStatus: PlanActionStatus.PLAN_OVERDUE, expectedElementSelector: 'plan-overdue-tag' },
+    { planStatus: PlanActionStatus.INACTIVE_PLAN, expectedElementSelector: 'inactive-plan-tag' },
+    { planStatus: PlanActionStatus.PLAN_DECLINED, expectedElementSelector: 'plan-declined-tag' },
+  ])(
+    'should render the actions card component with the correct tag given the user has permission to view deadlines and statuses and a plan status of $planStatus',
+    ({ planStatus, expectedElementSelector }) => {
+      // Given
+      userHasPermissionTo.mockReturnValue(true)
+      const params = {
+        ...templateParams,
+        planStatus,
+      }
+
+      // When
+      const content = nunjucks.render(template, params)
+      const $ = cheerio.load(content)
+
+      // Then
+      expect($('[data-qa=education-support-plan-actions] span').length).toEqual(1)
+      expect($(`[data-qa=education-support-plan-actions] span[data-qa=${expectedElementSelector}]`).length).toEqual(1)
+    },
+  )
+
+  it.each([
+    //
+    PlanActionStatus.REVIEW_DUE,
+    PlanActionStatus.REVIEW_OVERDUE,
+    PlanActionStatus.NO_PLAN,
+  ])(
+    'should render the actions card component without a tag given the user has permission to view deadlines and statuses and a plan status of unsupported type %s',
+    planStatus => {
+      // Given
+      userHasPermissionTo.mockReturnValue(true)
+      const params = {
+        ...templateParams,
+        planStatus,
+      }
+
+      // When
+      const content = nunjucks.render(template, params)
+      const $ = cheerio.load(content)
+
+      // Then
+      expect($('[data-qa=education-support-plan-actions] span').length).toEqual(0)
+    },
+  )
 })
