@@ -8,6 +8,8 @@ import createEmptyRefuseEducationSupportPlanDtoIfNotInJourneyData from './middle
 import checkRefuseEducationSupportPlanDtoExistsInJourneyData from './middleware/checkRefuseEducationSupportPlanDtoExistsInJourneyData'
 import reasonSchema from './validationSchemas/reasonSchema'
 import ReasonController from './reason/reasonController'
+import ApplicationAction from '../../../enums/applicationAction'
+import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 
 const refuseEducationSupportPlanRoutes = (services: Services): Router => {
   const { educationSupportPlanScheduleService, journeyDataService } = services
@@ -16,8 +18,7 @@ const refuseEducationSupportPlanRoutes = (services: Services): Router => {
   const reasonController = new ReasonController(educationSupportPlanScheduleService)
 
   router.use('/', [
-    // TODO - enable this line when we understand the RBAC roles and permissions
-    // checkUserHasPermissionTo(ApplicationAction.EXEMPT_EDUCATION_LEARNER_SUPPORT_PLAN),
+    checkUserHasPermissionTo(ApplicationAction.RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN),
     insertJourneyIdentifier({ insertIdAfterElement: 3 }), // insert journey ID immediately after '/education-support-plan/:prisonNumber/refuse-plan' - eg: '/education-support-plan/A1234BC/refuse-plan/473e9ee4-37d6-4afb-92a2-5729b10cc60f/reason'
   ])
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])

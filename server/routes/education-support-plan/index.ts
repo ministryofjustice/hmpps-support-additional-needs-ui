@@ -9,9 +9,6 @@ const educationSupportPlanRoutes = (services: Services): Router => {
   router.use('/create', createEducationSupportPlanRoutes(services))
   router.use('/refuse-plan', refuseEducationSupportPlanRoutes(services))
 
-  // TODO - implement the /update routes when we have stories
-  // router.use('/update', updateEducationSupportPlanRoutes(services))
-
   return router
 }
 

@@ -30,12 +30,14 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.SEARCH,
         ApplicationAction.VIEW_PROFILE,
         ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN,
+        ApplicationAction.RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN,
         ApplicationAction.RECORD_CHALLENGES,
         ApplicationAction.RECORD_STRENGTHS,
         ApplicationAction.RECORD_SUPPORT_STRATEGIES,
         ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS,
         ApplicationAction.RECORD_DIAGNOSED_CONDITIONS,
         ApplicationAction.RECORD_ALN_SCREENER,
+        ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES,
       ]
 
       // When
@@ -56,6 +58,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS,
         ApplicationAction.RECORD_DIAGNOSED_CONDITIONS,
         ApplicationAction.RECORD_ALN_SCREENER,
+        ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES,
       ]
 
       // When
