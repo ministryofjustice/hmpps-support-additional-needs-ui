@@ -53,6 +53,34 @@
         {% endif %}
       {% endif %}
 
+      <ul class="govuk-list" data-qa="education-support-plan-action-items">
+        {% if userHasPermissionTo('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN') %}
+          {% if ['NEEDS_PLAN', 'PLAN_DUE', 'PLAN_OVERDUE', 'PLAN_DECLINED'].indexOf(planStatus) > -1 %}
+            <li>
+              <a class="govuk-link" data-qa="create-education-support-plan-button" href="/education-support-plan/{{ prisonerSummary.prisonNumber }}/create/who-created-the-plan">
+                <span>
+                  <img src="/assets/images/icon-edit.svg" role="presentation" alt="" class="action-icon" />
+                  Create education support plan
+                </span>
+              </a>
+            </li>
+          {% endif %}
+        {% endif %}
+
+        {% if userHasPermissionTo('RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN') %}
+          {% if ['NEEDS_PLAN', 'PLAN_DUE', 'PLAN_OVERDUE'].indexOf(planStatus) > -1 %}
+            <li>
+              <a class="govuk-link" data-qa="decline-education-support-plan-button" href="/education-support-plan/{{ prisonerSummary.prisonNumber }}/refuse-plan/reason">
+                <span>
+                  <img src="/assets/images/icon-stamp.svg" role="presentation" alt="" class="action-icon" />
+                  Decline education support plan
+                </span>
+              </a>
+            </li>
+          {% endif %}
+        {% endif %}
+      </ul>
+
     </section>
   </div>
 
