@@ -20,7 +20,7 @@ context(`Change links on the Check Your Answers page when creating an Education 
     cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] }) // user has the role that gives them permission to create ELSPs)
     cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', { prisonNumber })
     cy.task('stubCreateEducationSupportPlan', prisonNumber)
   })
 

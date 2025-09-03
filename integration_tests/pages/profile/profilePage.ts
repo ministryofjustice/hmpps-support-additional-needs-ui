@@ -3,6 +3,8 @@ import SelectChallengeCategoryPage from '../challenges/selectChallengeCategoryPa
 import ScreenerDatePage from '../additional-learning-needs-screener/screenerDatePage'
 import SelectConditionsPage from '../conditions/selectConditionsPage'
 import SelectStrengthCategoryPage from '../strengths/selectStrengthCategoryPage'
+import WhoCreatedThePlanPage from '../education-support-plan/whoCreatedThePlanPage'
+import ReasonPage from '../education-support-plan/refuse-plan/reasonPage'
 
 export default abstract class ProfilePage extends Page {
   hasSuccessMessage<T extends ProfilePage>(message: string): T {
@@ -47,6 +49,22 @@ export default abstract class ProfilePage extends Page {
     return Page.verifyOnPage(SelectStrengthCategoryPage)
   }
 
+  clickCreateEducationSupportPlanButton(): WhoCreatedThePlanPage {
+    this.createEducationSupportPlanButton().click()
+    return Page.verifyOnPage(WhoCreatedThePlanPage)
+  }
+
+  clickDeclineEducationSupportPlanButton(): ReasonPage {
+    this.declineEducationSupportPlanButton().click()
+    return Page.verifyOnPage(ReasonPage)
+  }
+
+  actionsCardContainsEducationSupportPlanActions() {
+    this.actionsCard().should('exist')
+    this.educationSupportPlanActionItems().should('exist')
+    return this
+  }
+
   private tabBarLink = (targetTab: string): PageElement => cy.get(`.moj-sub-navigation__link:contains('${targetTab}')`)
 
   private activeTab = (): PageElement => cy.get('.moj-sub-navigation__link[aria-current=page]')
@@ -62,4 +80,14 @@ export default abstract class ProfilePage extends Page {
   private addConditionsButton = (): PageElement => cy.get('[data-qa=add-conditions-button]')
 
   private addStrengthButton = (): PageElement => cy.get('[data-qa=add-strength-button]')
+
+  private createEducationSupportPlanButton = (): PageElement => cy.get('[data-qa=create-education-support-plan-button]')
+
+  private declineEducationSupportPlanButton = (): PageElement =>
+    cy.get('[data-qa=decline-education-support-plan-button]')
+
+  private actionsCard = (): PageElement => cy.get('[data-qa=actions-card]')
+
+  private educationSupportPlanActionItems = (): PageElement =>
+    cy.get('[data-qa=education-support-plan-action-items] li')
 }

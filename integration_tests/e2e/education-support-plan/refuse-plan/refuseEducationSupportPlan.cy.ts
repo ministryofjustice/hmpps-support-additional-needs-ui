@@ -6,6 +6,7 @@ import { patchRequestedFor } from '../../../mockApis/wiremock/requestPatternBuil
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
+import aPlanActionStatus from '../../../../server/testsupport/planActionStatusTestDataBuilder'
 
 context('Refuse an Education Support Plan', () => {
   const prisonNumber = 'H4115SD'
@@ -13,7 +14,17 @@ context('Refuse an Education Support Plan', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', {
+      prisonNumber,
+      planActionStatus: aPlanActionStatus({
+        status: 'PLAN_DUE',
+        reviewDeadlineDate: null,
+        exemptionReason: null,
+        exemptionDetail: null,
+        exemptionRecordedAt: null,
+        exemptionRecordedBy: null,
+      }),
+    })
     cy.task('stubUpdateEducationSupportPlanCreationStatus', prisonNumber)
   })
 
@@ -37,7 +48,7 @@ context('Refuse an Education Support Plan', () => {
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
       .actionsCardContainsEducationSupportPlanActions()
-      .clickRefuseEducationSupportPlanButton()
+      .clickDeclineEducationSupportPlanButton()
 
     // When
     Page.verifyOnPage(ReasonPage) //
@@ -86,7 +97,7 @@ context('Refuse an Education Support Plan', () => {
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
       .actionsCardContainsEducationSupportPlanActions()
-      .clickRefuseEducationSupportPlanButton()
+      .clickDeclineEducationSupportPlanButton()
     Page.verifyOnPage(ReasonPage) //
       .apiErrorBannerIsNotDisplayed()
 

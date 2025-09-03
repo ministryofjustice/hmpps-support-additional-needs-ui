@@ -4,7 +4,6 @@ import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDa
 import formatDate from '../../../../filters/formatDateFilter'
 import formatPrisonerNameFilter, { NameFormat } from '../../../../filters/formatPrisonerNameFilter'
 import { Result } from '../../../../utils/result/result'
-import aValidPlanCreationScheduleDto from '../../../../testsupport/planCreationScheduleDtoTestDataBuilder'
 import { aValidConditionsList } from '../../../../testsupport/conditionDtoTestDataBuilder'
 import filterArrayOnPropertyFilter from '../../../../filters/filterArrayOnPropertyFilter'
 import formatConditionTypeScreenValueFilter from '../../../../filters/formatConditionTypeFilter'
@@ -14,6 +13,7 @@ import ChallengeCategory from '../../../../enums/challengeCategory'
 import formatChallengeCategoryScreenValueFilter from '../../../../filters/formatChallengeCategoryFilter'
 import { aCuriousAlnAndLddAssessmentsDto } from '../../../../testsupport/curiousAlnAndLddAssessmentsDtoTestDataBuilder'
 import formatAlnAssessmentReferralScreenValueFilter from '../../../../filters/formatAlnAssessmentReferralFilter'
+import aPlanLifecycleStatusDto from '../../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -50,7 +50,7 @@ const userHasPermissionTo = jest.fn()
 const templateParams = {
   prisonerSummary,
   tab: 'overview',
-  educationSupportPlanCreationSchedule: Result.fulfilled(aValidPlanCreationScheduleDto()),
+  educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
   conditions: Result.fulfilled(aValidConditionsList()),
   strengthCategories: Result.fulfilled([StrengthCategory.LITERACY_SKILLS, StrengthCategory.NUMERACY_SKILLS]),
   challengeCategories: Result.fulfilled([ChallengeCategory.LITERACY_SKILLS, ChallengeCategory.NUMERACY_SKILLS]),
@@ -70,7 +70,7 @@ describe('Profile overview page', () => {
     // Given
     const pageViewModel = {
       ...templateParams,
-      educationSupportPlanCreationSchedule: Result.fulfilled(aValidPlanCreationScheduleDto()),
+      educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
       pageHasApiErrors: false,
     }
 
@@ -87,15 +87,15 @@ describe('Profile overview page', () => {
     expect($('[data-qa=challenges-summary-card]').length).toEqual(1)
     expect($('[data-qa=support-recommendations-summary-card]').length).toEqual(1)
     expect($('[data-qa=actions-card]').length).toEqual(1)
-    expect($('[data-qa=actions-card] li').length).toEqual(2)
+    expect($('[data-qa=actions-card] li').length).toEqual(6)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
-  it('should render the profile overview page given the plan creation schedule service API promise is not resolved', () => {
+  it('should render the profile overview page given the plan action status service API promise is not resolved', () => {
     // Given
     const pageViewModel = {
       ...templateParams,
-      educationSupportPlanCreationSchedule: Result.rejected(new Error('Failed to get plan creation schedule')),
+      educationSupportPlanLifecycleStatus: Result.rejected(new Error('Failed to get plan action status')),
       pageHasApiErrors: true,
     }
 
@@ -112,7 +112,7 @@ describe('Profile overview page', () => {
     expect($('[data-qa=challenges-summary-card]').length).toEqual(1)
     expect($('[data-qa=support-recommendations-summary-card]').length).toEqual(1)
     expect($('[data-qa=actions-card]').length).toEqual(1)
-    expect($('[data-qa=actions-card] li').length).toEqual(0)
+    expect($('[data-qa=actions-card] li').length).toEqual(5)
     expect($('[data-qa=api-error-banner]').length).toEqual(1)
   })
 })

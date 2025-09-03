@@ -23,7 +23,8 @@ export type GroupedStrengths = Record<
 
 export default class StrengthsController {
   getStrengthsView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    const { alnScreeners, prisonerSummary, prisonNamesById, strengths } = res.locals
+    const { alnScreeners, educationSupportPlanLifecycleStatus, prisonerSummary, prisonNamesById, strengths } =
+      res.locals
 
     let groupedStrengthsPromise: Result<GroupedStrengths, Error>
     if (alnScreeners.isFulfilled() && strengths.isFulfilled()) {
@@ -63,6 +64,7 @@ export default class StrengthsController {
     const viewRenderArgs = {
       prisonerSummary,
       prisonNamesById,
+      educationSupportPlanLifecycleStatus,
       groupedStrengths: groupedStrengthsPromise,
       tab: 'strengths',
     }

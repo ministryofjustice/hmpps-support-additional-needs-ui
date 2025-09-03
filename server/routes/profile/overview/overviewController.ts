@@ -18,7 +18,7 @@ export default class OverviewController {
       conditions,
       challenges,
       curiousAlnAndLddAssessments,
-      educationSupportPlanCreationSchedule,
+      educationSupportPlanLifecycleStatus,
       prisonNamesById,
       strengths,
     } = res.locals
@@ -61,7 +61,7 @@ export default class OverviewController {
     const viewRenderArgs = {
       prisonerSummary,
       conditions,
-      educationSupportPlanCreationSchedule,
+      educationSupportPlanLifecycleStatus,
       strengthCategories: strengthCategoriesPromise,
       challengeCategories: challengeCategoriesPromise,
       curiousAlnAndLddAssessments,

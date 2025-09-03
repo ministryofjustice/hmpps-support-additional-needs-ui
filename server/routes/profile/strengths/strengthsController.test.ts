@@ -10,6 +10,7 @@ import {
   setupNonAlnStrengthsPromise,
 } from '../profileTestSupportFunctions'
 import { aValidAlnScreenerResponseDto } from '../../../testsupport/alnScreenerDtoTestDataBuilder'
+import aPlanLifecycleStatusDto from '../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 
 describe('strengthsController', () => {
   const controller = new StrengthsController()
@@ -18,6 +19,7 @@ describe('strengthsController', () => {
 
   const prisonId = 'MDI'
   const prisonNamesById = { BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' }
+  const educationSupportPlanLifecycleStatus = Result.fulfilled(aPlanLifecycleStatusDto())
 
   // Non-ALN strengths
   const { numeracy, numeracy2, literacy, emotionsNonActive, attention, speaking } = setupNonAlnStrengths()
@@ -40,7 +42,7 @@ describe('strengthsController', () => {
   const req = {} as unknown as Request
   const res = {
     render,
-    locals: { prisonerSummary, strengths, alnScreeners, prisonNamesById },
+    locals: { prisonerSummary, strengths, alnScreeners, prisonNamesById, educationSupportPlanLifecycleStatus },
   } as unknown as Response
   const next = jest.fn()
 
@@ -98,6 +100,7 @@ describe('strengthsController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
+      educationSupportPlanLifecycleStatus,
       tab: 'strengths',
       groupedStrengths: expect.objectContaining({
         status: 'fulfilled',
@@ -125,6 +128,7 @@ describe('strengthsController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
+      educationSupportPlanLifecycleStatus,
       tab: 'strengths',
       groupedStrengths: expect.objectContaining({
         status: 'rejected',
@@ -149,6 +153,7 @@ describe('strengthsController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
+      educationSupportPlanLifecycleStatus,
       tab: 'strengths',
       groupedStrengths: expect.objectContaining({
         status: 'rejected',
@@ -175,6 +180,7 @@ describe('strengthsController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
+      educationSupportPlanLifecycleStatus,
       tab: 'strengths',
       groupedStrengths: expect.objectContaining({
         status: 'rejected',

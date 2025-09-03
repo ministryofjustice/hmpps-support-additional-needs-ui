@@ -11,6 +11,7 @@ import formatStrengthIdentificationSourceScreenValueFilter from '../../../../fil
 import { formatStrengthTypeScreenValueFilter } from '../../../../filters/formatStrengthTypeFilter'
 import StrengthType from '../../../../enums/strengthType'
 import StrengthCategory from '../../../../enums/strengthCategory'
+import aPlanLifecycleStatusDto from '../../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -48,6 +49,7 @@ const templateParams = {
   tab: 'strengths',
   groupedStrengths: Result.fulfilled({}),
   prisonNamesById: Result.fulfilled(prisonNamesById),
+  educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
   pageHasApiErrors: false,
 }
 

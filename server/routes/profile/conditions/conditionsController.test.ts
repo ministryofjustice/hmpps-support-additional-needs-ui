@@ -3,6 +3,7 @@ import ConditionsController from './conditionsController'
 import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
 import { aValidConditionsList } from '../../../testsupport/conditionDtoTestDataBuilder'
 import { Result } from '../../../utils/result/result'
+import aPlanLifecycleStatusDto from '../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 
 describe('conditionsController', () => {
   const controller = new ConditionsController()
@@ -10,11 +11,12 @@ describe('conditionsController', () => {
   const prisonerSummary = aValidPrisonerSummary()
   const conditions = Result.fulfilled(aValidConditionsList())
   const prisonNamesById = { BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' }
+  const educationSupportPlanLifecycleStatus = Result.fulfilled(aPlanLifecycleStatusDto())
 
   const req = {} as unknown as Request
   const res = {
     render: jest.fn(),
-    locals: { prisonerSummary, conditions, prisonNamesById },
+    locals: { prisonerSummary, conditions, prisonNamesById, educationSupportPlanLifecycleStatus },
   } as unknown as Response
   const next = jest.fn()
 
@@ -29,6 +31,7 @@ describe('conditionsController', () => {
       prisonerSummary,
       conditions,
       prisonNamesById,
+      educationSupportPlanLifecycleStatus,
       tab: 'conditions',
     }
 

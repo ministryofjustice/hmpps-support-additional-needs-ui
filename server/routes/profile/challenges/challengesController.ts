@@ -17,7 +17,9 @@ export type GroupedStructuredChallenges = Record<
 
 export default class ChallengesController {
   getChallengesView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    const { prisonerSummary, challenges, alnScreeners, prisonNamesById } = res.locals
+    const { prisonerSummary, challenges, alnScreeners, prisonNamesById, educationSupportPlanLifecycleStatus } =
+      res.locals
+
     const alnScreenersResult = alnScreeners as Result<AlnScreenerList>
 
     let groupedChallengesPromise: Result<GroupedStructuredChallenges, Error>
@@ -35,6 +37,7 @@ export default class ChallengesController {
     const viewRenderArgs = {
       prisonNamesById,
       prisonerSummary,
+      educationSupportPlanLifecycleStatus,
       tab: 'challenges',
       groupedChallenges: groupedChallengesPromise,
     }

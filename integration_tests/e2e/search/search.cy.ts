@@ -115,7 +115,7 @@ context(`Display the Search screen`, () => {
     // Given
     const firstPersonOnFirstPage: Person = peopleGroupedByPageRequest[0][0]
     cy.task('getPrisonerById', firstPersonOnFirstPage.prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber: firstPersonOnFirstPage.prisonNumber })
+    cy.task('stubGetPlanActionStatus', { prisonNumber: firstPersonOnFirstPage.prisonNumber })
     cy.visit('/search')
 
     // Then
