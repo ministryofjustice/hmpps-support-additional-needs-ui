@@ -17,7 +17,7 @@ context('Create a Strength', () => {
     cy.task('stubSignIn')
     cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', { prisonNumber })
     cy.task('stubCreateStrengths', prisonNumber)
     cy.task('stubGetStrengths', { prisonNumber })
   })

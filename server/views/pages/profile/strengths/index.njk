@@ -13,6 +13,10 @@
   </div>
 
   <div class="govuk-grid-row">
+
+    {% set educationSupportPlanLifecycleStatusFulFilled = educationSupportPlanLifecycleStatus.isFulfilled() %}
+    {% set educationSupportPlanLifecycleStatus = educationSupportPlanLifecycleStatus.value if educationSupportPlanLifecycleStatusFulFilled else {} %}
+
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
       {% if groupedStrengths.isFulfilled() %}
@@ -44,7 +48,9 @@
     <div class="govuk-grid-column-one-third app-u-print-full-width">
       {{ actionsCard({
         userHasPermissionTo: userHasPermissionTo,
-        prisonerSummary: prisonerSummary
+        prisonerSummary: prisonerSummary,
+        planStatus: educationSupportPlanLifecycleStatus.status,
+        planCreationDeadlineDate: educationSupportPlanLifecycleStatus.planCreationDeadlineDate
       }) }}
     </div>
   </div>

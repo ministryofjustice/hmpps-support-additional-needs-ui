@@ -19,6 +19,8 @@ const stubGetPlanActionStatus = (
         reviewDeadlineDate: null,
         exemptionReason: 'EXEMPT_REFUSED_TO_ENGAGE',
         exemptionDetail: 'Chris feels he does not need a support plan',
+        exemptionRecordedAt: '2025-10-02',
+        exemptionRecordedBy: 'Alex Smith',
       },
     },
   })

@@ -27,7 +27,7 @@ context('Create an Education Support Plan', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', { prisonNumber })
     cy.task('stubCreateEducationSupportPlan', prisonNumber)
   })
 

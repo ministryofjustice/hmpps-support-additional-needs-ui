@@ -1,11 +1,15 @@
 {% extends "../layout.njk" %}
-{% from "../../../components/actions-card/macro.njk" import actionsCard %}
+{% from "../components/actions-card/macro.njk" import actionsCard %}
 
 {% set pageId = 'profile-overview' %}
 {% set pageTitle = "Support for additional needs" %}
 
 {% block content %}
   <div class="govuk-grid-row profile-overview">
+
+    {% set educationSupportPlanLifecycleStatusFulFilled = educationSupportPlanLifecycleStatus.isFulfilled() %}
+    {% set educationSupportPlanLifecycleStatus = educationSupportPlanLifecycleStatus.value if educationSupportPlanLifecycleStatusFulFilled else {} %}
+
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
       <div class="two-column-summary-cards">
@@ -19,9 +23,10 @@
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">
       {{ actionsCard({
-        prisonerSummary: prisonerSummary,
         userHasPermissionTo: userHasPermissionTo,
-        educationSupportPlanCreationSchedule: educationSupportPlanCreationSchedule.value if educationSupportPlanCreationSchedule.isFulfilled()
+        prisonerSummary: prisonerSummary,
+        planStatus: educationSupportPlanLifecycleStatus.status,
+        planCreationDeadlineDate: educationSupportPlanLifecycleStatus.planCreationDeadlineDate
       }) }}
     </div>
   </div>

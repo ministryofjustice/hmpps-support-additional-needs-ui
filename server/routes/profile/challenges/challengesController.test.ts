@@ -9,6 +9,7 @@ import { Result } from '../../../utils/result/result'
 import { aValidAlnScreenerList, aValidAlnScreenerResponseDto } from '../../../testsupport/alnScreenerDtoTestDataBuilder'
 import aValidChallengeResponseDto from '../../../testsupport/challengeResponseDtoTestDataBuilder'
 import ChallengeCategory from '../../../enums/challengeCategory'
+import aPlanLifecycleStatusDto from '../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 
 describe('challengesController', () => {
   const controller = new ChallengesController()
@@ -35,11 +36,12 @@ describe('challengesController', () => {
     }),
   )
   const prisonNamesById = Result.fulfilled({ BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' })
+  const educationSupportPlanLifecycleStatus = Result.fulfilled(aPlanLifecycleStatusDto())
 
   const req = {} as unknown as Request
   const res = {
     render: jest.fn(),
-    locals: { prisonerSummary, challenges, alnScreeners, prisonNamesById },
+    locals: { prisonerSummary, challenges, alnScreeners, prisonNamesById, educationSupportPlanLifecycleStatus },
   } as unknown as Response
   const next = jest.fn()
 
@@ -54,6 +56,7 @@ describe('challengesController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonNamesById,
       prisonerSummary,
+      educationSupportPlanLifecycleStatus,
       tab: 'challenges',
       groupedChallenges: expect.objectContaining({
         status: 'fulfilled',

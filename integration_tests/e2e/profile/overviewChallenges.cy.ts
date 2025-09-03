@@ -13,7 +13,7 @@ context('Profile Overview Page - Challenges section', () => {
     cy.task('stubSignIn')
     cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', { prisonNumber })
     cy.task('stubGetConditions', { prisonNumber })
     cy.task('stubGetChallenges', { prisonNumber })
     cy.task('stubGetChallenges', { prisonNumber })

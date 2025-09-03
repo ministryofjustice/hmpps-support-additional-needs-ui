@@ -17,6 +17,7 @@ context('Create a Support Strategy', () => {
     cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', { prisonNumber })
     cy.task('stubCreateSupportStrategies', prisonNumber)
     cy.task('stubGetSupportStrategies', { prisonNumber })
   })

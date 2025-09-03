@@ -15,7 +15,7 @@ describe('Create Conditions', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', { prisonNumber })
     cy.task('stubCreateConditions', prisonNumber)
     cy.task('stubGetConditions', { prisonNumber })
   })

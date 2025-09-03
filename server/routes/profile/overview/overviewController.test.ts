@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import OverviewController from './overviewController'
 import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
-import aValidPlanCreationScheduleDto from '../../../testsupport/planCreationScheduleDtoTestDataBuilder'
 import { Result } from '../../../utils/result/result'
 import { aValidConditionsList } from '../../../testsupport/conditionDtoTestDataBuilder'
 import {
@@ -17,12 +16,13 @@ import { aValidAlnScreenerResponseDto } from '../../../testsupport/alnScreenerDt
 import StrengthCategory from '../../../enums/strengthCategory'
 import ChallengeCategory from '../../../enums/challengeCategory'
 import { aCuriousAlnAndLddAssessmentsDto } from '../../../testsupport/curiousAlnAndLddAssessmentsDtoTestDataBuilder'
+import aPlanLifecycleStatusDto from '../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 
 describe('overviewController', () => {
   const controller = new OverviewController()
 
   const prisonerSummary = aValidPrisonerSummary()
-  const educationSupportPlanCreationSchedule = Result.fulfilled(aValidPlanCreationScheduleDto())
+  const educationSupportPlanLifecycleStatus = Result.fulfilled(aPlanLifecycleStatusDto())
   const conditions = Result.fulfilled(aValidConditionsList())
 
   // Non-ALN strengths
@@ -85,7 +85,7 @@ describe('overviewController', () => {
     render: jest.fn(),
     locals: {
       prisonerSummary,
-      educationSupportPlanCreationSchedule,
+      educationSupportPlanLifecycleStatus,
       conditions,
       curiousAlnAndLddAssessments,
       strengths,
@@ -109,7 +109,7 @@ describe('overviewController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
-      educationSupportPlanCreationSchedule,
+      educationSupportPlanLifecycleStatus,
       conditions,
       curiousAlnAndLddAssessments,
       tab: 'overview',
@@ -150,7 +150,7 @@ describe('overviewController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
-      educationSupportPlanCreationSchedule,
+      educationSupportPlanLifecycleStatus,
       conditions,
       curiousAlnAndLddAssessments,
       tab: 'overview',
@@ -177,7 +177,7 @@ describe('overviewController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
-      educationSupportPlanCreationSchedule,
+      educationSupportPlanLifecycleStatus,
       conditions,
       tab: 'overview',
       challengeCategories: expect.objectContaining({
@@ -203,7 +203,7 @@ describe('overviewController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
-      educationSupportPlanCreationSchedule,
+      educationSupportPlanLifecycleStatus,
       conditions,
       curiousAlnAndLddAssessments,
       tab: 'overview',
@@ -232,7 +232,7 @@ describe('overviewController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
-      educationSupportPlanCreationSchedule,
+      educationSupportPlanLifecycleStatus,
       conditions,
       curiousAlnAndLddAssessments,
       tab: 'overview',
@@ -261,7 +261,7 @@ describe('overviewController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
-      educationSupportPlanCreationSchedule,
+      educationSupportPlanLifecycleStatus,
       conditions,
       curiousAlnAndLddAssessments,
       tab: 'overview',
@@ -299,7 +299,7 @@ describe('overviewController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
-      educationSupportPlanCreationSchedule,
+      educationSupportPlanLifecycleStatus,
       conditions,
       curiousAlnAndLddAssessments,
       tab: 'overview',
