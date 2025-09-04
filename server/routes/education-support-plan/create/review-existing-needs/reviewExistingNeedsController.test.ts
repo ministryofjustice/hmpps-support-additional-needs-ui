@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import ReviewNeedsConditionsStrengthsController from './reviewNeedsConditionsStrengthsController'
+import ReviewExistingNeedsController from './reviewExistingNeedsController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 
-describe('reviewNeedsConditionsStrengthsController', () => {
-  const controller = new ReviewNeedsConditionsStrengthsController()
+describe('reviewExistingNeedsController', () => {
+  const controller = new ReviewExistingNeedsController()
 
   const prisonerSummary = aValidPrisonerSummary()
 
@@ -27,11 +27,11 @@ describe('reviewNeedsConditionsStrengthsController', () => {
 
   it('should render view', async () => {
     // Given
-    const expectedViewTemplate = 'pages/education-support-plan/review-needs-conditions-strengths/index'
+    const expectedViewTemplate = 'pages/education-support-plan/review-existing-needs/index'
     const expectedViewModel = { prisonerSummary }
 
     // When
-    await controller.getReviewNeedsConditionsStrengthsView(req, res, next)
+    await controller.getReviewExistingNeedsView(req, res, next)
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
@@ -42,7 +42,7 @@ describe('reviewNeedsConditionsStrengthsController', () => {
     const expectedNextRoute = 'individual-support-requirements'
 
     // When
-    await controller.submitReviewNeedsConditionsStrengthsForm(req, res, next)
+    await controller.submitReviewExistingNeedsForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)

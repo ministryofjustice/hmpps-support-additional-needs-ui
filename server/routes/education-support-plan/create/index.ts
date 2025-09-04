@@ -7,7 +7,7 @@ import WhoCreatedThePlanController from './who-created-the-plan/whoCreatedThePla
 import OtherPeopleConsultedController from './other-people-consulted/otherPeopleConsultedController'
 import AddPersonConsultedController from './other-people-consulted/addPersonConsultedController'
 import OtherPeopleConsultedListController from './other-people-consulted/otherPeopleConsultedListController'
-import ReviewNeedsConditionsStrengthsController from './review-needs-conditions-strengths/reviewNeedsConditionsStrengthsController'
+import ReviewExistingNeedsController from './review-existing-needs/reviewExistingNeedsController'
 import IndividualSupportRequirementsController from './individual-support-requirements/individualSupportRequirementsController'
 import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
 import SpecificTeachingSkillsController from './specific-teaching-skills/specificTeachingSkillsController'
@@ -42,7 +42,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const otherPeopleConsultedController = new OtherPeopleConsultedController()
   const addPersonConsultedController = new AddPersonConsultedController()
   const otherPeopleConsultedListController = new OtherPeopleConsultedListController()
-  const reviewNeedsConditionsStrengthsController = new ReviewNeedsConditionsStrengthsController()
+  const reviewNeedsConditionsStrengthsController = new ReviewExistingNeedsController()
   const individualSupportRequirementsController = new IndividualSupportRequirementsController()
   const teachingAdjustmentsController = new TeachingAdjustmentsController()
   const specificTeachingSkillsController = new SpecificTeachingSkillsController()
@@ -96,13 +96,13 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
     asyncMiddleware(otherPeopleConsultedListController.submitOtherPeopleConsultedListForm),
   ])
 
-  router.get('/:journeyId/review-needs-conditions-and-strengths', [
+  router.get('/:journeyId/review-existing-needs', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    asyncMiddleware(reviewNeedsConditionsStrengthsController.getReviewNeedsConditionsStrengthsView),
+    asyncMiddleware(reviewNeedsConditionsStrengthsController.getReviewExistingNeedsView),
   ])
-  router.post('/:journeyId/review-needs-conditions-and-strengths', [
+  router.post('/:journeyId/review-existing-needs', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    asyncMiddleware(reviewNeedsConditionsStrengthsController.submitReviewNeedsConditionsStrengthsForm),
+    asyncMiddleware(reviewNeedsConditionsStrengthsController.submitReviewExistingNeedsForm),
   ])
 
   router.get('/:journeyId/individual-support-requirements', [
