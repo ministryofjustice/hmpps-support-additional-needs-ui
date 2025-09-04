@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import { StrengthService } from '../../../services'
-import { Result } from '../../../utils/result/result'
+import { StrengthService } from '../../services'
+import { Result } from '../../utils/result/result'
 
 /**
  *  Function that returns a middleware function to retrieve the prisoner's Strengths

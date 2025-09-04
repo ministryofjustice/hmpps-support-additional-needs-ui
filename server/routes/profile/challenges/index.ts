@@ -3,7 +3,7 @@ import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import ChallengesController from './challengesController'
 import { Services } from '../../../services'
 import retrieveCurrentChallenges from '../middleware/retrieveCurrentChallenges'
-import retrieveAlnScreeners from '../middleware/retrieveAlnScreeners'
+import retrieveAlnScreeners from '../../middleware/retrieveAlnScreeners'
 import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
 import retrieveEducationSupportPlanLifecycleStatus from '../middleware/retrieveEducationSupportPlanLifecycleStatus'
 
