@@ -8,6 +8,7 @@ import OtherPeopleConsultedController from './other-people-consulted/otherPeople
 import AddPersonConsultedController from './other-people-consulted/addPersonConsultedController'
 import OtherPeopleConsultedListController from './other-people-consulted/otherPeopleConsultedListController'
 import ReviewExistingNeedsController from './review-existing-needs/reviewExistingNeedsController'
+import ReviewExistingStrengthsController from './review-existing-needs/reviewExistingStrengthsController'
 import IndividualSupportRequirementsController from './individual-support-requirements/individualSupportRequirementsController'
 import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
 import SpecificTeachingSkillsController from './specific-teaching-skills/specificTeachingSkillsController'
@@ -33,16 +34,26 @@ import additionalInformationSchema from '../validationSchemas/additionalInformat
 import individualSupportRequirementsSchema from '../validationSchemas/individualSupportRequirementsSchema'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
+import retrieveStrengths from '../../middleware/retrieveStrengths'
+import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
+import retrieveAlnScreeners from '../../middleware/retrieveAlnScreeners'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
-  const { educationSupportPlanService, journeyDataService } = services
+  const {
+    additionalLearningNeedsService,
+    educationSupportPlanService,
+    journeyDataService,
+    prisonService,
+    strengthService,
+  } = services
   const router = Router({ mergeParams: true })
 
   const whoCreatedThePlanController = new WhoCreatedThePlanController()
   const otherPeopleConsultedController = new OtherPeopleConsultedController()
   const addPersonConsultedController = new AddPersonConsultedController()
   const otherPeopleConsultedListController = new OtherPeopleConsultedListController()
-  const reviewNeedsConditionsStrengthsController = new ReviewExistingNeedsController()
+  const reviewExistingNeedsController = new ReviewExistingNeedsController()
+  const reviewExistingStrengthsController = new ReviewExistingStrengthsController()
   const individualSupportRequirementsController = new IndividualSupportRequirementsController()
   const teachingAdjustmentsController = new TeachingAdjustmentsController()
   const specificTeachingSkillsController = new SpecificTeachingSkillsController()
@@ -98,18 +109,23 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/review-existing-needs', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    asyncMiddleware(reviewNeedsConditionsStrengthsController.getReviewExistingNeedsView),
+    asyncMiddleware(reviewExistingNeedsController.getReviewExistingNeedsView),
   ])
   router.post('/:journeyId/review-existing-needs', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    asyncMiddleware(reviewNeedsConditionsStrengthsController.submitReviewExistingNeedsForm),
+    asyncMiddleware(reviewExistingNeedsController.submitReviewExistingNeedsForm),
   ])
 
   router.get('/:journeyId/review-existing-needs/strengths', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Review existing strengths page')
-    },
+    retrievePrisonsLookup(prisonService),
+    retrieveStrengths(strengthService),
+    retrieveAlnScreeners(additionalLearningNeedsService),
+    asyncMiddleware(reviewExistingStrengthsController.getReviewExistingStrengthsView),
+  ])
+  router.post('/:journeyId/review-existing-needs/strengths', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(reviewExistingStrengthsController.submitReviewExistingStrengthsForm),
   ])
 
   router.get('/:journeyId/review-existing-needs/challenges', [
