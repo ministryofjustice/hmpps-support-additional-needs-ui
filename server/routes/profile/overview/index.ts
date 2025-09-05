@@ -5,7 +5,7 @@ import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import retrieveConditions from '../../middleware/retrieveConditions'
 import retrieveStrengths from '../../middleware/retrieveStrengths'
 import retrieveAlnScreeners from '../../middleware/retrieveAlnScreeners'
-import retrieveCurrentChallenges from '../middleware/retrieveCurrentChallenges'
+import retrieveChallenges from '../../middleware/retrieveChallenges'
 import retrieveCuriousAlnAndLddAssessments from '../middleware/retrieveCuriousAlnAndLddAssessments'
 import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
 import retrieveEducationSupportPlanLifecycleStatus from '../middleware/retrieveEducationSupportPlanLifecycleStatus'
@@ -28,7 +28,7 @@ const overviewRoutes = (services: Services): Router => {
       retrieveAlnScreeners(additionalLearningNeedsService),
       retrieveConditions(conditionService),
       retrieveStrengths(strengthService),
-      retrieveCurrentChallenges(challengeService),
+      retrieveChallenges(challengeService),
       retrieveCuriousAlnAndLddAssessments(curiousService),
       retrievePrisonsLookup(prisonService),
       asyncMiddleware(controller.getOverviewView),
