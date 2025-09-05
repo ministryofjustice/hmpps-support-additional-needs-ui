@@ -25,6 +25,14 @@ const pageViewEventMap: Record<string, Page> = {
     Page.CREATE_ELSP_OTHER_PEOPLE_CONSULTED_LIST,
   '/education-support-plan/:prisonNumber/create/:journeyId/review-existing-needs':
     Page.CREATE_ELSP_REVIEW_EXISTING_NEEDS,
+  '/education-support-plan/:prisonNumber/create/:journeyId/review-existing-needs/strengths':
+    Page.CREATE_ELSP_REVIEW_EXISTING_STRENGTHS,
+  '/education-support-plan/:prisonNumber/create/:journeyId/review-existing-needs/challenges':
+    Page.CREATE_ELSP_REVIEW_EXISTING_CHALLENGES,
+  '/education-support-plan/:prisonNumber/create/:journeyId/review-existing-needs/conditions':
+    Page.CREATE_ELSP_REVIEW_EXISTING_CONDITIONS,
+  '/education-support-plan/:prisonNumber/create/:journeyId/review-existing-needs/support-strategies':
+    Page.CREATE_ELSP_REVIEW_EXISTING_SUPPORT_STRATEGIES,
   '/education-support-plan/:prisonNumber/create/:journeyId/individual-support-requirements':
     Page.CREATE_ELSP_INDIVIDUAL_SUPPORT_REQUIREMENTS,
   '/education-support-plan/:prisonNumber/create/:journeyId/teaching-adjustments': Page.CREATE_ELSP_TEACHING_ADJUSTMENTS,

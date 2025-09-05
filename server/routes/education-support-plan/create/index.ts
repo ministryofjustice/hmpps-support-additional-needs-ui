@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Request, Response, Router } from 'express'
 import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
@@ -103,6 +103,34 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   router.post('/:journeyId/review-existing-needs', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(reviewNeedsConditionsStrengthsController.submitReviewExistingNeedsForm),
+  ])
+
+  router.get('/:journeyId/review-existing-needs/strengths', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    async (req: Request, res: Response) => {
+      res.send('Review existing strengths page')
+    },
+  ])
+
+  router.get('/:journeyId/review-existing-needs/challenges', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    async (req: Request, res: Response) => {
+      res.send('Review existing challenges page')
+    },
+  ])
+
+  router.get('/:journeyId/review-existing-needs/conditions', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    async (req: Request, res: Response) => {
+      res.send('Review existing conditions page')
+    },
+  ])
+
+  router.get('/:journeyId/review-existing-needs/support-strategies', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    async (req: Request, res: Response) => {
+      res.send('Review existing support strategies page')
+    },
   ])
 
   router.get('/:journeyId/individual-support-requirements', [
