@@ -1,5 +1,11 @@
 import { startOfToday, subDays } from 'date-fns'
-import type { AlnScreenerResponseDto, ChallengeResponseDto, StrengthResponseDto } from 'dto'
+import type {
+  AlnScreenerList,
+  AlnScreenerResponseDto,
+  ChallengeResponseDto,
+  StrengthResponseDto,
+  StrengthsList,
+} from 'dto'
 import { aValidStrengthResponseDto, aValidStrengthsList } from '../../testsupport/strengthResponseDtoTestDataBuilder'
 import StrengthType from '../../enums/strengthType'
 import StrengthCategory from '../../enums/strengthCategory'
@@ -111,7 +117,7 @@ export function setupNonAlnStrengthsPromise(
   options: {
     strengths?: Array<StrengthResponseDto>
   } = { strengths: Object.values(setupNonAlnStrengths()) },
-) {
+): Result<StrengthsList, Error> {
   return Result.fulfilled(aValidStrengthsList({ strengths: options.strengths }))
 }
 
@@ -125,7 +131,7 @@ export function setupAlnScreenersPromise(
       strengths: Object.values(setupAlnStrengths()),
     }),
   },
-) {
+): Result<AlnScreenerList, Error> {
   const latestScreenerDate = options.latestScreener.screenerDate
   return Result.fulfilled(
     aValidAlnScreenerList({

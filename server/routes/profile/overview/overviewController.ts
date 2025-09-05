@@ -5,10 +5,11 @@ import {
   getActiveStrengthsFromAlnScreener,
   getLatestAlnScreener,
   getNonAlnActiveStrengths,
-} from '../profileStrengthsFunctions'
+  getActiveChallengesFromAlnScreener,
+  getNonAlnActiveChallenges,
+} from '../../utils'
 import enumComparator from '../../enumComparator'
 import ChallengeCategory from '../../../enums/challengeCategory'
-import { getActiveChallengesFromAlnScreener, getNonAlnActiveChallenges } from '../profileChallengesFunctions'
 
 export default class OverviewController {
   getOverviewView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
