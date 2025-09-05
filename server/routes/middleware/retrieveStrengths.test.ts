@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import StrengthService from '../../../services/strengthService'
+import StrengthService from '../../services/strengthService'
 import retrieveStrengths from './retrieveStrengths'
-import { aValidStrengthsList } from '../../../testsupport/strengthResponseDtoTestDataBuilder'
+import { aValidStrengthsList } from '../../testsupport/strengthResponseDtoTestDataBuilder'
 
-jest.mock('../../../services/strengthService')
+jest.mock('../../services/strengthService')
 
 describe('retrieveStrengths', () => {
   const strengthService = new StrengthService(null) as jest.Mocked<StrengthService>

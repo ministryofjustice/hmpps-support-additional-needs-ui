@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import AdditionalLearningNeedsScreenerService from '../../../services/additionalLearningNeedsScreenerService'
+import AdditionalLearningNeedsScreenerService from '../../services/additionalLearningNeedsScreenerService'
 import retrieveAlnScreeners from './retrieveAlnScreeners'
-import { aValidAlnScreenerList } from '../../../testsupport/alnScreenerDtoTestDataBuilder'
+import { aValidAlnScreenerList } from '../../testsupport/alnScreenerDtoTestDataBuilder'
 
-jest.mock('../../../services/additionalLearningNeedsScreenerService')
+jest.mock('../../services/additionalLearningNeedsScreenerService')
 
 describe('retrieveAlnScreeners', () => {
   const alnService = new AdditionalLearningNeedsScreenerService(
