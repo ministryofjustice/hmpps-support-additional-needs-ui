@@ -51,7 +51,7 @@ const toGroupedStrengthsPromise = (
   }
 
   // At least one of the API calls has failed; we need data from both APIs in order to properly render the Strengths page
-  // Set the groupedStrengths to be a rejected Result containing the error message(s) from the original rejected promise(s)
+  // Return a rejected Result containing the error message(s) from the original rejected promise(s)
   return Result.rewrapRejected(alnScreeners, strengths)
 }
 
