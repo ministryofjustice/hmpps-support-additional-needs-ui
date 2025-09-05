@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import ConditionService from '../../../services/conditionService'
+import ConditionService from '../../services/conditionService'
 import retrieveConditions from './retrieveConditions'
-import { aValidConditionsList } from '../../../testsupport/conditionDtoTestDataBuilder'
+import { aValidConditionsList } from '../../testsupport/conditionDtoTestDataBuilder'
 
-jest.mock('../../../services/conditionService')
+jest.mock('../../services/conditionService')
 
 describe('retrieveConditions', () => {
   const conditionService = new ConditionService(null) as jest.Mocked<ConditionService>

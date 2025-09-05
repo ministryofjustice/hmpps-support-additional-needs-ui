@@ -9,6 +9,7 @@ import AddPersonConsultedController from './other-people-consulted/addPersonCons
 import OtherPeopleConsultedListController from './other-people-consulted/otherPeopleConsultedListController'
 import ReviewExistingNeedsController from './review-existing-needs/reviewExistingNeedsController'
 import ReviewExistingStrengthsController from './review-existing-needs/reviewExistingStrengthsController'
+import ReviewExistingConditionsController from './review-existing-needs/reviewExistingConditionsController'
 import IndividualSupportRequirementsController from './individual-support-requirements/individualSupportRequirementsController'
 import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
 import SpecificTeachingSkillsController from './specific-teaching-skills/specificTeachingSkillsController'
@@ -37,10 +38,12 @@ import ApplicationAction from '../../../enums/applicationAction'
 import retrieveStrengths from '../../middleware/retrieveStrengths'
 import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
 import retrieveAlnScreeners from '../../middleware/retrieveAlnScreeners'
+import retrieveConditions from '../../middleware/retrieveConditions'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const {
     additionalLearningNeedsService,
+    conditionService,
     educationSupportPlanService,
     journeyDataService,
     prisonService,
@@ -54,6 +57,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const otherPeopleConsultedListController = new OtherPeopleConsultedListController()
   const reviewExistingNeedsController = new ReviewExistingNeedsController()
   const reviewExistingStrengthsController = new ReviewExistingStrengthsController()
+  const reviewExistingConditionsController = new ReviewExistingConditionsController()
   const individualSupportRequirementsController = new IndividualSupportRequirementsController()
   const teachingAdjustmentsController = new TeachingAdjustmentsController()
   const specificTeachingSkillsController = new SpecificTeachingSkillsController()
@@ -137,9 +141,13 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/review-existing-needs/conditions', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Review existing conditions page')
-    },
+    retrievePrisonsLookup(prisonService),
+    retrieveConditions(conditionService),
+    asyncMiddleware(reviewExistingConditionsController.getReviewExistingConditionsView),
+  ])
+  router.post('/:journeyId/review-existing-needs/conditions', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(reviewExistingConditionsController.submitReviewExistingConditionsForm),
   ])
 
   router.get('/:journeyId/review-existing-needs/support-strategies', [

@@ -1,23 +1,14 @@
-{% extends "../layout.njk" %}
-{% from "../components/actions-card/macro.njk" import actionsCard %}
-{% from "../../../components/conditions-summary-card/macro.njk" import conditionsSummaryCard %}
+{% extends "../../layout.njk" %}
+{% from "../../../../components/conditions-summary-card/macro.njk" import conditionsSummaryCard %}
 
-{% set pageId = 'profile-conditions' %}
-{% set pageTitle = "Support for additional needs - Conditions" %}
+{% set pageId = 'education-support-plan-review-existing-conditions' %}
+{% set pageTitle = "Create an education support plan - Review conditions" %}
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <h2 class="govuk-heading-m">Conditions</h2>
-    </div>
-  </div>
+    <div class="govuk-grid-column-two-thirds">
 
-  <div class="govuk-grid-row">
-
-    {% set educationSupportPlanLifecycleStatusFulFilled = educationSupportPlanLifecycleStatus.isFulfilled() %}
-    {% set educationSupportPlanLifecycleStatus = educationSupportPlanLifecycleStatus.value if educationSupportPlanLifecycleStatusFulFilled else {} %}
-
-    <div class="govuk-grid-column-two-thirds app-u-print-full-width">
+      <h1 class="govuk-heading-l">{{ prisonerSummary | formatFirst_name_Last_name }}'s conditions</h1>
 
       {% if conditions.isFulfilled() %}
         {% set activeConditions = conditions.value.conditions | filterArrayOnProperty('active', true) | sort(attribute = 'updatedAt', reverse = true) %}
@@ -49,9 +40,6 @@
               <p class="govuk-body">
                 No conditions recorded
               </p>
-              {% if userHasPermissionTo('RECORD_SELF_DECLARED_CONDITIONS') %}
-                <a class="govuk-link govuk-body" href="/conditions/{{ prisonerSummary.prisonNumber }}/create/select-conditions">Record condition</a>
-              {% endif %}
             </div>
           </div>
 
@@ -61,15 +49,19 @@
         <h3 class="govuk-heading-s" data-qa="conditions-unavailable-message">We cannot show these details right now</h3>
         <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
       {% endif %}
-    </div>
 
-    <div class="govuk-grid-column-one-third app-u-print-full-width">
-      {{ actionsCard({
-        userHasPermissionTo: userHasPermissionTo,
-        prisonerSummary: prisonerSummary,
-        planStatus: educationSupportPlanLifecycleStatus.status,
-        planCreationDeadlineDate: educationSupportPlanLifecycleStatus.planCreationDeadlineDate
-      }) }}
+
+
+      <form class="form" method="post" novalidate="">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
     </div>
   </div>
 {% endblock %}
