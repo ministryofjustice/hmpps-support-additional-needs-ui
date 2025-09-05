@@ -9,7 +9,7 @@
             {% set howIdentifiedContent %}
               <ul class="govuk-list govuk-!-font-size-16">
                 {% for challengeIdentificationSource in challenge.howIdentified %}
-                  <li>{{ challengeIdentificationSource | formatStrengthIdentificationSourceScreenValue if challengeIdentificationSource != 'OTHER' else challenge.howIdentifiedOther }}</li>
+                  <li>{{ challengeIdentificationSource | formatChallengeIdentificationSourceScreenValue if challengeIdentificationSource != 'OTHER' else challenge.howIdentifiedOther }}</li>
                 {% endfor %}
               </ul>
             {% endset %}

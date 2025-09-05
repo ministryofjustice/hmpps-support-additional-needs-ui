@@ -1,5 +1,7 @@
 {% extends "../layout.njk" %}
 {% from "../components/actions-card/macro.njk" import actionsCard %}
+{% from "../../../components/challenges-summary-card/macro.njk" import challengesSummaryCard %}
+{% from "../../../components/challenges-summary-card/macro.njk" import alnChallengesSummaryCard %}
 
 {% set pageId = 'profile-challenges' %}
 {% set pageTitle = "Support for additional needs - Challenges" %}
@@ -20,12 +22,43 @@
 
       {% if groupedChallenges.isFulfilled() %}
         {% set groupedChallenges = groupedChallenges.value %}
-        {% if groupedChallenges | length == 0 %}
-          {% include "./components/_noChallengesSummaryCard.njk" %}
-        {% else %}
+
+        {% if groupedChallenges | length %}
           {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
-          {% include "./_challenges.njk" %}
+          {% for challengeCategory, challengesData in groupedChallenges %}
+            <div class="govuk-summary-card" data-qa="challenges-summary-card-{{ challengeCategory }}">
+              <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">{{ challengeCategory | formatChallengeCategoryScreenValue }}</h2>
+              </div>
+              <div class="govuk-summary-card__content govuk-!-padding-top-0">
+                <div class="govuk-summary-list">
+                  {# Render non-ALN challenges first #}
+                  {% for challenge in challengesData.nonAlnChallenges %}
+                    {{  challengesSummaryCard(challenge, prisonNamesById) }}
+                  {% endfor %}
+
+                  {# Render challenges from the most recent ALN Screener #}
+                  {{ alnChallengesSummaryCard(challengesData.latestAlnScreener, prisonNamesById) }}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+
+        {% else %}
+
+          <div class="govuk-summary-card" data-qa="no-challenges-summary-card">
+            <div class="govuk-summary-card__content">
+              <p class="govuk-body">
+                No challenges recorded
+              </p>
+              {% if userHasPermissionTo('RECORD_CHALLENGES') %}
+                <a class="govuk-link govuk-body" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category">Add challenge</a>
+              {% endif %}
+            </div>
+          </div>
+
         {% endif %}
+
       {% else %}
         <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>
         <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>

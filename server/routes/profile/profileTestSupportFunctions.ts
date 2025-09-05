@@ -204,7 +204,7 @@ export function setupNonAlnChallenges() {
 
 export function setupNonAlnChallengesPromise(
   challenges: Array<ChallengeResponseDto> = Object.values(setupNonAlnChallenges()),
-) {
+): Result<Array<ChallengeResponseDto>, Error> {
   return Result.fulfilled(challenges)
 }
 
