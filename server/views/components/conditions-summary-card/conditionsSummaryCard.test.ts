@@ -2,10 +2,10 @@ import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
 import { parseISO } from 'date-fns'
 import type { ConditionDto } from 'dto'
-import { aValidConditionDto } from '../../../../../../testsupport/conditionDtoTestDataBuilder'
-import formatDateFilter from '../../../../../../filters/formatDateFilter'
-import formatConditionTypeScreenValueFilter from '../../../../../../filters/formatConditionTypeFilter'
-import ConditionType from '../../../../../../enums/conditionType'
+import { aValidConditionDto } from '../../../testsupport/conditionDtoTestDataBuilder'
+import formatDateFilter from '../../../filters/formatDateFilter'
+import formatConditionTypeScreenValueFilter from '../../../filters/formatConditionTypeFilter'
+import ConditionType from '../../../enums/conditionType'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/dist/',

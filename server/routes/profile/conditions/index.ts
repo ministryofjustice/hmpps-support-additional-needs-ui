@@ -2,7 +2,7 @@ import { Router } from 'express'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import ConditionsController from './conditionsController'
 import { Services } from '../../../services'
-import retrieveConditions from '../middleware/retrieveConditions'
+import retrieveConditions from '../../middleware/retrieveConditions'
 import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
 import retrieveEducationSupportPlanLifecycleStatus from '../middleware/retrieveEducationSupportPlanLifecycleStatus'
 
