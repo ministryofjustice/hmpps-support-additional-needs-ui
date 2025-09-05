@@ -1,14 +1,14 @@
 import { Request, Response } from 'express'
-import ChallengeService from '../../../services/challengeService'
-import retrieveCurrentChallenges from './retrieveCurrentChallenges'
-import { aValidChallengeResponse } from '../../../testsupport/challengeResponseTestDataBuilder'
+import ChallengeService from '../../services/challengeService'
+import retrieveChallenges from './retrieveChallenges'
+import { aValidChallengeResponse } from '../../testsupport/challengeResponseTestDataBuilder'
 
-jest.mock('../../../services/challengeService')
+jest.mock('../../services/challengeService')
 
-describe('retrieveCurrentChallenges', () => {
+describe('retrieveChallenges', () => {
   const mockedChallengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
 
-  const requestHandler = retrieveCurrentChallenges(mockedChallengeService)
+  const requestHandler = retrieveChallenges(mockedChallengeService)
   const prisonNumber = 'A1234BC'
   const username = 'a-dps-user'
 
@@ -28,7 +28,7 @@ describe('retrieveCurrentChallenges', () => {
     res.locals = { user: undefined, apiErrorCallback }
   })
 
-  it('should retrieve current challenges and store in res.locals', async () => {
+  it('should retrieve challenges and store in res.locals', async () => {
     // Given
     const expectedChallenge = [aValidChallengeResponse()]
     mockedChallengeService.getChallenges.mockResolvedValue(expectedChallenge)

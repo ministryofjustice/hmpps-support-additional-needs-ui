@@ -1,11 +1,11 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import { ChallengeService } from '../../../services'
-import { Result } from '../../../utils/result/result'
+import { ChallengeService } from '../../services'
+import { Result } from '../../utils/result/result'
 
 /**
- *  Function that returns a middleware function to retrieve the prisoner's current challenges
+ *  Function that returns a middleware function to retrieve the prisoner's challenges
  */
-const retrieveCurrentChallenges = (challengeService: ChallengeService): RequestHandler => {
+const retrieveChallenges = (challengeService: ChallengeService): RequestHandler => {
   return async (req: Request, res: Response, next: NextFunction) => {
     const { prisonNumber } = req.params
 
@@ -19,4 +19,4 @@ const retrieveCurrentChallenges = (challengeService: ChallengeService): RequestH
   }
 }
 
-export default retrieveCurrentChallenges
+export default retrieveChallenges
