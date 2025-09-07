@@ -1,11 +1,16 @@
 import { startOfToday, subDays } from 'date-fns'
-import type { AlnScreenerDto, AlnScreenerList, AlnScreenerResponseDto, StrengthResponseDto } from 'dto'
+import type {
+  AlnScreenerDto,
+  AlnScreenerList,
+  AlnScreenerResponseDto,
+  ChallengeResponseDto,
+  StrengthResponseDto,
+} from 'dto'
 import ChallengeType from '../enums/challengeType'
 import StrengthType from '../enums/strengthType'
-import ChallengeCategory from '../enums/challengeCategory'
 import { DtoAuditFields, validDtoAuditFields } from './auditFieldsTestDataBuilder'
 import { aValidStrengthResponseDto } from './strengthResponseDtoTestDataBuilder'
-import { aValidChallengeResponse } from './challengeResponseTestDataBuilder'
+import aValidChallengeResponseDto from './challengeResponseDtoTestDataBuilder'
 
 const aValidAlnScreenerList = (options?: {
   prisonNumber?: string
@@ -18,12 +23,12 @@ const aValidAlnScreenerList = (options?: {
 const aValidAlnScreenerResponseDto = (
   options?: DtoAuditFields & {
     screenerDate?: Date
-    challenges?: Array<{ challengeTypeCode: ChallengeType; challengeCategory: ChallengeCategory }>
+    challenges?: Array<ChallengeResponseDto>
     strengths?: Array<StrengthResponseDto>
   },
 ): AlnScreenerResponseDto => ({
   screenerDate: options?.screenerDate || subDays(startOfToday(), 1),
-  challenges: options?.challenges || aValidChallengeResponse(),
+  challenges: options?.challenges || [aValidChallengeResponseDto()],
   strengths: options?.strengths || [aValidStrengthResponseDto()],
   ...validDtoAuditFields(options),
 })
