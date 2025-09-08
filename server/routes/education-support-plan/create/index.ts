@@ -8,6 +8,7 @@ import OtherPeopleConsultedController from './other-people-consulted/otherPeople
 import AddPersonConsultedController from './other-people-consulted/addPersonConsultedController'
 import OtherPeopleConsultedListController from './other-people-consulted/otherPeopleConsultedListController'
 import ReviewExistingNeedsController from './review-existing-needs/reviewExistingNeedsController'
+import ReviewExistingChallengesController from './review-existing-needs/reviewExistingChallengesController'
 import ReviewExistingStrengthsController from './review-existing-needs/reviewExistingStrengthsController'
 import ReviewExistingConditionsController from './review-existing-needs/reviewExistingConditionsController'
 import IndividualSupportRequirementsController from './individual-support-requirements/individualSupportRequirementsController'
@@ -39,10 +40,12 @@ import retrieveStrengths from '../../middleware/retrieveStrengths'
 import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
 import retrieveAlnScreeners from '../../middleware/retrieveAlnScreeners'
 import retrieveConditions from '../../middleware/retrieveConditions'
+import retrieveChallenges from '../../middleware/retrieveChallenges'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const {
     additionalLearningNeedsService,
+    challengeService,
     conditionService,
     educationSupportPlanService,
     journeyDataService,
@@ -57,6 +60,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const otherPeopleConsultedListController = new OtherPeopleConsultedListController()
   const reviewExistingNeedsController = new ReviewExistingNeedsController()
   const reviewExistingStrengthsController = new ReviewExistingStrengthsController()
+  const reviewExistingChallengesController = new ReviewExistingChallengesController()
   const reviewExistingConditionsController = new ReviewExistingConditionsController()
   const individualSupportRequirementsController = new IndividualSupportRequirementsController()
   const teachingAdjustmentsController = new TeachingAdjustmentsController()
@@ -134,9 +138,14 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/review-existing-needs/challenges', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Review existing challenges page')
-    },
+    retrievePrisonsLookup(prisonService),
+    retrieveChallenges(challengeService),
+    retrieveAlnScreeners(additionalLearningNeedsService),
+    asyncMiddleware(reviewExistingChallengesController.getReviewExistingChallengesView),
+  ])
+  router.post('/:journeyId/review-existing-needs/challenges', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(reviewExistingChallengesController.submitReviewExistingChallengesForm),
   ])
 
   router.get('/:journeyId/review-existing-needs/conditions', [
