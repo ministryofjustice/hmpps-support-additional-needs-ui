@@ -31,6 +31,7 @@ import {
 } from '../filters/formatSupportStrategyTypeFilter'
 import challengeStaffSupportTextLookupFilter from '../filters/challengeStaffSupportTextLookupFilter'
 import formatAlnAssessmentReferralScreenValueFilter from '../filters/formatAlnAssessmentReferralFilter'
+import formatChallengeIdentificationSourceScreenValueFilter from '../filters/formatChallengeIdentificationSourceFilter'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -76,6 +77,10 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatStrengthTypeScreenValue', formatStrengthTypeScreenValueFilter)
   njkEnv.addFilter('formatStrengthTypeHintText', formatStrengthTypeHintTextFilter)
   njkEnv.addFilter('formatChallengeCategoryScreenValue', formatChallengeCategoryScreenValueFilter)
+  njkEnv.addFilter(
+    'formatChallengeIdentificationSourceScreenValue',
+    formatChallengeIdentificationSourceScreenValueFilter,
+  )
   njkEnv.addFilter('formatChallengeTypeScreenValue', formatChallengeTypeScreenValueFilter)
   njkEnv.addFilter('formatChallengeTypeHintText', formatChallengeTypeHintTextFilter)
   njkEnv.addFilter('formatConditionTypeScreenValue', formatConditionTypeScreenValueFilter)

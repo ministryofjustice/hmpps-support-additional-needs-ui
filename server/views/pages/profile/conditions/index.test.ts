@@ -10,6 +10,7 @@ import filterArrayOnPropertyFilter from '../../../../filters/filterArrayOnProper
 import formatConditionTypeScreenValueFilter from '../../../../filters/formatConditionTypeFilter'
 import ConditionType from '../../../../enums/conditionType'
 import ConditionSource from '../../../../enums/conditionSource'
+import aPlanLifecycleStatusDto from '../../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -46,6 +47,7 @@ const templateParams = {
   tab: 'conditions',
   conditions: Result.fulfilled(aValidConditionsList()),
   prisonNamesById: Result.fulfilled(prisonNamesById),
+  educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
   pageHasApiErrors: false,
 }
 

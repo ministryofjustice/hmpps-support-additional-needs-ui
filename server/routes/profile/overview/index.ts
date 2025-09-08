@@ -2,13 +2,13 @@ import { Router } from 'express'
 import { Services } from '../../../services'
 import OverviewController from './overviewController'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
-import retrieveCurrentEducationSupportPlanCreationSchedule from '../middleware/retrieveCurrentEducationSupportPlanCreationSchedule'
-import retrieveConditions from '../middleware/retrieveConditions'
-import retrieveStrengths from '../middleware/retrieveStrengths'
-import retrieveAlnScreeners from '../middleware/retrieveAlnScreeners'
-import retrieveCurrentChallenges from '../middleware/retrieveCurrentChallenges'
+import retrieveConditions from '../../middleware/retrieveConditions'
+import retrieveStrengths from '../../middleware/retrieveStrengths'
+import retrieveAlnScreeners from '../../middleware/retrieveAlnScreeners'
+import retrieveChallenges from '../../middleware/retrieveChallenges'
 import retrieveCuriousAlnAndLddAssessments from '../middleware/retrieveCuriousAlnAndLddAssessments'
 import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
+import retrieveEducationSupportPlanLifecycleStatus from '../middleware/retrieveEducationSupportPlanLifecycleStatus'
 
 const overviewRoutes = (services: Services): Router => {
   const {
@@ -16,7 +16,7 @@ const overviewRoutes = (services: Services): Router => {
     challengeService,
     conditionService,
     curiousService,
-    educationSupportPlanScheduleService,
+    educationSupportPlanService,
     prisonService,
     strengthService,
   } = services
@@ -24,11 +24,11 @@ const overviewRoutes = (services: Services): Router => {
 
   return Router({ mergeParams: true }) //
     .get('/', [
-      retrieveCurrentEducationSupportPlanCreationSchedule(educationSupportPlanScheduleService),
+      retrieveEducationSupportPlanLifecycleStatus(educationSupportPlanService),
       retrieveAlnScreeners(additionalLearningNeedsService),
       retrieveConditions(conditionService),
       retrieveStrengths(strengthService),
-      retrieveCurrentChallenges(challengeService),
+      retrieveChallenges(challengeService),
       retrieveCuriousAlnAndLddAssessments(curiousService),
       retrievePrisonsLookup(prisonService),
       asyncMiddleware(controller.getOverviewView),

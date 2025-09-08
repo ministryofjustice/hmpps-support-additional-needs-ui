@@ -15,7 +15,7 @@ describe('Create Conditions', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', { prisonNumber })
     cy.task('stubCreateConditions', prisonNumber)
     cy.task('stubGetConditions', { prisonNumber })
   })
@@ -40,7 +40,7 @@ describe('Create Conditions', () => {
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
       .selectTab('Conditions', ConditionsPage)
-      .clickRecordConditionsButton()
+      .clickAddConditionsButton()
 
     // When
     Page.verifyOnPage(SelectConditionsPage) //
@@ -116,7 +116,7 @@ describe('Create Conditions', () => {
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
       .selectTab('Conditions', ConditionsPage)
-      .clickRecordConditionsButton()
+      .clickAddConditionsButton()
 
     // When
     Page.verifyOnPage(SelectConditionsPage) //

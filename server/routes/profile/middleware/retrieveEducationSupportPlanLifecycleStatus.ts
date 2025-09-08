@@ -14,7 +14,7 @@ const retrieveEducationSupportPlanLifecycleStatus = (
 
     // Lookup the prisoner's ELSP Lifecycle Status and store in res.locals
     const { apiErrorCallback } = res.locals
-    res.locals.educationSupportPlanlifecycleStatus = await Result.wrap(
+    res.locals.educationSupportPlanLifecycleStatus = await Result.wrap(
       educationSupportPlanService.getEducationSupportPlanLifecycleStatus(username, prisonNumber),
       apiErrorCallback,
     )

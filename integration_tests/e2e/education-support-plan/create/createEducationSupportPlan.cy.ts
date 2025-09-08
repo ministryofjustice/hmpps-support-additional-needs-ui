@@ -5,7 +5,7 @@ import PlanCreatedByValue from '../../../../server/enums/planCreatedByValue'
 import OtherPeopleConsultedPage from '../../../pages/education-support-plan/otherPeopleConsultedPage'
 import OtherPeopleConsultedAddPersonPage from '../../../pages/education-support-plan/otherPeopleConsultedAddPersonPage'
 import OtherPeopleConsultedListPage from '../../../pages/education-support-plan/otherPeopleConsultedListPage'
-import ReviewNeedsConditionsStrengthsPage from '../../../pages/education-support-plan/reviewNeedsConditionsStrengthsPage'
+import ReviewExistingNeedsPage from '../../../pages/education-support-plan/reviewExistingNeedsPage'
 import OverviewPage from '../../../pages/profile/overviewPage'
 import TeachingAdjustmentsPage from '../../../pages/education-support-plan/teachingAdjustmentsPage'
 import SpecificTeachingSkillsPage from '../../../pages/education-support-plan/specificTeachingSkillsPage'
@@ -27,7 +27,7 @@ context('Create an Education Support Plan', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', { prisonNumber })
     cy.task('stubCreateEducationSupportPlan', prisonNumber)
   })
 
@@ -103,9 +103,9 @@ context('Create an Education Support Plan', () => {
       .personAtRowIs(2, 'Another Teacher')
 
     Page.verifyOnPage(OtherPeopleConsultedListPage) //
-      .submitPageTo(ReviewNeedsConditionsStrengthsPage)
+      .submitPageTo(ReviewExistingNeedsPage)
 
-    Page.verifyOnPage(ReviewNeedsConditionsStrengthsPage) //
+    Page.verifyOnPage(ReviewExistingNeedsPage) //
       .submitPageTo(IndividualSupportRequirementsPage)
 
     Page.verifyOnPage(IndividualSupportRequirementsPage) //

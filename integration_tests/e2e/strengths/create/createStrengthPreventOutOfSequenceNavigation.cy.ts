@@ -10,7 +10,7 @@ context('Prevent out of sequence navigation to pages in the Create Strength jour
     cy.task('stubSignIn')
     cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', { prisonNumber })
   })
   ;['detail'].forEach(page => {
     it(`should prevent direct navigation to ${page} page when the user has not started the Create Strength journey`, () => {

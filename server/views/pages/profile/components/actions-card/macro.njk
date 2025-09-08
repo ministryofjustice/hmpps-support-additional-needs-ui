@@ -1,0 +1,13 @@
+{# Actions Card macro for the Profile pages
+
+Data supplied to this marco:
+  params: {
+    userHasPermissionTo
+    prisonerSummary
+    planStatus
+    planCreationDeadlineDate
+  }
+#}
+{% macro actionsCard(params) %}
+  {%- include "./template.njk" -%}
+{% endmacro %}

@@ -1,0 +1,70 @@
+{% extends "../../layout.njk" %}
+{% from "../../../../components/challenges-summary-card/macro.njk" import challengesSummaryCard %}
+{% from "../../../../components/challenges-summary-card/macro.njk" import alnChallengesSummaryCard %}
+
+{% set pageId = 'education-support-plan-review-existing-challenges' %}
+{% set pageTitle = "Create an education support plan - Review challenges" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">{{ prisonerSummary | formatFirst_name_Last_name }}'s challenges</h1>
+
+      {% if groupedChallenges.isFulfilled() %}
+        {% set groupedChallenges = groupedChallenges.value %}
+
+        {% if groupedChallenges | length %}
+
+          {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+          {% for challengeCategory, challengesData in groupedChallenges %}
+            <div class="govuk-summary-card" data-qa="challenges-summary-card-{{ challengeCategory }}">
+              <div class="govuk-summary-card__title-wrapper">
+                <h2 class="govuk-summary-card__title">{{ challengeCategory | formatChallengeCategoryScreenValue }}</h2>
+              </div>
+              <div class="govuk-summary-card__content govuk-!-padding-top-0">
+                <div class="govuk-summary-list">
+                  {# Render non-ALN challenges first #}
+                  {% for challenge in challengesData.nonAlnChallenges %}
+                    {{  challengesSummaryCard(challenge, prisonNamesById) }}
+                  {% endfor %}
+
+                  {# Render challenges from the most recent ALN Screener #}
+                  {{ alnChallengesSummaryCard(challengesData.latestAlnScreener, prisonNamesById) }}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+
+        {% else %}
+
+          <div class="govuk-summary-card" data-qa="no-challenges-summary-card">
+            <div class="govuk-summary-card__content">
+              <p class="govuk-body">
+                No challenges recorded
+              </p>
+            </div>
+          </div>
+
+        {% endif %}
+
+      {% else %}
+        <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>
+        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+      {% endif %}
+
+
+
+      <form class="form" method="post" novalidate="">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

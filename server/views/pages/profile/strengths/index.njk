@@ -1,22 +1,29 @@
 {% extends "../layout.njk" %}
-{% from "./components/strengths-summary-card/macro.njk" import strengthsSummaryCard %}
-{% from "../../../components/actions-card/macro.njk" import actionsCard %}
+{% from "../components/actions-card/macro.njk" import actionsCard %}
+{% from "../../../components/strengths-summary-card/macro.njk" import strengthsSummaryCard %}
 
 {% set pageId = 'profile-strengths' %}
 {% set pageTitle = "Support for additional needs - Strengths" %}
 
 {% block content %}
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds app-u-print-full-width">
+    <div class="govuk-grid-column-full">
       <h2 class="govuk-heading-m">Strengths</h2>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+
+    {% set educationSupportPlanLifecycleStatusFulFilled = educationSupportPlanLifecycleStatus.isFulfilled() %}
+    {% set educationSupportPlanLifecycleStatus = educationSupportPlanLifecycleStatus.value if educationSupportPlanLifecycleStatusFulFilled else {} %}
+
+    <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
       {% if groupedStrengths.isFulfilled() %}
         {% set groupedStrengths = groupedStrengths.value %}
 
-        {% if groupedStrengths | length == 0 %}
-          {% include './_noStrengthsSummaryCard.njk' %}
+        {% if groupedStrengths | length %}
 
-        {% else %}
           {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
           {% for strengthCategory, strengthsData in groupedStrengths %}
             {{ strengthsSummaryCard({
@@ -29,7 +36,21 @@
             }) }}
           {% endfor %}
 
+        {% else %}
+
+          <div class="govuk-summary-card" data-qa="no-strengths-summary-card">
+            <div class="govuk-summary-card__content">
+              <p class="govuk-body">
+                No strengths recorded
+              </p>
+              {% if userHasPermissionTo('RECORD_STRENGTHS') %}
+                <a class="govuk-link govuk-body" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category">Add strength</a>
+              {% endif %}
+            </div>
+          </div>
+
         {% endif %}
+
       {% else %}
         <h3 class="govuk-heading-s" data-qa="strengths-unavailable-message">We cannot show these details right now</h3>
         <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
@@ -38,9 +59,10 @@
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">
       {{ actionsCard({
-        prisonerSummary: prisonerSummary,
         userHasPermissionTo: userHasPermissionTo,
-        actionMenuType: 'strengths'
+        prisonerSummary: prisonerSummary,
+        planStatus: educationSupportPlanLifecycleStatus.status,
+        planCreationDeadlineDate: educationSupportPlanLifecycleStatus.planCreationDeadlineDate
       }) }}
     </div>
   </div>

@@ -5,10 +5,11 @@ import {
   getActiveStrengthsFromAlnScreener,
   getLatestAlnScreener,
   getNonAlnActiveStrengths,
-} from '../profileStrengthsFunctions'
+  getActiveChallengesFromAlnScreener,
+  getNonAlnActiveChallenges,
+} from '../../utils'
 import enumComparator from '../../enumComparator'
 import ChallengeCategory from '../../../enums/challengeCategory'
-import { getActiveChallengesFromAlnScreener, getNonAlnActiveChallenges } from '../profileChallengesFunctions'
 
 export default class OverviewController {
   getOverviewView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -18,7 +19,7 @@ export default class OverviewController {
       conditions,
       challenges,
       curiousAlnAndLddAssessments,
-      educationSupportPlanCreationSchedule,
+      educationSupportPlanLifecycleStatus,
       prisonNamesById,
       strengths,
     } = res.locals
@@ -61,7 +62,7 @@ export default class OverviewController {
     const viewRenderArgs = {
       prisonerSummary,
       conditions,
-      educationSupportPlanCreationSchedule,
+      educationSupportPlanLifecycleStatus,
       strengthCategories: strengthCategoriesPromise,
       challengeCategories: challengeCategoriesPromise,
       curiousAlnAndLddAssessments,

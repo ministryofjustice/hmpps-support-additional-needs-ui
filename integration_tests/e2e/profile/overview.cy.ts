@@ -5,27 +5,37 @@
 import OverviewPage from '../../pages/profile/overviewPage'
 import Page from '../../pages/page'
 import Error404Page from '../../pages/error404'
-import PlanCreationScheduleStatus from '../../../server/enums/planCreationScheduleStatus'
 import SupportStrategiesPage from '../../pages/profile/supportStrategiesPage'
 import EducationSupportPlanPage from '../../pages/profile/educationSupportPlanPage'
 import ConditionsPage from '../../pages/profile/conditionsPage'
 import StrengthsPage from '../../pages/profile/strengthsPage'
 import ChallengesPage from '../../pages/profile/challengesPage'
+import aPlanActionStatus from '../../../server/testsupport/planActionStatusTestDataBuilder'
 
 context('Profile Overview Page', () => {
   const prisonNumber = 'H4115SD'
 
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
+    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] })
     cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
     cy.task('stubGetConditions', { prisonNumber })
     cy.task('stubGetChallenges', { prisonNumber })
     cy.task('stubGetStrengths', { prisonNumber })
     cy.task('stubGetCuriousV2Assessments', { prisonNumber })
     cy.task('stubGetEducationSupportPlan', prisonNumber)
+    cy.task('stubGetPlanActionStatus', {
+      prisonNumber,
+      planActionStatus: aPlanActionStatus({
+        status: 'PLAN_DUE',
+        reviewDeadlineDate: null,
+        exemptionReason: null,
+        exemptionDetail: null,
+        exemptionRecordedAt: null,
+        exemptionRecordedBy: null,
+      }),
+    })
   })
 
   it('should be able to navigate directly to the profile overview page', () => {
@@ -45,32 +55,15 @@ context('Profile Overview Page', () => {
       .apiErrorBannerIsNotDisplayed()
   })
 
-  it('should display overview page given prisoner already has an Education Support Plan', () => {
+  it('should display overview page given retrieving the prisoners plan action status returns an error', () => {
     // Given
-    cy.task('stubGetEducationSupportPlanCreationSchedules', {
-      prisonNumber,
-      status: PlanCreationScheduleStatus.COMPLETED,
-    })
+    cy.task('stubGetPlanActionStatus500Error', prisonNumber)
 
     // When
     cy.visit(`/profile/${prisonNumber}/overview`)
 
     // Then
     Page.verifyOnPage(OverviewPage) //
-      .actionsCardIsNotPresent()
-      .apiErrorBannerIsNotDisplayed()
-  })
-
-  it('should display overview page given retrieving the prisoners plan creation schedule returns an error', () => {
-    // Given
-    cy.task('stubGetEducationSupportPlanCreationSchedules500Error', { prisonNumber })
-
-    // When
-    cy.visit(`/profile/${prisonNumber}/overview`)
-
-    // Then
-    Page.verifyOnPage(OverviewPage) //
-      .actionsCardIsNotPresent()
       .apiErrorBannerIsDisplayed()
   })
 

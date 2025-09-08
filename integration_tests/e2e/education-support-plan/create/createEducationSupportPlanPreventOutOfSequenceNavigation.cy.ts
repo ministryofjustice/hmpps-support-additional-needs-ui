@@ -10,7 +10,11 @@ context('Prevent out of sequence navigation to pages in the Create Education Sup
     'other-people-consulted',
     'other-people-consulted/add-person',
     'other-people-consulted/list',
-    'review-needs-conditions-and-strengths',
+    'review-existing-needs',
+    'review-existing-needs/strengths',
+    'review-existing-needs/conditions',
+    'review-existing-needs/challenges',
+    'review-existing-needs/support-strategies',
     'individual-support-requirements',
     'teaching-adjustments',
     'specific-teaching-skills',
@@ -25,7 +29,7 @@ context('Prevent out of sequence navigation to pages in the Create Education Sup
   beforeEach(() => {
     cy.task('reset')
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', { prisonNumber })
   })
 
   pages.forEach(page => {

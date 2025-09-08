@@ -20,7 +20,7 @@ context('Record an Additional Learning Needs screener for a prisoner', () => {
     cy.task('stubSignIn')
     cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', { prisonNumber })
     cy.task('stubChallengesReferenceData')
     cy.task('stubStrengthsReferenceData')
     cy.task('stubRecordAlnScreener', prisonNumber)

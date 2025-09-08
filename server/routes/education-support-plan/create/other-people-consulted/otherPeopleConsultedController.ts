@@ -31,7 +31,7 @@ export default class OtherPeopleConsultedController {
 
     return res.redirect(
       wereOtherPeopleConsultedForm.wereOtherPeopleConsulted === YesNoValue.NO
-        ? 'review-needs-conditions-and-strengths'
+        ? 'review-existing-needs'
         : 'other-people-consulted/add-person',
     )
   }

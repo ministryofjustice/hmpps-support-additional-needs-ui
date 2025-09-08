@@ -5,7 +5,7 @@ import WhoCreatedThePlanPage from '../pages/education-support-plan/whoCreatedThe
 import Page from '../pages/page'
 import PlanCreatedByValue from '../../server/enums/planCreatedByValue'
 import OtherPeopleConsultedPage from '../pages/education-support-plan/otherPeopleConsultedPage'
-import ReviewNeedsConditionsStrengthsPage from '../pages/education-support-plan/reviewNeedsConditionsStrengthsPage'
+import ReviewExistingNeedsPage from '../pages/education-support-plan/reviewExistingNeedsPage'
 import TeachingAdjustmentsPage from '../pages/education-support-plan/teachingAdjustmentsPage'
 import SpecificTeachingSkillsPage from '../pages/education-support-plan/specificTeachingSkillsPage'
 import ExamArrangementsPage from '../pages/education-support-plan/examArrangementsPage'
@@ -47,7 +47,7 @@ Cypress.Commands.add(
       .submitPageTo(OtherPeopleConsultedPage)
       //
       .selectOtherPeopleWereNotConsulted()
-      .submitPageTo(ReviewNeedsConditionsStrengthsPage)
+      .submitPageTo(ReviewExistingNeedsPage)
       //
       .submitPageTo(IndividualSupportRequirementsPage)
       //

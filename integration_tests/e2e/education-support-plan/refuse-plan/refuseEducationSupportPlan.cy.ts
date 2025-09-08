@@ -5,21 +5,33 @@ import PlanCreationScheduleExemptionReason from '../../../../server/enums/planCr
 import { patchRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
+import AuthorisationErrorPage from '../../../pages/authorisationError'
+import aPlanActionStatus from '../../../../server/testsupport/planActionStatusTestDataBuilder'
 
 context('Refuse an Education Support Plan', () => {
   const prisonNumber = 'H4115SD'
 
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.signIn()
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetEducationSupportPlanCreationSchedules', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', {
+      prisonNumber,
+      planActionStatus: aPlanActionStatus({
+        status: 'PLAN_DUE',
+        reviewDeadlineDate: null,
+        exemptionReason: null,
+        exemptionDetail: null,
+        exemptionRecordedAt: null,
+        exemptionRecordedBy: null,
+      }),
+    })
     cy.task('stubUpdateEducationSupportPlanCreationStatus', prisonNumber)
   })
 
   it('should be able to navigate directly to the refuse Education Support Plan page', () => {
     // Given
+    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] }) // user has the role that gives them permission to refuse ELSPs)
+    cy.signIn()
 
     // When
     cy.visit(`/education-support-plan/${prisonNumber}/refuse-plan/reason`)
@@ -30,10 +42,13 @@ context('Refuse an Education Support Plan', () => {
 
   it('should refuse a prisoners Education Support Plan, triggering validation on every screen', () => {
     // Given
+    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] }) // user has the role that gives them permission to refuse ELSPs)
+    cy.signIn()
+
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
       .actionsCardContainsEducationSupportPlanActions()
-      .clickRefuseEducationSupportPlanButton()
+      .clickDeclineEducationSupportPlanButton()
 
     // When
     Page.verifyOnPage(ReasonPage) //
@@ -74,12 +89,15 @@ context('Refuse an Education Support Plan', () => {
 
   it('should not refuse a prisoners Education Support Plan given API returns an error response', () => {
     // Given
+    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] }) // user has the role that gives them permission to refuse ELSPs)
+    cy.signIn()
+
     cy.task('stubUpdateEducationSupportPlanCreationStatus500Error', prisonNumber)
 
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
       .actionsCardContainsEducationSupportPlanActions()
-      .clickRefuseEducationSupportPlanButton()
+      .clickDeclineEducationSupportPlanButton()
     Page.verifyOnPage(ReasonPage) //
       .apiErrorBannerIsNotDisplayed()
 
@@ -92,5 +110,17 @@ context('Refuse an Education Support Plan', () => {
     // Then
     Page.verifyOnPage(ReasonPage) //
       .apiErrorBannerIsDisplayed()
+  })
+
+  it('should not be able to navigate directly to the refuse Education Support Plan page given user does not have the required role', () => {
+    // Given
+    cy.task('stubSignIn', { roles: ['ROLE_SOME_OTHER_ROLE'] }) // user has some DPS roles, but not the specific role that gives them permission to refuse ELSPs
+    cy.signIn()
+
+    // When
+    cy.visit(`/education-support-plan/${prisonNumber}/refuse-plan/reason`, { failOnStatusCode: false })
+
+    // Then
+    Page.verifyOnPage(AuthorisationErrorPage)
   })
 })

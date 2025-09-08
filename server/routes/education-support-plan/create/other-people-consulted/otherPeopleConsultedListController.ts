@@ -28,7 +28,7 @@ export default class OtherPeopleConsultedListController {
     }
 
     return res.redirect(
-      req.query?.submitToCheckAnswers !== 'true' ? '../review-needs-conditions-and-strengths' : '../check-your-answers',
+      req.query?.submitToCheckAnswers !== 'true' ? '../review-existing-needs' : '../check-your-answers',
     )
   }
 

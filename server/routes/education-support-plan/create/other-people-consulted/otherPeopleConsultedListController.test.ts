@@ -52,7 +52,7 @@ describe('otherPeopleConsultedListController', () => {
       req.body = {}
       req.journeyData = { educationSupportPlanDto }
 
-      const expectedNextRoute = '../review-needs-conditions-and-strengths'
+      const expectedNextRoute = '../review-existing-needs'
 
       // When
       await controller.submitOtherPeopleConsultedListForm(req, res, next)

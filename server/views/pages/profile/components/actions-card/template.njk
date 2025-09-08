@@ -1,0 +1,141 @@
+{% set userHasPermissionTo = params.userHasPermissionTo %}
+{% set prisonerSummary = params.prisonerSummary %}
+{% set planStatus = params.planStatus %}
+{% set planCreationDeadlineDate = params.planCreationDeadlineDate %}
+
+<div class="govuk-summary-card actions-card govuk-!-display-none-print" data-qa="actions-card">
+  <div class="govuk-summary-card__title-wrapper govuk-!-padding-bottom-2">
+    <h2 class="govuk-summary-card__title">Actions</h2>
+  </div>
+
+  <div class="govuk-summary-card__content" data-qa="education-support-plan-actions">
+    <section>
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Education support plan</h3>
+
+      {% if userHasPermissionTo('VIEW_ELSP_DEADLINES_AND_STATUSES') %}
+
+        {% if planStatus == 'NEEDS_PLAN' %}
+          <span class="govuk-tag govuk-tag--yellow govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="needs-plan-tag">
+            Needs plan
+          </span>
+        {% endif %}
+
+        {% if planStatus == 'PLAN_DUE' %}
+          <span class="govuk-tag govuk-tag--yellow govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="plan-due-tag">
+            Plan Due
+          </span>
+          <p class="govuk-body">Create plan by {{ planCreationDeadlineDate | formatDate('d MMM yyyy') }}</p>
+        {% endif %}
+
+        {% if planStatus == 'ACTIVE_PLAN' %}
+          <span class="govuk-tag govuk-tag--green govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="active-plan-tag">
+            Active plan
+          </span>
+        {% endif %}
+
+        {% if planStatus == 'PLAN_OVERDUE' %}
+          <span class="govuk-tag govuk-tag--red govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="plan-overdue-tag">
+            Plan overdue
+          </span>
+          <p class="govuk-body">Create plan by {{ planCreationDeadlineDate | formatDate('d MMM yyyy') }}</p>
+        {% endif %}
+
+        {% if planStatus == 'INACTIVE_PLAN' %}
+          <span class="govuk-tag govuk-tag--grey govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="inactive-plan-tag">
+            Inactive plan
+          </span>
+        {% endif %}
+
+        {% if planStatus == 'PLAN_DECLINED' %}
+          <span class="govuk-tag govuk-tag--grey govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="plan-declined-tag">
+            Plan declined
+          </span>
+        {% endif %}
+      {% endif %}
+
+      <ul class="govuk-list" data-qa="education-support-plan-action-items">
+        {% if userHasPermissionTo('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN') %}
+          {% if ['NEEDS_PLAN', 'PLAN_DUE', 'PLAN_OVERDUE', 'PLAN_DECLINED'].indexOf(planStatus) > -1 %}
+            <li>
+              <a class="govuk-link" data-qa="create-education-support-plan-button" href="/education-support-plan/{{ prisonerSummary.prisonNumber }}/create/who-created-the-plan">
+                <span>
+                  <img src="/assets/images/icon-edit.svg" role="presentation" alt="" class="action-icon" />
+                  Create education support plan
+                </span>
+              </a>
+            </li>
+          {% endif %}
+        {% endif %}
+
+        {% if userHasPermissionTo('RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN') %}
+          {% if ['NEEDS_PLAN', 'PLAN_DUE', 'PLAN_OVERDUE'].indexOf(planStatus) > -1 %}
+            <li>
+              <a class="govuk-link" data-qa="decline-education-support-plan-button" href="/education-support-plan/{{ prisonerSummary.prisonNumber }}/refuse-plan/reason">
+                <span>
+                  <img src="/assets/images/icon-stamp.svg" role="presentation" alt="" class="action-icon" />
+                  Decline education support plan
+                </span>
+              </a>
+            </li>
+          {% endif %}
+        {% endif %}
+      </ul>
+
+    </section>
+  </div>
+
+  <div class="govuk-summary-card__content" data-qa="screening-and-assessment-actions">
+    <section>
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Screening and assessment</h3>
+      <ul class="govuk-list" data-qa="screening-and-assessment-action-items">
+        {% if userHasPermissionTo('RECORD_ALN_SCREENER') %}
+          <li>
+            <a class="govuk-link" data-qa="record-screener-results-button" href="/aln-screener/{{ prisonerSummary.prisonNumber }}/create/screener-date">
+              <span>
+                <img src="/assets/images/icon-edit.svg" role="presentation" alt="" class="action-icon" />
+                Record screener results
+              </span>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </section>
+  </div>
+
+  <div class="govuk-summary-card__content" data-qa="additional-needs-actions">
+    <section>
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Additional needs</h3>
+      <ul class="govuk-list" data-qa="additional-needs-action-items">
+        {% if userHasPermissionTo('RECORD_CHALLENGES') %}
+          <li>
+            <a class="govuk-link" data-qa="add-challenge-button" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category">
+              Add challenges
+            </a>
+          </li>
+        {% endif %}
+        {% if userHasPermissionTo('RECORD_STRENGTHS') %}
+          <li>
+            <a class="govuk-link" data-qa="add-strength-button" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category">
+              Add strengths
+            </a>
+          </li>
+        {% endif %}
+        {% if userHasPermissionTo('RECORD_SUPPORT_STRATEGIES') %}
+          <li>
+            <a class="govuk-link" data-qa="add-support-strategy-button" href="/support-strategies/{{ prisonerSummary.prisonNumber }}/create/select-category">
+              Add support strategies
+            </a>
+          </li>
+        {% endif %}
+        {% if userHasPermissionTo('RECORD_SELF_DECLARED_CONDITIONS') %}
+          <li>
+            <a class="govuk-link" data-qa="add-conditions-button" href="/conditions/{{ prisonerSummary.prisonNumber }}/create/select-conditions">
+              Add conditions
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </section>
+  </div>
+
+</div>
