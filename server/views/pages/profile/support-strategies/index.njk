@@ -5,11 +5,45 @@
 {% set pageTitle = "Support for additional needs - Support strategies" %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds app-u-print-full-width">
-      <h2 class="govuk-heading-m">Support strategies</h2>
-    </div>
-
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds app-u-print-full-width">
+    <h2 class="govuk-heading-m">Support strategies</h2>
+    {% if supportStrategies.isFulfilled() %}
+      {% set supportStrategies = supportStrategies.value %}
+      {% if supportStrategies | length == 0 %}
+        {% include "./_noSupportStrategiesSummaryCard.njk" %}
+      {% else %}
+        {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+        {% for groupName, supportStrategyData in supportStrategies %}
+              <div class="govuk-summary-card" data-qa="support-strategy-summary-card-{{ groupName }}">
+                <div class="govuk-summary-card__title-wrapper">
+                  <h2 class="govuk-summary-card__title">{{ groupName | formatSupportStrategyTypeScreenValue }}</h2>
+                </div>
+                <div class="govuk-summary-card__content govuk-!-padding-top-0">
+                  <div class="govuk-summary-list">
+                    {% for supportStrategy in supportStrategyData %}
+                      <div class="govuk-summary-list__row" data-qa="support-strategy-summary-list-row">
+                        <p class="govuk-body govuk-!-margin-top-3"
+                           data-qa="support-strategy-details">{{ supportStrategy.supportStrategyDetails }}
+                        </p>
+                        {% set prisonName = prisonNamesById[supportStrategy.updatedAtPrison] | default(supportStrategy.updatedAtPrison) %}
+                        <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="support-strategy-audit">
+                          Added on {{ supportStrategy.updatedAt | formatDate('d MMMM yyyy') }} by {{ supportStrategy.updatedByDisplayName }}, {{ prisonName }}
+                        </p>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+          {% endfor %}
+      {% endif %}
+    {% else %}
+        <h3 class="govuk-heading-s" data-qa="support-strategies-unavailable-message">We cannot show these details
+          right now</h3>
+        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be
+          available.</p>
+    {% endif %}
+  </div>
     <div class="govuk-grid-column-one-third app-u-print-full-width">
       {{ actionsCard({
         prisonerSummary: prisonerSummary,
@@ -17,6 +51,5 @@
         actionMenuType: 'support-strategies'
       }) }}
     </div>
-
   </div>
 {% endblock %}
