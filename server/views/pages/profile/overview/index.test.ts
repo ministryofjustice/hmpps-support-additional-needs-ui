@@ -1,5 +1,6 @@
 import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
+import { parseISO } from 'date-fns'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import formatDate from '../../../../filters/formatDateFilter'
 import formatPrisonerNameFilter, { NameFormat } from '../../../../filters/formatPrisonerNameFilter'
@@ -14,6 +15,9 @@ import formatChallengeCategoryScreenValueFilter from '../../../../filters/format
 import { aCuriousAlnAndLddAssessmentsDto } from '../../../../testsupport/curiousAlnAndLddAssessmentsDtoTestDataBuilder'
 import formatAlnAssessmentReferralScreenValueFilter from '../../../../filters/formatAlnAssessmentReferralFilter'
 import aPlanLifecycleStatusDto from '../../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
+import { formatSupportStrategyTypeScreenValueFilter } from '../../../../filters/formatSupportStrategyTypeFilter'
+import aValidSupportStrategyResponseDto from '../../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
+import SupportStrategyType from '../../../../enums/supportStrategyType'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -35,6 +39,7 @@ njkEnv //
   .addFilter('formatStrengthCategoryScreenValue', formatStrengthCategoryScreenValueFilter)
   .addFilter('formatChallengeCategoryScreenValue', formatChallengeCategoryScreenValueFilter)
   .addFilter('formatAlnAssessmentReferralScreenValue', formatAlnAssessmentReferralScreenValueFilter)
+  .addFilter('formatSupportStrategyTypeScreenValue', formatSupportStrategyTypeScreenValueFilter)
 
 const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',
@@ -46,12 +51,22 @@ const prisonNamesById = {
 }
 const template = 'index.njk'
 
+const groupedSupportStrategies = Result.fulfilled([
+  aValidSupportStrategyResponseDto({
+    supportStrategyCategoryTypeCode: SupportStrategyType.SENSORY,
+    updatedAt: parseISO('2021-01-01T00:00:00.000Z'),
+    createdAt: parseISO('2021-01-01T00:00:00.000Z'),
+    details: 'This is the oldest entry',
+  }),
+])
+
 const userHasPermissionTo = jest.fn()
 const templateParams = {
   prisonerSummary,
   tab: 'overview',
   educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
   conditions: Result.fulfilled(aValidConditionsList()),
+  groupedSupportStrategies,
   strengthCategories: Result.fulfilled([StrengthCategory.LITERACY_SKILLS, StrengthCategory.NUMERACY_SKILLS]),
   challengeCategories: Result.fulfilled([ChallengeCategory.LITERACY_SKILLS, ChallengeCategory.NUMERACY_SKILLS]),
   curiousAlnAndLddAssessments: Result.fulfilled(aCuriousAlnAndLddAssessmentsDto()),
@@ -85,7 +100,8 @@ describe('Profile overview page', () => {
     expect($('[data-qa=conditions-summary-card]').length).toEqual(1)
     expect($('[data-qa=strengths-summary-card]').length).toEqual(1)
     expect($('[data-qa=challenges-summary-card]').length).toEqual(1)
-    expect($('[data-qa=support-recommendations-summary-card]').length).toEqual(1)
+    expect($('[data-qa=support-strategies-summary-card]').length).toEqual(1)
+    expect($('[data-qa=support-strategy-summary-list-row]').length).toEqual(1)
     expect($('[data-qa=actions-card]').length).toEqual(1)
     expect($('[data-qa=actions-card] li').length).toEqual(6)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
@@ -110,7 +126,7 @@ describe('Profile overview page', () => {
     expect($('[data-qa=conditions-summary-card]').length).toEqual(1)
     expect($('[data-qa=strengths-summary-card]').length).toEqual(1)
     expect($('[data-qa=challenges-summary-card]').length).toEqual(1)
-    expect($('[data-qa=support-recommendations-summary-card]').length).toEqual(1)
+    expect($('[data-qa=support-strategies-summary-card]').length).toEqual(1)
     expect($('[data-qa=actions-card]').length).toEqual(1)
     expect($('[data-qa=actions-card] li').length).toEqual(5)
     expect($('[data-qa=api-error-banner]').length).toEqual(1)

@@ -17,6 +17,8 @@ import StrengthCategory from '../../../enums/strengthCategory'
 import ChallengeCategory from '../../../enums/challengeCategory'
 import { aCuriousAlnAndLddAssessmentsDto } from '../../../testsupport/curiousAlnAndLddAssessmentsDtoTestDataBuilder'
 import aPlanLifecycleStatusDto from '../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
+import aValidSupportStrategyResponseDto from '../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
+import { GroupedSupportStrategies } from '../support-strategies/supportStrategiesController'
 
 describe('overviewController', () => {
   const controller = new OverviewController()
@@ -24,6 +26,11 @@ describe('overviewController', () => {
   const prisonerSummary = aValidPrisonerSummary()
   const educationSupportPlanLifecycleStatus = Result.fulfilled(aPlanLifecycleStatusDto())
   const conditions = Result.fulfilled(aValidConditionsList())
+  const supportStrategies = Result.fulfilled([aValidSupportStrategyResponseDto()])
+  // Use default SupportStrategyResponseDto builder values, which contains a Memory support strategy
+  const expectedGroupedSupportStrategies: GroupedSupportStrategies = {
+    MEMORY: [aValidSupportStrategyResponseDto()],
+  }
 
   // Non-ALN strengths
   const { numeracy, numeracy2, literacy, emotionsNonActive, attention, speaking } = setupNonAlnStrengths()
@@ -92,6 +99,7 @@ describe('overviewController', () => {
       alnScreeners,
       challenges,
       prisonNamesById,
+      supportStrategies,
     },
   } as unknown as Response
   const next = jest.fn()
@@ -101,11 +109,13 @@ describe('overviewController', () => {
     res.locals.strengths = strengths
     res.locals.challenges = challenges
     res.locals.alnScreeners = alnScreeners
+    res.locals.supportStrategies = supportStrategies
   })
 
   it('should render the view', async () => {
     // Given
     const expectedViewTemplate = 'pages/profile/overview/index'
+
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
@@ -130,6 +140,10 @@ describe('overviewController', () => {
           ChallengeCategory.LITERACY_SKILLS,
           ChallengeCategory.NUMERACY_SKILLS,
         ],
+      }),
+      groupedSupportStrategies: expect.objectContaining({
+        status: 'fulfilled',
+        value: expectedGroupedSupportStrategies,
       }),
     })
 
@@ -158,6 +172,10 @@ describe('overviewController', () => {
         status: 'rejected',
         reason: expectedError,
       }),
+      groupedSupportStrategies: expect.objectContaining({
+        status: 'fulfilled',
+        value: expectedGroupedSupportStrategies,
+      }),
     })
 
     // When
@@ -183,6 +201,10 @@ describe('overviewController', () => {
       challengeCategories: expect.objectContaining({
         status: 'rejected',
         reason: expectedError,
+      }),
+      groupedSupportStrategies: expect.objectContaining({
+        status: 'fulfilled',
+        value: expectedGroupedSupportStrategies,
       }),
     })
 
@@ -210,6 +232,10 @@ describe('overviewController', () => {
       strengthCategories: expect.objectContaining({
         status: 'rejected',
         reason: expectedError,
+      }),
+      groupedSupportStrategies: expect.objectContaining({
+        status: 'fulfilled',
+        value: expectedGroupedSupportStrategies,
       }),
     })
 
@@ -239,6 +265,10 @@ describe('overviewController', () => {
       strengthCategories: expect.objectContaining({
         status: 'rejected',
         reason: expectedError,
+      }),
+      groupedSupportStrategies: expect.objectContaining({
+        status: 'fulfilled',
+        value: expectedGroupedSupportStrategies,
       }),
     })
 
@@ -278,6 +308,10 @@ describe('overviewController', () => {
           ChallengeCategory.NUMERACY_SKILLS,
         ],
       }),
+      groupedSupportStrategies: expect.objectContaining({
+        status: 'fulfilled',
+        value: expectedGroupedSupportStrategies,
+      }),
     })
 
     // When
@@ -315,6 +349,10 @@ describe('overviewController', () => {
           ChallengeCategory.LITERACY_SKILLS,
           ChallengeCategory.NUMERACY_SKILLS,
         ],
+      }),
+      groupedSupportStrategies: expect.objectContaining({
+        status: 'fulfilled',
+        value: expectedGroupedSupportStrategies,
       }),
     })
 

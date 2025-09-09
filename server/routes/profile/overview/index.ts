@@ -9,6 +9,7 @@ import retrieveChallenges from '../../middleware/retrieveChallenges'
 import retrieveCuriousAlnAndLddAssessments from '../middleware/retrieveCuriousAlnAndLddAssessments'
 import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
 import retrieveEducationSupportPlanLifecycleStatus from '../middleware/retrieveEducationSupportPlanLifecycleStatus'
+import retrieveSupportStrategies from '../middleware/retrieveSupportStrategies'
 
 const overviewRoutes = (services: Services): Router => {
   const {
@@ -19,6 +20,7 @@ const overviewRoutes = (services: Services): Router => {
     educationSupportPlanService,
     prisonService,
     strengthService,
+    supportStrategyService,
   } = services
   const controller = new OverviewController()
 
@@ -31,6 +33,7 @@ const overviewRoutes = (services: Services): Router => {
       retrieveChallenges(challengeService),
       retrieveCuriousAlnAndLddAssessments(curiousService),
       retrievePrisonsLookup(prisonService),
+      retrieveSupportStrategies(supportStrategyService),
       asyncMiddleware(controller.getOverviewView),
     ])
 }

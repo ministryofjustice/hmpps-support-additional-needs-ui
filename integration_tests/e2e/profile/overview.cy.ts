@@ -36,6 +36,7 @@ context('Profile Overview Page', () => {
         exemptionRecordedBy: null,
       }),
     })
+    cy.task('stubGetSupportStrategies', { prisonNumber, supportStrategies: [] })
   })
 
   it('should be able to navigate directly to the profile overview page', () => {
@@ -50,7 +51,7 @@ context('Profile Overview Page', () => {
       .hasLddAssessmentsRecorded()
       .hasConditionsRecorded('Acquired brain injury')
       .hasStrengthsRecorded('Numeracy skills')
-      .hasNoSupportRecommendationsRecorded()
+      .hasNoSupportStrategiesRecorded()
       .actionsCardContainsEducationSupportPlanActions()
       .apiErrorBannerIsNotDisplayed()
   })
