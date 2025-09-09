@@ -6,7 +6,6 @@ import Page from '../../pages/page'
 import { aValidSupportStrategyResponse } from '../../../server/testsupport/supportStrategyResponseTestDataBuilder'
 import SupportStrategiesPage from '../../pages/profile/supportStrategiesPage'
 import SupportStrategyType from '../../../server/enums/supportStrategyType'
-import StrengthsPage from '../../pages/profile/strengthsPage'
 
 context('Profile Support Strategies Page', () => {
   const prisonNumber = 'A00001A'
