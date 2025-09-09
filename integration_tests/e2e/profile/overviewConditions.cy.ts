@@ -18,6 +18,7 @@ context('Profile Overview Page - Conditions section', () => {
     cy.task('stubGetChallenges', { prisonNumber })
     cy.task('stubGetStrengths', { prisonNumber })
     cy.task('stubGetCuriousV2Assessments', { prisonNumber })
+    cy.task('stubGetSupportStrategies', { prisonNumber, supportStrategies: [] })
   })
 
   it('should display overview page given the prisoner has no Conditions recorded', () => {
