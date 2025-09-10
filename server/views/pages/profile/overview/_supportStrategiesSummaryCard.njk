@@ -1,0 +1,50 @@
+{% if groupedSupportStrategies.isFulfilled() %}
+  {% set supportStrategiesData = groupedSupportStrategies.value %}
+{% endif %}
+
+<div class="govuk-summary-card" data-qa="support-strategies-summary-card">
+  <div class="govuk-summary-card__title-wrapper">
+    <h2 class="govuk-summary-card__title">Support strategies</h2>
+    <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+      {% if supportStrategiesData %}
+        {% if supportStrategiesData | length %}
+          <li class="govuk-summary-card__action">
+            <a class="govuk-link govuk-!-font-weight-regular" href="/profile/{{ prisonerSummary.prisonNumber }}/support-strategies" data-qa="view-support-strategies-button">View support strategies</a>
+          </li>
+        {% else %}
+          {% if userHasPermissionTo('RECORD_SUPPORT_STRATEGIES') %}
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link govuk-!-font-weight-regular" href="/support-strategies/{{ prisonerSummary.prisonNumber }}/create/select-category" data-qa="add-support-strategies-button">Add support strategies</a>
+            </li>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </ul>
+  </div>
+
+  <div class="govuk-summary-card__content">
+    {% if groupedSupportStrategies.isFulfilled() %}
+      {% if supportStrategiesData | length %}
+      <div class="govuk-summary-list">
+        {% for groupName, supportStrategyData in supportStrategiesData %}
+          <div class="govuk-summary-list__row" data-qa="support-strategy-summary-list-row">
+            <h3 class="govuk-heading-s govuk-!-margin-top-3"> {{ groupName | formatSupportStrategyTypeScreenValue }} </h3>
+            {% for supportStrategy in supportStrategyData %}
+              <p class="govuk-body govuk-!-margin-top-3"
+                 data-qa="support-strategy-details">{{ supportStrategy.supportStrategyDetails }}
+              </p>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="govuk-body" data-qa="no-support-strategies-recorded-message">
+        No support strategies recorded
+      </p>
+    {% endif %}
+    {% else %}
+        <h3 class="govuk-heading-s" data-qa="support-strategies-unavailable-message">We cannot show these details right now</h3>
+        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+    {% endif %}
+  </div>
+</div>

@@ -10,6 +10,7 @@ import {
 } from '../../utils'
 import enumComparator from '../../enumComparator'
 import ChallengeCategory from '../../../enums/challengeCategory'
+import toGroupedSupportStrategiesPromise from '../../utils/groupedSupportStrategiesMapper'
 
 export default class OverviewController {
   getOverviewView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -22,6 +23,7 @@ export default class OverviewController {
       educationSupportPlanLifecycleStatus,
       prisonNamesById,
       strengths,
+      supportStrategies,
     } = res.locals
 
     let strengthCategoriesPromise: Result<Array<StrengthCategory>, Error>
@@ -59,6 +61,8 @@ export default class OverviewController {
       challengeCategoriesPromise = Result.rewrapRejected(alnScreeners, challenges)
     }
 
+    const supportStrategiesPromise = toGroupedSupportStrategiesPromise(supportStrategies)
+
     const viewRenderArgs = {
       prisonerSummary,
       conditions,
@@ -67,6 +71,7 @@ export default class OverviewController {
       challengeCategories: challengeCategoriesPromise,
       curiousAlnAndLddAssessments,
       prisonNamesById,
+      groupedSupportStrategies: supportStrategiesPromise,
       tab: 'overview',
     }
     return res.render('pages/profile/overview/index', viewRenderArgs)
