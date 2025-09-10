@@ -38,11 +38,31 @@ describe('reviewSupportPlanSchema', () => {
       // When
       await validate(reviewSupportPlanSchema)(req, res, next)
 
-      // Then
-      expect(req.body).toEqual(requestBody)
-      expect(next).toHaveBeenCalled()
-      expect(req.flash).not.toHaveBeenCalled()
-      expect(res.redirectWithErrors).not.toHaveBeenCalled()
+      // Temporary block on review dates being set in Oct 2025 would cause this test to fail when it's run in october
+      // TODO: Remove this once October 2025 has passed
+      if (todayDate.getMonth() === 9 && todayDate.getFullYear() === 2025) {
+        // Then
+        const expectedErrors: Array<Error> = [
+          {
+            href: '#reviewDate',
+            text: 'Review date cannot be in October 2025',
+          },
+        ]
+        const expectedInvalidForm = JSON.stringify(requestBody)
+        expect(req.body).toEqual(requestBody)
+        expect(next).not.toHaveBeenCalled()
+        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+        expect(res.redirectWithErrors).toHaveBeenCalledWith(
+          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/next-review-date',
+          expectedErrors,
+        )
+      } else {
+        // Then
+        expect(req.body).toEqual(requestBody)
+        expect(next).toHaveBeenCalled()
+        expect(req.flash).not.toHaveBeenCalled()
+        expect(res.redirectWithErrors).not.toHaveBeenCalled()
+      }
     },
   )
 
@@ -75,6 +95,34 @@ describe('reviewSupportPlanSchema', () => {
       expectedErrors,
     )
   })
+
+  it.each([{ reviewDate: '01/10/2025' }, { reviewDate: '31/10/2025' }])(
+    'sad path - validation of reviewDate field fails due to being within October 2025  - reviewDate: $reviewDate',
+    async requestBody => {
+      // Given
+      req.body = requestBody
+
+      const expectedErrors: Array<Error> = [
+        {
+          href: '#reviewDate',
+          text: 'Review date cannot be in October 2025',
+        },
+      ]
+      const expectedInvalidForm = JSON.stringify(requestBody)
+
+      // When
+      await validate(reviewSupportPlanSchema)(req, res, next)
+
+      // Then
+      expect(req.body).toEqual(requestBody)
+      expect(next).not.toHaveBeenCalled()
+      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+      expect(res.redirectWithErrors).toHaveBeenCalledWith(
+        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/next-review-date',
+        expectedErrors,
+      )
+    },
+  )
 
   it.each([{ reviewDate: yesterday }, { reviewDate: threeMonthsAndOneDayAfterToday }])(
     'sad path - validation of reviewDate field fails due to being outside of range - reviewDate: $reviewDate',
