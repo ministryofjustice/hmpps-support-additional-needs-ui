@@ -1,4 +1,4 @@
-import { addMonths, startOfToday } from 'date-fns'
+import { addMonths, startOfToday, parse } from 'date-fns'
 import { createSchema, dateIsWithinInterval } from '../../../middleware/validationMiddleware'
 
 const reviewSupportPlanSchema = async () => {
@@ -14,7 +14,14 @@ const reviewSupportPlanSchema = async () => {
       start: startOfToday(),
       end: addMonths(startOfToday(), 3),
     }),
-  })
+  }).refine(
+    reviewDate => {
+      const date = parse(reviewDate.reviewDate as string, 'dd/MM/yyyy', new Date())
+      const isOctober2025 = date.getFullYear() === 2025 && date.getMonth() === 9
+      return !isOctober2025
+    },
+    { path: ['reviewDate'], message: 'Review date cannot be in October 2025' },
+  )
 }
 
 export default reviewSupportPlanSchema
