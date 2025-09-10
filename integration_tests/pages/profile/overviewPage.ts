@@ -119,7 +119,8 @@ export default class OverviewPage extends ProfilePage {
 
   private strengthsUnavailableMessage = (): PageElement => cy.get('[data-qa=strengths-unavailable-message]')
 
-  private supportStrategiesUnavailableMessage = (): PageElement => cy.get('[data-qa=support-strategies-unavailable-message]')
+  private supportStrategiesUnavailableMessage = (): PageElement =>
+    cy.get('[data-qa=support-strategies-unavailable-message]')
 
   private supportStrategiesSummaryCardContent = (): PageElement =>
     cy.get('[data-qa=support-strategies-summary-card] .govuk-summary-card__content')
