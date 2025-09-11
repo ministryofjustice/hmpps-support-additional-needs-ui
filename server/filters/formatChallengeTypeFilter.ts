@@ -76,6 +76,8 @@ const challengeTypeScreenValues = new Map<ChallengeType, string>([
   [ChallengeType.TASK_SWITCHING, 'Task switching'],
   [ChallengeType.NUMBER_SEQUENCING, 'Number sequencing'],
   [ChallengeType.PEOPLE_PERSON, 'People person'],
+  [ChallengeType.SHORT_TERM_MEMORY, 'Short term memory'],
+  [ChallengeType.LONG_TERM_MEMORY, 'Long term memory'],
 
   [ChallengeType.NONE, 'No challenges identified'],
 ])
