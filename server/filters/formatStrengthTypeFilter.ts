@@ -76,6 +76,8 @@ const strengthTypeScreenValues = new Map<StrengthType, string>([
   [StrengthType.TASK_SWITCHING, 'Task switching'],
   [StrengthType.NUMBER_SEQUENCING, 'Number sequencing'],
   [StrengthType.PEOPLE_PERSON, 'People person'],
+  [StrengthType.SHORT_TERM_MEMORY, 'Short term memory'],
+  [StrengthType.LONG_TERM_MEMORY, 'Long term memory'],
 
   [StrengthType.NONE, 'No strengths identified'],
 ])

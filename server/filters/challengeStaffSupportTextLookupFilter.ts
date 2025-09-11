@@ -747,6 +747,32 @@ Use alphabetical lists once per week.
 
   Prioritise tasks by checking with staff or peers.`,
   ],
+  [
+    ChallengeType.LONG_TERM_MEMORY,
+    `Help individuals build strategies like writing things down, keeping a diary, and using alarms or reminders. Be alert to any concerns they raise about memory decline and support access to healthcare.
+
+    Possible Support Strategies:
+
+    Use a diary or notebook daily to track appointments and tasks.
+
+    Set reminders or alarms for important activities.
+
+    Review weekly notes to reinforce memory of key information.`,
+  ],
+  [
+    ChallengeType.SHORT_TERM_MEMORY,
+    `Encourage individuals to repeat back instructions or information to confirm their understanding and help commit it to memory. This also helps identify any confusion early.
+
+    Possible Support Strategies:
+
+    Practise repeating back key points during conversations.
+
+    Use a checklist or visual aid to track short-term tasks.
+
+    Take part in memory-building exercises weekly.
+
+    Ask for clarification if unsure about what was said.`,
+  ],
 ])
 
 const challengeStaffSupportTextLookupFilter = (value: ChallengeType): string =>
