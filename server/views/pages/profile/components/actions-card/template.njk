@@ -2,6 +2,7 @@
 {% set prisonerSummary = params.prisonerSummary %}
 {% set planStatus = params.planStatus %}
 {% set planCreationDeadlineDate = params.planCreationDeadlineDate %}
+{% set planReviewDeadlineDate = params.planReviewDeadlineDate %}
 
 <div class="govuk-summary-card actions-card govuk-!-display-none-print" data-qa="actions-card">
   <div class="govuk-summary-card__title-wrapper govuk-!-padding-bottom-2">
@@ -24,20 +25,21 @@
           <span class="govuk-tag govuk-tag--yellow govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="plan-due-tag">
             Plan Due
           </span>
-          <p class="govuk-body">Create plan by {{ planCreationDeadlineDate | formatDate('d MMM yyyy') }}</p>
+          <p class="govuk-body" data-qa="plan-creation-due-date">Create plan by {{ planCreationDeadlineDate | formatDate('d MMM yyyy') }}</p>
         {% endif %}
 
         {% if planStatus == 'ACTIVE_PLAN' %}
           <span class="govuk-tag govuk-tag--green govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="active-plan-tag">
             Active plan
           </span>
+          <p class="govuk-body" data-qa="plan-review-due-date">Review due {{ planReviewDeadlineDate | formatDate('d MMM yyyy') }}</p>
         {% endif %}
 
         {% if planStatus == 'PLAN_OVERDUE' %}
           <span class="govuk-tag govuk-tag--red govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="plan-overdue-tag">
             Plan overdue
           </span>
-          <p class="govuk-body">Create plan by {{ planCreationDeadlineDate | formatDate('d MMM yyyy') }}</p>
+          <p class="govuk-body" data-qa="plan-creation-due-date">Create plan by {{ planCreationDeadlineDate | formatDate('d MMM yyyy') }}</p>
         {% endif %}
 
         {% if planStatus == 'INACTIVE_PLAN' %}

@@ -1,6 +1,6 @@
 import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
-import { startOfToday } from 'date-fns'
+import { addMonths, format, startOfToday } from 'date-fns'
 import aValidPrisonerSummary from '../../../../../testsupport/prisonerSummaryTestDataBuilder'
 import PlanActionStatus from '../../../../../enums/planActionStatus'
 import formatDateFilter from '../../../../../filters/formatDateFilter'
@@ -16,6 +16,7 @@ njkEnv //
   .addFilter('formatDate', formatDateFilter)
 
 const planCreationDeadlineDate = startOfToday()
+const planReviewDeadlineDate = addMonths(planCreationDeadlineDate, 3)
 
 const userHasPermissionTo = jest.fn()
 const templateParams = {
@@ -23,6 +24,7 @@ const templateParams = {
   userHasPermissionTo,
   planStatus: PlanActionStatus.PLAN_DUE,
   planCreationDeadlineDate,
+  planReviewDeadlineDate: null as Date,
 }
 
 const template = 'actionCards.test.njk'
@@ -479,6 +481,107 @@ describe('Tests for Profile pages actions card component', () => {
 
       // Then
       expect($('[data-qa=decline-education-support-plan-button]').length).toEqual(0)
+    },
+  )
+
+  it.each([
+    //
+    PlanActionStatus.PLAN_DUE,
+    PlanActionStatus.PLAN_OVERDUE,
+  ])(
+    'should render the actions card component with the plan creation due date given a plan status of %s',
+    planStatus => {
+      // Given
+      const params = {
+        ...templateParams,
+        planCreationDeadlineDate,
+        planStatus,
+      }
+
+      // When
+      const content = nunjucks.render(template, params)
+      const $ = cheerio.load(content)
+
+      // Then
+      expect($('[data-qa=plan-creation-due-date]').text().trim()).toEqual(
+        `Create plan by ${format(planCreationDeadlineDate, 'd MMM yyyy')}`,
+      )
+    },
+  )
+
+  it.each([
+    //
+    PlanActionStatus.REVIEW_OVERDUE,
+    PlanActionStatus.REVIEW_DUE,
+    PlanActionStatus.ACTIVE_PLAN,
+    PlanActionStatus.NEEDS_PLAN,
+    PlanActionStatus.INACTIVE_PLAN,
+    PlanActionStatus.PLAN_DECLINED,
+    PlanActionStatus.NO_PLAN,
+  ])(
+    'should render the actions card component without the plan creation due date given a plan status of %s',
+    planStatus => {
+      // Given
+      const params = {
+        ...templateParams,
+        planStatus,
+      }
+
+      // When
+      const content = nunjucks.render(template, params)
+      const $ = cheerio.load(content)
+
+      // Then
+      expect($('[data-qa=plan-creation-due-date]').length).toEqual(0)
+    },
+  )
+
+  it.each([
+    //
+    PlanActionStatus.ACTIVE_PLAN,
+  ])('should render the actions card component with the plan review due date given a plan status of %s', planStatus => {
+    // Given
+    const params = {
+      ...templateParams,
+      planReviewDeadlineDate,
+      planStatus,
+    }
+
+    // When
+    const content = nunjucks.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=plan-review-due-date]').text().trim()).toEqual(
+      `Review due ${format(planReviewDeadlineDate, 'd MMM yyyy')}`,
+    )
+  })
+
+  it.each([
+    //
+    PlanActionStatus.PLAN_DUE,
+    PlanActionStatus.PLAN_OVERDUE,
+    PlanActionStatus.REVIEW_OVERDUE,
+    PlanActionStatus.REVIEW_DUE,
+    PlanActionStatus.NEEDS_PLAN,
+    PlanActionStatus.INACTIVE_PLAN,
+    PlanActionStatus.PLAN_DECLINED,
+    PlanActionStatus.NO_PLAN,
+  ])(
+    'should render the actions card component without the plan review due date given a plan status of %s',
+    planStatus => {
+      // Given
+      const params = {
+        ...templateParams,
+        planStatus,
+      }
+
+      // When
+      const content = nunjucks.render(template, params)
+      const $ = cheerio.load(content)
+
+      // Then
+      expect($('[data-qa=plan-review-due-date]').length).toEqual(0)
     },
   )
 })
