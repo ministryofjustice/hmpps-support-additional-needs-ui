@@ -69,11 +69,9 @@
                   <dl class="app-u-description-list">
                     {% for person in dto.otherPeopleConsulted %}
                       <dt>Name: </dt>
-                      <dd>{{ person.name }}</dd>
-                      {# TODO - enable job role when the designs call for it
+                      <dd data-qa="other-consulted-name">{{ person.name }}</dd>
                       <dt>Job role: </dt>
-                      <dd>{{ person.jobRole }}</dd>
-                      #}
+                      <dd data-qa="other-consulted-job-role">{{ person.jobRole }}</dd>
                     {% endfor %}
                   </dl>
                 </dd>

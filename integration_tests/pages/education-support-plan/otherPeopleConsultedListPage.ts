@@ -12,11 +12,16 @@ export default class OtherPeopleConsultedListPage extends Page {
     return this
   }
 
-  personAtRowIs(row: number, expectedName: string): OtherPeopleConsultedListPage {
+  personAtRowIs(row: number, expectedName: string, expectedJobRole: string): OtherPeopleConsultedListPage {
     this.peopleConsultedListTable()
       .find('[data-qa=person-consulted-name]')
       .eq(zeroIndexed(row))
       .should('contain.text', expectedName)
+    this.peopleConsultedListTable()
+      .find('[data-qa=person-consulted-job-role]')
+      .eq(zeroIndexed(row))
+      .should('contain.text', expectedJobRole)
+
     return this
   }
 

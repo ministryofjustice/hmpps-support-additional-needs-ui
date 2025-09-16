@@ -92,23 +92,27 @@ context('Create an Education Support Plan', () => {
     Page.verifyOnPage(OtherPeopleConsultedAddPersonPage) //
       // submit the page without answering the question to trigger a validation error
       .submitPageTo(OtherPeopleConsultedAddPersonPage)
-      .hasErrorCount(1)
+      .hasErrorCount(2)
       .hasFieldInError('fullName')
+      .hasFieldInError('jobRole')
       // enter the fields and submit the form to the next page
       .enterFullName('A Teacher')
+      .enterJobRole('Teacher')
       .submitPageTo(OtherPeopleConsultedListPage)
       .numberOfPeopleConsultedIs(1)
-      .personAtRowIs(1, 'A Teacher')
+      .personAtRowIs(1, 'A Teacher', 'Teacher')
       .clickToAddAnotherPerson()
       .submitPageTo(OtherPeopleConsultedAddPersonPage)
-      .hasErrorCount(1)
+      .hasErrorCount(2)
       .hasFieldInError('fullName')
+      .hasFieldInError('jobRole')
       // enter the fields and submit the form to the next page
       .enterFullName('Another Teacher')
+      .enterJobRole('Teacher')
       .submitPageTo(OtherPeopleConsultedListPage)
       .numberOfPeopleConsultedIs(2)
-      .personAtRowIs(1, 'A Teacher')
-      .personAtRowIs(2, 'Another Teacher')
+      .personAtRowIs(1, 'A Teacher', 'Teacher')
+      .personAtRowIs(2, 'Another Teacher', 'Teacher')
 
     Page.verifyOnPage(OtherPeopleConsultedListPage) //
       .submitPageTo(ReviewExistingNeedsPage)
@@ -264,9 +268,9 @@ Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. M
               "@.planCreatedBy.jobRole == 'Peer Mentor' && " +
               '@.otherContributors.size() == 2 && ' +
               "@.otherContributors[0].name == 'A Teacher' && " +
-              "@.otherContributors[0].jobRole == 'N/A' && " +
+              "@.otherContributors[0].jobRole == 'Teacher' && " +
               "@.otherContributors[1].name == 'Another Teacher' && " +
-              "@.otherContributors[1].jobRole == 'N/A' && " +
+              "@.otherContributors[1].jobRole == 'Teacher' && " +
               '@.hasCurrentEhcp == true && ' +
               "@.teachingAdjustments == 'Use simpler examples to help students understand concepts' && " +
               "@.specificTeachingSkills == 'Adopt a more inclusive approach to teaching' && " +

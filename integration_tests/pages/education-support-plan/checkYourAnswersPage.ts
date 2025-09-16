@@ -63,17 +63,23 @@ export default class CheckYourAnswersPage extends Page {
   hasNumberOfPeopleConsulted(expected: number): CheckYourAnswersPage {
     this.otherPeopleConsultedListValue() //
       .should('be.visible')
-      .find('dd')
+      .find('[data-qa=other-consulted-name]')
       .should('have.length', expected)
     return this
   }
 
-  otherPersonConsultedWas(row: number, expectedName: string): CheckYourAnswersPage {
+  otherPersonConsultedWas(row: number, expectedName: string, expectedJobRole: string): CheckYourAnswersPage {
     this.otherPeopleConsultedListValue()
       .should('be.visible')
-      .find('dd')
+      .find('[data-qa=other-consulted-name]')
       .eq(zeroIndexed(row))
       .should('contain.text', expectedName)
+
+    this.otherPeopleConsultedListValue()
+      .should('be.visible')
+      .find('[data-qa=other-consulted-job-role')
+      .eq(zeroIndexed(row))
+      .should('contain.text', expectedJobRole)
     return this
   }
 
