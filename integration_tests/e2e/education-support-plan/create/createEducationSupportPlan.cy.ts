@@ -20,6 +20,10 @@ import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
 import AdditionalInformationPage from '../../../pages/education-support-plan/additionalInformationPage'
 import IndividualSupportRequirementsPage from '../../../pages/education-support-plan/individualSupportRequirementsPage'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
+import ReviewExistingStrengthsPage from '../../../pages/education-support-plan/reviewExistingStrengthsPage'
+import ReviewExistingChallengesPage from '../../../pages/education-support-plan/reviewExistingChallengesPage'
+import ReviewExistingConditionsPage from '../../../pages/education-support-plan/reviewExistingConditionsPage'
+import ReviewExistingSupportStrategiesPage from '../../../pages/education-support-plan/reviewExistingSupportStrategiesPage'
 
 context('Create an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -29,6 +33,10 @@ context('Create an Education Support Plan', () => {
     cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetPlanActionStatus', { prisonNumber })
     cy.task('stubCreateEducationSupportPlan', prisonNumber)
+    cy.task('stubGetStrengths', { prisonNumber })
+    cy.task('stubGetChallenges', { prisonNumber })
+    cy.task('stubGetConditions', { prisonNumber })
+    cy.task('stubGetSupportStrategies', { prisonNumber })
   })
 
   it('should be able to navigate directly to the create Education Support Plan page', () => {
@@ -106,6 +114,24 @@ context('Create an Education Support Plan', () => {
       .submitPageTo(ReviewExistingNeedsPage)
 
     Page.verifyOnPage(ReviewExistingNeedsPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(ReviewExistingNeedsPage)
+      .hasErrorCount(1)
+      .hasFieldInError('reviewBeforeCreatingPlan')
+      // enter the fields and submit the form to the next page
+      .selectReviewExistingNeeds()
+      .submitPageTo(ReviewExistingStrengthsPage)
+
+    Page.verifyOnPage(ReviewExistingStrengthsPage) //
+      .submitPageTo(ReviewExistingChallengesPage)
+
+    Page.verifyOnPage(ReviewExistingChallengesPage) //
+      .submitPageTo(ReviewExistingConditionsPage)
+
+    Page.verifyOnPage(ReviewExistingConditionsPage) //
+      .submitPageTo(ReviewExistingSupportStrategiesPage)
+
+    Page.verifyOnPage(ReviewExistingSupportStrategiesPage) //
       .submitPageTo(IndividualSupportRequirementsPage)
 
     Page.verifyOnPage(IndividualSupportRequirementsPage) //

@@ -43,6 +43,7 @@ import retrieveAlnScreeners from '../../middleware/retrieveAlnScreeners'
 import retrieveConditions from '../../middleware/retrieveConditions'
 import retrieveChallenges from '../../middleware/retrieveChallenges'
 import retrieveSupportStrategies from '../../middleware/retrieveSupportStrategies'
+import reviewExistingNeedsSchema from '../validationSchemas/reviewExistingNeedsSchema'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -125,6 +126,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.post('/:journeyId/review-existing-needs', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    validate(reviewExistingNeedsSchema),
     asyncMiddleware(reviewExistingNeedsController.submitReviewExistingNeedsForm),
   ])
 

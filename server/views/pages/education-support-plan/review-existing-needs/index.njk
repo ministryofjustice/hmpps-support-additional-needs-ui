@@ -7,11 +7,33 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      <h1 class="govuk-heading-l">Review needs, conditions and strengths (placeholder page)</h1>
-
       <form class="form" method="post" novalidate="">
         <div class="govuk-form-group">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukRadios({
+            name: "reviewBeforeCreatingPlan",
+            fieldset: {
+              legend: {
+                text: "Do you want to review " + prisonerSummary | formatFirst_name_Last_name + " challenges, strengths and support strategies before creating an education support plan?",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            items: [
+              {
+                value: "YES",
+                text: "Yes",
+                checked: form.reviewBeforeCreatingPlan === "YES"
+              },
+              {
+                value: "NO",
+                text: "No, we have already reviewed them",
+                checked: form.reviewBeforeCreatingPlan === "NO"
+              }
+            ],
+            errorMessage: errors | findError('reviewBeforeCreatingPlan')
+          }) }}
         </div>
 
         {{ govukButton({
