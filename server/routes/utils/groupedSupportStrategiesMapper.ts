@@ -3,7 +3,7 @@ import { compareDesc } from 'date-fns'
 import { Result } from '../../utils/result/result'
 import SupportStrategyType from '../../enums/supportStrategyType'
 
-export type GroupedSupportStrategies = {
+type GroupedSupportStrategies = {
   [key: string]: SupportStrategyResponseDto[]
 }
 

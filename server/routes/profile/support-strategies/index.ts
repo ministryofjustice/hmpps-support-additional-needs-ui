@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import SupportStrategiesController from './supportStrategiesController'
-import retrieveSupportStrategies from '../middleware/retrieveSupportStrategies'
+import retrieveSupportStrategies from '../../middleware/retrieveSupportStrategies'
 import { Services } from '../../../services'
 import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
 

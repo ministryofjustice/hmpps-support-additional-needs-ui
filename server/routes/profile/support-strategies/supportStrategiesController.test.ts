@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { parseISO } from 'date-fns'
-import SupportStrategiesController, { GroupedSupportStrategies } from './supportStrategiesController'
+import SupportStrategiesController from './supportStrategiesController'
 import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
 import { Result } from '../../../utils/result/result'
 import aValidSupportStrategyResponseDto from '../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
@@ -28,7 +28,7 @@ describe('supportStrategiesController', () => {
   it('should render the view', async () => {
     // Given
     const expectedViewTemplate = 'pages/profile/support-strategies/index'
-    const expectedGroupedSupportStrategies: GroupedSupportStrategies = {
+    const expectedGroupedSupportStrategies = {
       MEMORY: [aValidSupportStrategyResponseDto()],
     }
     const expectedViewModel = {
@@ -69,7 +69,7 @@ describe('supportStrategiesController', () => {
       }),
     ])
 
-    const expectedGroupedSupportStrategies: GroupedSupportStrategies = {
+    const expectedGroupedSupportStrategies = {
       LITERACY_SKILLS_DEFAULT: [
         aValidSupportStrategyResponseDto({
           supportStrategyCategoryTypeCode: SupportStrategyType.LITERACY_SKILLS_DEFAULT,

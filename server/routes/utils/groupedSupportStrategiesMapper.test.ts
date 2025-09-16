@@ -3,7 +3,6 @@ import { parseISO } from 'date-fns'
 import { Result } from '../../utils/result/result'
 import aValidSupportStrategyResponseDto from '../../testsupport/supportStrategyResponseDtoTestDataBuilder'
 import SupportStrategyType from '../../enums/supportStrategyType'
-import { GroupedSupportStrategies } from '../profile/support-strategies/supportStrategiesController'
 import toGroupedSupportStrategiesPromise from './groupedSupportStrategiesMapper'
 
 describe('groupedSupportStrategyMapper', () => {
@@ -33,7 +32,7 @@ describe('groupedSupportStrategyMapper', () => {
   describe('toGroupedSupportStrategiesPromise', () => {
     it('should map with the correct in group ordering for support strategies', () => {
       // Given
-      const expectedGroupedSupportStrategies: GroupedSupportStrategies = {
+      const expectedGroupedSupportStrategies = {
         SENSORY: [
           aValidSupportStrategyResponseDto({
             supportStrategyCategoryTypeCode: SupportStrategyType.SENSORY,

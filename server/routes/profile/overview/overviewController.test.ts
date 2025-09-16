@@ -18,7 +18,6 @@ import ChallengeCategory from '../../../enums/challengeCategory'
 import { aCuriousAlnAndLddAssessmentsDto } from '../../../testsupport/curiousAlnAndLddAssessmentsDtoTestDataBuilder'
 import aPlanLifecycleStatusDto from '../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 import aValidSupportStrategyResponseDto from '../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
-import { GroupedSupportStrategies } from '../support-strategies/supportStrategiesController'
 
 describe('overviewController', () => {
   const controller = new OverviewController()
@@ -28,7 +27,7 @@ describe('overviewController', () => {
   const conditions = Result.fulfilled(aValidConditionsList())
   const supportStrategies = Result.fulfilled([aValidSupportStrategyResponseDto()])
   // Use default SupportStrategyResponseDto builder values, which contains a Memory support strategy
-  const expectedGroupedSupportStrategies: GroupedSupportStrategies = {
+  const expectedGroupedSupportStrategies = {
     MEMORY: [aValidSupportStrategyResponseDto()],
   }
 

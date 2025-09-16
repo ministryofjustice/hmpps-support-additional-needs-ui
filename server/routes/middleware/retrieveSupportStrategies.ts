@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import { Result } from '../../../utils/result/result'
-import SupportStrategyService from '../../../services/supportStrategyService'
+import { Result } from '../../utils/result/result'
+import SupportStrategyService from '../../services/supportStrategyService'
 
 /**
  *  Function that returns a middleware function to retrieve the prisoner's Support Strategies

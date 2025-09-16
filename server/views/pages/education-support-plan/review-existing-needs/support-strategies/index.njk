@@ -1,0 +1,72 @@
+{% extends "../../layout.njk" %}
+{% from "../../../../components/strengths-summary-card/macro.njk" import strengthsSummaryCard %}
+
+{% set pageId = 'education-support-plan-review-existing-support strategies' %}
+{% set pageTitle = "Create an education support plan - Review support strategies" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <h1 class="govuk-heading-l">{{ prisonerSummary | formatFirst_name_Last_name }}'s support strategies</h1>
+
+    {% if supportStrategies.isFulfilled() %}
+      {% set supportStrategies = supportStrategies.value %}
+
+      {% if supportStrategies | length %}
+
+        {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+        {% for groupName, supportStrategyData in supportStrategies %}
+          <div class="govuk-summary-card" data-qa="support-strategy-summary-card-{{ groupName }}">
+            <div class="govuk-summary-card__title-wrapper">
+              <h2 class="govuk-summary-card__title">{{ groupName | formatSupportStrategyTypeScreenValue }}</h2>
+            </div>
+            <div class="govuk-summary-card__content govuk-!-padding-top-0">
+              <div class="govuk-summary-list">
+                {% for supportStrategy in supportStrategyData %}
+                  <div class="govuk-summary-list__row" data-qa="support-strategy-summary-list-row">
+                    <p class="govuk-body govuk-!-margin-top-3"
+                       data-qa="support-strategy-details">{{ supportStrategy.supportStrategyDetails }}
+                    </p>
+                    {% set prisonName = prisonNamesById[supportStrategy.updatedAtPrison] | default(supportStrategy.updatedAtPrison) %}
+                    <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="support-strategy-audit">
+                      Added on {{ supportStrategy.updatedAt | formatDate('d MMMM yyyy') }} by {{ supportStrategy.updatedByDisplayName }}, {{ prisonName }}
+                    </p>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+
+      {% else %}
+
+        <div class="govuk-summary-card" data-qa="no-support-strategies-summary-card">
+          <div class="govuk-summary-card__content">
+            <p class="govuk-body">
+              No support strategies recorded
+            </p>
+          </div>
+        </div>
+
+      {% endif %}
+
+    {% else %}
+      <h3 class="govuk-heading-s" data-qa="support-strategies-unavailable-message">We cannot show these details right now</h3>
+      <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+    {% endif %}
+
+    <form class="form" method="post" novalidate="">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+      {{ govukButton({
+        id: "submit-button",
+        text: "Continue",
+        type: "submit",
+        attributes: {"data-qa": "submit-button"},
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}
