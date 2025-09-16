@@ -6,7 +6,6 @@ import { Result } from '../../../../utils/result/result'
 import { formatSupportStrategyTypeScreenValueFilter } from '../../../../filters/formatSupportStrategyTypeFilter'
 import aValidSupportStrategyResponseDto from '../../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
 import SupportStrategyType from '../../../../enums/supportStrategyType'
-import { GroupedSupportStrategies } from '../../../../routes/profile/support-strategies/supportStrategiesController'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -32,7 +31,7 @@ const templateParams = {
   userHasPermissionTo,
 }
 
-const groupedSupportStrategies: Result<GroupedSupportStrategies, Error> = Result.fulfilled({
+const groupedSupportStrategies = Result.fulfilled({
   SENSORY: [
     aValidSupportStrategyResponseDto({
       supportStrategyCategoryTypeCode: SupportStrategyType.SENSORY,

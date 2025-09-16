@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
-import SupportStrategyService from '../../../services/supportStrategyService'
+import SupportStrategyService from '../../services/supportStrategyService'
 import retrieveSupportStrategies from './retrieveSupportStrategies'
-import { aValidSupportStrategyResponse } from '../../../testsupport/supportStrategyResponseTestDataBuilder'
+import { aValidSupportStrategyResponse } from '../../testsupport/supportStrategyResponseTestDataBuilder'
 
-jest.mock('../../../services/supportStrategyService')
+jest.mock('../../services/supportStrategyService')
 
 describe('retrieveSupportStrategies', () => {
   const mockedSupportStrategyService = new SupportStrategyService(null) as jest.Mocked<SupportStrategyService>

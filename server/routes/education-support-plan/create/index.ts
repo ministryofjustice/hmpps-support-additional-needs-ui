@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
@@ -11,6 +11,7 @@ import ReviewExistingNeedsController from './review-existing-needs/reviewExistin
 import ReviewExistingChallengesController from './review-existing-needs/reviewExistingChallengesController'
 import ReviewExistingStrengthsController from './review-existing-needs/reviewExistingStrengthsController'
 import ReviewExistingConditionsController from './review-existing-needs/reviewExistingConditionsController'
+import ReviewExistingSupportStrategiesController from './review-existing-needs/reviewExistingSupportStrategiesController'
 import IndividualSupportRequirementsController from './individual-support-requirements/individualSupportRequirementsController'
 import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
 import SpecificTeachingSkillsController from './specific-teaching-skills/specificTeachingSkillsController'
@@ -41,6 +42,7 @@ import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
 import retrieveAlnScreeners from '../../middleware/retrieveAlnScreeners'
 import retrieveConditions from '../../middleware/retrieveConditions'
 import retrieveChallenges from '../../middleware/retrieveChallenges'
+import retrieveSupportStrategies from '../../middleware/retrieveSupportStrategies'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -51,6 +53,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
     journeyDataService,
     prisonService,
     strengthService,
+    supportStrategyService,
   } = services
   const router = Router({ mergeParams: true })
 
@@ -62,6 +65,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const reviewExistingStrengthsController = new ReviewExistingStrengthsController()
   const reviewExistingChallengesController = new ReviewExistingChallengesController()
   const reviewExistingConditionsController = new ReviewExistingConditionsController()
+  const reviewExistingSupportStrategiesController = new ReviewExistingSupportStrategiesController()
   const individualSupportRequirementsController = new IndividualSupportRequirementsController()
   const teachingAdjustmentsController = new TeachingAdjustmentsController()
   const specificTeachingSkillsController = new SpecificTeachingSkillsController()
@@ -161,9 +165,13 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/review-existing-needs/support-strategies', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Review existing support strategies page')
-    },
+    retrievePrisonsLookup(prisonService),
+    retrieveSupportStrategies(supportStrategyService),
+    asyncMiddleware(reviewExistingSupportStrategiesController.getReviewExistingSupportStrategiesView),
+  ])
+  router.post('/:journeyId/review-existing-needs/support-strategies', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(reviewExistingSupportStrategiesController.submitReviewExistingSupportStrategiesForm),
   ])
 
   router.get('/:journeyId/individual-support-requirements', [
