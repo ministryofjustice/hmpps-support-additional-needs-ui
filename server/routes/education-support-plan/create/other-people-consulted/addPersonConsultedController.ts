@@ -19,12 +19,12 @@ export default class AddPersonConsultedController {
     return res.redirect(`list${submitToCheckYourAnswersQueryString}`)
   }
 
-  private updateDtoFromForm = (req: Request, form: { fullName: string }) => {
+  private updateDtoFromForm = (req: Request, form: { fullName: string; jobRole: string }) => {
     const { educationSupportPlanDto } = req.journeyData
     if (educationSupportPlanDto.otherPeopleConsulted == null) {
       educationSupportPlanDto.otherPeopleConsulted = []
     }
-    educationSupportPlanDto.otherPeopleConsulted.push({ name: form.fullName, jobRole: 'N/A' })
+    educationSupportPlanDto.otherPeopleConsulted.push({ name: form.fullName, jobRole: form.jobRole })
     educationSupportPlanDto.wereOtherPeopleConsulted = true
     req.journeyData.educationSupportPlanDto = educationSupportPlanDto
   }

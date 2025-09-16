@@ -10,5 +10,12 @@ export default class OtherPeopleConsultedAddPersonPage extends Page {
     return this
   }
 
+  enterJobRole(value: string): OtherPeopleConsultedAddPersonPage {
+    this.jobRoleField().clear().type(value, { delay: 0 })
+    return this
+  }
+
   private fullNameField = (): PageElement => cy.get('[data-qa=fullName]')
+
+  private jobRoleField = (): PageElement => cy.get('[data-qa=jobRole]')
 }

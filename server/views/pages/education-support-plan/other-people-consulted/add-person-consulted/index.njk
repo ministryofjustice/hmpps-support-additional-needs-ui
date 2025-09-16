@@ -29,6 +29,22 @@
             },
             errorMessage: errors | findError('fullName')
           }) }}
+          {{ govukInput({
+            id: "jobRole",
+            name: "jobRole",
+            value: form.jobRole,
+            maxlength: 200,
+            label: {
+              text: "Job Role",
+              classes: "govuk-label--s govuk-!-font-weight-bold",
+              attributes: { "aria-live": "polite", "data-qa": "job-role" }
+            },
+            attributes: {
+              "aria-label" : "Specify job role for who met with " + prisonerSummary | formatFirst_name_Last_name,
+              "data-qa": "jobRole"
+            },
+            errorMessage: errors | findError('jobRole')
+          }) }}
 
         </div>
 

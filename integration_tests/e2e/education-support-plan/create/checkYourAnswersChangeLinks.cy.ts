@@ -98,25 +98,28 @@ context(`Change links on the Check Your Answers page when creating an Education 
       .selectOtherPeopleWereConsulted()
       .submitPageTo(OtherPeopleConsultedAddPersonPage)
       .enterFullName('Person 1')
+      .enterJobRole('Teacher 1')
       .submitPageTo(OtherPeopleConsultedListPage)
       .clickToAddAnotherPerson()
       .enterFullName('Person 2')
+      .enterJobRole('Teacher 2')
       .submitPageTo(OtherPeopleConsultedListPage)
       .clickToAddAnotherPerson()
       .enterFullName('Person 3')
+      .enterJobRole('Teacher 3')
       .submitPageTo(OtherPeopleConsultedListPage)
       .submitPageTo(CheckYourAnswersPage)
       // check all added people are listed
       .hasNumberOfPeopleConsulted(3)
-      .otherPersonConsultedWas(1, 'Person 1')
-      .otherPersonConsultedWas(2, 'Person 2')
-      .otherPersonConsultedWas(3, 'Person 3')
+      .otherPersonConsultedWas(1, 'Person 1', 'Teacher 1')
+      .otherPersonConsultedWas(2, 'Person 2', 'Teacher 2')
+      .otherPersonConsultedWas(3, 'Person 3', 'Teacher 3')
       .clickOtherPeopleConsultedListChangeLink()
       .removePerson(3, OtherPeopleConsultedListPage)
       .submitPageTo(CheckYourAnswersPage)
       .hasNumberOfPeopleConsulted(2)
-      .otherPersonConsultedWas(1, 'Person 1')
-      .otherPersonConsultedWas(2, 'Person 2')
+      .otherPersonConsultedWas(1, 'Person 1', 'Teacher 1')
+      .otherPersonConsultedWas(2, 'Person 2', 'Teacher 2')
 
       // check and update additional information
       .hasAdditionalInformation('None entered')
@@ -152,9 +155,9 @@ context(`Change links on the Check Your Answers page when creating an Education 
               "@.planCreatedBy.jobRole == 'Peer Mentor' && " +
               '@.otherContributors.size() == 2 && ' +
               "@.otherContributors[0].name == 'Person 1' && " +
-              "@.otherContributors[0].jobRole == 'N/A' && " +
+              "@.otherContributors[0].jobRole == 'Teacher 1' && " +
               "@.otherContributors[1].name == 'Person 2' && " +
-              "@.otherContributors[1].jobRole == 'N/A' && " +
+              "@.otherContributors[1].jobRole == 'Teacher 2' && " +
               '@.hasCurrentEhcp == true && ' +
               "@.teachingAdjustments == 'Use simpler examples to help students understand concepts' && " +
               "@.specificTeachingSkills == 'Teacher with BSL proficiency required' && " +

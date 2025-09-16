@@ -73,12 +73,13 @@ describe('addPersonConsultedController', () => {
     req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto({ otherPeopleConsulted: null }) }
     req.body = {
       fullName: 'A Teacher',
+      jobRole: 'A test job role',
     }
 
     const expectedNextRoute = 'list'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
-      otherPeopleConsulted: [{ name: 'A Teacher', jobRole: 'N/A' }],
+      otherPeopleConsulted: [{ name: 'A Teacher', jobRole: 'A test job role' }],
     }
 
     // When
@@ -96,22 +97,23 @@ describe('addPersonConsultedController', () => {
       educationSupportPlanDto: {
         ...aValidEducationSupportPlanDto(),
         otherPeopleConsulted: [
-          { name: 'Person 1', jobRole: 'N/A' },
-          { name: 'Person 2', jobRole: 'N/A' },
+          { name: 'Person 1', jobRole: 'A test job role' },
+          { name: 'Person 2', jobRole: 'A test job role' },
         ],
       },
     }
     req.body = {
       fullName: 'Person 3',
+      jobRole: 'A test job role',
     }
 
     const expectedNextRoute = 'list'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       otherPeopleConsulted: [
-        { name: 'Person 1', jobRole: 'N/A' },
-        { name: 'Person 2', jobRole: 'N/A' },
-        { name: 'Person 3', jobRole: 'N/A' },
+        { name: 'Person 1', jobRole: 'A test job role' },
+        { name: 'Person 2', jobRole: 'A test job role' },
+        { name: 'Person 3', jobRole: 'A test job role' },
       ],
     }
 
@@ -129,12 +131,13 @@ describe('addPersonConsultedController', () => {
     req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto({ otherPeopleConsulted: null }) }
     req.body = {
       fullName: 'A Teacher',
+      jobRole: 'A test job role',
     }
 
     const expectedNextRoute = 'list?submitToCheckAnswers=true' // expect the submitToCheckAnswers flag to be passed to the next route
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
-      otherPeopleConsulted: [{ name: 'A Teacher', jobRole: 'N/A' }],
+      otherPeopleConsulted: [{ name: 'A Teacher', jobRole: 'A test job role' }],
     }
 
     // When

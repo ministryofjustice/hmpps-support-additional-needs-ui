@@ -22,7 +22,7 @@ describe('addPersonConsultedSchema', () => {
 
   it('happy path - validation passes', async () => {
     // Given
-    const requestBody = { fullName: 'A Person' }
+    const requestBody = { fullName: 'A Person', jobRole: 'A Job Role' }
     req.body = requestBody
 
     // When
@@ -37,14 +37,15 @@ describe('addPersonConsultedSchema', () => {
 
   it.each([
     //
-    { fullName: null },
-    { fullName: undefined },
-    { fullName: '' },
-    { fullName: ' ' },
+    { fullName: null, jobRole: 'A Job Role' },
+    { fullName: undefined, jobRole: 'A Job Role' },
+    { fullName: '', jobRole: 'A Job Role' },
+    { fullName: ' ', jobRole: 'A Job Role' },
     {
       fullName: `
 
     `,
+      jobRole: 'A Job Role',
     },
   ])('sad path - fullName field validation fails - %s', async requestBody => {
     // Given
@@ -53,7 +54,87 @@ describe('addPersonConsultedSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#fullName',
-        text: 'Enter the full name of the person was was consulted or involved in the creation of the plan',
+        text: 'Enter the full name of the person who was consulted or involved in the creation of the plan',
+      },
+    ]
+    const expectedInvalidForm = JSON.stringify(requestBody)
+
+    // When
+    await validate(addPersonConsultedSchema)(req, res, next)
+
+    // Then
+    expect(req.body).toEqual(requestBody)
+    expect(next).not.toHaveBeenCalled()
+    expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+    expect(res.redirectWithErrors).toHaveBeenCalledWith(
+      '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/other-people-consulted/add-person',
+      expectedErrors,
+    )
+  })
+
+  it.each([
+    //
+    { fullName: 'Bob', jobRole: null },
+    { fullName: 'Bob', jobRole: undefined },
+    { fullName: 'Bob', jobRole: '' },
+    { fullName: 'Bob', jobRole: ' ' },
+    {
+      fullName: 'Bob',
+      jobRole: `
+
+      `,
+    },
+  ])('sad path - jobRole field validation fails - %s', async requestBody => {
+    // Given
+    req.body = requestBody
+
+    const expectedErrors: Array<Error> = [
+      {
+        href: '#jobRole',
+        text: 'Enter the job role of the person who was consulted or involved in the creation of the plan',
+      },
+    ]
+    const expectedInvalidForm = JSON.stringify(requestBody)
+
+    // When
+    await validate(addPersonConsultedSchema)(req, res, next)
+
+    // Then
+    expect(req.body).toEqual(requestBody)
+    expect(next).not.toHaveBeenCalled()
+    expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+    expect(res.redirectWithErrors).toHaveBeenCalledWith(
+      '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/other-people-consulted/add-person',
+      expectedErrors,
+    )
+  })
+
+  it.each([
+    //
+    { fullName: null, jobRole: null },
+    { fullName: undefined, jobRole: undefined },
+    { fullName: '', jobRole: '' },
+    { fullName: ' ', jobRole: ' ' },
+    {
+      fullName: `
+
+      `,
+      jobRole: `
+
+      `,
+    },
+  ])('sad path - fullName and jobRole field validation fails - %s', async requestBody => {
+    // Given
+    req.body = requestBody
+
+    const expectedErrors: Array<Error> = [
+      {
+        href: '#fullName',
+        text: 'Enter the full name of the person who was consulted or involved in the creation of the plan',
+      },
+      {
+        href: '#jobRole',
+        text: 'Enter the job role of the person who was consulted or involved in the creation of the plan',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -75,6 +156,7 @@ describe('addPersonConsultedSchema', () => {
     // Given
     const requestBody = {
       fullName: 'a'.repeat(201),
+      jobRole: 'A Job Role',
     }
     req.body = requestBody
 
@@ -82,6 +164,35 @@ describe('addPersonConsultedSchema', () => {
       {
         href: '#fullName',
         text: 'Full name must be 200 characters or less',
+      },
+    ]
+    const expectedInvalidForm = JSON.stringify(requestBody)
+
+    // When
+    await validate(addPersonConsultedSchema)(req, res, next)
+
+    // Then
+    expect(req.body).toEqual(requestBody)
+    expect(next).not.toHaveBeenCalled()
+    expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+    expect(res.redirectWithErrors).toHaveBeenCalledWith(
+      '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/other-people-consulted/add-person',
+      expectedErrors,
+    )
+  })
+
+  it('sad path - jobRole field length validation fails', async () => {
+    // Given
+    const requestBody = {
+      fullName: 'Rodney',
+      jobRole: 'a'.repeat(201),
+    }
+    req.body = requestBody
+
+    const expectedErrors: Array<Error> = [
+      {
+        href: '#jobRole',
+        text: 'Job role must be 200 characters or less',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
