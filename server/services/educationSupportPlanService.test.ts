@@ -28,6 +28,7 @@ describe('educationSupportPlanService', () => {
       const unPersistedEducationSupportPlanDto = aValidEducationSupportPlanDto({
         prisonNumber,
         prisonId,
+        reviewBeforeCreatingPlan: true,
         planCreatedByOther: null,
         otherPeopleConsulted: null,
       })
@@ -49,6 +50,7 @@ describe('educationSupportPlanService', () => {
         otherPeopleConsulted: null,
         reviewDate: null,
         prisonId: null,
+        reviewBeforeCreatingPlan: null,
       })
 
       // When
@@ -104,6 +106,7 @@ describe('educationSupportPlanService', () => {
       const expectedEducationSupportPlan = aValidEducationSupportPlanDto({
         prisonId: null,
         reviewDate: null,
+        reviewBeforeCreatingPlan: null,
         planCreatedByOther: { name: 'Alan Teacher', jobRole: 'Education Instructor' },
       })
 

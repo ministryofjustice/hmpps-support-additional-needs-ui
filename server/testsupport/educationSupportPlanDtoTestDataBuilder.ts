@@ -7,6 +7,7 @@ const aValidEducationSupportPlanDto = (
   options?: DtoAuditFields & {
     prisonNumber?: string
     prisonId?: string
+    reviewBeforeCreatingPlan?: boolean
     planCreatedByOther?: {
       name: string
       jobRole: string
@@ -28,6 +29,8 @@ const aValidEducationSupportPlanDto = (
 ): EducationSupportPlanDto => ({
   prisonNumber: options?.prisonNumber ?? 'A1234BC',
   prisonId: options?.prisonId === null ? null : options?.prisonId || 'BXI',
+  reviewBeforeCreatingPlan:
+    options?.reviewBeforeCreatingPlan === null ? null : options?.reviewBeforeCreatingPlan || true,
   planCreatedByLoggedInUser: options?.planCreatedByOther == null,
   planCreatedByOtherFullName: options?.planCreatedByOther?.name,
   planCreatedByOtherJobRole: options?.planCreatedByOther?.jobRole,

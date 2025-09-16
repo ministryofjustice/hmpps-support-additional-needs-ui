@@ -85,7 +85,7 @@ const stubGetChallenges = (
             updatedByDisplayName: 'Alex Smith',
             updatedAt: '2023-06-19T09:39:44Z',
             updatedAtPrison: 'MDI',
-            symptoms: 'John is great at adding up',
+            symptoms: 'John is not good at long division',
             howIdentified: ['EDUCATION_SKILLS_WORK'],
             challengeType: {
               code: 'NUMERACY_SKILLS_DEFAULT',

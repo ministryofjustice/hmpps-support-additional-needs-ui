@@ -49,6 +49,7 @@ Cypress.Commands.add(
       .selectOtherPeopleWereNotConsulted()
       .submitPageTo(ReviewExistingNeedsPage)
       //
+      .selectDoNotReviewExistingNeeds()
       .submitPageTo(IndividualSupportRequirementsPage)
       //
       .enterSupportRequirements('Prisoner has requested large print books to help with reading')

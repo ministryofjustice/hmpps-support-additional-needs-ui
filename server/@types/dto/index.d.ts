@@ -30,6 +30,7 @@ declare module 'dto' {
   export interface EducationSupportPlanDto extends ReferencedAndAuditable {
     prisonNumber: string
     prisonId: string
+    reviewBeforeCreatingPlan?: boolean
     planCreatedByLoggedInUser?: boolean
     planCreatedByOtherFullName?: string
     planCreatedByOtherJobRole?: string
