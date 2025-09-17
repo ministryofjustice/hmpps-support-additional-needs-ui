@@ -36,8 +36,6 @@ const pageViewEventMap: Record<string, Page> = {
   '/education-support-plan/:prisonNumber/create/:journeyId/individual-support-requirements':
     Page.CREATE_ELSP_INDIVIDUAL_SUPPORT_REQUIREMENTS,
   '/education-support-plan/:prisonNumber/create/:journeyId/teaching-adjustments': Page.CREATE_ELSP_TEACHING_ADJUSTMENTS,
-  '/education-support-plan/:prisonNumber/create/:journeyId/learning-environment-adjustments':
-    Page.CREATE_ELSP_LEARNING_ENVIRONMENT_ADJUSTMENTS,
   '/education-support-plan/:prisonNumber/create/:journeyId/specific-teaching-skills':
     Page.CREATE_ELSP_SPECIFIC_TEACHING_SKILLS,
   '/education-support-plan/:prisonNumber/create/:journeyId/exam-arrangements': Page.CREATE_ELSP_EXAM_ARRANGEMENTS,
