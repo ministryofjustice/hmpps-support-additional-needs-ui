@@ -20,9 +20,18 @@ describe('reasonSchema', () => {
   })
 
   it.each([
-    { refusalReason: 'EXEMPT_REFUSED_TO_ENGAGE' },
-    { refusalReason: 'EXEMPT_NOT_REQUIRED' },
-    { refusalReason: 'EXEMPT_INACCURATE_IDENTIFICATION' },
+    {
+      refusalReason: 'EXEMPT_REFUSED_TO_ENGAGE',
+      refusalReasonDetails: { EXEMPT_REFUSED_TO_ENGAGE: 'a'.repeat(199) },
+    },
+    {
+      refusalReason: 'EXEMPT_NOT_REQUIRED',
+      refusalReasonDetails: { EXEMPT_NOT_REQUIRED: 'a'.repeat(199) },
+    },
+    {
+      refusalReason: 'EXEMPT_INACCURATE_IDENTIFICATION',
+      refusalReasonDetails: { EXEMPT_INACCURATE_IDENTIFICATION: 'a'.repeat(199) },
+    },
   ])('happy path - validation passes - refusalReason: $refusalReason', async requestBody => {
     // Given
     req.body = requestBody
