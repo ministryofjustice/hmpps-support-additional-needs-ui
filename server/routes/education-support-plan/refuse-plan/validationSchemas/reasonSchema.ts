@@ -6,7 +6,7 @@ import { isEmpty, textValueExceedsLength } from '../../../../utils/validation/te
 const reasonSchema = async () => {
   const MAX_REFUSAL_REASON_DETAILS_LENGTH = 200
 
-  const refusalReasonMandatoryMessage = 'Select the reason that the education support plan is being refused'
+  const refusalReasonMandatoryMessage = 'Select the reason an education support plan has been declined'
   const refusalReasonDetailsMaxLengthMessage = `Refusal details must be ${MAX_REFUSAL_REASON_DETAILS_LENGTH} characters or less`
   const detailsMandatoryMessage = 'Enter details'
 
@@ -19,14 +19,17 @@ const reasonSchema = async () => {
       .optional(),
   }).check(ctx => {
     const { refusalReason, refusalReasonDetails } = ctx.value
-    if (!refusalReasonDetails && isEmpty(refusalReasonDetails?.[refusalReason])) {
+    if (!refusalReasonDetails?.[refusalReason] || isEmpty(refusalReasonDetails?.[refusalReason])) {
       ctx.issues.push({
         code: 'custom',
         input: ctx.value,
         path: [`${refusalReason}_refusalDetails`],
         message: detailsMandatoryMessage,
       })
-    } else if (textValueExceedsLength(refusalReasonDetails[refusalReason], MAX_REFUSAL_REASON_DETAILS_LENGTH)) {
+    } else if (
+      refusalReasonDetails?.[refusalReason] &&
+      textValueExceedsLength(refusalReasonDetails[refusalReason], MAX_REFUSAL_REASON_DETAILS_LENGTH)
+    ) {
       ctx.issues.push({
         code: 'custom',
         input: ctx.value,

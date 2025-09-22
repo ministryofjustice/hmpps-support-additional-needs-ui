@@ -110,4 +110,34 @@ describe('reasonSchema', () => {
       )
     },
   )
+  it.each([
+    { refusalReason: 'EXEMPT_REFUSED_TO_ENGAGE' },
+    { refusalReason: 'EXEMPT_REFUSED_TO_ENGAGE', refusalReasonDetails: { EXEMPT_REFUSED_TO_ENGAGE: '' } },
+  ])(
+    'sad path - validation of refusalReasonDetails field required validation fails - refusalReasonDetails: $refusalReasonDetails',
+    async requestBody => {
+      // Given
+      req.body = requestBody
+
+      const expectedErrors: Array<Error> = [
+        {
+          href: `#${requestBody.refusalReason}_refusalDetails`,
+          text: 'Enter details',
+        },
+      ]
+      const expectedInvalidForm = JSON.stringify(requestBody)
+
+      // When
+      await validate(reasonSchema)(req, res, next)
+
+      // Then
+      expect(req.body).toEqual(requestBody)
+      expect(next).not.toHaveBeenCalled()
+      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+      expect(res.redirectWithErrors).toHaveBeenCalledWith(
+        '/education-support-plan/A1234BC/refuse-plan/61375886-8ec3-4ed4-a017-a0525817f14a/reason',
+        expectedErrors,
+      )
+    },
+  )
 })
