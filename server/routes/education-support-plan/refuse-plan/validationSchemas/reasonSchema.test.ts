@@ -20,9 +20,18 @@ describe('reasonSchema', () => {
   })
 
   it.each([
-    { refusalReason: 'EXEMPT_REFUSED_TO_ENGAGE' },
-    { refusalReason: 'EXEMPT_NOT_REQUIRED' },
-    { refusalReason: 'EXEMPT_INACCURATE_IDENTIFICATION' },
+    {
+      refusalReason: 'EXEMPT_REFUSED_TO_ENGAGE',
+      refusalReasonDetails: { EXEMPT_REFUSED_TO_ENGAGE: 'a'.repeat(199) },
+    },
+    {
+      refusalReason: 'EXEMPT_NOT_REQUIRED',
+      refusalReasonDetails: { EXEMPT_NOT_REQUIRED: 'a'.repeat(199) },
+    },
+    {
+      refusalReason: 'EXEMPT_INACCURATE_IDENTIFICATION',
+      refusalReasonDetails: { EXEMPT_INACCURATE_IDENTIFICATION: 'a'.repeat(199) },
+    },
   ])('happy path - validation passes - refusalReason: $refusalReason', async requestBody => {
     // Given
     req.body = requestBody
@@ -49,7 +58,7 @@ describe('reasonSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#refusalReason',
-        text: 'Select the reason that the education support plan is being refused',
+        text: 'Select the reason an education support plan has been declined',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -84,6 +93,36 @@ describe('reasonSchema', () => {
         {
           href: `#${requestBody.refusalReason}_refusalDetails`,
           text: 'Refusal details must be 200 characters or less',
+        },
+      ]
+      const expectedInvalidForm = JSON.stringify(requestBody)
+
+      // When
+      await validate(reasonSchema)(req, res, next)
+
+      // Then
+      expect(req.body).toEqual(requestBody)
+      expect(next).not.toHaveBeenCalled()
+      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+      expect(res.redirectWithErrors).toHaveBeenCalledWith(
+        '/education-support-plan/A1234BC/refuse-plan/61375886-8ec3-4ed4-a017-a0525817f14a/reason',
+        expectedErrors,
+      )
+    },
+  )
+  it.each([
+    { refusalReason: 'EXEMPT_REFUSED_TO_ENGAGE' },
+    { refusalReason: 'EXEMPT_REFUSED_TO_ENGAGE', refusalReasonDetails: { EXEMPT_REFUSED_TO_ENGAGE: '' } },
+  ])(
+    'sad path - validation of refusalReasonDetails field required validation fails - refusalReasonDetails: $refusalReasonDetails',
+    async requestBody => {
+      // Given
+      req.body = requestBody
+
+      const expectedErrors: Array<Error> = [
+        {
+          href: `#${requestBody.refusalReason}_refusalDetails`,
+          text: 'Enter details',
         },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
