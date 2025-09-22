@@ -58,7 +58,7 @@ describe('reasonSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#refusalReason',
-        text: 'Select the reason that the education support plan is being refused',
+        text: 'Select the reason an education support plan has been declined',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
