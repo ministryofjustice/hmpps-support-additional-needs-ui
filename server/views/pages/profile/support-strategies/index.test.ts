@@ -5,6 +5,7 @@ import formatPrisonerNameFilter, { NameFormat } from '../../../../filters/format
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import { Result } from '../../../../utils/result/result'
 import { formatSupportStrategyTypeScreenValueFilter } from '../../../../filters/formatSupportStrategyTypeFilter'
+import aPlanLifecycleStatusDto from '../../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -40,6 +41,7 @@ const templateParams = {
   tab: 'support-strategies',
   supportStrategies: Result.fulfilled({}),
   prisonNamesById: Result.fulfilled(prisonNamesById),
+  educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
   pageHasApiErrors: false,
 }
 

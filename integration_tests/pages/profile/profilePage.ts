@@ -5,6 +5,7 @@ import SelectConditionsPage from '../conditions/selectConditionsPage'
 import SelectStrengthCategoryPage from '../strengths/selectStrengthCategoryPage'
 import WhoCreatedThePlanPage from '../education-support-plan/whoCreatedThePlanPage'
 import ReasonPage from '../education-support-plan/refuse-plan/reasonPage'
+import SelectSupportStrategyCategoryPage from '../support-strategies/selectSupportStrategyCategoryPage'
 
 export default abstract class ProfilePage extends Page {
   hasSuccessMessage<T extends ProfilePage>(message: string): T {
@@ -49,6 +50,11 @@ export default abstract class ProfilePage extends Page {
     return Page.verifyOnPage(SelectStrengthCategoryPage)
   }
 
+  clickAddSupportStrategyButton(): SelectSupportStrategyCategoryPage {
+    this.addSupportStrategyButton().click()
+    return Page.verifyOnPage(SelectSupportStrategyCategoryPage)
+  }
+
   clickCreateEducationSupportPlanButton(): WhoCreatedThePlanPage {
     this.createEducationSupportPlanButton().click()
     return Page.verifyOnPage(WhoCreatedThePlanPage)
@@ -80,6 +86,8 @@ export default abstract class ProfilePage extends Page {
   private addConditionsButton = (): PageElement => cy.get('[data-qa=add-conditions-button]')
 
   private addStrengthButton = (): PageElement => cy.get('[data-qa=add-strength-button]')
+
+  private addSupportStrategyButton = (): PageElement => cy.get('[data-qa=add-support-strategy-button]')
 
   private createEducationSupportPlanButton = (): PageElement => cy.get('[data-qa=create-education-support-plan-button]')
 
