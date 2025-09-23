@@ -5,19 +5,21 @@ import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataB
 import { Result } from '../../../utils/result/result'
 import aValidSupportStrategyResponseDto from '../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
 import SupportStrategyType from '../../../enums/supportStrategyType'
+import aPlanLifecycleStatusDto from '../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 
 describe('supportStrategiesController', () => {
   const controller = new SupportStrategiesController()
 
   const prisonerSummary = aValidPrisonerSummary()
   const prisonNamesById = Result.fulfilled({ BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' })
+  const educationSupportPlanLifecycleStatus = Result.fulfilled(aPlanLifecycleStatusDto())
   const supportStrategies = Result.fulfilled([aValidSupportStrategyResponseDto()])
   const render = jest.fn()
 
   const req = {} as unknown as Request
   const res = {
     render,
-    locals: { prisonerSummary, supportStrategies, prisonNamesById },
+    locals: { prisonerSummary, supportStrategies, prisonNamesById, educationSupportPlanLifecycleStatus },
   } as unknown as Response
   const next = jest.fn()
 
@@ -34,6 +36,7 @@ describe('supportStrategiesController', () => {
     const expectedViewModel = {
       prisonNamesById,
       prisonerSummary,
+      educationSupportPlanLifecycleStatus,
       supportStrategies: expect.objectContaining({
         status: 'fulfilled',
         value: expectedGroupedSupportStrategies,
@@ -47,6 +50,7 @@ describe('supportStrategiesController', () => {
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
+
   it('should render the view given the support strategies promises are fulfilled', async () => {
     // Given
     const expectedViewTemplate = 'pages/profile/support-strategies/index'
@@ -97,6 +101,7 @@ describe('supportStrategiesController', () => {
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,
       prisonNamesById,
+      educationSupportPlanLifecycleStatus,
       tab: 'support-strategies',
       supportStrategies: expect.objectContaining({
         status: 'fulfilled',
@@ -124,6 +129,7 @@ describe('supportStrategiesController', () => {
     const expectedViewModel = {
       prisonNamesById,
       prisonerSummary,
+      educationSupportPlanLifecycleStatus,
       supportStrategies: expect.objectContaining({
         status: 'rejected',
         reason: expectedError,
