@@ -593,13 +593,13 @@ describe('Tests for Profile pages actions card component', () => {
     '2099-12-30',
     '2100-01-01',
   ])(
-    'it should render the action cards component with a plan creation date given the plan is due and the plan creation date is %s',
+    'it should render the action cards component with a plan review date given the plan is active and the plan review date is %s',
     date => {
       // Given
       const params = {
         ...templateParams,
-        planStatus: PlanActionStatus.PLAN_DUE,
-        planCreationDeadlineDate: startOfDay(date),
+        planStatus: PlanActionStatus.ACTIVE_PLAN,
+        planReviewDeadlineDate: startOfDay(date),
       }
 
       // When
@@ -607,19 +607,17 @@ describe('Tests for Profile pages actions card component', () => {
       const $ = cheerio.load(content)
 
       // Then
-      expect($('[data-qa=plan-due-tag]').length).toEqual(1)
-      expect($('[data-qa=plan-creation-due-date]').text().trim()).toEqual(
-        `Create plan by ${format(date, 'd MMM yyyy')}`,
-      )
+      expect($('[data-qa=active-plan-tag]').length).toEqual(1)
+      expect($('[data-qa=plan-review-due-date]').text().trim()).toEqual(`Review due ${format(date, 'd MMM yyyy')}`)
     },
   )
 
-  it('it should render the action cards component without a plan creation date given the plan is due and the plan creation date is 2099-12-31', () => {
+  it('it should render the action cards component without a plan review date given the plan is active and the plan review date is 2099-12-31', () => {
     // Given
     const params = {
       ...templateParams,
-      planStatus: PlanActionStatus.PLAN_DUE,
-      planCreationDeadlineDate: startOfDay('2099-12-31'),
+      planStatus: PlanActionStatus.ACTIVE_PLAN,
+      planReviewDeadlineDate: startOfDay('2099-12-31'),
     }
 
     // When
@@ -627,7 +625,7 @@ describe('Tests for Profile pages actions card component', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('[data-qa=plan-due-tag]').length).toEqual(1)
-    expect($('[data-qa=plan-creation-due-date]').length).toEqual(0)
+    expect($('[data-qa=active-plan-tag]').length).toEqual(1)
+    expect($('[data-qa=plan-review-due-date]').length).toEqual(0)
   })
 })
