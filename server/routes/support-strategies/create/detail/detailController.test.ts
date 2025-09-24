@@ -136,7 +136,7 @@ describe('detailController', () => {
     await controller.submitDetailForm(req, res, next)
 
     // Then
-    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Support strategy added')
     expect(req.journeyData.supportStrategyDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
     expect(supportStrategyService.createSupportStrategies).toHaveBeenCalledWith(username, [expectedSupportStrategyDto])

@@ -37,7 +37,7 @@ export default class DetailController {
 
     const { prisonNumber } = supportStrategyDto
     req.journeyData.supportStrategyDto = undefined
-    return res.redirect(`/profile/${prisonNumber}/support-strategies`)
+    return res.redirectWithSuccess(`/profile/${prisonNumber}/support-strategies`, 'Support strategy added')
   }
 
   private populateFormFromDto = (dto: SupportStrategyDto) => {
