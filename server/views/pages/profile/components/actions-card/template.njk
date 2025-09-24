@@ -25,7 +25,9 @@
           <span class="govuk-tag govuk-tag--yellow govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="plan-due-tag">
             Plan Due
           </span>
-          <p class="govuk-body" data-qa="plan-creation-due-date">Create plan by {{ planCreationDeadlineDate | formatDate('d MMM yyyy') }}</p>
+          {% if planCreationDeadlineDate | formatDate('yyyy-MM-dd') != '2099-12-31' %}
+            <p class="govuk-body" data-qa="plan-creation-due-date">Create plan by {{ planCreationDeadlineDate | formatDate('d MMM yyyy') }}</p>
+          {% endif %}
         {% endif %}
 
         {% if planStatus == 'ACTIVE_PLAN' %}
