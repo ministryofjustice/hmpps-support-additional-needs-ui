@@ -24,6 +24,11 @@
     margin-bottom: 5mm;
   }
 
+  .govuk-summary-card {
+    page-break-inside:avoid;
+    page-break-after:auto;
+  }
+
   .govuk-summary-card__title-wrapper {
     padding-bottom: 0;
   }
