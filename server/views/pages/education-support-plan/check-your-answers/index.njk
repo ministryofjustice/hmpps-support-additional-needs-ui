@@ -18,7 +18,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      <h1 class="govuk-heading-l">Review {{ prisonerSummary | formatFirst_name_Last_name }}'s education support plan</h1>
+      <h1 class="govuk-heading-l">Check and save your answers</h1>
 
       <form class="form" method="post" novalidate="">
         <div class="govuk-form-group">
@@ -27,7 +27,7 @@
           <dl class="govuk-summary-list govuk-!-margin-bottom-8">
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
-                Did you meet with the prisoner?
+                Are you creating the plan?
               </dt>
               <dd class="govuk-summary-list__value" data-qa="who-created-the-plan">
                 {{ dto.planCreatedByLoggedInUser | formatYesNo }}
@@ -85,6 +85,20 @@
 
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                Prisoner view on support needed
+              </dt>
+              <dd class="govuk-summary-list__value" data-qa="individual-support-requirements">
+                <span class="app-u-multiline-text">{{ dto.individualSupport }}</span>
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="individual-support-requirements?submitToCheckAnswers=true" data-qa="individual-support-requirements-change-link">
+                  Change<span class="govuk-visually-hidden"> details of any education support the person feels they need</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
                 Adjustments to teaching, learning environment or materials
               </dt>
               <dd class="govuk-summary-list__value" data-qa="teaching-adjustments">
@@ -102,21 +116,7 @@
 
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
-                Prisoner view on support needed
-              </dt>
-              <dd class="govuk-summary-list__value" data-qa="individual-support-requirements">
-                <span class="app-u-multiline-text">{{ dto.individualSupport }}</span>
-              </dd>
-              <dd class="govuk-summary-list__actions">
-                <a class="govuk-link" href="individual-support-requirements?submitToCheckAnswers=true" data-qa="individual-support-requirements-change-link">
-                  Change<span class="govuk-visually-hidden"> details of any education support the person feels they need</span>
-                </a>
-              </dd>
-            </div>
-
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
-                Specific knowledge or training
+                Teacher knowledge or skills
               </dt>
               <dd class="govuk-summary-list__value" data-qa="specific-teaching-skills">
                 {{ dto.specificTeachingSkillsNeeded | formatYesNo }}
@@ -164,7 +164,7 @@
 
             <div class="govuk-summary-list__row">
               <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
-                LNSP support in the classroom
+                Learning needs support
               </dt>
               <dd class="govuk-summary-list__value" data-qa="lnsp-support">
                 {{ dto.lnspSupportNeeded | formatYesNo }}
@@ -213,7 +213,7 @@
 
         {{ govukButton({
           id: "submit-button",
-          text: "Continue",
+          text: "Submit plan",
           type: "submit",
           attributes: {"data-qa": "submit-button"},
           preventDoubleClick: true
