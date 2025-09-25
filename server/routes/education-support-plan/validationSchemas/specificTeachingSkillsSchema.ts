@@ -6,8 +6,9 @@ import { isEmpty, textValueExceedsLength } from '../../../utils/validation/textV
 const specificTeachingSkillsSchema = async () => {
   const MAX_DETAILS_LENGTH = 4000
 
-  const skillsRequiredMandatoryMessage = 'Select whether any specific teaching skills are required'
-  const detailsMandatoryMessage = 'Enter details of any specific teaching skills'
+  const skillsRequiredMandatoryMessage =
+    "Select if teachers need specific knowledge or skills to support person's learning"
+  const detailsMandatoryMessage = "Enter the details of teachers' specific knowledge or skills"
   const detailsMaxLengthMessage = `Details of specific teaching skills must be ${MAX_DETAILS_LENGTH} characters or less`
 
   return createSchema({
