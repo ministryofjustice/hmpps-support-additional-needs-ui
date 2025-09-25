@@ -52,7 +52,7 @@ describe('individualSupportRequirementsSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#supportRequirements',
-        text: 'Enter details of any support requirements that the individual feels they need',
+        text: 'Add details of the support in education the person feels they need',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
