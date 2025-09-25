@@ -7,7 +7,7 @@ const learningNeedsSupportPractitionerSupportSchema = async () => {
   const MAX_DETAILS_LENGTH = 4000
   const MIN_SUPPORT_HOURS = 0
 
-  const supportRequiredMandatoryMessage = 'Select whether any support from an LNSP is required'
+  const supportRequiredMandatoryMessage = 'Select if you recommend the person has specific learning needs support'
   const detailsMandatoryMessage = 'Enter details of any support required'
   const detailsMaxLengthMessage = `Details of required support must be ${MAX_DETAILS_LENGTH} characters or less`
   const supportHoursMessage = `You must enter a number of hours of support even if that number is 0`
