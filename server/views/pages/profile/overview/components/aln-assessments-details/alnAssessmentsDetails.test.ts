@@ -66,9 +66,7 @@ describe('Tests for the ALN Assessments Details component', () => {
       `Ifereeca Peigh's additional learning needs assessment recorded whilst at Leeds (HMP)`,
     )
     expect(assessmentAtLeeds.find('[data-qa=assessment-date]').text().trim()).toEqual('13 October 2024')
-    expect(assessmentAtLeeds.find('[data-qa=assessment-outcome]').text().trim()).toEqual(
-      'Needs an education support plan',
-    )
+    expect(assessmentAtLeeds.find('[data-qa=assessment-outcome]').text().trim()).toEqual('Additional needs identified')
     expect(assessmentAtLeeds.find('[data-qa=assessment-referral]').text().trim()).toEqual('Safer Custody')
 
     const assessmentAtBrixton = $('[data-qa=aln-assessment-from-BXI]')
@@ -78,7 +76,7 @@ describe('Tests for the ALN Assessments Details component', () => {
     )
     expect(assessmentAtBrixton.find('[data-qa=assessment-date]').text().trim()).toEqual('6 January 2023')
     expect(assessmentAtBrixton.find('[data-qa=assessment-outcome]').text().trim()).toEqual(
-      'No education support plan needed',
+      'No Additional needs identified',
     )
     expect(assessmentAtBrixton.find('[data-qa=assessment-referral]').text().trim()).toEqual('Education Specialist')
   })
