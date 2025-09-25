@@ -53,7 +53,7 @@ describe('learningNeedsSupportPractitionerSupportSchema', () => {
       const expectedErrors: Array<Error> = [
         {
           href: '#supportRequired',
-          text: 'Select whether any support from an LNSP is required',
+          text: 'Select if you recommend the person has specific learning needs support',
         },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
