@@ -65,7 +65,7 @@ describe('whoCompletedThePlanSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#completedBy',
-        text: 'Select whether you met with the person to create their plan',
+        text: 'Select if you are creating the plan with the learner',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -103,7 +103,7 @@ describe('whoCompletedThePlanSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#completedByOtherFullName',
-        text: 'Enter the full name of the person who met with the person to create their plan',
+        text: 'Enter the full name of the person who is creating the plan',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -171,7 +171,7 @@ describe('whoCompletedThePlanSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#completedByOtherJobRole',
-        text: 'Enter the job title of the person who met with the person to create their plan',
+        text: 'Enter the job role of the person who is creating the plan',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -231,11 +231,11 @@ describe('whoCompletedThePlanSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#completedByOtherFullName',
-        text: 'Enter the full name of the person who met with the person to create their plan',
+        text: 'Enter the full name of the person who is creating the plan',
       },
       {
         href: '#completedByOtherJobRole',
-        text: 'Enter the job title of the person who met with the person to create their plan',
+        text: 'Enter the job role of the person who is creating the plan',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
