@@ -73,7 +73,7 @@ export function addUserDataToRequests(envelope: EnvelopeTelemetry, contextObject
       // eslint-disable-next-line no-param-reassign
       envelope.data.baseData.properties = {
         username,
-        activeCaseLoadId
+        activeCaseLoadId,
         ...properties,
       }
     }
