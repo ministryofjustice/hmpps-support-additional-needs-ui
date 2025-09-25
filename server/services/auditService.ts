@@ -46,9 +46,16 @@ export enum Page {
 enum AuditableUserAction {
   PAGE_VIEW_ATTEMPT = 'PAGE_VIEW_ATTEMPT',
   PAGE_VIEW = 'PAGE_VIEW',
+  CREATE_EDUCATION_LEARNER_SUPPORT_PLAN = 'CREATE_EDUCATION_LEARNER_SUPPORT_PLAN',
+  REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN = 'REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN',
+  RECORD_ALN_SCREENER = 'RECORD_ALN_SCREENER',
+  CREATE_STRENGTH = 'CREATE_STRENGTH',
+  CREATE_CHALLENGE = 'CREATE_CHALLENGE',
+  CREATE_CONDITION = 'CREATE_CONDITION',
+  CREATE_SUPPORT_STRATEGY = 'CREATE_SUPPORT_STRATEGY',
 }
 
-export interface PageViewEventDetails {
+export interface BaseAuditData {
   who: string
   subjectId?: string
   subjectType?: string
@@ -63,7 +70,7 @@ export default class AuditService {
     return this.hmppsAuditClient.sendMessage(event, false)
   }
 
-  async logPageViewAttempt(page: Page, eventDetails: PageViewEventDetails) {
+  async logPageViewAttempt(page: Page, eventDetails: BaseAuditData) {
     const event: AuditEvent = {
       ...eventDetails,
       what: `${AuditableUserAction.PAGE_VIEW_ATTEMPT}_${page}`,
@@ -71,11 +78,60 @@ export default class AuditService {
     return this.logAuditEvent(event)
   }
 
-  async logPageView(page: Page, eventDetails: PageViewEventDetails) {
+  async logPageView(page: Page, eventDetails: BaseAuditData) {
     const event: AuditEvent = {
       ...eventDetails,
       what: `${AuditableUserAction.PAGE_VIEW}_${page}`,
     }
     return this.logAuditEvent(event)
+  }
+
+  async logCreateEducationSupportPlan(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.CREATE_EDUCATION_LEARNER_SUPPORT_PLAN,
+    })
+  }
+
+  async logReviewEducationSupportPlan(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN,
+    })
+  }
+
+  async logCreateStrength(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.CREATE_STRENGTH,
+    })
+  }
+
+  async logCreateChallenge(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.CREATE_CHALLENGE,
+    })
+  }
+
+  async logCreateCondition(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.CREATE_CONDITION,
+    })
+  }
+
+  async logCreateSupportStrategy(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.CREATE_SUPPORT_STRATEGY,
+    })
+  }
+
+  async logRecordAlnScreener(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.RECORD_ALN_SCREENER,
+    })
   }
 }
