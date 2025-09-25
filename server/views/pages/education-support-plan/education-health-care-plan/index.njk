@@ -20,6 +20,9 @@
                 classes: "govuk-fieldset__legend--l"
               }
             },
+            hint: {
+              text: 'An EHCP is a plan for children and young people aged up to 25 who need additional needs support in education. Contact the person\'s local authority for more details.'
+            },
             items: [
               {
                 value: "YES",
@@ -33,7 +36,7 @@
               }
             ],
             errorMessage: errors | findError('hasCurrentEhcp')
-          }) }}
+            }) }}
         </div>
 
         {{ govukButton({
