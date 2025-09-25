@@ -6,8 +6,9 @@ import { isEmpty, textValueExceedsLength } from '../../../utils/validation/textV
 const teachingAdjustmentsSchema = async () => {
   const MAX_DETAILS_LENGTH = 4000
 
-  const adjustmentsRequiredMandatoryMessage = 'Select whether any adjustments are required to the teaching'
-  const detailsMandatoryMessage = 'Enter details of any adjustments to the teaching'
+  const adjustmentsRequiredMandatoryMessage =
+    'Select if the person needs any adjustments to teaching, learning environment or materials'
+  const detailsMandatoryMessage = 'Add details of the adjustments needed to teaching, learning environment or materials'
   const detailsMaxLengthMessage = `Details of adjustments to the teaching must be ${MAX_DETAILS_LENGTH} characters or less`
 
   return createSchema({

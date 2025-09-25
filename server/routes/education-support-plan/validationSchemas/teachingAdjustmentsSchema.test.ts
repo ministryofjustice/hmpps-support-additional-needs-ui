@@ -53,7 +53,7 @@ describe('teachingAdjustmentsSchema', () => {
       const expectedErrors: Array<Error> = [
         {
           href: '#adjustmentsNeeded',
-          text: 'Select whether any adjustments are required to the teaching',
+          text: 'Select if the person needs any adjustments to teaching, learning environment or materials',
         },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
@@ -83,7 +83,10 @@ describe('teachingAdjustmentsSchema', () => {
       req.body = requestBody
 
       const expectedErrors: Array<Error> = [
-        { href: '#details', text: 'Enter details of any adjustments to the teaching' },
+        {
+          href: '#details',
+          text: 'Add details of the adjustments needed to teaching, learning environment or materials',
+        },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
 
