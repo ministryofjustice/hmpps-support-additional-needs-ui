@@ -56,7 +56,7 @@ describe('examArrangementsSchema', () => {
       const expectedErrors: Array<Error> = [
         {
           href: '#arrangementsNeeded',
-          text: 'Select whether any access arrangements are required',
+          text: 'Select if access arrangements are needed for exams or assessments',
         },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
@@ -85,7 +85,9 @@ describe('examArrangementsSchema', () => {
       // Given
       req.body = requestBody
 
-      const expectedErrors: Array<Error> = [{ href: '#details', text: 'Enter details of any access arrangements' }]
+      const expectedErrors: Array<Error> = [
+        { href: '#details', text: 'Enter details of access arrangements needed for exams or assessments' },
+      ]
       const expectedInvalidForm = JSON.stringify(requestBody)
 
       // When
