@@ -54,7 +54,7 @@ describe('specificTeachingSkillsSchema', () => {
       const expectedErrors: Array<Error> = [
         {
           href: '#skillsRequired',
-          text: 'Select whether any specific teaching skills are required',
+          text: "Select if teachers need specific knowledge or skills to support person's learning",
         },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
@@ -83,7 +83,9 @@ describe('specificTeachingSkillsSchema', () => {
       // Given
       req.body = requestBody
 
-      const expectedErrors: Array<Error> = [{ href: '#details', text: 'Enter details of any specific teaching skills' }]
+      const expectedErrors: Array<Error> = [
+        { href: '#details', text: "Enter the details of teachers' specific knowledge or skills" },
+      ]
       const expectedInvalidForm = JSON.stringify(requestBody)
 
       // When
