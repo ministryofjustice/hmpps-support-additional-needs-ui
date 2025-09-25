@@ -6,8 +6,8 @@ import { isEmpty, textValueExceedsLength } from '../../../utils/validation/textV
 const examArrangementsSchema = async () => {
   const MAX_DETAILS_LENGTH = 4000
 
-  const arrangementsRequiredMandatoryMessage = 'Select whether any access arrangements are required'
-  const detailsMandatoryMessage = 'Enter details of any access arrangements'
+  const arrangementsRequiredMandatoryMessage = 'Select if access arrangements are needed for exams or assessments'
+  const detailsMandatoryMessage = 'Enter details of access arrangements needed for exams or assessments'
   const detailsMaxLengthMessage = `Details of access arrangements must be ${MAX_DETAILS_LENGTH} characters or less`
 
   return createSchema({
