@@ -1,5 +1,4 @@
 import { Request, Response } from 'express'
-import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
 import CheckYourAnswersController from './checkYourAnswersController'
 import EducationSupportPlanService from '../../../../services/educationSupportPlanService'
@@ -12,7 +11,6 @@ describe('checkYourAnswersController', () => {
 
   const username = 'A_USER'
   const prisonNumber = 'A1234BC'
-  const prisonerSummary = aValidPrisonerSummary({ prisonNumber })
   const educationSupportPlanDto = aValidEducationSupportPlanDto({ prisonNumber })
 
   const flash = jest.fn()
@@ -29,7 +27,7 @@ describe('checkYourAnswersController', () => {
     redirectWithErrors: jest.fn(),
     redirectWithSuccess: jest.fn(),
     render: jest.fn(),
-    locals: { prisonerSummary },
+    locals: {},
   } as unknown as Response
   const next = jest.fn()
 
@@ -47,7 +45,6 @@ describe('checkYourAnswersController', () => {
 
     const expectedViewTemplate = 'pages/education-support-plan/check-your-answers/index'
     const expectedViewModel = {
-      prisonerSummary,
       dto: aValidEducationSupportPlanDto(),
       errorSavingEducationSupportPlan: false,
     }
@@ -65,7 +62,6 @@ describe('checkYourAnswersController', () => {
 
     const expectedViewTemplate = 'pages/education-support-plan/check-your-answers/index'
     const expectedViewModel = {
-      prisonerSummary,
       dto: aValidEducationSupportPlanDto(),
       errorSavingEducationSupportPlan: true,
     }

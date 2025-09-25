@@ -6,11 +6,9 @@ export default class CheckYourAnswersController {
   constructor(private readonly educationSupportPlanService: EducationSupportPlanService) {}
 
   getCheckYourAnswersView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    const { prisonerSummary } = res.locals
     const { educationSupportPlanDto } = req.journeyData
 
     const viewRenderArgs = {
-      prisonerSummary,
       dto: educationSupportPlanDto,
       errorSavingEducationSupportPlan: req.flash('pageHasApiErrors')[0] != null,
     }
