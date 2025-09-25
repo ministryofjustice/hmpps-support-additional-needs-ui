@@ -52,7 +52,7 @@
                 No challenges recorded
               </p>
               {% if userHasPermissionTo('RECORD_CHALLENGES') %}
-                <a class="govuk-link govuk-body" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category">Add challenge</a>
+                <a class="govuk-link govuk-body govuk-!-display-none-print" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category">Add challenge</a>
               {% endif %}
             </div>
           </div>

@@ -4,7 +4,7 @@
       No support strategies recorded
     </p>
     {% if userHasPermissionTo('RECORD_SUPPORT_STRATEGIES') %}
-      <a class="govuk-link govuk-body" href="/support-strategies/{{ prisonerSummary.prisonNumber }}/create/select-category">Add support strategy</a>
+      <a class="govuk-link govuk-body govuk-!-display-none-print" href="/support-strategies/{{ prisonerSummary.prisonNumber }}/create/select-category">Add support strategy</a>
     {% endif %}
   </div>
 </div>

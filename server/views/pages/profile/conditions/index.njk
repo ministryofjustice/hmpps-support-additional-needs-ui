@@ -50,7 +50,7 @@
                 No conditions recorded
               </p>
               {% if userHasPermissionTo('RECORD_SELF_DECLARED_CONDITIONS') %}
-                <a class="govuk-link govuk-body" href="/conditions/{{ prisonerSummary.prisonNumber }}/create/select-conditions">Record condition</a>
+                <a class="govuk-link govuk-body govuk-!-display-none-print" href="/conditions/{{ prisonerSummary.prisonNumber }}/create/select-conditions">Record condition</a>
               {% endif %}
             </div>
           </div>
