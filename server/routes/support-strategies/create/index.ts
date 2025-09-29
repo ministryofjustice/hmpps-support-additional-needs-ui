@@ -14,11 +14,11 @@ import DetailController from './detail/detailController'
 import detailSchema from '../validationSchemas/detailSchema'
 
 const createSupportStrategiesRoutes = (services: Services): Router => {
-  const { journeyDataService, supportStrategyService } = services
+  const { auditService, journeyDataService, supportStrategyService } = services
   const router = Router({ mergeParams: true })
 
   const selectCategoryController = new SelectCategoryController()
-  const detailController = new DetailController(supportStrategyService)
+  const detailController = new DetailController(supportStrategyService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.RECORD_SUPPORT_STRATEGIES),

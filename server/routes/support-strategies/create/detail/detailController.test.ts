@@ -3,12 +3,15 @@ import DetailController from './detailController'
 import aValidSupportStrategyDto from '../../../../testsupport/supportStrategyDtoTestDataBuilder'
 import SupportStrategyType from '../../../../enums/supportStrategyType'
 import SupportStrategyService from '../../../../services/supportStrategyService'
+import AuditService from '../../../../services/auditService'
 
 jest.mock('../../../../services/supportStrategyService')
+jest.mock('../../../../services/auditService')
 
 describe('detailController', () => {
   const supportStrategyService = new SupportStrategyService(null) as jest.Mocked<SupportStrategyService>
-  const controller = new DetailController(supportStrategyService)
+  const auditService = new AuditService(null) as jest.Mocked<AuditService>
+  const controller = new DetailController(supportStrategyService, auditService)
 
   const username = 'A_USER'
   const prisonId = 'MDI'
@@ -21,6 +24,7 @@ describe('detailController', () => {
     user: { username },
     journeyData: {},
     body: {},
+    params: { prisonNumber },
     flash,
   } as unknown as Request
   const res = {
@@ -140,6 +144,13 @@ describe('detailController', () => {
     expect(req.journeyData.supportStrategyDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
     expect(supportStrategyService.createSupportStrategies).toHaveBeenCalledWith(username, [expectedSupportStrategyDto])
+    expect(auditService.logCreateSupportStrategy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subjectId: prisonNumber,
+        subjectType: 'PRISONER_ID',
+        who: username,
+      }),
+    )
   })
 
   it('should submit form and redirect to next route given calling API is not successful', async () => {
@@ -172,5 +183,6 @@ describe('detailController', () => {
     expect(req.journeyData.supportStrategyDto).toEqual(supportStrategyDto)
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
     expect(supportStrategyService.createSupportStrategies).toHaveBeenCalledWith(username, [expectedSupportStrategyDto])
+    expect(auditService.logCreateSupportStrategy).not.toHaveBeenCalled()
   })
 })

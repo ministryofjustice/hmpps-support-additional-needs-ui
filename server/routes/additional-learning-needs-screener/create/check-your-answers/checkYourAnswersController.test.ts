@@ -7,14 +7,17 @@ import { aValidAlnScreenerDto } from '../../../../testsupport/alnScreenerDtoTest
 import ChallengeType from '../../../../enums/challengeType'
 import StrengthType from '../../../../enums/strengthType'
 import AdditionalLearningNeedsScreenerService from '../../../../services/additionalLearningNeedsScreenerService'
+import AuditService from '../../../../services/auditService'
 
+jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/additionalLearningNeedsScreenerService')
 
 describe('checkYourAnswersController', () => {
   const alnService = new AdditionalLearningNeedsScreenerService(
     null,
   ) as jest.Mocked<AdditionalLearningNeedsScreenerService>
-  const controller = new CheckYourAnswersController(alnService)
+  const auditService = new AuditService(null) as jest.Mocked<AuditService>
+  const controller = new CheckYourAnswersController(alnService, auditService)
 
   const username = 'A_USER'
   const prisonNumber = 'A1234BC'
@@ -36,6 +39,7 @@ describe('checkYourAnswersController', () => {
     journeyData: {},
     body: {},
     user: { username },
+    params: { prisonNumber },
     flash,
   } as unknown as Request
   const res = {
@@ -170,6 +174,13 @@ describe('checkYourAnswersController', () => {
     expect(req.journeyData.alnScreenerDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
     expect(alnService.recordAlnScreener).toHaveBeenCalledWith(username, alnScreenerDto)
+    expect(auditService.logRecordAlnScreener).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subjectId: prisonNumber,
+        subjectType: 'PRISONER_ID',
+        who: username,
+      }),
+    )
   })
 
   it('should submit form and redirect to next route given calling API is not successful', async () => {
@@ -186,6 +197,7 @@ describe('checkYourAnswersController', () => {
     expect(req.journeyData.alnScreenerDto).toEqual(alnScreenerDto)
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
     expect(alnService.recordAlnScreener).toHaveBeenCalledWith(username, alnScreenerDto)
+    expect(auditService.logRecordAlnScreener).not.toHaveBeenCalled()
   })
 })
 

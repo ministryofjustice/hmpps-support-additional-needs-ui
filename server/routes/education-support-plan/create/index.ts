@@ -48,6 +48,7 @@ import reviewExistingNeedsSchema from '../validationSchemas/reviewExistingNeedsS
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const {
     additionalLearningNeedsService,
+    auditService,
     challengeService,
     conditionService,
     educationSupportPlanService,
@@ -75,7 +76,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const lnspController = new LearningNeedsSupportPractitionerSupportController()
   const additionalInformationController = new AdditionalInformationController()
   const reviewSupportPlanController = new ReviewSupportPlanController()
-  const checkYourAnswersController = new CheckYourAnswersController(educationSupportPlanService)
+  const checkYourAnswersController = new CheckYourAnswersController(educationSupportPlanService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN),

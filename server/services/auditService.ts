@@ -48,6 +48,7 @@ enum AuditableUserAction {
   PAGE_VIEW = 'PAGE_VIEW',
   CREATE_EDUCATION_LEARNER_SUPPORT_PLAN = 'CREATE_EDUCATION_LEARNER_SUPPORT_PLAN',
   REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN = 'REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN',
+  UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN_SCHEDULE = 'UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN_SCHEDULE',
   RECORD_ALN_SCREENER = 'RECORD_ALN_SCREENER',
   CREATE_STRENGTH = 'CREATE_STRENGTH',
   CREATE_CHALLENGE = 'CREATE_CHALLENGE',
@@ -86,14 +87,14 @@ export default class AuditService {
     return this.logAuditEvent(event)
   }
 
-  async logCreateEducationSupportPlan(baseAuditData: BaseAuditData) {
+  async logCreateEducationLearnerSupportPlan(baseAuditData: BaseAuditData) {
     return this.logAuditEvent({
       ...baseAuditData,
       what: AuditableUserAction.CREATE_EDUCATION_LEARNER_SUPPORT_PLAN,
     })
   }
 
-  async logReviewEducationSupportPlan(baseAuditData: BaseAuditData) {
+  async logReviewEducationLearnerSupportPlan(baseAuditData: BaseAuditData) {
     return this.logAuditEvent({
       ...baseAuditData,
       what: AuditableUserAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN,
@@ -132,6 +133,13 @@ export default class AuditService {
     return this.logAuditEvent({
       ...baseAuditData,
       what: AuditableUserAction.RECORD_ALN_SCREENER,
+    })
+  }
+
+  async logUpdateEducationLearnerSupportPlanAsRefused(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN_SCHEDULE,
     })
   }
 }

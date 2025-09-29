@@ -2,12 +2,15 @@ import { Request, Response } from 'express'
 import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
 import CheckYourAnswersController from './checkYourAnswersController'
 import EducationSupportPlanService from '../../../../services/educationSupportPlanService'
+import AuditService from '../../../../services/auditService'
 
+jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/educationSupportPlanService')
 
 describe('checkYourAnswersController', () => {
   const educationSupportPlanService = new EducationSupportPlanService(null) as jest.Mocked<EducationSupportPlanService>
-  const controller = new CheckYourAnswersController(educationSupportPlanService)
+  const auditService = new AuditService(null) as jest.Mocked<AuditService>
+  const controller = new CheckYourAnswersController(educationSupportPlanService, auditService)
 
   const username = 'A_USER'
   const prisonNumber = 'A1234BC'
@@ -20,6 +23,7 @@ describe('checkYourAnswersController', () => {
     journeyData: {},
     body: {},
     user: { username },
+    params: { prisonNumber },
     flash,
   } as unknown as Request
   const res = {
@@ -92,6 +96,13 @@ describe('checkYourAnswersController', () => {
       username,
       educationSupportPlanDto,
     )
+    expect(auditService.logCreateEducationLearnerSupportPlan).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subjectId: prisonNumber,
+        subjectType: 'PRISONER_ID',
+        who: username,
+      }),
+    )
   })
 
   it('should submit form and redirect to next route given calling API is not successful', async () => {
@@ -111,5 +122,6 @@ describe('checkYourAnswersController', () => {
       username,
       educationSupportPlanDto,
     )
+    expect(auditService.logCreateEducationLearnerSupportPlan).not.toHaveBeenCalled()
   })
 })

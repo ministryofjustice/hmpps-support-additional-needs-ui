@@ -5,12 +5,15 @@ import aValidStrengthDto from '../../../../testsupport/strengthDtoTestDataBuilde
 import StrengthIdentificationSource from '../../../../enums/strengthIdentificationSource'
 import StrengthService from '../../../../services/strengthService'
 import StrengthType from '../../../../enums/strengthType'
+import AuditService from '../../../../services/auditService'
 
+jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/strengthService')
 
 describe('detailController', () => {
   const strengthService = new StrengthService(null) as jest.Mocked<StrengthService>
-  const controller = new DetailController(strengthService)
+  const auditService = new AuditService(null) as jest.Mocked<AuditService>
+  const controller = new DetailController(strengthService, auditService)
 
   const username = 'A_USER'
   const prisonId = 'MDI'
@@ -23,6 +26,7 @@ describe('detailController', () => {
     user: { username },
     journeyData: {},
     body: {},
+    params: { prisonNumber },
     flash,
   } as unknown as Request
   const res = {
@@ -153,6 +157,13 @@ describe('detailController', () => {
     expect(req.journeyData.strengthDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
     expect(strengthService.createStrengths).toHaveBeenCalledWith(username, [expectedStrengthDto])
+    expect(auditService.logCreateStrength).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subjectId: prisonNumber,
+        subjectType: 'PRISONER_ID',
+        who: username,
+      }),
+    )
   })
 
   it('should submit form and redirect to next route given calling API is not successful', async () => {
@@ -189,5 +200,6 @@ describe('detailController', () => {
     expect(req.journeyData.strengthDto).toEqual(strengthDto)
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
     expect(strengthService.createStrengths).toHaveBeenCalledWith(username, [expectedStrengthDto])
+    expect(auditService.logCreateStrength).not.toHaveBeenCalled()
   })
 })

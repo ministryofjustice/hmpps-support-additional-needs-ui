@@ -5,12 +5,15 @@ import ConditionType from '../../../../enums/conditionType'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import ConditionService from '../../../../services/conditionService'
 import ConditionSource from '../../../../enums/conditionSource'
+import AuditService from '../../../../services/auditService'
 
+jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/conditionService')
 
 describe('detailsController', () => {
   const conditionService = new ConditionService(null) as jest.Mocked<ConditionService>
-  const controller = new DetailsController(conditionService)
+  const auditService = new AuditService(null) as jest.Mocked<AuditService>
+  const controller = new DetailsController(conditionService, auditService)
 
   const username = 'FRED_123'
   const prisonNumber = 'A1234BC'
@@ -28,6 +31,7 @@ describe('detailsController', () => {
     session: {},
     journeyData: {},
     body: {},
+    params: { prisonNumber },
     flash,
   } as unknown as Request
   const res = {
@@ -244,6 +248,13 @@ describe('detailsController', () => {
     expect(req.journeyData.conditionsList).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
     expect(conditionService.createConditions).toHaveBeenCalledWith(username, expectedConditionsList)
+    expect(auditService.logCreateCondition).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subjectId: prisonNumber,
+        subjectType: 'PRISONER_ID',
+        who: username,
+      }),
+    )
   })
 
   it('should submit form and redirect to next route given calling API is not successful', async () => {
@@ -296,5 +307,6 @@ describe('detailsController', () => {
     expect(req.journeyData.conditionsList).toEqual(conditions)
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
     expect(conditionService.createConditions).toHaveBeenCalledWith(username, expectedConditionsList)
+    expect(auditService.logCreateCondition).not.toHaveBeenCalled()
   })
 })

@@ -2,9 +2,13 @@ import { NextFunction, Request, Response } from 'express'
 import type { SupportStrategyDto } from 'dto'
 import { SupportStrategyService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
+import AuditService, { BaseAuditData } from '../../../../services/auditService'
 
 export default class DetailController {
-  constructor(private readonly supportStrategyService: SupportStrategyService) {}
+  constructor(
+    private readonly supportStrategyService: SupportStrategyService,
+    private readonly auditService: AuditService,
+  ) {}
 
   getDetailView = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
@@ -37,6 +41,7 @@ export default class DetailController {
 
     const { prisonNumber } = supportStrategyDto
     req.journeyData.supportStrategyDto = undefined
+    this.auditService.logCreateSupportStrategy(this.createSupportStrategyAuditData(req)) // no need to wait for response
     return res.redirectWithSuccess(`/profile/${prisonNumber}/support-strategies`, 'Support strategy added')
   }
 
@@ -50,5 +55,15 @@ export default class DetailController {
     const { supportStrategyDto } = req.journeyData
     supportStrategyDto.supportStrategyDetails = form.description
     req.journeyData.supportStrategyDto = supportStrategyDto
+  }
+
+  private createSupportStrategyAuditData = (req: Request): BaseAuditData => {
+    return {
+      details: {},
+      subjectType: 'PRISONER_ID',
+      subjectId: req.params.prisonNumber,
+      who: req.user?.username ?? 'UNKNOWN',
+      correlationId: req.id,
+    }
   }
 }

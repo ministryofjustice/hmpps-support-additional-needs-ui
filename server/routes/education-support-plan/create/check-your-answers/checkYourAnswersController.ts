@@ -1,9 +1,13 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import { EducationSupportPlanService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
+import AuditService, { BaseAuditData } from '../../../../services/auditService'
 
 export default class CheckYourAnswersController {
-  constructor(private readonly educationSupportPlanService: EducationSupportPlanService) {}
+  constructor(
+    private readonly educationSupportPlanService: EducationSupportPlanService,
+    private readonly auditService: AuditService,
+  ) {}
 
   getCheckYourAnswersView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { educationSupportPlanDto } = req.journeyData
@@ -28,8 +32,19 @@ export default class CheckYourAnswersController {
       req.flash('pageHasApiErrors', 'true')
       return res.redirect('check-your-answers')
     }
-
+    this.auditService.logCreateEducationLearnerSupportPlan(this.createEducationLearnerSupportPlanAuditData(req)) // no need to wait for response
     req.journeyData.educationSupportPlanDto = undefined
+
     return res.redirectWithSuccess(`/profile/${prisonNumber}/overview`, 'Education support plan created')
+  }
+
+  private createEducationLearnerSupportPlanAuditData = (req: Request): BaseAuditData => {
+    return {
+      details: {},
+      subjectType: 'PRISONER_ID',
+      subjectId: req.params.prisonNumber,
+      who: req.user?.username ?? 'UNKNOWN',
+      correlationId: req.id,
+    }
   }
 }

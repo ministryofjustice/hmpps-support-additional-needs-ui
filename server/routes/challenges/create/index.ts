@@ -14,11 +14,11 @@ import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessCon
 import ApplicationAction from '../../../enums/applicationAction'
 
 const createChallengeRoutes = (services: Services): Router => {
-  const { journeyDataService, challengeService } = services
+  const { auditService, challengeService, journeyDataService } = services
   const router = Router({ mergeParams: true })
 
   const selectCategoryController = new SelectCategoryController()
-  const detailController = new DetailController(challengeService)
+  const detailController = new DetailController(challengeService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.RECORD_CHALLENGES),

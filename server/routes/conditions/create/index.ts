@@ -14,11 +14,11 @@ import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessCon
 import ApplicationAction from '../../../enums/applicationAction'
 
 const createConditionsRoutes = (services: Services): Router => {
-  const { conditionService, journeyDataService } = services
+  const { auditService, conditionService, journeyDataService } = services
   const router = Router({ mergeParams: true })
 
   const selectConditionsController = new SelectConditionsController()
-  const detailsController = new DetailsController(conditionService)
+  const detailsController = new DetailsController(conditionService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS),
