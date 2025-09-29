@@ -24,7 +24,6 @@ generic-service:
     SUPPORT_ADDITIONAL_NEEDS_API_URL: 'https://support-for-additional-needs-api-preprod.hmpps.service.justice.gov.uk'
     CURIOUS_API_URL: "https://preprodservices.sequation.net/sequation-virtual-campus2-api"
     ENVIRONMENT_NAME: PRE-PRODUCTION
-    AUDIT_ENABLED: "false"
     DPS_URL: 'https://digital-preprod.prison.service.justice.gov.uk'
     NEW_DPS_URL: "https://dps-preprod.prison.service.justice.gov.uk"
     COMPONENT_API_URL: "https://frontend-components-preprod.hmpps.service.justice.gov.uk"
