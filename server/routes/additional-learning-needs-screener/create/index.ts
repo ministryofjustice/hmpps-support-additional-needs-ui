@@ -20,13 +20,13 @@ import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessCon
 import ApplicationAction from '../../../enums/applicationAction'
 
 const createAlnRoutes = (services: Services): Router => {
-  const { additionalLearningNeedsService, journeyDataService, referenceDataService } = services
+  const { additionalLearningNeedsService, auditService, journeyDataService, referenceDataService } = services
   const router = Router({ mergeParams: true })
 
   const screenerDateController = new ScreenerDateController()
   const addChallengesController = new AddChallengesController()
   const addStrengthsController = new AddStrengthsController()
-  const checkYourAnswersController = new CheckYourAnswersController(additionalLearningNeedsService)
+  const checkYourAnswersController = new CheckYourAnswersController(additionalLearningNeedsService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.RECORD_ALN_SCREENER),

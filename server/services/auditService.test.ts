@@ -73,7 +73,7 @@ describe('Audit service', () => {
     })
   })
 
-  describe('logCreateEducationSupportPlan', () => {
+  describe('logCreateEducationLearnerSupportPlan', () => {
     it('should send ELSP Creation event audit message', async () => {
       // Given
 
@@ -86,7 +86,7 @@ describe('Audit service', () => {
       }
 
       // When
-      const actual = await auditService.logCreateEducationSupportPlan(baseArchiveAuditData)
+      const actual = await auditService.logCreateEducationLearnerSupportPlan(baseArchiveAuditData)
 
       // Then
       expect(actual).toEqual(expectedSqsMessageResponse)
@@ -104,7 +104,7 @@ describe('Audit service', () => {
     })
   })
 
-  describe('logReviewEducationSupportPlan', () => {
+  describe('logReviewEducationLearnerSupportPlan', () => {
     it('should send ELSP Review event audit message', async () => {
       // Given
 
@@ -117,7 +117,7 @@ describe('Audit service', () => {
       }
 
       // When
-      const actual = await auditService.logReviewEducationSupportPlan(baseArchiveAuditData)
+      const actual = await auditService.logReviewEducationLearnerSupportPlan(baseArchiveAuditData)
 
       // Then
       expect(actual).toEqual(expectedSqsMessageResponse)
@@ -279,6 +279,37 @@ describe('Audit service', () => {
       expect(hmppsAuditClient.sendMessage).toHaveBeenCalledWith(
         {
           what: 'CREATE_SUPPORT_STRATEGY',
+          correlationId: '49380145-d73d-4ad2-8460-f26b039249cc',
+          details: {},
+          subjectId: 'A1234BC',
+          subjectType: 'PRISONER_ID',
+          who: 'a-dps-user',
+        },
+        expectedHmppsAuditClientToThrowOnError,
+      )
+    })
+  })
+
+  describe('logUpdateEducationLearnerSupportPlanAsRefused', () => {
+    it('should send Update ELSP As Refused event audit message', async () => {
+      // Given
+
+      const baseArchiveAuditData: BaseAuditData = {
+        correlationId: '49380145-d73d-4ad2-8460-f26b039249cc',
+        details: {},
+        subjectId: 'A1234BC',
+        subjectType: 'PRISONER_ID',
+        who: 'a-dps-user',
+      }
+
+      // When
+      const actual = await auditService.logUpdateEducationLearnerSupportPlanAsRefused(baseArchiveAuditData)
+
+      // Then
+      expect(actual).toEqual(expectedSqsMessageResponse)
+      expect(hmppsAuditClient.sendMessage).toHaveBeenCalledWith(
+        {
+          what: 'UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN_SCHEDULE',
           correlationId: '49380145-d73d-4ad2-8460-f26b039249cc',
           details: {},
           subjectId: 'A1234BC',

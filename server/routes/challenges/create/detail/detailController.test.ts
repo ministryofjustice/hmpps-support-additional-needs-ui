@@ -5,12 +5,15 @@ import ChallengeService from '../../../../services/challengeService'
 import aValidChallengeDto from '../../../../testsupport/challengeDtoTestDataBuilder'
 import ChallengeIdentificationSource from '../../../../enums/challengeIdentificationSource'
 import ChallengeType from '../../../../enums/challengeType'
+import AuditService from '../../../../services/auditService'
 
+jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/challengeService')
 
 describe('detailController', () => {
   const mockedChallengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
-  const controller = new DetailController(mockedChallengeService)
+  const auditService = new AuditService(null) as jest.Mocked<AuditService>
+  const controller = new DetailController(mockedChallengeService, auditService)
 
   const username = 'FRED_123'
   const prisonId = 'BXI'
@@ -23,6 +26,7 @@ describe('detailController', () => {
     session: {},
     journeyData: {},
     body: {},
+    params: { prisonNumber },
     flash,
   } as unknown as Request
   const res = {
@@ -129,6 +133,13 @@ describe('detailController', () => {
     expect(req.journeyData.challengeDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
     expect(mockedChallengeService.createChallenges).toHaveBeenCalledWith(username, [expectedChallengeDto])
+    expect(auditService.logCreateChallenge).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subjectId: prisonNumber,
+        subjectType: 'PRISONER_ID',
+        who: username,
+      }),
+    )
   })
 
   it('should submit form and redirect to next route given calling API is not successful', async () => {
@@ -165,5 +176,6 @@ describe('detailController', () => {
     expect(req.journeyData.challengeDto).toEqual(challengeDto)
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
     expect(mockedChallengeService.createChallenges).toHaveBeenCalledWith(username, [expectedChallengeDto])
+    expect(auditService.logCreateChallenge).not.toHaveBeenCalled()
   })
 })

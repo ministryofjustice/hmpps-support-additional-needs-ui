@@ -12,10 +12,10 @@ import ApplicationAction from '../../../enums/applicationAction'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 
 const refuseEducationSupportPlanRoutes = (services: Services): Router => {
-  const { educationSupportPlanScheduleService, journeyDataService } = services
+  const { auditService, educationSupportPlanScheduleService, journeyDataService } = services
   const router = Router({ mergeParams: true })
 
-  const reasonController = new ReasonController(educationSupportPlanScheduleService)
+  const reasonController = new ReasonController(educationSupportPlanScheduleService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN),

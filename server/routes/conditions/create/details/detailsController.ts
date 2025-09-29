@@ -3,9 +3,13 @@ import type { ConditionDto, ConditionsList } from 'dto'
 import ConditionType from '../../../../enums/conditionType'
 import { ConditionService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
+import AuditService, { BaseAuditData } from '../../../../services/auditService'
 
 export default class DetailsController {
-  constructor(private readonly conditionService: ConditionService) {}
+  constructor(
+    private readonly conditionService: ConditionService,
+    private readonly auditService: AuditService,
+  ) {}
 
   getDetailsView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm, prisonerSummary } = res.locals
@@ -39,6 +43,7 @@ export default class DetailsController {
 
     const { prisonNumber } = conditionsList
     req.journeyData.conditionsList = undefined
+    this.auditService.logCreateCondition(this.createConditionsAuditData(req)) // no need to wait for response
     return res.redirectWithSuccess(`/profile/${prisonNumber}/conditions`, 'Condition(s) updated')
   }
 
@@ -65,5 +70,15 @@ export default class DetailsController {
         conditionDto.source = form.conditionDiagnosis?.[conditionType] ?? 'SELF_DECLARED'
       })
     req.journeyData.conditionsList = conditionsList
+  }
+
+  private createConditionsAuditData = (req: Request): BaseAuditData => {
+    return {
+      details: {},
+      subjectType: 'PRISONER_ID',
+      subjectId: req.params.prisonNumber,
+      who: req.user?.username ?? 'UNKNOWN',
+      correlationId: req.id,
+    }
   }
 }

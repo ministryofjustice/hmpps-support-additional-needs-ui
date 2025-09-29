@@ -5,14 +5,17 @@ import ReasonController from './reasonController'
 import PlanCreationScheduleExemptionReason from '../../../../enums/planCreationScheduleExemptionReason'
 import EducationSupportPlanScheduleService from '../../../../services/educationSupportPlanScheduleService'
 import aValidPlanCreationScheduleDto from '../../../../testsupport/planCreationScheduleDtoTestDataBuilder'
+import AuditService from '../../../../services/auditService'
 
+jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/educationSupportPlanScheduleService')
 
 describe('reasonController', () => {
   const educationSupportPlanScheduleService = new EducationSupportPlanScheduleService(
     null,
   ) as jest.Mocked<EducationSupportPlanScheduleService>
-  const controller = new ReasonController(educationSupportPlanScheduleService)
+  const auditService = new AuditService(null) as jest.Mocked<AuditService>
+  const controller = new ReasonController(educationSupportPlanScheduleService, auditService)
 
   const username = 'A_USER'
   const prisonId = 'MDI'
@@ -26,6 +29,7 @@ describe('reasonController', () => {
     user: { username },
     journeyData: {},
     body: {},
+    params: { prisonNumber },
     flash,
   } as unknown as Request
   const res = {
@@ -156,6 +160,16 @@ describe('reasonController', () => {
     expect(
       educationSupportPlanScheduleService.updateEducationSupportPlanCreationScheduleAsRefused,
     ).toHaveBeenCalledWith(username, expectedRefuseEducationSupportPlanDto)
+    expect(auditService.logUpdateEducationLearnerSupportPlanAsRefused).toHaveBeenCalledWith(
+      expect.objectContaining({
+        subjectId: prisonNumber,
+        subjectType: 'PRISONER_ID',
+        who: username,
+        details: {
+          reason: 'EXEMPT_NOT_REQUIRED',
+        },
+      }),
+    )
   })
 
   it('should submit form and redirect to next route given calling API is not successful', async () => {
@@ -194,5 +208,6 @@ describe('reasonController', () => {
     expect(
       educationSupportPlanScheduleService.updateEducationSupportPlanCreationScheduleAsRefused,
     ).toHaveBeenCalledWith(username, expectedRefuseEducationSupportPlanDto)
+    expect(auditService.logUpdateEducationLearnerSupportPlanAsRefused).not.toHaveBeenCalled()
   })
 })

@@ -3,9 +3,13 @@ import type { ReferenceDataItemDto } from 'dto'
 import { asArray } from '../../../../utils/utils'
 import { AdditionalLearningNeedsScreenerService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
+import AuditService, { BaseAuditData } from '../../../../services/auditService'
 
 export default class CheckYourAnswersController {
-  constructor(private readonly alnService: AdditionalLearningNeedsScreenerService) {}
+  constructor(
+    private readonly alnService: AdditionalLearningNeedsScreenerService,
+    private readonly auditService: AuditService,
+  ) {}
 
   getCheckYourAnswersView = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm, challengesReferenceData, strengthsReferenceData } = res.locals
@@ -38,7 +42,18 @@ export default class CheckYourAnswersController {
     }
 
     req.journeyData.alnScreenerDto = undefined
+    this.auditService.logRecordAlnScreener(this.createRecordAlnScreenerAuditData(req)) // no need to wait for response
     return res.redirect(`/profile/${prisonNumber}/overview`)
+  }
+
+  private createRecordAlnScreenerAuditData = (req: Request): BaseAuditData => {
+    return {
+      details: {},
+      subjectType: 'PRISONER_ID',
+      subjectId: req.params.prisonNumber,
+      who: req.user?.username ?? 'UNKNOWN',
+      correlationId: req.id,
+    }
   }
 }
 

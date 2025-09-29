@@ -14,11 +14,11 @@ import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessCon
 import ApplicationAction from '../../../enums/applicationAction'
 
 const createStrengthRoutes = (services: Services): Router => {
-  const { journeyDataService, strengthService } = services
+  const { auditService, journeyDataService, strengthService } = services
   const router = Router({ mergeParams: true })
 
   const selectCategoryController = new SelectCategoryController()
-  const detailController = new DetailController(strengthService)
+  const detailController = new DetailController(strengthService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.RECORD_STRENGTHS),

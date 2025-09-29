@@ -2,11 +2,15 @@ import { NextFunction, Request, RequestHandler, Response } from 'express'
 import type { ChallengeDto } from 'dto'
 import ChallengeIdentificationSource from '../../../../enums/challengeIdentificationSource'
 import { Result } from '../../../../utils/result/result'
-import { ChallengeService } from '../../../../services'
+import { AuditService, ChallengeService } from '../../../../services'
 import { asArray } from '../../../../utils/utils'
+import { BaseAuditData } from '../../../../services/auditService'
 
 export default class DetailController {
-  constructor(private readonly challengeService: ChallengeService) {}
+  constructor(
+    private readonly challengeService: ChallengeService,
+    private readonly auditService: AuditService,
+  ) {}
 
   getDetailView = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
@@ -44,6 +48,7 @@ export default class DetailController {
 
     const { prisonNumber } = challengeDto
     req.journeyData.challengeDto = undefined
+    this.auditService.logCreateChallenge(this.createChallengesAuditData(req)) // no need to wait for response
     return res.redirectWithSuccess(`/profile/${prisonNumber}/challenges`, 'Challenge added')
   }
 
@@ -63,6 +68,16 @@ export default class DetailController {
       description: challengeDto.symptoms,
       howIdentified: challengeDto.howIdentified || [],
       howIdentifiedOther: challengeDto.howIdentifiedOther,
+    }
+  }
+
+  private createChallengesAuditData = (req: Request): BaseAuditData => {
+    return {
+      details: {},
+      subjectType: 'PRISONER_ID',
+      subjectId: req.params.prisonNumber,
+      who: req.user?.username ?? 'UNKNOWN',
+      correlationId: req.id,
     }
   }
 }

@@ -1,12 +1,16 @@
 import { NextFunction, Request, Response } from 'express'
 import type { StrengthDto } from 'dto'
 import StrengthIdentificationSource from '../../../../enums/strengthIdentificationSource'
-import { StrengthService } from '../../../../services'
+import { AuditService, StrengthService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
 import { asArray } from '../../../../utils/utils'
+import { BaseAuditData } from '../../../../services/auditService'
 
 export default class DetailController {
-  constructor(private readonly strengthService: StrengthService) {}
+  constructor(
+    private readonly strengthService: StrengthService,
+    private readonly auditService: AuditService,
+  ) {}
 
   getDetailView = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
@@ -44,6 +48,7 @@ export default class DetailController {
 
     const { prisonNumber } = strengthDto
     req.journeyData.strengthDto = undefined
+    this.auditService.logCreateStrength(this.createStrengthAuditData(req)) // no need to wait for response
     return res.redirectWithSuccess(`/profile/${prisonNumber}/strengths`, 'Strength added')
   }
 
@@ -64,5 +69,15 @@ export default class DetailController {
     strengthDto.howIdentified = form.howIdentified
     strengthDto.howIdentifiedOther = form.howIdentifiedOther
     req.journeyData.strengthDto = strengthDto
+  }
+
+  private createStrengthAuditData = (req: Request): BaseAuditData => {
+    return {
+      details: {},
+      subjectType: 'PRISONER_ID',
+      subjectId: req.params.prisonNumber,
+      who: req.user?.username ?? 'UNKNOWN',
+      correlationId: req.id,
+    }
   }
 }

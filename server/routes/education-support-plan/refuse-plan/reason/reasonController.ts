@@ -3,9 +3,13 @@ import type { RefuseEducationSupportPlanDto } from 'dto'
 import { EducationSupportPlanScheduleService } from '../../../../services'
 import PlanCreationScheduleExemptionReason from '../../../../enums/planCreationScheduleExemptionReason'
 import { Result } from '../../../../utils/result/result'
+import AuditService, { BaseAuditData } from '../../../../services/auditService'
 
 export default class ReasonController {
-  constructor(private readonly educationSupportPlanScheduleService: EducationSupportPlanScheduleService) {}
+  constructor(
+    private readonly educationSupportPlanScheduleService: EducationSupportPlanScheduleService,
+    private readonly auditService: AuditService,
+  ) {}
 
   getRefusePlanReasonView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { prisonerSummary, invalidForm } = res.locals
@@ -41,6 +45,9 @@ export default class ReasonController {
 
     const { prisonNumber } = refuseEducationSupportPlanDto
     req.journeyData.refuseEducationSupportPlanDto = undefined
+    this.auditService.logUpdateEducationLearnerSupportPlanAsRefused(
+      this.refusedEducationLearnerSupportPlanAuditData(req, refuseEducationSupportPlanDto.reason),
+    ) // no need to wait for response
     return res.redirectWithSuccess(`/profile/${prisonNumber}/overview`, 'Refusal of education support plan recorded')
   }
 
@@ -60,5 +67,18 @@ export default class ReasonController {
     refuseEducationSupportPlanDto.reason = form.refusalReason
     refuseEducationSupportPlanDto.details = form.refusalReasonDetails[form.refusalReason]
     req.journeyData.refuseEducationSupportPlanDto = refuseEducationSupportPlanDto
+  }
+
+  private refusedEducationLearnerSupportPlanAuditData = (
+    req: Request,
+    reason: PlanCreationScheduleExemptionReason,
+  ): BaseAuditData => {
+    return {
+      details: { reason },
+      subjectType: 'PRISONER_ID',
+      subjectId: req.params.prisonNumber,
+      who: req.user?.username ?? 'UNKNOWN',
+      correlationId: req.id,
+    }
   }
 }
