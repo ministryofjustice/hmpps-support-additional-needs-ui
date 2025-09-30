@@ -24,9 +24,14 @@ generic-service:
     SUPPORT_ADDITIONAL_NEEDS_API_URL: 'https://support-for-additional-needs-api-dev.hmpps.service.justice.gov.uk'
     CURIOUS_API_URL: 'https://testservices.sequation.net/sequation-virtual-campus2-api'
     ENVIRONMENT_NAME: DEV
+    AUDIT_ENABLED: true
     DPS_URL: 'https://digital-dev.prison.service.justice.gov.uk'
     NEW_DPS_URL: 'https://dps-dev.prison.service.justice.gov.uk'
     COMPONENT_API_URL: 'https://frontend-components-dev.hmpps.service.justice.gov.uk'
+
+  namespace_secrets:
+    sqs-hmpps-audit-secret:
+      AUDIT_SQS_QUEUE_URL: 'sqs_queue_url'
 
   allowlist:
     uservision-accessibility-testers: 5.181.59.114/32
