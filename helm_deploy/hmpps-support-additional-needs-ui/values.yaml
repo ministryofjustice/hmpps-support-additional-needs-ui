@@ -45,8 +45,9 @@ generic-service:
     REDIS_ENABLED: 'true'
     REDIS_TLS_ENABLED: 'true'
     TOKEN_VERIFICATION_ENABLED: 'true'
+    PRODUCT_ID: 'DPS124'
     AUDIT_SQS_REGION: 'eu-west-2'
-    AUDIT_SERVICE_NAME: 'DPS124' # Your audit service name
+    AUDIT_SERVICE_NAME: 'hmpps-support-additional-needs'
     AUDIT_ENABLED: 'false'
     PRISONER_SEARCH_API_DEFAULT_PAGE_SIZE: "9999"
     SEARCH_UI_DEFAULT_PAGINATION_PAGE_SIZE: "50"
