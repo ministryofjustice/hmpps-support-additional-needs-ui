@@ -48,7 +48,7 @@ generic-service:
     PRODUCT_ID: 'DPS124'
     AUDIT_SQS_REGION: 'eu-west-2'
     AUDIT_SERVICE_NAME: 'hmpps-support-additional-needs'
-    AUDIT_ENABLED: 'false'
+    AUDIT_ENABLED: 'true'
     PRISONER_SEARCH_API_DEFAULT_PAGE_SIZE: "9999"
     SEARCH_UI_DEFAULT_PAGINATION_PAGE_SIZE: "50"
 
@@ -81,10 +81,8 @@ generic-service:
       REDIS_AUTH_TOKEN: 'auth_token'
     hmpps-support-additional-needs-ui-application-insights:
       APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
-    # This secret will need to be created in your namespace (note it isn't in hmpps-templates-dev)
-    # IRSA configuration in your namespace will also be required, and then uncomment serviceAccountName above.
-    # sqs-hmpps-audit-secret:
-    #   AUDIT_SQS_QUEUE_URL: 'sqs_queue_url'
+    sqs-hmpps-audit-secret:
+      AUDIT_SQS_QUEUE_URL: 'sqs_queue_url'
 
   allowlist:
     groups:
