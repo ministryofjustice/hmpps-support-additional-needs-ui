@@ -1,9 +1,7 @@
 generic-service:
   nameOverride: hmpps-support-additional-needs-ui
   productId: 'DPS124' # productId for the product that this belongs too, i.e. DPS001, see README.md for details
-
-  # the IRSA service account name for accessing AWS resources
-  # serviceAccountName: "hmpps-support-additional-needs-ui"
+  serviceAccountName: hmpps-support-additional-needs # Needed to access AWS resources like SQS queues and SNS topics
 
   replicaCount: 4
 
