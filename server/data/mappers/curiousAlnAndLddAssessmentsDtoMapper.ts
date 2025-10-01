@@ -17,8 +17,12 @@ const toCuriousLddAssessmentDtos = (apiResponse: LearnerLatestAssessmentV1DTO): 
   const curiousV1LddAssessments: Array<LearnerLddInfoExternalV1DTO> = apiResponse.ldd
   return curiousV1LddAssessments
     .filter(
-      lddAssessment =>
-        lddAssessment.lddPrimaryName && (lddAssessment.rapidAssessmentDate || lddAssessment.inDepthAssessmentDate),
+      (lddAssessment: LearnerLddInfoExternalV1DTO) =>
+        // At least one of the 4 fields needs to have a value for it to be considered a valid LDD record and for us to map it
+        lddAssessment.lddPrimaryName?.length > 0 ||
+        (lddAssessment.lddSecondaryNames || []).length > 0 ||
+        lddAssessment.rapidAssessmentDate != null ||
+        lddAssessment.inDepthAssessmentDate != null,
     )
     .map(lddAssessment => ({
       prisonId: lddAssessment.establishmentId,
