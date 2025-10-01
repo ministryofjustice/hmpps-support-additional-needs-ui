@@ -218,14 +218,14 @@ describe('curiousAlnAndLddAssessmentsDtoMapper', () => {
                 lddSecondaryNames: [],
                 inDepthAssessmentDate: null,
                 rapidAssessmentDate: null,
-              }), // not expected to be mapped because it does not contain lddPrimaryName and at least one of the assessment dates
+              }), // not expected to be mapped because none of the fields that we expect to be populated are
               aLearnerLddInfoExternalV1DTO({
                 prisonId: 'BFI',
                 lddPrimaryName: 'Mental health difficulty',
                 lddSecondaryNames: [],
                 inDepthAssessmentDate: null,
                 rapidAssessmentDate: null,
-              }), // not expected to be mapped because it does not contain lddPrimaryName and at least one of the assessment dates
+              }), // expect to be mapped
             ],
           }),
         ],
@@ -245,6 +245,13 @@ describe('curiousAlnAndLddAssessmentsDtoMapper', () => {
           inDepthAssessmentDate: null,
           primaryLddAndHealthNeed: 'Hearing impairment',
           additionalLddAndHealthNeeds: ['Partial deafness', 'Deafness'],
+        }),
+        aCuriousLddAssessmentDto({
+          prisonId: 'BFI',
+          rapidAssessmentDate: null,
+          inDepthAssessmentDate: null,
+          primaryLddAndHealthNeed: 'Mental health difficulty',
+          additionalLddAndHealthNeeds: [],
         }),
       ]
 
