@@ -6,7 +6,7 @@ import reviewSupportPlanSchema from './reviewSupportPlanSchema'
 
 describe('reviewSupportPlanSchema', () => {
   const todayDate = startOfToday()
-  const today = format(todayDate, 'd/M/yyyy')
+  // const today = format(todayDate, 'd/M/yyyy')
   const threeMonthsAfterTodayDate = addMonths(todayDate, 3)
   const threeMonthsAfterToday = format(threeMonthsAfterTodayDate, 'd/M/yyyy')
   const yesterdayDate = subDays(todayDate, 1)
@@ -29,42 +29,24 @@ describe('reviewSupportPlanSchema', () => {
     req.originalUrl = '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/next-review-date'
   })
 
-  it.each([{ reviewDate: today }, { reviewDate: threeMonthsAfterToday }])(
-    'happy path - validation passes - reviewDate: $reviewDate',
-    async requestBody => {
-      // Given
-      req.body = requestBody
+  it.each([
+    // TODO - put "today" back, and remove "today + 1 month", when we have removed the code to prevent users entering an October date
+    // { reviewDate: today },
+    { reviewDate: format(addMonths(todayDate, 1), 'd/M/yyyy') },
+    { reviewDate: threeMonthsAfterToday },
+  ])('happy path - validation passes - reviewDate: $reviewDate', async requestBody => {
+    // Given
+    req.body = requestBody
 
-      // When
-      await validate(reviewSupportPlanSchema)(req, res, next)
+    // When
+    await validate(reviewSupportPlanSchema)(req, res, next)
 
-      // Temporary block on review dates being set in Oct 2025 would cause this test to fail when it's run in october
-      // TODO: Remove this once October 2025 has passed
-      if (todayDate.getMonth() === 9 && todayDate.getFullYear() === 2025) {
-        // Then
-        const expectedErrors: Array<Error> = [
-          {
-            href: '#reviewDate',
-            text: 'Review date cannot be in October 2025',
-          },
-        ]
-        const expectedInvalidForm = JSON.stringify(requestBody)
-        expect(req.body).toEqual(requestBody)
-        expect(next).not.toHaveBeenCalled()
-        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
-        expect(res.redirectWithErrors).toHaveBeenCalledWith(
-          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/next-review-date',
-          expectedErrors,
-        )
-      } else {
-        // Then
-        expect(req.body).toEqual(requestBody)
-        expect(next).toHaveBeenCalled()
-        expect(req.flash).not.toHaveBeenCalled()
-        expect(res.redirectWithErrors).not.toHaveBeenCalled()
-      }
-    },
-  )
+    // Then
+    expect(req.body).toEqual(requestBody)
+    expect(next).toHaveBeenCalled()
+    expect(req.flash).not.toHaveBeenCalled()
+    expect(res.redirectWithErrors).not.toHaveBeenCalled()
+  })
 
   it.each([
     { reviewDate: '' },
