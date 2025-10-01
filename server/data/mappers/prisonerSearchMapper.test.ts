@@ -7,6 +7,7 @@ import aValidSearchByPrisonResponse from '../../testsupport/searchByPrisonRespon
 import aValidPrisonerSearch from '../../testsupport/prisonerSearchTestDataBuilder'
 import SearchSortField from '../../enums/searchSortField'
 import SearchSortDirection from '../../enums/searchSortDirection'
+import PlanActionStatus from '../../enums/planActionStatus'
 
 describe('prisonerSearchMapper', () => {
   const prisonId = 'BXI'
@@ -30,7 +31,10 @@ describe('prisonerSearchMapper', () => {
             sentenceType: SentenceType.SENTENCED,
             cellLocation: 'A-1-102',
             releaseDate: '2025-12-31',
-            additionalNeedsSummary: undefined,
+            inEducation: false,
+            hasAdditionalNeed: false,
+            planStatus: PlanActionStatus.PLAN_DECLINED,
+            deadlineDate: '2025-10-15',
           }),
         ],
       })
@@ -64,8 +68,10 @@ describe('prisonerSearchMapper', () => {
             releaseDate: startOfDay('2025-12-31'),
             sentenceType: SentenceType.SENTENCED,
             location: 'A-1-102',
-            hasSupportPlan: false,
-            hasSupportNeeds: false,
+            isInEducation: false,
+            hasAdditionalNeeds: false,
+            planStatus: PlanActionStatus.PLAN_DECLINED,
+            deadlineDate: startOfDay('2025-10-15'),
           }),
         ],
       })
@@ -96,7 +102,10 @@ describe('prisonerSearchMapper', () => {
         sentenceType: SentenceType.SENTENCED,
         cellLocation: 'A-1-102',
         releaseDate: '2025-12-31',
-        additionalNeedsSummary: undefined,
+        inEducation: true,
+        hasAdditionalNeed: true,
+        planStatus: PlanActionStatus.NO_PLAN,
+        deadlineDate: null,
       })
 
       const expected = aValidPrisonerSearchSummary({
@@ -108,8 +117,10 @@ describe('prisonerSearchMapper', () => {
         releaseDate: startOfDay('2025-12-31'),
         sentenceType: SentenceType.SENTENCED,
         location: 'A-1-102',
-        hasSupportPlan: false,
-        hasSupportNeeds: false,
+        isInEducation: true,
+        hasAdditionalNeeds: true,
+        planStatus: PlanActionStatus.NO_PLAN,
+        deadlineDate: null,
       })
 
       // When

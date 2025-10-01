@@ -1,6 +1,7 @@
 declare module 'viewModels' {
   import type { PlanCreationScheduleDto } from 'dto'
   import SentenceType from '../../enums/sentenceType'
+  import PlanActionStatus from '../../enums/planActionStatus'
 
   export interface PrisonerSummary {
     prisonNumber: string
@@ -17,8 +18,10 @@ declare module 'viewModels' {
   }
 
   export interface PrisonerSearchSummary extends PrisonerSummary {
-    hasSupportPlan: boolean
-    hasSupportNeeds: boolean
+    isInEducation: boolean
+    hasAdditionalNeeds: boolean
+    planStatus: PlanActionStatus
+    deadlineDate?: Date
   }
 
   export interface PrisonerSearch {
