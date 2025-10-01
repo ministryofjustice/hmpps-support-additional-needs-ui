@@ -101,7 +101,7 @@ export default {
     },
     prisonRegister: {
       url: get('PRISON_REGISTER_API_URL', 'http://localhost:8083', requiredInProduction),
-      healthPath: '/health/ping',
+      healthPath: null,
       timeout: {
         response: Number(get('PRISON_REGISTER_API_TIMEOUT_RESPONSE', 5000)),
         deadline: Number(get('PRISON_REGISTER_API_TIMEOUT_DEADLINE', 5000)),
@@ -128,7 +128,7 @@ export default {
     },
     curious: {
       url: get('CURIOUS_API_URL', 'http://localhost:8083', requiredInProduction),
-      healthPath: '/ping',
+      healthPath: null,
       timeout: {
         response: Number(get('CURIOUS_API_TIMEOUT_RESPONSE', 5000)),
         deadline: Number(get('CURIOUS_API_TIMEOUT_DEADLINE', 5000)),

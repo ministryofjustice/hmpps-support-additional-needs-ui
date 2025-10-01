@@ -13,7 +13,7 @@ describe('curiousApiClient', () => {
   } as unknown as jest.Mocked<AuthenticationClient>
   const curiousApiClient = new CuriousApiClient(mockAuthenticationClient)
 
-  config.apis.prisonerSearch.url = 'http://localhost:8200'
+  config.apis.curious.url = 'http://localhost:8200'
   const curiousApi = nock(config.apis.curious.url)
 
   beforeEach(() => {
