@@ -36,7 +36,7 @@ describe('supportAdditionalNeedsApiClient', () => {
   } as unknown as jest.Mocked<AuthenticationClient>
   const supportAdditionalNeedsApiClient = new SupportAdditionalNeedsApiClient(mockAuthenticationClient)
 
-  config.apis.prisonerSearch.url = 'http://localhost:8200'
+  config.apis.supportAdditionalNeedsApi.url = 'http://localhost:8200'
   const supportAdditionalNeedsApi = nock(config.apis.supportAdditionalNeedsApi.url)
 
   beforeEach(() => {
