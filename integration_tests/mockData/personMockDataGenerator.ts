@@ -1,5 +1,7 @@
-import type { AdditionalNeedsSummary, Person } from 'supportAdditionalNeedsApiClient'
+import type { Person } from 'supportAdditionalNeedsApiClient'
 import { addDays, format, startOfToday, subDays } from 'date-fns'
+import PlanActionStatus from '../../server/enums/planActionStatus'
+import SentenceType from '../../server/enums/sentenceType'
 
 /**
  * Generator function that can be called as a cypress task that generates and returns an array of random `Person`
@@ -17,7 +19,9 @@ const personMockDataGenerator = (numberOfRecords = 500): Array<Person> => {
     releaseDate: randomReleaseDate(),
     cellLocation: generateRandomLocation(),
     sentenceType: randomSentenceType(),
-    additionalNeeds: randomAdditionalNeeds(),
+    inEducation: randomNumber(1, 2) === 2,
+    hasAdditionalNeed: randomNumber(1, 2) === 2,
+    ...randomPlanStatusAndDeadlineDate(),
   }))
 }
 
@@ -37,7 +41,7 @@ const randomForename = (): string => FORENAMES[randomNumber(1, FORENAMES.length)
 
 const randomSurname = (): string => SURNAMES[randomNumber(1, SURNAMES.length) - 1]
 
-const randomSentenceType = (): string => SENTENCE_TYPES[randomNumber(1, SENTENCE_TYPES.length) - 1]
+const randomSentenceType = (): string => getRandomEnumValue(SentenceType)
 
 /**
  * Returns a random date sometime between 6570 days (18 years) and 25550 days (70 years) years before today
@@ -69,16 +73,21 @@ const randomNumbers = (numberOfNumbers: number): string => {
 
 const randomNumber = (min: number, max: number): number => Math.floor(Math.random() * (max + 1 - min) + min)
 
-const randomAdditionalNeeds = (): AdditionalNeedsSummary => {
-  if (randomNumber(1, 2) === 1) {
-    return undefined
+const randomPlanStatusAndDeadlineDate = (): { planStatus: PlanActionStatus; deadlineDate: string | null } => {
+  const planStatus = getRandomEnumValue(PlanActionStatus)
+  if ([PlanActionStatus.NO_PLAN, PlanActionStatus.PLAN_DECLINED, PlanActionStatus.INACTIVE_PLAN].includes(planStatus)) {
+    return { planStatus, deadlineDate: null }
   }
-  return {
-    hasChallenges: randomNumber(1, 2) === 2,
-    hasConditions: randomNumber(1, 2) === 2,
-    hasStrengths: randomNumber(1, 2) === 2,
-    hasSupportRecommendations: randomNumber(1, 2) === 2,
+  if ([PlanActionStatus.PLAN_OVERDUE, PlanActionStatus.REVIEW_OVERDUE].includes(planStatus)) {
+    return { planStatus, deadlineDate: format(subDays(startOfToday(), randomNumber(1, 10)), 'yyyy-MM-dd') }
   }
+  return { planStatus, deadlineDate: format(addDays(startOfToday(), randomNumber(1, 5)), 'yyyy-MM-dd') }
+}
+
+const getRandomEnumValue = (enumeration: unknown) => {
+  const values = Object.keys(enumeration)
+  const enumKey = values[randomNumber(1, values.length)]
+  return enumeration[enumKey]
 }
 
 const ALPHABET = [
@@ -106,8 +115,8 @@ const ALPHABET = [
   'V',
   'W',
   'X',
-  'Z',
   'Y',
+  'Z',
 ]
 
 const FORENAMES = [
@@ -165,19 +174,6 @@ const SURNAMES = [
   'LIMA',
   'JOHNSON',
   'JACKSON',
-]
-
-const SENTENCE_TYPES = [
-  'RECALL',
-  'DEAD',
-  'INDETERMINATE_SENTENCE',
-  'SENTENCED',
-  'CONVICTED_UNSENTENCED',
-  'CIVIL_PRISONER',
-  'IMMIGRATION_DETAINEE',
-  'REMAND',
-  'UNKNOWN',
-  'OTHER',
 ]
 
 export default { generatePeople: personMockDataGenerator }

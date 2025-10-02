@@ -8,6 +8,7 @@ import aValidPrisonerSearch from '../testsupport/prisonerSearchTestDataBuilder'
 import aValidPerson from '../testsupport/personTestDataBuilder'
 import SentenceType from '../enums/sentenceType'
 import aValidPrisonerSearchSummary from '../testsupport/prisonerSearchSummaryTestDataBuilder'
+import PlanActionStatus from '../enums/planActionStatus'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -48,7 +49,10 @@ describe('searchService', () => {
             sentenceType: SentenceType.SENTENCED,
             cellLocation: 'A-1-102',
             releaseDate: '2025-12-31',
-            additionalNeedsSummary: undefined,
+            inEducation: false,
+            hasAdditionalNeed: true,
+            deadlineDate: null,
+            planStatus: PlanActionStatus.NO_PLAN,
           }),
         ],
       })
@@ -69,8 +73,10 @@ describe('searchService', () => {
             releaseDate: startOfDay('2025-12-31'),
             sentenceType: SentenceType.SENTENCED,
             location: 'A-1-102',
-            hasSupportPlan: false,
-            hasSupportNeeds: false,
+            isInEducation: false,
+            hasAdditionalNeeds: true,
+            planStatus: PlanActionStatus.NO_PLAN,
+            deadlineDate: null,
           }),
         ],
       })

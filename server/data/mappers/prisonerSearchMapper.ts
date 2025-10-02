@@ -23,10 +23,12 @@ const toPrisonerSearchSummary = (apiResponse: Person, prisonId: string): Prisone
   lastName: apiResponse.surname,
   sentenceType: apiResponse.sentenceType,
   dateOfBirth: startOfDay(apiResponse.dateOfBirth),
-  releaseDate: apiResponse.releaseDate ? startOfDay(apiResponse.releaseDate) : undefined,
+  releaseDate: apiResponse.releaseDate ? startOfDay(apiResponse.releaseDate) : null,
   location: apiResponse.cellLocation,
-  hasSupportPlan: false, // TODO map correctly once we have the relevant data from the API
-  hasSupportNeeds: false, // TODO map correctly once we have the relevant data from the API
+  isInEducation: apiResponse.inEducation,
+  hasAdditionalNeeds: apiResponse.hasAdditionalNeed,
+  planStatus: apiResponse.planStatus,
+  deadlineDate: apiResponse.deadlineDate ? startOfDay(apiResponse.deadlineDate) : null,
 })
 
 const toMojPaginationParams = (apiResponse: PaginationMetaData, searchOptions: SearchOptions): MojPaginationParams => {
