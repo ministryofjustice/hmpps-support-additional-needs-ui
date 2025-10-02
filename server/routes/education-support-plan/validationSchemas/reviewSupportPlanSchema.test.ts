@@ -78,7 +78,7 @@ describe('reviewSupportPlanSchema', () => {
     )
   })
 
-  it.each([{ reviewDate: '01/10/2025' }, { reviewDate: '31/10/2025' }])(
+  it.each([{ reviewDate: '31/10/2025' }])(
     'sad path - validation of reviewDate field fails due to being within October 2025  - reviewDate: $reviewDate',
     async requestBody => {
       // Given

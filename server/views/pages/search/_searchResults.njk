@@ -24,18 +24,21 @@
             fieldName: 'PRISONER_NAME',
             headerText: 'Prisoner Name'
           }) }}
+          <th scope="col" class="govuk-table__header" data-qa="CELL_LOCATION-column-header">
+            Location
+          </th>
           {{ sortableTableHeader({
             sortBy: sortField,
             sortOrder: sortDirection,
-            fieldName: 'PRISON_NUMBER',
-            headerText: 'Prison Number'
+            fieldName: 'RELEASE_DATE',
+            headerText: 'Release date'
           }) }}
-          {{ sortableTableHeader({
-            sortBy: sortField,
-            sortOrder: sortDirection,
-            fieldName: 'CELL_LOCATION',
-            headerText: 'Location'
-          }) }}
+          <th scope="col" class="govuk-table__header" data-qa="ADDITIONAL_NEEDS-column-header">
+            Additional needs
+          </th>
+          <th scope="col" class="govuk-table__header" data-qa="IN_EDUCATION-column-header">
+            In education
+          </th>
         </tr>
       </thead>
 
@@ -47,9 +50,13 @@
                 {{ prisoner | formatLast_name_comma_First_name }}
               </a>
               <span class="app-print-only">{{ prisoner | formatLast_name_comma_First_name }}</span>
+              <br>
+              <span class='govuk-hint govuk-!-margin-bottom-0'>{{ prisoner.prisonNumber }}</span>
             </td>
-            <td class="govuk-table__cell">{{ prisoner.prisonNumber }}</td>
             <td class="govuk-table__cell">{{ prisoner.location }}</td>
+            <td class="govuk-table__cell" data-sort-value="{{ prisoner.releaseDate | formatDate('yyyyMMdd') }}">{{ prisoner.releaseDate | formatDate('d MMM yyyy') or 'N/A' }}</td>
+            <td class="govuk-table__cell">{{ prisoner.hasAdditionalNeeds | formatYesNo }}</td>
+            <td class="govuk-table__cell">{{ prisoner.isInEducation | formatYesNo }}</td>
           </tr>
         {% endfor %}
       </tbody>
