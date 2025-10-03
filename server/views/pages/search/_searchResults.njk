@@ -120,7 +120,13 @@
                 {% endif %}
               </td>
               <td class="govuk-table__cell" data-qa-deadlineDate="{{ deadlineDate | formatDate('yyyy-MM-dd') }}">
-                {{ 'No due date' if deadlineDate | formatDate('yyyy-MM-dd') == '2099-12-31' else deadlineDate | formatDate('d MMM yyyy') or 'N/A' }}
+                {% if planStatus == 'NO_PLAN' or planStatus == 'INACTIVE_PLAN' or planStatus == 'PLAN_DECLINED' %}
+                  N/A
+                {% elseif planStatus == 'NEEDS_PLAN' %}
+                  No due date
+                {% else %}
+                  {{ 'No due date' if deadlineDate | formatDate('yyyy-MM-dd') == '2099-12-31' else deadlineDate | formatDate('d MMM yyyy') or 'N/A' }}
+                {% endif %}
               </td>
             {% endif %}
           </tr>
