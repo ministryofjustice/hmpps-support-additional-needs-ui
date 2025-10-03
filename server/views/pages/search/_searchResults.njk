@@ -36,10 +36,11 @@
           <th scope="col" class="govuk-table__header" data-qa="ADDITIONAL_NEEDS-column-header">
             Additional needs
           </th>
+          {#
           <th scope="col" class="govuk-table__header" data-qa="IN_EDUCATION-column-header">
             In education
           </th>
-
+          #}
           {% if userHasPermissionTo('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_SEARCH') %}
             <th scope="col" class="govuk-table__header" data-qa="PLAN_STATUS-column-header">
               Education plan
@@ -68,8 +69,9 @@
             <td class="govuk-table__cell">{{ prisoner.location }}</td>
             <td class="govuk-table__cell">{{ prisoner.releaseDate | formatDate('d MMM yyyy') or 'N/A' }}</td>
             <td class="govuk-table__cell">{{ prisoner.hasAdditionalNeeds | formatYesNo }}</td>
+            {#
             <td class="govuk-table__cell">{{ prisoner.isInEducation | formatYesNo }}</td>
-
+            #}
             {% if userHasPermissionTo('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_SEARCH') %}
               {% set planStatus = prisoner.planStatus %}
               {% set deadlineDate = prisoner.deadlineDate %}
