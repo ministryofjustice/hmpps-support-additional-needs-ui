@@ -12,6 +12,8 @@ import challengesRoutes from './challenges'
 import alnScreenerRoutes from './additional-learning-needs-screener'
 import conditionsRoutes from './conditions'
 import supportStrategiesRoutes from './support-strategies'
+import { checkUserHasPermissionTo } from '../middleware/roleBasedAccessControl'
+import ApplicationAction from '../enums/applicationAction'
 
 export default function routes(services: Services): Router {
   const router = Router({ mergeParams: true })
@@ -33,8 +35,15 @@ export default function routes(services: Services): Router {
 
   router.use('/', landingPageRoutes())
 
-  router.use('/search', searchRoutes(services))
-  router.use('/profile/:prisonNumber', profileRoutes(services))
+  router.use('/search', [
+    //
+    checkUserHasPermissionTo(ApplicationAction.SEARCH),
+    searchRoutes(services),
+  ])
+  router.use('/profile/:prisonNumber', [
+    checkUserHasPermissionTo(ApplicationAction.VIEW_PROFILE),
+    profileRoutes(services),
+  ])
   router.use('/education-support-plan/:prisonNumber', educationSupportPlanRoutes(services))
   router.use('/strengths/:prisonNumber', strengthsRoutes(services))
   router.use('/challenges/:prisonNumber', challengesRoutes(services))
