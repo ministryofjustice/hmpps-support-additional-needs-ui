@@ -12,12 +12,12 @@ import OverviewPage from '../../pages/profile/overviewPage'
  * Scenarios that need to click "into" a specific prisoner record to get to the Overview page will need some extra stubbing
  * in order to set specific stubs in the API for the specific prisoner clicked on.
  */
-context(`Display the Search screen`, () => {
+context('Search screen', () => {
   let peopleGroupedByPageRequest: Array<Array<Person>>
 
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
+    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] })
     cy.signIn()
 
     // Generate 725 Prisoner Search Summaries that will be displayed on the Search page by virtue of using them in the search API stub.
@@ -124,5 +124,35 @@ context(`Display the Search screen`, () => {
 
     // When
     Page.verifyOnPage(OverviewPage)
+  })
+})
+
+context('Search screen for users with different permissions', () => {
+  it('should show the basic search page given user does not have the manager role', () => {
+    // Given
+    cy.task('reset')
+    cy.task('stubSignIn', { roles: ['ROLE_SOME_ROLE_THAT_IS_NOT_SAN_MANAGER'] })
+    cy.signIn()
+
+    // When
+    cy.visit('/search')
+
+    // Then
+    Page.verifyOnPage(SearchPage) //
+      .doesNotHaveStatusAndDueDateColumnsDisplayed()
+  })
+
+  it('should show the search page with all columns given user does have the manager role', () => {
+    // Given
+    cy.task('reset')
+    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] })
+    cy.signIn()
+
+    // When
+    cy.visit('/search')
+
+    // Then
+    Page.verifyOnPage(SearchPage) //
+      .hasStatusAndDueDateColumnsDisplayed()
   })
 })

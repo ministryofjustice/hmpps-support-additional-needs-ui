@@ -39,6 +39,18 @@
           <th scope="col" class="govuk-table__header" data-qa="IN_EDUCATION-column-header">
             In education
           </th>
+
+          {% if userHasPermissionTo('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_SEARCH') %}
+            <th scope="col" class="govuk-table__header" data-qa="PLAN_STATUS-column-header">
+              Education plan
+            </th>
+            {{ sortableTableHeader({
+              sortBy: sortField,
+              sortOrder: sortDirection,
+              fieldName: 'DEADLINE_DATE',
+              headerText: 'Due date'
+            }) }}
+          {% endif %}
         </tr>
       </thead>
 
@@ -54,9 +66,63 @@
               <span class='govuk-hint govuk-!-margin-bottom-0'>{{ prisoner.prisonNumber }}</span>
             </td>
             <td class="govuk-table__cell">{{ prisoner.location }}</td>
-            <td class="govuk-table__cell" data-sort-value="{{ prisoner.releaseDate | formatDate('yyyyMMdd') }}">{{ prisoner.releaseDate | formatDate('d MMM yyyy') or 'N/A' }}</td>
+            <td class="govuk-table__cell">{{ prisoner.releaseDate | formatDate('d MMM yyyy') or 'N/A' }}</td>
             <td class="govuk-table__cell">{{ prisoner.hasAdditionalNeeds | formatYesNo }}</td>
             <td class="govuk-table__cell">{{ prisoner.isInEducation | formatYesNo }}</td>
+
+            {% if userHasPermissionTo('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_SEARCH') %}
+              {% set planStatus = prisoner.planStatus %}
+              {% set deadlineDate = prisoner.deadlineDate %}
+              <td class="govuk-table__cell" data-qa-plan-status="{{ planStatus }}">
+                {% if planStatus == 'NEEDS_PLAN' %}
+                  <span class="govuk-tag govuk-tag--yellow" data-qa="needs-plan-tag">
+                    Needs plan
+                  </span>
+
+                {% elseif planStatus == 'PLAN_DUE' %}
+                  <span class="govuk-tag govuk-tag--yellow" data-qa="plan-due-tag">
+                    Plan due
+                  </span>
+
+                {% elseif planStatus == 'ACTIVE_PLAN' %}
+                  <span class="govuk-tag govuk-tag--green" data-qa="active-plan-tag">
+                    Active plan
+                  </span>
+
+                {% elseif planStatus == 'PLAN_OVERDUE' %}
+                  <span class="govuk-tag govuk-tag--red" data-qa="plan-overdue-tag">
+                    Plan overdue
+                  </span>
+
+                {% elseif planStatus == 'INACTIVE_PLAN' %}
+                  <span class="govuk-tag govuk-tag--grey" data-qa="inactive-plan-tag">
+                    Inactive plan
+                  </span>
+
+                {% elseif planStatus == 'PLAN_DECLINED' %}
+                  <span class="govuk-tag govuk-tag--grey" data-qa="plan-declined-tag">
+                    Plan declined
+                  </span>
+
+                {% elseif planStatus == 'REVIEW_DUE' %}
+                  <span class="govuk-tag govuk-tag--yellow" data-qa="review-due-tag">
+                    Review due
+                  </span>
+
+                {% elseif planStatus == 'REVIEW_OVERDUE' %}
+                  <span class="govuk-tag govuk-tag--red" data-qa="review-overdue-tag">
+                    Review overdue
+                  </span>
+
+                {% else %}
+                  {# No plan #}
+                  No
+                {% endif %}
+              </td>
+              <td class="govuk-table__cell" data-qa-deadlineDate="{{ deadlineDate | formatDate('yyyy-MM-dd') }}">
+                {{ 'No due date' if deadlineDate | formatDate('yyyy-MM-dd') == '2099-12-31' else deadlineDate | formatDate('d MMM yyyy') or 'N/A' }}
+              </td>
+            {% endif %}
           </tr>
         {% endfor %}
       </tbody>

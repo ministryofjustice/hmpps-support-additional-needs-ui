@@ -3,6 +3,7 @@ enum SearchSortField {
   PRISON_NUMBER = 'PRISON_NUMBER',
   CELL_LOCATION = 'CELL_LOCATION',
   RELEASE_DATE = 'RELEASE_DATE',
+  DEADLINE_DATE = 'DEADLINE_DATE',
 }
 
 export default SearchSortField
