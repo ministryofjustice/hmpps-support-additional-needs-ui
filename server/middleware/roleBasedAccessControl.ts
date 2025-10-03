@@ -21,10 +21,11 @@ const rolesForAction = (): Record<ApplicationAction, Array<ApplicationRole>> => 
     ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
   ],
   [ApplicationAction.RECORD_ALN_SCREENER]: [],
-  [ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES]: [
+  [ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE]: [
     ApplicationRole.ROLE_SAN_EDITOR,
     ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
   ],
+  [ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES_ON_SEARCH]: [ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
 })
 
 /**

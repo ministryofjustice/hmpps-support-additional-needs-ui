@@ -10,13 +10,14 @@ import AuditService from '../../services/auditService'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 import setUpWebSession from '../../middleware/setUpWebSession'
 import auditMiddleware from '../../middleware/auditMiddleware'
+import createUserToken from '../../testutils/createUserToken'
 
 jest.mock('../../services/auditService')
 
 export const user: HmppsUser = {
   name: 'FIRST LAST',
   userId: 'id',
-  token: 'token',
+  token: createUserToken([]),
   username: 'user1',
   displayName: 'First Last',
   authSource: 'nomis',

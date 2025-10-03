@@ -13,7 +13,7 @@
     <section>
       <h3 class="govuk-heading-s govuk-!-margin-bottom-2">Education support plan</h3>
 
-      {% if userHasPermissionTo('VIEW_ELSP_DEADLINES_AND_STATUSES') %}
+      {% if userHasPermissionTo('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE') %}
 
         {% if planStatus == 'NEEDS_PLAN' %}
           <span class="govuk-tag govuk-tag--yellow govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="needs-plan-tag">
