@@ -32,12 +32,12 @@ const stubSearchByPrison = (options?: {
         forename: prisoner.firstName,
         surname: prisoner.lastName,
         firstName: prisoner.firstName,
-        additionalNeedsSummary: {
-          hasConditions: true,
-          hasChallenges: true,
-          hasStrengths: true,
-          hasSupportRecommendations: true,
-        },
+        dateOfBirth: prisoner.dateOfBirth,
+        releaseDate: prisoner.releaseDate,
+        inEducation: true,
+        hasAdditionalNeed: true,
+        planStatus: 'PLAN_DUE',
+        deadlineDate: '2025-10-05',
       }))
   const totalElements = options?.totalRecords || returnedPrisoners.length
   const totalPages = Math.ceil(totalElements / pageSize)

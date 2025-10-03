@@ -101,6 +101,18 @@ export default class SearchPage extends Page {
     return Page.verifyOnPage(OverviewPage)
   }
 
+  doesNotHaveStatusAndDueDateColumnsDisplayed(): SearchPage {
+    this.planStatusColumnHeading().should('not.exist')
+    this.deadlineDateColumnHeading().should('not.exist')
+    return this
+  }
+
+  hasStatusAndDueDateColumnsDisplayed(): SearchPage {
+    this.planStatusColumnHeading().should('be.visible')
+    this.deadlineDateColumnHeading().should('be.visible')
+    return this
+  }
+
   private searchTermField = (): PageElement => cy.get('#searchTerm')
 
   private applyFiltersButton = (): PageElement => cy.get('[data-qa=apply-filters]')
@@ -122,4 +134,8 @@ export default class SearchPage extends Page {
   private sortableTableHeaders = (): PageElement => cy.get('[data-qa=sortable-table-headers]')
 
   private searchUnavailbleMessage = (): PageElement => cy.get('[data-qa=search-unavailable-message]')
+
+  private planStatusColumnHeading = (): PageElement => cy.get('[data-qa=PLAN_STATUS-column-header]')
+
+  private deadlineDateColumnHeading = (): PageElement => cy.get('[data-qa=DEADLINE_DATE-column-header]')
 }
