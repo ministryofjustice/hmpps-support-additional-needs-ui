@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import logger from '../../../../../logger'
+import logger from '../../../../logger'
 
 /**
  * Request handler function to check the [EducationSupportPlanDto] exists in the journeyData.

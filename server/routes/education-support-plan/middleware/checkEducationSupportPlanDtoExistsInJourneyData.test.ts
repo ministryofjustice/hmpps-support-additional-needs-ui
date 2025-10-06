@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { v4 as uuidV4 } from 'uuid'
 import checkEducationSupportPlanDtoExistsInJourneyData from './checkEducationSupportPlanDtoExistsInJourneyData'
-import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
+import aValidEducationSupportPlanDto from '../../../testsupport/educationSupportPlanDtoTestDataBuilder'
 
 describe('checkEducationSupportPlanDtoInJourneyData', () => {
   const prisonNumber = 'A1234BC'

@@ -50,6 +50,38 @@ const pageViewEventMap: Record<string, Page> = {
   // Prisoner refuses creation of ELSP routes
   '/education-support-plan/:prisonNumber/refuse-plan/:journeyId/reason': Page.REFUSE_ELSP_REASON,
 
+  // Review ELSP routes
+  '/education-support-plan/:prisonNumber/review/:journeyId/who-reviewed-the-plan': Page.REVIEW_ELSP_WHO_REVIEWED_PLAN,
+  '/education-support-plan/:prisonNumber/review/:journeyId/other-people-consulted':
+    Page.REVIEW_ELSP_OTHER_PEOPLE_CONSULTED,
+  '/education-support-plan/:prisonNumber/review/:journeyId/other-people-consulted/add-person':
+    Page.REVIEW_ELSP_OTHER_PEOPLE_CONSULTED_ADD_PERSON,
+  '/education-support-plan/:prisonNumber/review/:journeyId/other-people-consulted/list':
+    Page.REVIEW_ELSP_OTHER_PEOPLE_CONSULTED_LIST,
+  '/education-support-plan/:prisonNumber/review/:journeyId/individual-view-on-progress':
+    Page.REVIEW_ELSP_INDIVIDUAL_VIEW_ON_PROGRESS,
+  '/education-support-plan/:prisonNumber/review/:journeyId/your-view-on-progress':
+    Page.REVIEW_ELSP_YOUR_VIEW_ON_PROGRESS,
+  '/education-support-plan/:prisonNumber/review/:journeyId/review-existing-needs':
+    Page.REVIEW_ELSP_REVIEW_EXISTING_NEEDS,
+  '/education-support-plan/:prisonNumber/review/:journeyId/review-existing-needs/strengths':
+    Page.REVIEW_ELSP_REVIEW_EXISTING_STRENGTHS,
+  '/education-support-plan/:prisonNumber/review/:journeyId/review-existing-needs/challenges':
+    Page.REVIEW_ELSP_REVIEW_EXISTING_CHALLENGES,
+  '/education-support-plan/:prisonNumber/review/:journeyId/review-existing-needs/conditions':
+    Page.REVIEW_ELSP_REVIEW_EXISTING_CONDITIONS,
+  '/education-support-plan/:prisonNumber/review/:journeyId/review-existing-needs/support-strategies':
+    Page.REVIEW_ELSP_REVIEW_EXISTING_SUPPORT_STRATEGIES,
+  '/education-support-plan/:prisonNumber/review/:journeyId/teaching-adjustments': Page.REVIEW_ELSP_TEACHING_ADJUSTMENTS,
+  '/education-support-plan/:prisonNumber/review/:journeyId/specific-teaching-skills':
+    Page.REVIEW_ELSP_SPECIFIC_TEACHING_SKILLS,
+  '/education-support-plan/:prisonNumber/review/:journeyId/exam-arrangements': Page.REVIEW_ELSP_EXAM_ARRANGEMENTS,
+  '/education-support-plan/:prisonNumber/review/:journeyId/lnsp-support': Page.REVIEW_ELSP_LNSP_SUPPORT,
+  '/education-support-plan/:prisonNumber/review/:journeyId/additional-information':
+    Page.REVIEW_ELSP_ADDITIONAL_INFORMATION,
+  '/education-support-plan/:prisonNumber/review/:journeyId/next-review-date': Page.REVIEW_ELSP_SET_REVIEW_DATE,
+  '/education-support-plan/:prisonNumber/review/:journeyId/check-your-answers': Page.REVIEW_ELSP_CHECK_YOUR_ANSWERS,
+
   // Create strengths routes
   '/strengths/:prisonNumber/create/:journeyId/select-category': Page.CREATE_STRENGTH_CATEGORY,
   '/strengths/:prisonNumber/create/:journeyId/detail': Page.CREATE_STRENGTH_DETAILS,
@@ -76,6 +108,7 @@ const pageViewEventMap: Record<string, Page> = {
   '/': null,
   '/education-support-plan/:prisonNumber/create/who-created-the-plan': null,
   '/education-support-plan/:prisonNumber/refuse-plan/reason': null,
+  '/education-support-plan/:prisonNumber/review/who-reviewed-the-plan': null,
   '/strengths/:prisonNumber/create/select-category': null,
   '/challenges/:prisonNumber/create/select-category': null,
   '/aln-screener/:prisonNumber/create/screener-date': null,
