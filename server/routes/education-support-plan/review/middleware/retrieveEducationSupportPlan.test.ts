@@ -16,21 +16,21 @@ describe('retrieveEducationSupportPlan', () => {
   const req = {
     user: { username },
     params: { prisonNumber },
+    journeyData: {},
     flash: jest.fn(),
   } as unknown as Request
   const res = {
     render: jest.fn(),
-    locals: {},
     redirect: jest.fn(),
   } as unknown as Response
   const next = jest.fn()
 
   beforeEach(() => {
     jest.resetAllMocks()
-    res.locals = { user: undefined }
+    req.journeyData = {}
   })
 
-  it('should retrieve ELSP and store on res.locals given ELSP exists for prisoner', async () => {
+  it('should retrieve ELSP and store on journeyData given ELSP exists for prisoner and it does not already exist on the journeyData', async () => {
     // Given
     const expectedEducationSupportPlan = aValidEducationSupportPlanDto({ prisonNumber })
     educationSupportPlanService.getEducationSupportPlan.mockResolvedValue(expectedEducationSupportPlan)
@@ -39,10 +39,40 @@ describe('retrieveEducationSupportPlan', () => {
     await requestHandler(req, res, next)
 
     // Then
-    expect(res.locals.educationSupportPlan.isFulfilled()).toEqual(true)
-    expect(res.locals.educationSupportPlan.value).toEqual(expectedEducationSupportPlan)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlan)
     expect(educationSupportPlanService.getEducationSupportPlan).toHaveBeenCalledWith(username, prisonNumber)
     expect(next).toHaveBeenCalledWith()
+    expect(req.flash).not.toHaveBeenCalled()
+  })
+
+  it('should not retrieve ELSP given ELSP exists on the journeyData for the prisoner', async () => {
+    // Given
+    const expectedEducationSupportPlan = aValidEducationSupportPlanDto({ prisonNumber })
+    req.journeyData.educationSupportPlanDto = expectedEducationSupportPlan
+
+    // When
+    await requestHandler(req, res, next)
+
+    // Then
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlan)
+    expect(educationSupportPlanService.getEducationSupportPlan).not.toHaveBeenCalled()
+    expect(next).toHaveBeenCalledWith()
+    expect(req.flash).not.toHaveBeenCalled()
+  })
+
+  it('should redirect to the profile overview page given ELSP already exists on the journeyData but for another prisoner', async () => {
+    // Given
+    const someoneElsesEducationSupportPlan = aValidEducationSupportPlanDto({ prisonNumber: 'Z1234XX' })
+    req.journeyData.educationSupportPlanDto = someoneElsesEducationSupportPlan
+
+    // When
+    await requestHandler(req, res, next)
+
+    // Then
+    expect(req.journeyData.educationSupportPlanDto).toEqual(someoneElsesEducationSupportPlan)
+    expect(res.redirect).toHaveBeenCalledWith(`/profile/${prisonNumber}/overview`)
+    expect(educationSupportPlanService.getEducationSupportPlan).not.toHaveBeenCalled()
+    expect(next).not.toHaveBeenCalled()
     expect(req.flash).not.toHaveBeenCalled()
   })
 
@@ -57,7 +87,7 @@ describe('retrieveEducationSupportPlan', () => {
 
     // Then
     expect(next).toHaveBeenCalledWith(expectedError)
-    expect(res.locals.educationSupportPlan).toBeUndefined()
+    expect(req.journeyData.educationSupportPlanDto).toBeUndefined()
     expect(req.flash).not.toHaveBeenCalled()
     expect(educationSupportPlanService.getEducationSupportPlan).toHaveBeenCalledWith(username, prisonNumber)
   })
@@ -71,7 +101,7 @@ describe('retrieveEducationSupportPlan', () => {
     await requestHandler(req, res, next)
 
     // Then
-    expect(res.locals.educationSupportPlan).toBeUndefined()
+    expect(req.journeyData.educationSupportPlanDto).toBeUndefined()
     expect(res.redirect).toHaveBeenCalledWith(`/profile/${prisonNumber}/overview`)
     expect(req.flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
     expect(educationSupportPlanService.getEducationSupportPlan).toHaveBeenCalledWith(username, prisonNumber)

@@ -38,6 +38,7 @@ describe('educationSupportPlanDtoMapper', () => {
         prisonId: null,
         reviewDate: null,
         reviewBeforeCreatingPlan: null,
+        planReviewedByOther: null,
       })
 
       // When
@@ -76,6 +77,7 @@ describe('educationSupportPlanDtoMapper', () => {
         prisonId: null,
         reviewDate: null,
         reviewBeforeCreatingPlan: null,
+        planReviewedByOther: null,
       })
 
       // When

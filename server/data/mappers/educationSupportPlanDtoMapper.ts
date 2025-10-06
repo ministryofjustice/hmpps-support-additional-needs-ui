@@ -36,6 +36,9 @@ const toEducationSupportPlanDto = (
         prisonId: null,
         reviewDate: null,
         reviewBeforeCreatingPlan: null,
+        planReviewedByLoggedInUser: null,
+        planReviewedByOtherFullName: null,
+        planReviewedByOtherJobRole: null,
       }
     : null
 }

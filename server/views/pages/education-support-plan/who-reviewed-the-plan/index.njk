@@ -1,0 +1,87 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'education-support-plan-who-reviewed-the-plan' %}
+{% set pageTitle = "Review an education support plan - Who reviewed support plan" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {% set somebodyElseHtml %}
+            {{ govukInput({
+              id: "reviewedByOtherFullName",
+              name: "reviewedByOtherFullName",
+              value: form.reviewedByOtherFullName,
+              maxlength: 200,
+              label: {
+                text: "Full name of person",
+                classes: "govuk-label--s govuk-!-font-weight-bold",
+                attributes: { "aria-live": "polite", "data-qa": "reviewed-by-other-full-name" }
+              },
+              attributes: {
+                "aria-label" : "Give details as to who met with " + prisonerSummary | formatFirst_name_Last_name,
+                "data-qa": "reviewedByOtherFullName"
+              },
+              errorMessage: errors | findError('reviewedByOtherFullName')
+            }) }}
+            {{ govukInput({
+              id: "reviewedByOtherJobRole",
+              name: "reviewedByOtherJobRole",
+              value: form.reviewedByOtherJobRole,
+              maxlength: 200,
+              label: {
+                text: "Job role of person",
+                classes: "govuk-label--s govuk-!-font-weight-bold",
+                attributes: { "aria-live": "polite", "data-qa": "reviewed-by-other-job-role" }
+              },
+              attributes: {
+                "aria-label" : "Give details as to who met with " + prisonerSummary | formatFirst_name_Last_name,
+                "data-qa": "reviewedByOtherJobRole"
+              },
+              errorMessage: errors | findError('reviewedByOtherJobRole')
+            }) }}
+          {% endset %}
+
+          {{ govukRadios({
+            name: "reviewedBy",
+            fieldset: {
+              legend: {
+                text: "Are you the person reviewing the plan with " + prisonerSummary | formatFirst_name_Last_name + "?",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            items: [
+              {
+                value: "MYSELF",
+                text: "Yes",
+                checked: form.reviewedBy === "MYSELF"
+              },
+              {
+                value: "SOMEBODY_ELSE",
+                text: "No",
+                checked: form.reviewedBy === "SOMEBODY_ELSE",
+                conditional: {
+                  html: somebodyElseHtml
+                }
+              }
+            ],
+            errorMessage: errors | findError('reviewedBy')
+          }) }}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

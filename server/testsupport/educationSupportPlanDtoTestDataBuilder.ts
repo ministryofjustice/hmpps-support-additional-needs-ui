@@ -25,6 +25,10 @@ const aValidEducationSupportPlanDto = (
     reviewDate?: Date
     individualSupport?: string
     additionalInformation?: string
+    planReviewedByOther?: {
+      name: string
+      jobRole: string
+    }
   },
 ): EducationSupportPlanDto => ({
   prisonNumber: options?.prisonNumber ?? 'A1234BC',
@@ -67,6 +71,9 @@ const aValidEducationSupportPlanDto = (
     options?.additionalInformation === null
       ? null
       : options?.additionalInformation || 'Chris is very open about his issues and is a pleasure to talk to.',
+  planReviewedByLoggedInUser: options?.planReviewedByOther === null ? null : options?.planReviewedByOther == null,
+  planReviewedByOtherFullName: options?.planReviewedByOther === null ? null : options?.planReviewedByOther?.name,
+  planReviewedByOtherJobRole: options?.planReviewedByOther === null ? null : options?.planReviewedByOther?.jobRole,
   ...validDtoAuditFields(options),
 })
 
