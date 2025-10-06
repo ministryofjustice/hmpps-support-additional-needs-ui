@@ -1,3 +1,4 @@
+{% from "moj/components/pagination/macro.njk" import mojPagination %}
 {% from "../../components/sortable-table-header/macro.njk" import sortableTableHeader %}
 
 {% set prisoners = searchResults.value.prisoners %}
@@ -115,8 +116,9 @@
                   </span>
 
                 {% else %}
-                  {# No plan #}
-                  No
+                  <span data-qa="no-plan-tag">
+                    No
+                  </span>
                 {% endif %}
               </td>
               <td class="govuk-table__cell" data-qa-deadlineDate="{{ deadlineDate | formatDate('yyyy-MM-dd') }}">
@@ -125,7 +127,7 @@
                 {% elseif planStatus == 'NEEDS_PLAN' %}
                   No due date
                 {% else %}
-                  {{ 'No due date' if deadlineDate | formatDate('yyyy-MM-dd') == '2099-12-31' else deadlineDate | formatDate('d MMM yyyy') or 'N/A' }}
+                  {{ deadlineDate | formatDate('d MMM yyyy') or 'N/A' }}
                 {% endif %}
               </td>
             {% endif %}

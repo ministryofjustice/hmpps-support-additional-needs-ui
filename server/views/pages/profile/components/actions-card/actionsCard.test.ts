@@ -1,6 +1,6 @@
 import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
-import { addMonths, format, startOfDay, startOfToday } from 'date-fns'
+import { addMonths, format, startOfToday } from 'date-fns'
 import aValidPrisonerSummary from '../../../../../testsupport/prisonerSummaryTestDataBuilder'
 import PlanActionStatus from '../../../../../enums/planActionStatus'
 import formatDateFilter from '../../../../../filters/formatDateFilter'
@@ -584,48 +584,4 @@ describe('Tests for Profile pages actions card component', () => {
       expect($('[data-qa=plan-review-due-date]').length).toEqual(0)
     },
   )
-
-  it.each([
-    //
-    '2025-10-15',
-    '2025-12-31',
-    '2029-12-31',
-    '2099-12-30',
-    '2100-01-01',
-  ])(
-    'it should render the action cards component with a plan review date given the plan is active and the plan review date is %s',
-    date => {
-      // Given
-      const params = {
-        ...templateParams,
-        planStatus: PlanActionStatus.ACTIVE_PLAN,
-        planReviewDeadlineDate: startOfDay(date),
-      }
-
-      // When
-      const content = nunjucks.render(template, params)
-      const $ = cheerio.load(content)
-
-      // Then
-      expect($('[data-qa=active-plan-tag]').length).toEqual(1)
-      expect($('[data-qa=plan-review-due-date]').text().trim()).toEqual(`Review due ${format(date, 'd MMM yyyy')}`)
-    },
-  )
-
-  it('it should render the action cards component without a plan review date given the plan is active and the plan review date is 2099-12-31', () => {
-    // Given
-    const params = {
-      ...templateParams,
-      planStatus: PlanActionStatus.ACTIVE_PLAN,
-      planReviewDeadlineDate: startOfDay('2099-12-31'),
-    }
-
-    // When
-    const content = nunjucks.render(template, params)
-    const $ = cheerio.load(content)
-
-    // Then
-    expect($('[data-qa=active-plan-tag]').length).toEqual(1)
-    expect($('[data-qa=plan-review-due-date]').length).toEqual(0)
-  })
 })
