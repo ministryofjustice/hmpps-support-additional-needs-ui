@@ -6,7 +6,7 @@ import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import checkEducationSupportPlanDtoExistsInJourneyData from '../middleware/checkEducationSupportPlanDtoExistsInJourneyData'
 import { validate } from '../../../middleware/validationMiddleware'
-import whoCompletedThePlanSchema from '../validationSchemas/whoCompletedThePlanSchema'
+import whoReviewedThePlanSchema from '../validationSchemas/whoReviewedThePlanSchema'
 import wereOtherPeopleConsultedSchema from '../validationSchemas/wereOtherPeopleConsultedSchema'
 import addPersonConsultedSchema from '../validationSchemas/addPersonConsultedSchema'
 import reviewExistingNeedsSchema from '../validationSchemas/reviewExistingNeedsSchema'
@@ -23,6 +23,8 @@ import learningNeedsSupportPractitionerSupportSchema from '../validationSchemas/
 import additionalInformationSchema from '../validationSchemas/additionalInformationSchema'
 import reviewSupportPlanSchema from '../validationSchemas/reviewSupportPlanSchema'
 import retrieveEducationSupportPlan from './middleware/retrieveEducationSupportPlan'
+import WhoReviewedThePlanController from './who-reviewed-the-plan/whoReviewedThePlanController'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -37,6 +39,8 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   } = services
   const router = Router({ mergeParams: true })
 
+  const whoReviewedThePlanController = new WhoReviewedThePlanController()
+
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
     insertJourneyIdentifier({ insertIdAfterElement: 3 }), // insert journey ID immediately after '/education-support-plan/:prisonNumber/review' - eg: '/education-support-plan/A1234BC/review/473e9ee4-37d6-4afb-92a2-5729b10cc60f/who-created-the-plan'
@@ -45,13 +49,12 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/who-reviewed-the-plan', [
     retrieveEducationSupportPlan(educationSupportPlanService),
-    async (req: Request, res: Response) => {
-      res.send('Who reviewed the plan?')
-    },
+    asyncMiddleware(whoReviewedThePlanController.getWhoReviewedThePlanView),
   ])
   router.post('/:journeyId/who-reviewed-the-plan', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    validate(whoCompletedThePlanSchema),
+    validate(whoReviewedThePlanSchema),
+    asyncMiddleware(whoReviewedThePlanController.submitWhoReviewedThePlanForm),
   ])
 
   router.get('/:journeyId/other-people-consulted', [

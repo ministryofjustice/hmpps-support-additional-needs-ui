@@ -7,5 +7,5 @@
     classes: "js-back-link"
   }) }}
 
-  <p class="govuk-body">Create an education support plan</p>
+  <p class="govuk-body">{{ 'Review' if mode == 'review' else 'Create' }} an education support plan</p>
 {% endblock %}

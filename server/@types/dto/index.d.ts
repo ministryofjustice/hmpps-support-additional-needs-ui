@@ -52,6 +52,9 @@ declare module 'dto' {
     reviewDate?: Date
     individualSupport?: string
     additionalInformation?: string
+    planReviewedByLoggedInUser?: boolean
+    planReviewedByOtherFullName?: string
+    planReviewedByOtherJobRole?: string
   }
 
   export interface PlanCreationScheduleDto {
