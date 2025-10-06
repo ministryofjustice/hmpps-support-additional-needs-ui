@@ -25,6 +25,7 @@ import reviewSupportPlanSchema from '../validationSchemas/reviewSupportPlanSchem
 import retrieveEducationSupportPlan from './middleware/retrieveEducationSupportPlan'
 import WhoReviewedThePlanController from './who-reviewed-the-plan/whoReviewedThePlanController'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import createEmptyReviewEducationSupportPlanDtoIfNotInJourneyData from './middleware/createEmptyReviewEducationSupportPlanDtoIfNotInJourneyData'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -49,6 +50,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/who-reviewed-the-plan', [
     retrieveEducationSupportPlan(educationSupportPlanService),
+    createEmptyReviewEducationSupportPlanDtoIfNotInJourneyData,
     asyncMiddleware(whoReviewedThePlanController.getWhoReviewedThePlanView),
   ])
   router.post('/:journeyId/who-reviewed-the-plan', [

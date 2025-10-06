@@ -51,7 +51,6 @@ describe('educationSupportPlanService', () => {
         reviewDate: null,
         prisonId: null,
         reviewBeforeCreatingPlan: null,
-        planReviewedByOther: null,
       })
 
       // When
@@ -109,7 +108,6 @@ describe('educationSupportPlanService', () => {
         reviewDate: null,
         reviewBeforeCreatingPlan: null,
         planCreatedByOther: { name: 'Alan Teacher', jobRole: 'Education Instructor' },
-        planReviewedByOther: null,
       })
 
       // When
