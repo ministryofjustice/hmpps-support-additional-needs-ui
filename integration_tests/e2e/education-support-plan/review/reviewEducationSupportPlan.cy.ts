@@ -7,6 +7,7 @@ import PlanReviewedByValue from '../../../../server/enums/planReviewedByValue'
 import OtherPeopleConsultedPage from '../../../pages/education-support-plan/otherPeopleConsultedPage'
 import OtherPeopleConsultedAddPersonPage from '../../../pages/education-support-plan/otherPeopleConsultedAddPersonPage'
 import OtherPeopleConsultedListPage from '../../../pages/education-support-plan/otherPeopleConsultedListPage'
+import IndividualViewOnProgressPage from '../../../pages/education-support-plan/individualViewOnProgressPage'
 
 context('Review an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -91,9 +92,22 @@ context('Review an Education Support Plan', () => {
       .numberOfPeopleConsultedIs(2)
       .personAtRowIs(1, 'A Teacher', 'Teacher')
       .personAtRowIs(2, 'Another Teacher', 'Teacher')
+      .submitPageTo(IndividualViewOnProgressPage)
 
-    Page.verifyOnPage(OtherPeopleConsultedListPage) //
-    // .submitPageTo(ReviewExistingNeedsPage)
+    Page.verifyOnPage(IndividualViewOnProgressPage)
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(IndividualViewOnProgressPage)
+      .hasErrorCount(1)
+      .hasFieldInError('prisonerViewOnProgress')
+      // submit the page with both prisoner view and checkbox indicating they refused to take part, triggering different validation
+      .enterPrisonersViewOnProgress('Chris is happy with his progress so far')
+      .selectPrisonerDeclinedBeingPartOfReview()
+      .submitPageTo(IndividualViewOnProgressPage)
+      .hasErrorCount(1)
+      .hasFieldInError('prisonerViewOnProgress')
+      // clear the checkbox, submitting just the prisoner view on progress
+      .deSelectPrisonerDeclinedBeingPartOfReview()
+
     // TODO - flesh out this test, page by page, as each page in the review journey is implemented
   })
 

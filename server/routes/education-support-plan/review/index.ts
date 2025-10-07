@@ -23,13 +23,15 @@ import learningNeedsSupportPractitionerSupportSchema from '../validationSchemas/
 import additionalInformationSchema from '../validationSchemas/additionalInformationSchema'
 import reviewSupportPlanSchema from '../validationSchemas/reviewSupportPlanSchema'
 import retrieveEducationSupportPlan from './middleware/retrieveEducationSupportPlan'
-import WhoReviewedThePlanController from './who-reviewed-the-plan/whoReviewedThePlanController'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import createEmptyReviewEducationSupportPlanDtoIfNotInJourneyData from './middleware/createEmptyReviewEducationSupportPlanDtoIfNotInJourneyData'
+import checkReviewEducationSupportPlanDtoExistsInJourneyData from './middleware/checkReviewEducationSupportPlanDtoExistsInJourneyData'
+import WhoReviewedThePlanController from './who-reviewed-the-plan/whoReviewedThePlanController'
 import OtherPeopleConsultedController from './other-people-consulted/otherPeopleConsultedController'
 import AddPersonConsultedController from './other-people-consulted/addPersonConsultedController'
 import OtherPeopleConsultedListController from './other-people-consulted/otherPeopleConsultedListController'
-import checkReviewEducationSupportPlanDtoExistsInJourneyData from './middleware/checkReviewEducationSupportPlanDtoExistsInJourneyData'
+import IndividualViewOnProgressController from './individual-view-on-progress/individualViewOnProgressController'
+import individualViewOnProgressSchema from '../validationSchemas/individualViewOnProgressSchema'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -48,6 +50,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const otherPeopleConsultedController = new OtherPeopleConsultedController()
   const addPersonConsultedController = new AddPersonConsultedController()
   const otherPeopleConsultedListController = new OtherPeopleConsultedListController()
+  const individualViewOnProgressController = new IndividualViewOnProgressController()
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
@@ -102,11 +105,13 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   router.get('/:journeyId/individual-view-on-progress', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Individuals view on progress')
-    },
+    asyncMiddleware(individualViewOnProgressController.getIndividualViewOnProgressView),
   ])
-  router.post('/:journeyId/individual-view-on-progress', [checkEducationSupportPlanDtoExistsInJourneyData])
+  router.post('/:journeyId/individual-view-on-progress', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    validate(individualViewOnProgressSchema),
+    asyncMiddleware(individualViewOnProgressController.submitIndividualViewOnProgressForm),
+  ])
 
   router.get('/:journeyId/your-view-on-progress', [
     checkEducationSupportPlanDtoExistsInJourneyData,
