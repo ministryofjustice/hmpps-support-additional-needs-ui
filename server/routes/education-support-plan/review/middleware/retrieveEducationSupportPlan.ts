@@ -30,7 +30,10 @@ const retrieveEducationSupportPlan = (educationSupportPlanService: EducationSupp
         prisonNumber,
       )
       if (educationSupportPlanDto) {
-        req.journeyData = { educationSupportPlanDto }
+        req.journeyData = {
+          ...req.journeyData,
+          educationSupportPlanDto,
+        }
         return next()
       }
 

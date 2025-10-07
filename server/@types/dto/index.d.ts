@@ -52,9 +52,21 @@ declare module 'dto' {
     reviewDate?: Date
     individualSupport?: string
     additionalInformation?: string
+  }
+
+  export interface ReviewEducationSupportPlanDto extends ReferencedAndAuditable {
+    prisonNumber: string
+    prisonId: string
     planReviewedByLoggedInUser?: boolean
     planReviewedByOtherFullName?: string
     planReviewedByOtherJobRole?: string
+    wereOtherPeopleConsulted?: boolean
+    otherPeopleConsulted?: Array<{
+      name: string
+      jobRole: string
+    }>
+    reviewExistingNeeds?: boolean
+    reviewDate?: Date
   }
 
   export interface PlanCreationScheduleDto {

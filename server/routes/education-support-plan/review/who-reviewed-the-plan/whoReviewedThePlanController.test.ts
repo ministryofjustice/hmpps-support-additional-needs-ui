@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 import WhoReviewedThePlanController from './whoReviewedThePlanController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
-import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
 import PlanReviewedByValue from '../../../../enums/planReviewedByValue'
+import aValidReviewEducationSupportPlanDto from '../../../../testsupport/reviewEducationSupportPlanDtoTestDataBuilder'
 
 describe('whoReviewedThePlanController', () => {
   const controller = new WhoReviewedThePlanController()
@@ -16,7 +16,6 @@ describe('whoReviewedThePlanController', () => {
   } as unknown as Request
   const res = {
     redirect: jest.fn(),
-    redirectWithErrors: jest.fn(),
     render: jest.fn(),
     locals: { prisonerSummary },
   } as unknown as Response
@@ -26,8 +25,8 @@ describe('whoReviewedThePlanController', () => {
     jest.resetAllMocks()
     req.body = {}
     req.journeyData = {
-      educationSupportPlanDto: {
-        ...aValidEducationSupportPlanDto(),
+      reviewEducationSupportPlanDto: {
+        ...aValidReviewEducationSupportPlanDto(),
         planReviewedByLoggedInUser: false,
         planReviewedByOtherFullName: 'A user',
         planReviewedByOtherJobRole: 'A job role',
@@ -77,7 +76,7 @@ describe('whoReviewedThePlanController', () => {
   it('should submit form and redirect to next route given previous page was not check your answers', async () => {
     // Given
     req.query = {}
-    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.journeyData = { reviewEducationSupportPlanDto: aValidReviewEducationSupportPlanDto() }
     req.body = {
       reviewedBy: PlanReviewedByValue.SOMEBODY_ELSE,
       reviewedByOtherFullName: 'A user',
@@ -85,8 +84,8 @@ describe('whoReviewedThePlanController', () => {
     }
 
     const expectedNextRoute = 'other-people-consulted'
-    const expectedEducationSupportPlanDto = {
-      ...aValidEducationSupportPlanDto(),
+    const expectedReviewEducationSupportPlanDto = {
+      ...aValidReviewEducationSupportPlanDto(),
       planReviewedByLoggedInUser: false,
       planReviewedByOtherFullName: 'A user',
       planReviewedByOtherJobRole: 'A job role',
@@ -97,18 +96,15 @@ describe('whoReviewedThePlanController', () => {
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
-    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+    expect(req.journeyData.reviewEducationSupportPlanDto).toEqual(expectedReviewEducationSupportPlanDto)
   })
 
   it('should submit form and redirect to next route given previous page was check your answers', async () => {
     // Given
     req.query = { submitToCheckAnswers: 'true' }
     req.journeyData = {
-      educationSupportPlanDto: {
-        ...aValidEducationSupportPlanDto(),
-        planReviewedByLoggedInUser: true,
-        planReviewedByOtherFullName: undefined,
-        planReviewedByOtherJobRole: undefined,
+      reviewEducationSupportPlanDto: {
+        ...aValidReviewEducationSupportPlanDto(),
       },
     }
     req.body = {
@@ -118,8 +114,8 @@ describe('whoReviewedThePlanController', () => {
     }
 
     const expectedNextRoute = 'check-your-answers'
-    const expectedEducationSupportPlanDto = {
-      ...aValidEducationSupportPlanDto(),
+    const expectedReviewEducationSupportPlanDto = {
+      ...aValidReviewEducationSupportPlanDto(),
       planReviewedByLoggedInUser: false,
       planReviewedByOtherFullName: 'A user',
       planReviewedByOtherJobRole: 'A job role',
@@ -130,6 +126,6 @@ describe('whoReviewedThePlanController', () => {
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
-    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+    expect(req.journeyData.reviewEducationSupportPlanDto).toEqual(expectedReviewEducationSupportPlanDto)
   })
 })

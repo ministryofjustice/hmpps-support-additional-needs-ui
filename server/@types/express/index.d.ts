@@ -1,6 +1,7 @@
 import type {
   ChallengeDto,
   EducationSupportPlanDto,
+  ReviewEducationSupportPlanDto,
   StrengthDto,
   SupportStrategyDto,
   RefuseEducationSupportPlanDto,
@@ -26,6 +27,7 @@ export declare global {
 
     interface JourneyData {
       educationSupportPlanDto?: EducationSupportPlanDto
+      reviewEducationSupportPlanDto?: ReviewEducationSupportPlanDto
       refuseEducationSupportPlanDto?: RefuseEducationSupportPlanDto
       challengeDto?: ChallengeDto
       conditionsList?: ConditionsList
