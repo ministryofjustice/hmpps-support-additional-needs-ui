@@ -100,7 +100,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.post('/:journeyId/other-people-consulted', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    validate(wereOtherPeopleConsultedSchema),
+    validate(wereOtherPeopleConsultedSchema({ journey: 'create' })),
     asyncMiddleware(otherPeopleConsultedController.submitOtherPeopleConsultedForm),
   ])
   router.get('/:journeyId/other-people-consulted/add-person', [
@@ -109,7 +109,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.post('/:journeyId/other-people-consulted/add-person', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    validate(addPersonConsultedSchema),
+    validate(addPersonConsultedSchema({ journey: 'create' })),
     asyncMiddleware(addPersonConsultedController.submitAddPersonConsultedForm),
   ])
   router.get('/:journeyId/other-people-consulted/list', [

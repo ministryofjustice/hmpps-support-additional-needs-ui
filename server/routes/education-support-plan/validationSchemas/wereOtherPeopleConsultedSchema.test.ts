@@ -29,7 +29,7 @@ describe('wereOtherPeopleConsultedSchema', () => {
     req.body = requestBody
 
     // When
-    await validate(wereOtherPeopleConsultedSchema)(req, res, next)
+    await validate(wereOtherPeopleConsultedSchema())(req, res, next)
 
     // Then
     expect(req.body).toEqual(requestBody)
@@ -46,7 +46,7 @@ describe('wereOtherPeopleConsultedSchema', () => {
     { wereOtherPeopleConsulted: 'N' },
     { wereOtherPeopleConsulted: 'Y' },
   ])(
-    'sad path - validation of wereOtherPeopleConsulted field fails - wereOtherPeopleConsulted: $wereOtherPeopleConsulted',
+    'sad path - validation of wereOtherPeopleConsulted field fails for create journey - wereOtherPeopleConsulted: $wereOtherPeopleConsulted',
     async requestBody => {
       // Given
       req.body = requestBody
@@ -54,13 +54,48 @@ describe('wereOtherPeopleConsultedSchema', () => {
       const expectedErrors: Array<Error> = [
         {
           href: '#wereOtherPeopleConsulted',
-          text: 'Select whether other people where consulted in the creation of the plan',
+          text: 'Select whether other people were consulted in the creation of the plan',
         },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
 
       // When
-      await validate(wereOtherPeopleConsultedSchema)(req, res, next)
+      await validate(wereOtherPeopleConsultedSchema({ journey: 'create' }))(req, res, next)
+
+      // Then
+      expect(req.body).toEqual(requestBody)
+      expect(next).not.toHaveBeenCalled()
+      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+      expect(res.redirectWithErrors).toHaveBeenCalledWith(
+        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/other-people-consulted',
+        expectedErrors,
+      )
+    },
+  )
+
+  it.each([
+    { wereOtherPeopleConsulted: '' },
+    { wereOtherPeopleConsulted: undefined },
+    { wereOtherPeopleConsulted: null },
+    { wereOtherPeopleConsulted: 'a-non-supported-value' },
+    { wereOtherPeopleConsulted: 'N' },
+    { wereOtherPeopleConsulted: 'Y' },
+  ])(
+    'sad path - validation of wereOtherPeopleConsulted field fails for review journey - wereOtherPeopleConsulted: $wereOtherPeopleConsulted',
+    async requestBody => {
+      // Given
+      req.body = requestBody
+
+      const expectedErrors: Array<Error> = [
+        {
+          href: '#wereOtherPeopleConsulted',
+          text: 'Select if other people were consulted or involved',
+        },
+      ]
+      const expectedInvalidForm = JSON.stringify(requestBody)
+
+      // When
+      await validate(wereOtherPeopleConsultedSchema({ journey: 'review' }))(req, res, next)
 
       // Then
       expect(req.body).toEqual(requestBody)

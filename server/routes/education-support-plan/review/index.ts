@@ -26,6 +26,10 @@ import retrieveEducationSupportPlan from './middleware/retrieveEducationSupportP
 import WhoReviewedThePlanController from './who-reviewed-the-plan/whoReviewedThePlanController'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import createEmptyReviewEducationSupportPlanDtoIfNotInJourneyData from './middleware/createEmptyReviewEducationSupportPlanDtoIfNotInJourneyData'
+import OtherPeopleConsultedController from './other-people-consulted/otherPeopleConsultedController'
+import AddPersonConsultedController from './other-people-consulted/addPersonConsultedController'
+import OtherPeopleConsultedListController from './other-people-consulted/otherPeopleConsultedListController'
+import checkReviewEducationSupportPlanDtoExistsInJourneyData from './middleware/checkReviewEducationSupportPlanDtoExistsInJourneyData'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -41,6 +45,9 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const router = Router({ mergeParams: true })
 
   const whoReviewedThePlanController = new WhoReviewedThePlanController()
+  const otherPeopleConsultedController = new OtherPeopleConsultedController()
+  const addPersonConsultedController = new AddPersonConsultedController()
+  const otherPeopleConsultedListController = new OtherPeopleConsultedListController()
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
@@ -55,40 +62,46 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.post('/:journeyId/who-reviewed-the-plan', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     validate(whoReviewedThePlanSchema),
     asyncMiddleware(whoReviewedThePlanController.submitWhoReviewedThePlanForm),
   ])
 
   router.get('/:journeyId/other-people-consulted', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Were other people consulted?')
-    },
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(otherPeopleConsultedController.getOtherPeopleConsultedView),
   ])
   router.post('/:journeyId/other-people-consulted', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    validate(wereOtherPeopleConsultedSchema),
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
+    validate(wereOtherPeopleConsultedSchema({ journey: 'review' })),
+    asyncMiddleware(otherPeopleConsultedController.submitOtherPeopleConsultedForm),
   ])
   router.get('/:journeyId/other-people-consulted/add-person', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Other people consulted - Add person')
-    },
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(addPersonConsultedController.getAddPersonConsultedView),
   ])
   router.post('/:journeyId/other-people-consulted/add-person', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    validate(addPersonConsultedSchema),
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
+    validate(addPersonConsultedSchema({ journey: 'review' })),
+    asyncMiddleware(addPersonConsultedController.submitAddPersonConsultedForm),
   ])
   router.get('/:journeyId/other-people-consulted/list', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('List of other people consulted?')
-    },
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(otherPeopleConsultedListController.getOtherPeopleConsultedListView),
   ])
-  router.post('/:journeyId/other-people-consulted/list', [checkEducationSupportPlanDtoExistsInJourneyData])
+  router.post('/:journeyId/other-people-consulted/list', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(otherPeopleConsultedListController.submitOtherPeopleConsultedListForm),
+  ])
 
   router.get('/:journeyId/individual-view-on-progress', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     async (req: Request, res: Response) => {
       res.send('Individuals view on progress')
     },
@@ -97,6 +110,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/your-view-on-progress', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     async (req: Request, res: Response) => {
       res.send('Your view on progress')
     },
@@ -105,17 +119,20 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/review-existing-needs', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     async (req: Request, res: Response) => {
       res.send('Do you want to review existing needs?')
     },
   ])
   router.post('/:journeyId/review-existing-needs', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     validate(reviewExistingNeedsSchema),
   ])
 
   router.get('/:journeyId/review-existing-needs/strengths', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     retrievePrisonsLookup(prisonService),
     retrieveStrengths(strengthService),
     retrieveAlnScreeners(additionalLearningNeedsService),
@@ -127,6 +144,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/review-existing-needs/challenges', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     retrievePrisonsLookup(prisonService),
     retrieveChallenges(challengeService),
     retrieveAlnScreeners(additionalLearningNeedsService),
@@ -138,6 +156,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/review-existing-needs/conditions', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     retrievePrisonsLookup(prisonService),
     retrieveConditions(conditionService),
     async (req: Request, res: Response) => {
@@ -148,6 +167,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/review-existing-needs/support-strategies', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     retrievePrisonsLookup(prisonService),
     retrieveSupportStrategies(supportStrategyService),
     async (req: Request, res: Response) => {
@@ -158,72 +178,85 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/teaching-adjustments', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     async (req: Request, res: Response) => {
       res.send('Teaching adjustments')
     },
   ])
   router.post('/:journeyId/teaching-adjustments', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     validate(teachingAdjustmentsSchema),
   ])
 
   router.get('/:journeyId/specific-teaching-skills', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     async (req: Request, res: Response) => {
       res.send('Teacher knowledge/skills')
     },
   ])
   router.post('/:journeyId/specific-teaching-skills', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     validate(specificTeachingSkillsSchema),
   ])
 
   router.get('/:journeyId/exam-arrangements', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     async (req: Request, res: Response) => {
       res.send('Exam access arrangements')
     },
   ])
   router.post('/:journeyId/exam-arrangements', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     validate(examArrangementsSchema),
   ])
 
   router.get('/:journeyId/lnsp-support', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     async (req: Request, res: Response) => {
       res.send('LNSP support recommendations')
     },
   ])
   router.post('/:journeyId/lnsp-support', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     validate(learningNeedsSupportPractitionerSupportSchema),
   ])
 
   router.get('/:journeyId/additional-information', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     async (req: Request, res: Response) => {
       res.send('Additional information')
     },
   ])
   router.post('/:journeyId/additional-information', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     validate(additionalInformationSchema),
   ])
 
   router.get('/:journeyId/next-review-date', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     async (req: Request, res: Response) => {
       res.send('Set next review date')
     },
   ])
   router.post('/:journeyId/next-review-date', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     validate(reviewSupportPlanSchema),
   ])
 
   router.get('/:journeyId/check-your-answers', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     async (req: Request, res: Response) => {
       res.send('Check your answers')
     },
