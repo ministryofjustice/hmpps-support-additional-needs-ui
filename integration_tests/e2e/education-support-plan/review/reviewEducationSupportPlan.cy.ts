@@ -4,6 +4,9 @@ import Error404Page from '../../../pages/error404'
 import OverviewPage from '../../../pages/profile/overviewPage'
 import WhoReviewedThePlanPage from '../../../pages/education-support-plan/whoReviewedThePlanPage'
 import PlanReviewedByValue from '../../../../server/enums/planReviewedByValue'
+import OtherPeopleConsultedPage from '../../../pages/education-support-plan/otherPeopleConsultedPage'
+import OtherPeopleConsultedAddPersonPage from '../../../pages/education-support-plan/otherPeopleConsultedAddPersonPage'
+import OtherPeopleConsultedListPage from '../../../pages/education-support-plan/otherPeopleConsultedListPage'
 
 context('Review an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -53,6 +56,44 @@ context('Review an Education Support Plan', () => {
       // enter the fields and submit the form to the next page
       .enterFullName('Joe Bloggs')
       .enterJobRole('Peer Mentor')
+      .submitPageTo(OtherPeopleConsultedPage)
+
+    Page.verifyOnPage(OtherPeopleConsultedPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(OtherPeopleConsultedPage)
+      .hasErrorCount(1)
+      .hasFieldInError('wereOtherPeopleConsulted')
+      // enter the fields and submit the form to the next page
+      .selectOtherPeopleWereConsulted()
+      .submitPageTo(OtherPeopleConsultedAddPersonPage)
+
+    Page.verifyOnPage(OtherPeopleConsultedAddPersonPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(OtherPeopleConsultedAddPersonPage)
+      .hasErrorCount(2)
+      .hasFieldInError('fullName')
+      .hasFieldInError('jobRole')
+      // enter the fields and submit the form to the next page
+      .enterFullName('A Teacher')
+      .enterJobRole('Teacher')
+      .submitPageTo(OtherPeopleConsultedListPage)
+      .numberOfPeopleConsultedIs(1)
+      .personAtRowIs(1, 'A Teacher', 'Teacher')
+      .clickToAddAnotherPerson()
+      .submitPageTo(OtherPeopleConsultedAddPersonPage)
+      .hasErrorCount(2)
+      .hasFieldInError('fullName')
+      .hasFieldInError('jobRole')
+      // enter the fields and submit the form to the next page
+      .enterFullName('Another Teacher')
+      .enterJobRole('Teacher')
+      .submitPageTo(OtherPeopleConsultedListPage)
+      .numberOfPeopleConsultedIs(2)
+      .personAtRowIs(1, 'A Teacher', 'Teacher')
+      .personAtRowIs(2, 'Another Teacher', 'Teacher')
+
+    Page.verifyOnPage(OtherPeopleConsultedListPage) //
+    // .submitPageTo(ReviewExistingNeedsPage)
     // TODO - flesh out this test, page by page, as each page in the review journey is implemented
   })
 
