@@ -103,7 +103,7 @@ describe('otherPeopleConsultedController', () => {
         wereOtherPeopleConsulted: YesNoValue.NO,
       }
 
-      const expectedNextRoute = 'review-existing-needs'
+      const expectedNextRoute = 'individual-view-on-progress'
       const expectedReviewEducationSupportPlanDto = {
         ...aValidReviewEducationSupportPlanDto(),
         wereOtherPeopleConsulted: false,

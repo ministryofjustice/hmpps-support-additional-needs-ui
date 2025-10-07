@@ -65,6 +65,8 @@ declare module 'dto' {
       name: string
       jobRole: string
     }>
+    prisonerViewOnProgress?: string
+    prisonerDeclinedBeingPartOfReview?: boolean
     reviewExistingNeeds?: boolean
     reviewDate?: Date
   }

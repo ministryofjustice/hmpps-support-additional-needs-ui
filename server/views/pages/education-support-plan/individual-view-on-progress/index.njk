@@ -1,0 +1,61 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'education-support-plan-individual-view-on-progress' %}
+{% set pageTitle = "Review an education support plan - How prisoner feels about their progress" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form class="form" method="post" novalidate="">
+      <div class="govuk-form-group">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+              How does {{ prisonerSummary | formatFirst_name_Last_name }} feel about their progress?
+            </legend>
+
+            {% set fieldError = errors | findError('prisonerViewOnProgress')  %}
+            <section class="{{ 'govuk-form-group--error' if fieldError }}" {{ 'aria-describedby="prisonerViewOnProgress-error"' if fieldError }}>
+
+              {% if fieldError %}
+                <p id="prisonerViewOnProgress-error" class="govuk-error-message">
+                  <span class="govuk-visually-hidden">Error:</span> {{ fieldError.text }}
+                </p>
+              {% endif %}
+
+              {{ govukTextarea({
+              id: "prisonerViewOnProgress",
+              name: "prisonerViewOnProgress",
+              rows: "4",
+              value: form.prisonerViewOnProgress,
+              type: "text",
+              attributes: { "aria-label" : "Provide details of how the person feels about their progress" }
+            }) }}
+
+            <fieldset class="govuk-fieldset">
+              <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Or</legend>
+              <div class="govuk-checkboxes__item">
+                <input class="govuk-checkboxes__input" id="prisonerDeclinedBeingPartOfReview" name="prisonerDeclinedBeingPartOfReview" type="checkbox" value="true" {{ 'checked' if form.prisonerDeclinedBeingPartOfReview == 'true' }}>
+                <label class="govuk-label govuk-checkboxes__label" for="prisonerDeclinedBeingPartOfReview">
+                  {{ prisonerSummary | formatFirst_name_Last_name }} declined being part of this review
+                </label>
+              </div>
+            </fieldset>
+
+          </section>
+        </fieldset>
+
+      </div>
+
+      {{ govukButton({
+        id: "submit-button",
+        text: "Continue",
+        type: "submit",
+        attributes: {"data-qa": "submit-button"},
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}
