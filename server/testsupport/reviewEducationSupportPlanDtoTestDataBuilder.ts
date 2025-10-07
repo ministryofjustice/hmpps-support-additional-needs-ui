@@ -18,6 +18,7 @@ const aValidReviewEducationSupportPlanDto = (
     }>
     prisonerViewOnProgress?: string
     prisonerDeclinedBeingPartOfReview?: boolean
+    reviewersViewOnProgress?: string
     reviewDate?: Date
   },
 ): ReviewEducationSupportPlanDto => ({
@@ -37,6 +38,7 @@ const aValidReviewEducationSupportPlanDto = (
       : options?.prisonerViewOnProgress || 'Chris is happy with his progress',
   prisonerDeclinedBeingPartOfReview:
     options?.prisonerDeclinedBeingPartOfReview === false ? false : options?.prisonerDeclinedBeingPartOfReview || true,
+  reviewersViewOnProgress: options?.reviewersViewOnProgress || 'Chris has made incredible progress',
   reviewDate: options?.reviewDate === null ? null : options?.reviewDate || addMonths(startOfToday(), 2),
   ...validDtoAuditFields(options),
 })

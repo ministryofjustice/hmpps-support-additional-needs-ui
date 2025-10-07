@@ -1,0 +1,39 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'education-support-plan-reviewers-view-on-progress' %}
+{% set pageTitle = "Review an education support plan - Reviewer view on person's progress" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form class="form" method="post" novalidate="">
+      <div class="govuk-form-group">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {{ govukTextarea({
+          id: "reviewersViewOnProgress",
+          name: "reviewersViewOnProgress",
+          rows: "4",
+          value: form.reviewersViewOnProgress,
+          type: "text",
+          label: {
+            text: "What is you view on " + prisonerSummary | formatFirst_name_Last_name + "'s progress?",
+            classes: "govuk-label--l",
+            isPageHeading: true
+          },
+          attributes: { "aria-label" : "Provide details of how the reviewer feels about the progress" },
+          errorMessage: errors | findError('reviewersViewOnProgress')
+        }) }}
+      </div>
+
+      {{ govukButton({
+        id: "submit-button",
+        text: "Continue",
+        type: "submit",
+        attributes: {"data-qa": "submit-button"},
+        preventDoubleClick: true
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

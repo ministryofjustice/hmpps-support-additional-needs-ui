@@ -60,8 +60,8 @@ const pageViewEventMap: Record<string, Page> = {
     Page.REVIEW_ELSP_OTHER_PEOPLE_CONSULTED_LIST,
   '/education-support-plan/:prisonNumber/review/:journeyId/individual-view-on-progress':
     Page.REVIEW_ELSP_INDIVIDUAL_VIEW_ON_PROGRESS,
-  '/education-support-plan/:prisonNumber/review/:journeyId/your-view-on-progress':
-    Page.REVIEW_ELSP_YOUR_VIEW_ON_PROGRESS,
+  '/education-support-plan/:prisonNumber/review/:journeyId/reviewers-view-on-progress':
+    Page.REVIEW_ELSP_REVIEWERS_VIEW_ON_PROGRESS,
   '/education-support-plan/:prisonNumber/review/:journeyId/review-existing-needs':
     Page.REVIEW_ELSP_REVIEW_EXISTING_NEEDS,
   '/education-support-plan/:prisonNumber/review/:journeyId/review-existing-needs/strengths':

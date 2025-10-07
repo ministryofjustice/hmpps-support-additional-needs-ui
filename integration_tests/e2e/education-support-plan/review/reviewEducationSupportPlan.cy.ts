@@ -8,6 +8,7 @@ import OtherPeopleConsultedPage from '../../../pages/education-support-plan/othe
 import OtherPeopleConsultedAddPersonPage from '../../../pages/education-support-plan/otherPeopleConsultedAddPersonPage'
 import OtherPeopleConsultedListPage from '../../../pages/education-support-plan/otherPeopleConsultedListPage'
 import IndividualViewOnProgressPage from '../../../pages/education-support-plan/individualViewOnProgressPage'
+import ReviewersViewOnProgressPage from '../../../pages/education-support-plan/reviewersViewOnProgressPage'
 
 context('Review an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -107,6 +108,15 @@ context('Review an Education Support Plan', () => {
       .hasFieldInError('prisonerViewOnProgress')
       // clear the checkbox, submitting just the prisoner view on progress
       .deSelectPrisonerDeclinedBeingPartOfReview()
+      .submitPageTo(ReviewersViewOnProgressPage)
+
+    Page.verifyOnPage(ReviewersViewOnProgressPage)
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(ReviewersViewOnProgressPage)
+      .hasErrorCount(1)
+      .hasFieldInError('reviewersViewOnProgress')
+      // enter the field and submit the form to the next page
+      .enterReviewersViewOnProgress('Chris is working hard to improve his progress')
 
     // TODO - flesh out this test, page by page, as each page in the review journey is implemented
   })
