@@ -35,7 +35,7 @@ const toEducationSupportPlanDto = (
         additionalInformation: educationSupportPlanResponse.detail,
         prisonId: null,
         reviewDate: null,
-        reviewBeforeCreatingPlan: null,
+        reviewExistingNeeds: null,
       }
     : null
 }

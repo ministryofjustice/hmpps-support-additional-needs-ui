@@ -1,7 +1,7 @@
 {% extends "../layout.njk" %}
 
 {% set pageId = 'education-support-plan-review-existing-needs' %}
-{% set pageTitle = "Create an education support plan - Review challenges, strengths and support strategies before creating education support plan" %}
+{% set pageTitle = "Review an education support plan - Review challenges, strengths, conditions and support strategies before reviewing education support plan" if mode == 'review' else "Create an education support plan - Review challenges, strengths and support strategies before creating education support plan" %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -12,10 +12,10 @@
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
           {{ govukRadios({
-            name: "reviewBeforeCreatingPlan",
+            name: "reviewExistingNeeds",
             fieldset: {
               legend: {
-                text: "Do you want to review " + prisonerSummary | formatFirst_name_Last_name + " challenges, strengths and support strategies before creating an education support plan?",
+                text: "Do you want to review " + prisonerSummary | formatFirst_name_Last_name + "'s challenges, strengths and support strategies before " + ("reviewing the" if mode == 'review' else "creating an") + " education support plan?",
                 isPageHeading: true,
                 classes: "govuk-fieldset__legend--l"
               }
@@ -24,15 +24,15 @@
               {
                 value: "YES",
                 text: "Yes",
-                checked: form.reviewBeforeCreatingPlan === "YES"
+                checked: form.reviewExistingNeeds === "YES"
               },
               {
                 value: "NO",
                 text: "No, we have already reviewed them",
-                checked: form.reviewBeforeCreatingPlan === "NO"
+                checked: form.reviewExistingNeeds === "NO"
               }
             ],
-            errorMessage: errors | findError('reviewBeforeCreatingPlan')
+            errorMessage: errors | findError('reviewExistingNeeds')
           }) }}
         </div>
 

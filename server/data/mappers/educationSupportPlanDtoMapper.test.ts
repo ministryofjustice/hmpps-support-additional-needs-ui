@@ -37,7 +37,7 @@ describe('educationSupportPlanDtoMapper', () => {
         additionalInformation: 'Chris is happy with his plan',
         prisonId: null,
         reviewDate: null,
-        reviewBeforeCreatingPlan: null,
+        reviewExistingNeeds: null,
       })
 
       // When
@@ -75,7 +75,7 @@ describe('educationSupportPlanDtoMapper', () => {
         individualSupport: 'Chris has asked that he is not sat with disruptive people as he is keen to learn',
         prisonId: null,
         reviewDate: null,
-        reviewBeforeCreatingPlan: null,
+        reviewExistingNeeds: null,
       })
 
       // When

@@ -3,7 +3,7 @@
 {% from "../../../../components/challenges-summary-card/macro.njk" import alnChallengesSummaryCard %}
 
 {% set pageId = 'education-support-plan-review-existing-challenges' %}
-{% set pageTitle = "Create an education support plan - Review challenges" %}
+{% set pageTitle = ('Review' if mode == 'review' else 'Create') + ' an education support plan - Review challenges' %}
 
 {% block content %}
   <div class="govuk-grid-row">

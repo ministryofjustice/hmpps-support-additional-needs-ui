@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import ReviewExistingNeedsController from './reviewExistingNeedsController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
-import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
+import aValidReviewEducationSupportPlanDto from '../../../../testsupport/reviewEducationSupportPlanDtoTestDataBuilder'
 import YesNoValue from '../../../../enums/yesNoValue'
 
 describe('reviewExistingNeedsController', () => {
@@ -26,8 +26,8 @@ describe('reviewExistingNeedsController', () => {
     jest.resetAllMocks()
     req.body = {}
     req.journeyData = {
-      educationSupportPlanDto: {
-        ...aValidEducationSupportPlanDto(),
+      reviewEducationSupportPlanDto: {
+        ...aValidReviewEducationSupportPlanDto(),
         reviewExistingNeeds: true,
       },
     }
@@ -43,6 +43,7 @@ describe('reviewExistingNeedsController', () => {
       form: {
         reviewExistingNeeds: YesNoValue.YES,
       },
+      mode: 'review',
     }
 
     // When
@@ -60,7 +61,7 @@ describe('reviewExistingNeedsController', () => {
     res.locals.invalidForm = invalidForm
 
     const expectedViewTemplate = 'pages/education-support-plan/review-existing-needs/index'
-    const expectedViewModel = { prisonerSummary, form: invalidForm }
+    const expectedViewModel = { prisonerSummary, form: invalidForm, mode: 'review' }
 
     // When
     await controller.getReviewExistingNeedsView(req, res, next)
@@ -71,14 +72,14 @@ describe('reviewExistingNeedsController', () => {
 
   it('should submit form and redirect to next route given answer was yes', async () => {
     // Given
-    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.journeyData = { reviewEducationSupportPlanDto: aValidReviewEducationSupportPlanDto() }
     req.body = {
       reviewExistingNeeds: YesNoValue.YES,
     }
 
     const expectedNextRoute = 'review-existing-needs/strengths'
     const expectedEducationSupportPlanDto = {
-      ...aValidEducationSupportPlanDto(),
+      ...aValidReviewEducationSupportPlanDto(),
       reviewExistingNeeds: true,
     }
 
@@ -87,19 +88,19 @@ describe('reviewExistingNeedsController', () => {
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
-    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+    expect(req.journeyData.reviewEducationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
   })
 
   it('should submit form and redirect to next route given answer was no', async () => {
     // Given
-    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    req.journeyData = { reviewEducationSupportPlanDto: aValidReviewEducationSupportPlanDto() }
     req.body = {
       reviewExistingNeeds: YesNoValue.NO,
     }
 
-    const expectedNextRoute = 'individual-support-requirements'
+    const expectedNextRoute = 'teaching-adjustments'
     const expectedEducationSupportPlanDto = {
-      ...aValidEducationSupportPlanDto(),
+      ...aValidReviewEducationSupportPlanDto(),
       reviewExistingNeeds: false,
     }
 
@@ -108,6 +109,6 @@ describe('reviewExistingNeedsController', () => {
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
-    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+    expect(req.journeyData.reviewEducationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
   })
 })

@@ -127,7 +127,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.post('/:journeyId/review-existing-needs', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    validate(reviewExistingNeedsSchema),
+    validate(reviewExistingNeedsSchema({ journey: 'create' })),
     asyncMiddleware(reviewExistingNeedsController.submitReviewExistingNeedsForm),
   ])
 

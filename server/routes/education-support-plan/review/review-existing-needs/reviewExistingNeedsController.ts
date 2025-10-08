@@ -1,15 +1,15 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import type { EducationSupportPlanDto } from 'dto'
+import type { ReviewEducationSupportPlanDto } from 'dto'
 import YesNoValue from '../../../../enums/yesNoValue'
 
 export default class ReviewExistingNeedsController {
   getReviewExistingNeedsView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { prisonerSummary, invalidForm } = res.locals
-    const { educationSupportPlanDto } = req.journeyData
+    const { reviewEducationSupportPlanDto } = req.journeyData
 
-    const reviewExistingNeedsForm = invalidForm ?? this.populateFormFromDto(educationSupportPlanDto)
+    const reviewExistingNeedsForm = invalidForm ?? this.populateFormFromDto(reviewEducationSupportPlanDto)
 
-    const viewRenderArgs = { prisonerSummary, form: reviewExistingNeedsForm }
+    const viewRenderArgs = { prisonerSummary, form: reviewExistingNeedsForm, mode: 'review' }
     return res.render('pages/education-support-plan/review-existing-needs/index', viewRenderArgs)
   }
 
@@ -19,12 +19,12 @@ export default class ReviewExistingNeedsController {
 
     return res.redirect(
       reviewExistingNeedsForm.reviewExistingNeeds === YesNoValue.NO
-        ? 'individual-support-requirements'
+        ? 'teaching-adjustments'
         : 'review-existing-needs/strengths',
     )
   }
 
-  private populateFormFromDto = (dto: EducationSupportPlanDto) => {
+  private populateFormFromDto = (dto: ReviewEducationSupportPlanDto) => {
     if (dto.reviewExistingNeeds == null) {
       return {}
     }
@@ -32,8 +32,8 @@ export default class ReviewExistingNeedsController {
   }
 
   private updateDtoFromForm = (req: Request, form: { reviewExistingNeeds: YesNoValue }) => {
-    const { educationSupportPlanDto } = req.journeyData
-    educationSupportPlanDto.reviewExistingNeeds = form.reviewExistingNeeds === YesNoValue.YES
-    req.journeyData.educationSupportPlanDto = educationSupportPlanDto
+    const { reviewEducationSupportPlanDto } = req.journeyData
+    reviewEducationSupportPlanDto.reviewExistingNeeds = form.reviewExistingNeeds === YesNoValue.YES
+    req.journeyData.reviewEducationSupportPlanDto = reviewEducationSupportPlanDto
   }
 }
