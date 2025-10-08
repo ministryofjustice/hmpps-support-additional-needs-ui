@@ -11,7 +11,7 @@ context('Prevent out of sequence navigation to pages in the Review Education Sup
     'other-people-consulted/add-person',
     'other-people-consulted/list',
     'individual-view-on-progress',
-    'your-view-on-progress',
+    'reviewers-view-on-progress',
     'review-existing-needs',
     'review-existing-needs',
     'review-existing-needs/strengths',

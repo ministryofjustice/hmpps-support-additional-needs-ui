@@ -31,7 +31,9 @@ import OtherPeopleConsultedController from './other-people-consulted/otherPeople
 import AddPersonConsultedController from './other-people-consulted/addPersonConsultedController'
 import OtherPeopleConsultedListController from './other-people-consulted/otherPeopleConsultedListController'
 import IndividualViewOnProgressController from './individual-view-on-progress/individualViewOnProgressController'
+import ReviewersViewOnProgressController from './reviewers-view-on-progress/reviewersViewOnProgressController'
 import individualViewOnProgressSchema from '../validationSchemas/individualViewOnProgressSchema'
+import reviewersViewOnProgressSchema from '../validationSchemas/reviewersViewOnProgressSchema'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -51,6 +53,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const addPersonConsultedController = new AddPersonConsultedController()
   const otherPeopleConsultedListController = new OtherPeopleConsultedListController()
   const individualViewOnProgressController = new IndividualViewOnProgressController()
+  const reviewersViewOnProgressController = new ReviewersViewOnProgressController()
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
@@ -99,6 +102,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.post('/:journeyId/other-people-consulted/list', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(otherPeopleConsultedListController.submitOtherPeopleConsultedListForm),
   ])
 
@@ -109,18 +113,22 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.post('/:journeyId/individual-view-on-progress', [
     checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     validate(individualViewOnProgressSchema),
     asyncMiddleware(individualViewOnProgressController.submitIndividualViewOnProgressForm),
   ])
 
-  router.get('/:journeyId/your-view-on-progress', [
+  router.get('/:journeyId/reviewers-view-on-progress', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Your view on progress')
-    },
+    asyncMiddleware(reviewersViewOnProgressController.getReviewersViewOnProgressView),
   ])
-  router.post('/:journeyId/your-view-on-progress', [checkEducationSupportPlanDtoExistsInJourneyData])
+  router.post('/:journeyId/reviewers-view-on-progress', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
+    validate(reviewersViewOnProgressSchema),
+    asyncMiddleware(reviewersViewOnProgressController.submitReviewersViewOnProgressForm),
+  ])
 
   router.get('/:journeyId/review-existing-needs', [
     checkEducationSupportPlanDtoExistsInJourneyData,
@@ -145,7 +153,10 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
       res.send('Review existing strengths')
     },
   ])
-  router.post('/:journeyId/review-existing-needs/strengths', [checkEducationSupportPlanDtoExistsInJourneyData])
+  router.post('/:journeyId/review-existing-needs/strengths', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
+  ])
 
   router.get('/:journeyId/review-existing-needs/challenges', [
     checkEducationSupportPlanDtoExistsInJourneyData,
@@ -157,7 +168,10 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
       res.send('Review existing challenges')
     },
   ])
-  router.post('/:journeyId/review-existing-needs/challenges', [checkEducationSupportPlanDtoExistsInJourneyData])
+  router.post('/:journeyId/review-existing-needs/challenges', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
+  ])
 
   router.get('/:journeyId/review-existing-needs/conditions', [
     checkEducationSupportPlanDtoExistsInJourneyData,
@@ -168,7 +182,10 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
       res.send('Review existing conditions')
     },
   ])
-  router.post('/:journeyId/review-existing-needs/conditions', [checkEducationSupportPlanDtoExistsInJourneyData])
+  router.post('/:journeyId/review-existing-needs/conditions', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
+  ])
 
   router.get('/:journeyId/review-existing-needs/support-strategies', [
     checkEducationSupportPlanDtoExistsInJourneyData,
@@ -179,7 +196,10 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
       res.send('Review existing support strategies')
     },
   ])
-  router.post('/:journeyId/review-existing-needs/support-strategies', [checkEducationSupportPlanDtoExistsInJourneyData])
+  router.post('/:journeyId/review-existing-needs/support-strategies', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
+  ])
 
   router.get('/:journeyId/teaching-adjustments', [
     checkEducationSupportPlanDtoExistsInJourneyData,

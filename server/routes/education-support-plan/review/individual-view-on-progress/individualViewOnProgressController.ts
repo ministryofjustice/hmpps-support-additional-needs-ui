@@ -16,7 +16,9 @@ export default class IndividualViewOnProgressController {
     const individualViewOnProgressForm = { ...req.body }
     this.updateDtoFromForm(req, individualViewOnProgressForm)
 
-    return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'your-view-on-progress' : 'check-your-answers')
+    return res.redirect(
+      req.query?.submitToCheckAnswers !== 'true' ? 'reviewers-view-on-progress' : 'check-your-answers',
+    )
   }
 
   private populateFormFromDto = (dto: ReviewEducationSupportPlanDto) => {

@@ -67,6 +67,7 @@ declare module 'dto' {
     }>
     prisonerViewOnProgress?: string
     prisonerDeclinedBeingPartOfReview?: boolean
+    reviewersViewOnProgress?: string
     reviewExistingNeeds?: boolean
     reviewDate?: Date
   }

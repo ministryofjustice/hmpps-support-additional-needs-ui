@@ -10,21 +10,21 @@
       <div class="govuk-form-group">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-          <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-              How does {{ prisonerSummary | formatFirst_name_Last_name }} feel about their progress?
-            </legend>
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            How does {{ prisonerSummary | formatFirst_name_Last_name }} feel about their progress?
+          </legend>
 
-            {% set fieldError = errors | findError('prisonerViewOnProgress')  %}
-            <section class="{{ 'govuk-form-group--error' if fieldError }}" {{ 'aria-describedby="prisonerViewOnProgress-error"' if fieldError }}>
+          {% set fieldError = errors | findError('prisonerViewOnProgress')  %}
+          <section class="{{ 'govuk-form-group--error' if fieldError }}" {{ 'aria-describedby="prisonerViewOnProgress-error"' if fieldError }}>
 
-              {% if fieldError %}
-                <p id="prisonerViewOnProgress-error" class="govuk-error-message">
-                  <span class="govuk-visually-hidden">Error:</span> {{ fieldError.text }}
-                </p>
-              {% endif %}
+            {% if fieldError %}
+              <p id="prisonerViewOnProgress-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{ fieldError.text }}
+              </p>
+            {% endif %}
 
-              {{ govukTextarea({
+            {{ govukTextarea({
               id: "prisonerViewOnProgress",
               name: "prisonerViewOnProgress",
               rows: "4",
@@ -42,7 +42,6 @@
                 </label>
               </div>
             </fieldset>
-
           </section>
         </fieldset>
 

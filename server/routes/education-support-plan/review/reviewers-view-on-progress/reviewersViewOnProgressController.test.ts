@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import aValidReviewEducationSupportPlanDto from '../../../../testsupport/reviewEducationSupportPlanDtoTestDataBuilder'
-import IndividualViewOnProgressController from './individualViewOnProgressController'
+import ReviewersViewOnProgressController from './reviewersViewOnProgressController'
 
-describe('individualViewOnProgressController', () => {
-  const controller = new IndividualViewOnProgressController()
+describe('reviewersViewOnProgressController', () => {
+  const controller = new ReviewersViewOnProgressController()
 
   const prisonerSummary = aValidPrisonerSummary()
 
@@ -26,8 +26,7 @@ describe('individualViewOnProgressController', () => {
     req.journeyData = {
       reviewEducationSupportPlanDto: {
         ...aValidReviewEducationSupportPlanDto(),
-        prisonerDeclinedBeingPartOfReview: false,
-        prisonerViewOnProgress: 'Chris is happy with his progress',
+        reviewersViewOnProgress: 'Chris has made average progress',
       },
     }
   })
@@ -36,18 +35,17 @@ describe('individualViewOnProgressController', () => {
     // Given
     res.locals.invalidForm = undefined
 
-    const expectedViewTemplate = 'pages/education-support-plan/individual-view-on-progress/index'
+    const expectedViewTemplate = 'pages/education-support-plan/reviewers-view-on-progress/index'
     const expectedViewModel = {
       prisonerSummary,
       form: {
-        prisonerDeclinedBeingPartOfReview: false,
-        prisonerViewOnProgress: 'Chris is happy with his progress',
+        reviewersViewOnProgress: 'Chris has made average progress',
       },
       mode: 'review',
     }
 
     // When
-    await controller.getIndividualViewOnProgressView(req, res, next)
+    await controller.getReviewersViewOnProgressView(req, res, next)
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
@@ -56,15 +54,15 @@ describe('individualViewOnProgressController', () => {
   it('should render view given previously submitted invalid form', async () => {
     // Given
     const invalidForm = {
-      prisonerDeclinedBeingPartOfReview: 'not-a-valid-value',
+      reviewersViewOnProgress: undefined as string,
     }
     res.locals.invalidForm = invalidForm
 
-    const expectedViewTemplate = 'pages/education-support-plan/individual-view-on-progress/index'
+    const expectedViewTemplate = 'pages/education-support-plan/reviewers-view-on-progress/index'
     const expectedViewModel = { prisonerSummary, form: invalidForm, mode: 'review' }
 
     // When
-    await controller.getIndividualViewOnProgressView(req, res, next)
+    await controller.getReviewersViewOnProgressView(req, res, next)
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
@@ -75,19 +73,17 @@ describe('individualViewOnProgressController', () => {
     req.query = {}
     req.journeyData = { reviewEducationSupportPlanDto: aValidReviewEducationSupportPlanDto() }
     req.body = {
-      prisonerDeclinedBeingPartOfReview: true,
-      prisonerViewOnProgress: null,
+      reviewersViewOnProgress: 'Chris has made average progress',
     }
 
-    const expectedNextRoute = 'reviewers-view-on-progress'
+    const expectedNextRoute = 'review-existing-needs'
     const expectedReviewEducationSupportPlanDto = {
       ...aValidReviewEducationSupportPlanDto(),
-      prisonerDeclinedBeingPartOfReview: true,
-      prisonerViewOnProgress: undefined as string,
+      reviewersViewOnProgress: 'Chris has made average progress',
     }
 
     // When
-    await controller.submitIndividualViewOnProgressForm(req, res, next)
+    await controller.submitReviewersViewOnProgressForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
@@ -100,24 +96,21 @@ describe('individualViewOnProgressController', () => {
     req.journeyData = {
       reviewEducationSupportPlanDto: {
         ...aValidReviewEducationSupportPlanDto(),
-        prisonerDeclinedBeingPartOfReview: true,
-        prisonerViewOnProgress: null,
+        reviewersViewOnProgress: 'Chris has made average progress',
       },
     }
     req.body = {
-      prisonerDeclinedBeingPartOfReview: false,
-      prisonerViewOnProgress: 'Chris is happy with his progress',
+      reviewersViewOnProgress: 'Chris has made incredible progress',
     }
 
     const expectedNextRoute = 'check-your-answers'
     const expectedReviewEducationSupportPlanDto = {
       ...aValidReviewEducationSupportPlanDto(),
-      prisonerDeclinedBeingPartOfReview: false,
-      prisonerViewOnProgress: 'Chris is happy with his progress',
+      reviewersViewOnProgress: 'Chris has made incredible progress',
     }
 
     // When
-    await controller.submitIndividualViewOnProgressForm(req, res, next)
+    await controller.submitReviewersViewOnProgressForm(req, res, next)
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
