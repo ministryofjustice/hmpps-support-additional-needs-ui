@@ -14,6 +14,7 @@ import ReviewExistingStrengthsPage from '../../../pages/education-support-plan/r
 import ReviewExistingChallengesPage from '../../../pages/education-support-plan/reviewExistingChallengesPage'
 import ReviewExistingConditionsPage from '../../../pages/education-support-plan/reviewExistingConditionsPage'
 import ReviewExistingSupportStrategiesPage from '../../../pages/education-support-plan/reviewExistingSupportStrategiesPage'
+import TeachingAdjustmentsPage from '../../../pages/education-support-plan/teachingAdjustmentsPage'
 
 context('Review an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -22,7 +23,6 @@ context('Review an Education Support Plan', () => {
     cy.task('reset')
     cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetPlanActionStatus', { prisonNumber })
-    cy.task('stubCreateEducationSupportPlan', prisonNumber)
     cy.task('stubGetStrengths', { prisonNumber })
     cy.task('stubGetChallenges', { prisonNumber })
     cy.task('stubGetConditions', { prisonNumber })
@@ -143,7 +143,16 @@ context('Review an Education Support Plan', () => {
       .submitPageTo(ReviewExistingSupportStrategiesPage)
 
     Page.verifyOnPage(ReviewExistingSupportStrategiesPage) //
-    // .submitPageTo(TeachingAdjustmentsPage)
+      .submitPageTo(TeachingAdjustmentsPage)
+      .hasNoErrors()
+      // ELSP already has an answer to Teaching Adjustments - clear the answer to trigger a validation error
+      .clearDetails()
+      .submitPageTo(TeachingAdjustmentsPage)
+      .hasErrorCount(1)
+      .hasFieldInError('details')
+      // Set answer to No and submit to the next page
+      .selectTeachingAdjustmentsNotRequired()
+    // .submitPageTo(SpecificTeachingSkillsPage)
 
     // TODO - flesh out this test, page by page, as each page in the review journey is implemented
   })
