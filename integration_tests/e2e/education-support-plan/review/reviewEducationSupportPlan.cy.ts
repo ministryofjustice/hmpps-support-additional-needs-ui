@@ -9,6 +9,11 @@ import OtherPeopleConsultedAddPersonPage from '../../../pages/education-support-
 import OtherPeopleConsultedListPage from '../../../pages/education-support-plan/otherPeopleConsultedListPage'
 import IndividualViewOnProgressPage from '../../../pages/education-support-plan/individualViewOnProgressPage'
 import ReviewersViewOnProgressPage from '../../../pages/education-support-plan/reviewersViewOnProgressPage'
+import ReviewExistingNeedsPage from '../../../pages/education-support-plan/reviewExistingNeedsPage'
+import ReviewExistingStrengthsPage from '../../../pages/education-support-plan/reviewExistingStrengthsPage'
+import ReviewExistingChallengesPage from '../../../pages/education-support-plan/reviewExistingChallengesPage'
+import ReviewExistingConditionsPage from '../../../pages/education-support-plan/reviewExistingConditionsPage'
+import ReviewExistingSupportStrategiesPage from '../../../pages/education-support-plan/reviewExistingSupportStrategiesPage'
 
 context('Review an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -117,6 +122,28 @@ context('Review an Education Support Plan', () => {
       .hasFieldInError('reviewersViewOnProgress')
       // enter the field and submit the form to the next page
       .enterReviewersViewOnProgress('Chris is working hard to improve his progress')
+      .submitPageTo(ReviewExistingNeedsPage)
+
+    Page.verifyOnPage(ReviewExistingNeedsPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(ReviewExistingNeedsPage)
+      .hasErrorCount(1)
+      .hasFieldInError('reviewExistingNeeds')
+      // enter the fields and submit the form to the next page
+      .selectReviewExistingNeeds()
+      .submitPageTo(ReviewExistingStrengthsPage)
+
+    Page.verifyOnPage(ReviewExistingStrengthsPage) //
+      .submitPageTo(ReviewExistingChallengesPage)
+
+    Page.verifyOnPage(ReviewExistingChallengesPage) //
+      .submitPageTo(ReviewExistingConditionsPage)
+
+    Page.verifyOnPage(ReviewExistingConditionsPage) //
+      .submitPageTo(ReviewExistingSupportStrategiesPage)
+
+    Page.verifyOnPage(ReviewExistingSupportStrategiesPage) //
+    // .submitPageTo(TeachingAdjustmentsPage)
 
     // TODO - flesh out this test, page by page, as each page in the review journey is implemented
   })

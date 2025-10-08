@@ -2,7 +2,7 @@
 {% from "../../../../components/conditions-summary-card/macro.njk" import conditionsSummaryCard %}
 
 {% set pageId = 'education-support-plan-review-existing-conditions' %}
-{% set pageTitle = "Create an education support plan - Review conditions" %}
+{% set pageTitle = ('Review' if mode == 'review' else 'Create') + ' an education support plan - Review conditions' %}
 
 {% block content %}
   <div class="govuk-grid-row">

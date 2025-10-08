@@ -22,6 +22,8 @@ import examArrangementsSchema from '../validationSchemas/examArrangementsSchema'
 import learningNeedsSupportPractitionerSupportSchema from '../validationSchemas/learningNeedsSupportPractitionerSupportSchema'
 import additionalInformationSchema from '../validationSchemas/additionalInformationSchema'
 import reviewSupportPlanSchema from '../validationSchemas/reviewSupportPlanSchema'
+import individualViewOnProgressSchema from '../validationSchemas/individualViewOnProgressSchema'
+import reviewersViewOnProgressSchema from '../validationSchemas/reviewersViewOnProgressSchema'
 import retrieveEducationSupportPlan from './middleware/retrieveEducationSupportPlan'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import createEmptyReviewEducationSupportPlanDtoIfNotInJourneyData from './middleware/createEmptyReviewEducationSupportPlanDtoIfNotInJourneyData'
@@ -32,8 +34,11 @@ import AddPersonConsultedController from './other-people-consulted/addPersonCons
 import OtherPeopleConsultedListController from './other-people-consulted/otherPeopleConsultedListController'
 import IndividualViewOnProgressController from './individual-view-on-progress/individualViewOnProgressController'
 import ReviewersViewOnProgressController from './reviewers-view-on-progress/reviewersViewOnProgressController'
-import individualViewOnProgressSchema from '../validationSchemas/individualViewOnProgressSchema'
-import reviewersViewOnProgressSchema from '../validationSchemas/reviewersViewOnProgressSchema'
+import ReviewExistingNeedsController from './review-existing-needs/reviewExistingNeedsController'
+import ReviewExistingStrengthsController from './review-existing-needs/reviewExistingStrengthsController'
+import ReviewExistingChallengesController from './review-existing-needs/reviewExistingChallengesController'
+import ReviewExistingConditionsController from './review-existing-needs/reviewExistingConditionsController'
+import ReviewExistingSupportStrategiesController from './review-existing-needs/reviewExistingSupportStrategiesController'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -54,6 +59,11 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const otherPeopleConsultedListController = new OtherPeopleConsultedListController()
   const individualViewOnProgressController = new IndividualViewOnProgressController()
   const reviewersViewOnProgressController = new ReviewersViewOnProgressController()
+  const reviewExistingNeedsController = new ReviewExistingNeedsController()
+  const reviewExistingStrengthsController = new ReviewExistingStrengthsController()
+  const reviewExistingChallengesController = new ReviewExistingChallengesController()
+  const reviewExistingConditionsController = new ReviewExistingConditionsController()
+  const reviewExistingSupportStrategiesController = new ReviewExistingSupportStrategiesController()
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
@@ -133,14 +143,13 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   router.get('/:journeyId/review-existing-needs', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Do you want to review existing needs?')
-    },
+    asyncMiddleware(reviewExistingNeedsController.getReviewExistingNeedsView),
   ])
   router.post('/:journeyId/review-existing-needs', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    validate(reviewExistingNeedsSchema),
+    validate(reviewExistingNeedsSchema({ journey: 'review' })),
+    asyncMiddleware(reviewExistingNeedsController.submitReviewExistingNeedsForm),
   ])
 
   router.get('/:journeyId/review-existing-needs/strengths', [
@@ -149,13 +158,12 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
     retrievePrisonsLookup(prisonService),
     retrieveStrengths(strengthService),
     retrieveAlnScreeners(additionalLearningNeedsService),
-    async (req: Request, res: Response) => {
-      res.send('Review existing strengths')
-    },
+    asyncMiddleware(reviewExistingStrengthsController.getReviewExistingStrengthsView),
   ])
   router.post('/:journeyId/review-existing-needs/strengths', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(reviewExistingStrengthsController.submitReviewExistingStrengthsForm),
   ])
 
   router.get('/:journeyId/review-existing-needs/challenges', [
@@ -164,13 +172,12 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
     retrievePrisonsLookup(prisonService),
     retrieveChallenges(challengeService),
     retrieveAlnScreeners(additionalLearningNeedsService),
-    async (req: Request, res: Response) => {
-      res.send('Review existing challenges')
-    },
+    asyncMiddleware(reviewExistingChallengesController.getReviewExistingChallengesView),
   ])
   router.post('/:journeyId/review-existing-needs/challenges', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(reviewExistingChallengesController.submitReviewExistingChallengesForm),
   ])
 
   router.get('/:journeyId/review-existing-needs/conditions', [
@@ -178,13 +185,12 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
     retrievePrisonsLookup(prisonService),
     retrieveConditions(conditionService),
-    async (req: Request, res: Response) => {
-      res.send('Review existing conditions')
-    },
+    asyncMiddleware(reviewExistingConditionsController.getReviewExistingConditionsView),
   ])
   router.post('/:journeyId/review-existing-needs/conditions', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(reviewExistingConditionsController.submitReviewExistingConditionsForm),
   ])
 
   router.get('/:journeyId/review-existing-needs/support-strategies', [
@@ -192,13 +198,12 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
     retrievePrisonsLookup(prisonService),
     retrieveSupportStrategies(supportStrategyService),
-    async (req: Request, res: Response) => {
-      res.send('Review existing support strategies')
-    },
+    asyncMiddleware(reviewExistingSupportStrategiesController.getReviewExistingSupportStrategiesView),
   ])
   router.post('/:journeyId/review-existing-needs/support-strategies', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
+    asyncMiddleware(reviewExistingSupportStrategiesController.submitReviewExistingSupportStrategiesForm),
   ])
 
   router.get('/:journeyId/teaching-adjustments', [

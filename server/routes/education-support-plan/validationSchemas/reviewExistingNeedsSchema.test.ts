@@ -21,15 +21,16 @@ describe('reviewExistingNeedsSchema', () => {
   })
 
   it.each([
-    { reviewBeforeCreatingPlan: 'NO' },
-    { reviewBeforeCreatingPlan: 'NO' },
-    { reviewBeforeCreatingPlan: 'YES' },
-  ])('happy path - validation passes - reviewBeforeCreatingPlan: $reviewBeforeCreatingPlan', async requestBody => {
+    //
+    { reviewExistingNeeds: 'NO' },
+    { reviewExistingNeeds: 'NO' },
+    { reviewExistingNeeds: 'YES' },
+  ])('happy path - validation passes - reviewExistingNeeds: $reviewExistingNeeds', async requestBody => {
     // Given
     req.body = requestBody
 
     // When
-    await validate(reviewExistingNeedsSchema)(req, res, next)
+    await validate(reviewExistingNeedsSchema())(req, res, next)
 
     // Then
     expect(req.body).toEqual(requestBody)
@@ -39,28 +40,63 @@ describe('reviewExistingNeedsSchema', () => {
   })
 
   it.each([
-    { reviewBeforeCreatingPlan: '' },
-    { reviewBeforeCreatingPlan: undefined },
-    { reviewBeforeCreatingPlan: null },
-    { reviewBeforeCreatingPlan: 'a-non-supported-value' },
-    { reviewBeforeCreatingPlan: 'N' },
-    { reviewBeforeCreatingPlan: 'Y' },
+    { reviewExistingNeeds: '' },
+    { reviewExistingNeeds: undefined },
+    { reviewExistingNeeds: null },
+    { reviewExistingNeeds: 'a-non-supported-value' },
+    { reviewExistingNeeds: 'N' },
+    { reviewExistingNeeds: 'Y' },
   ])(
-    'sad path - validation of reviewBeforeCreatingPlan field fails - reviewBeforeCreatingPlan: $reviewBeforeCreatingPlan',
+    'sad path - validation of reviewExistingNeeds field fails in create journey - reviewExistingNeeds: $reviewExistingNeeds',
     async requestBody => {
       // Given
       req.body = requestBody
 
       const expectedErrors: Array<Error> = [
         {
-          href: '#reviewBeforeCreatingPlan',
+          href: '#reviewExistingNeeds',
           text: 'Select whether you would like to review strengths, challenges and support needs before creating the plan',
         },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
 
       // When
-      await validate(reviewExistingNeedsSchema)(req, res, next)
+      await validate(reviewExistingNeedsSchema({ journey: 'create' }))(req, res, next)
+
+      // Then
+      expect(req.body).toEqual(requestBody)
+      expect(next).not.toHaveBeenCalled()
+      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+      expect(res.redirectWithErrors).toHaveBeenCalledWith(
+        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/review-existing-needs',
+        expectedErrors,
+      )
+    },
+  )
+
+  it.each([
+    { reviewExistingNeeds: '' },
+    { reviewExistingNeeds: undefined },
+    { reviewExistingNeeds: null },
+    { reviewExistingNeeds: 'a-non-supported-value' },
+    { reviewExistingNeeds: 'N' },
+    { reviewExistingNeeds: 'Y' },
+  ])(
+    'sad path - validation of reviewExistingNeeds field fails in review journey - reviewExistingNeeds: $reviewExistingNeeds',
+    async requestBody => {
+      // Given
+      req.body = requestBody
+
+      const expectedErrors: Array<Error> = [
+        {
+          href: '#reviewExistingNeeds',
+          text: 'Select if you want to review challenges, strengths, conditions and support strategies before reviewing the education support plan',
+        },
+      ]
+      const expectedInvalidForm = JSON.stringify(requestBody)
+
+      // When
+      await validate(reviewExistingNeedsSchema({ journey: 'review' }))(req, res, next)
 
       // Then
       expect(req.body).toEqual(requestBody)

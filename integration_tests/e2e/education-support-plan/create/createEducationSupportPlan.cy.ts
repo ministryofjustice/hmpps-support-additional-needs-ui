@@ -121,7 +121,7 @@ context('Create an Education Support Plan', () => {
       // submit the page without answering the question to trigger a validation error
       .submitPageTo(ReviewExistingNeedsPage)
       .hasErrorCount(1)
-      .hasFieldInError('reviewBeforeCreatingPlan')
+      .hasFieldInError('reviewExistingNeeds')
       // enter the fields and submit the form to the next page
       .selectReviewExistingNeeds()
       .submitPageTo(ReviewExistingStrengthsPage)
