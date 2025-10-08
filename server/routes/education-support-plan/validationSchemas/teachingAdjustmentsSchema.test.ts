@@ -28,7 +28,7 @@ describe('teachingAdjustmentsSchema', () => {
     req.body = requestBody
 
     // When
-    await validate(teachingAdjustmentsSchema)(req, res, next)
+    await validate(teachingAdjustmentsSchema())(req, res, next)
 
     // Then
     expect(req.body).toEqual(requestBody)
@@ -37,93 +37,187 @@ describe('teachingAdjustmentsSchema', () => {
     expect(res.redirectWithErrors).not.toHaveBeenCalled()
   })
 
-  it.each([
-    { adjustmentsNeeded: '', details: undefined },
-    { adjustmentsNeeded: undefined, details: undefined },
-    { adjustmentsNeeded: null, details: undefined },
-    { adjustmentsNeeded: 'a-non-supported-value', details: undefined },
-    { adjustmentsNeeded: 'N', details: undefined },
-    { adjustmentsNeeded: 'Y', details: undefined },
-  ])(
-    'sad path - validation of adjustmentsNeeded field fails - adjustmentsNeeded: $adjustmentsNeeded, details: $details',
-    async requestBody => {
-      // Given
-      req.body = requestBody
+  describe('sad path tests for create journey', () => {
+    it.each([
+      { adjustmentsNeeded: '', details: undefined },
+      { adjustmentsNeeded: undefined, details: undefined },
+      { adjustmentsNeeded: null, details: undefined },
+      { adjustmentsNeeded: 'a-non-supported-value', details: undefined },
+      { adjustmentsNeeded: 'N', details: undefined },
+      { adjustmentsNeeded: 'Y', details: undefined },
+    ])(
+      'sad path - validation of adjustmentsNeeded field fails - adjustmentsNeeded: $adjustmentsNeeded, details: $details',
+      async requestBody => {
+        // Given
+        req.body = requestBody
 
-      const expectedErrors: Array<Error> = [
-        {
-          href: '#adjustmentsNeeded',
-          text: 'Select if the person needs any adjustments to teaching, learning environment or materials',
-        },
-      ]
-      const expectedInvalidForm = JSON.stringify(requestBody)
+        const expectedErrors: Array<Error> = [
+          {
+            href: '#adjustmentsNeeded',
+            text: 'Select if the person needs any adjustments to teaching, learning environment or materials',
+          },
+        ]
+        const expectedInvalidForm = JSON.stringify(requestBody)
 
-      // When
-      await validate(teachingAdjustmentsSchema)(req, res, next)
+        // When
+        await validate(teachingAdjustmentsSchema({ journey: 'create' }))(req, res, next)
 
-      // Then
-      expect(req.body).toEqual(requestBody)
-      expect(next).not.toHaveBeenCalled()
-      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
-      expect(res.redirectWithErrors).toHaveBeenCalledWith(
-        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/teaching-adjustments',
-        expectedErrors,
-      )
-    },
-  )
-
-  it.each([
-    { adjustmentsNeeded: 'YES', details: '' },
-    { adjustmentsNeeded: 'YES', details: undefined },
-    { adjustmentsNeeded: 'YES', details: null },
-  ])(
-    'sad path - validation of details field fails - adjustmentsNeeded: $adjustmentsNeeded, details: $details',
-    async requestBody => {
-      // Given
-      req.body = requestBody
-
-      const expectedErrors: Array<Error> = [
-        {
-          href: '#details',
-          text: 'Add details of the adjustments needed to teaching, learning environment or materials',
-        },
-      ]
-      const expectedInvalidForm = JSON.stringify(requestBody)
-
-      // When
-      await validate(teachingAdjustmentsSchema)(req, res, next)
-
-      // Then
-      expect(req.body).toEqual(requestBody)
-      expect(next).not.toHaveBeenCalled()
-      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
-      expect(res.redirectWithErrors).toHaveBeenCalledWith(
-        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/teaching-adjustments',
-        expectedErrors,
-      )
-    },
-  )
-
-  it('sad path - validation of details field length validation fails', async () => {
-    // Given
-    const requestBody = { adjustmentsNeeded: 'YES', details: 'a'.repeat(4001) }
-    req.body = requestBody
-
-    const expectedErrors: Array<Error> = [
-      { href: '#details', text: 'Details of adjustments to the teaching must be 4000 characters or less' },
-    ]
-    const expectedInvalidForm = JSON.stringify(requestBody)
-
-    // When
-    await validate(teachingAdjustmentsSchema)(req, res, next)
-
-    // Then
-    expect(req.body).toEqual(requestBody)
-    expect(next).not.toHaveBeenCalled()
-    expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
-    expect(res.redirectWithErrors).toHaveBeenCalledWith(
-      '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/teaching-adjustments',
-      expectedErrors,
+        // Then
+        expect(req.body).toEqual(requestBody)
+        expect(next).not.toHaveBeenCalled()
+        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+        expect(res.redirectWithErrors).toHaveBeenCalledWith(
+          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/teaching-adjustments',
+          expectedErrors,
+        )
+      },
     )
+
+    it.each([
+      { adjustmentsNeeded: 'YES', details: '' },
+      { adjustmentsNeeded: 'YES', details: undefined },
+      { adjustmentsNeeded: 'YES', details: null },
+    ])(
+      'sad path - validation of details field fails - adjustmentsNeeded: $adjustmentsNeeded, details: $details',
+      async requestBody => {
+        // Given
+        req.body = requestBody
+
+        const expectedErrors: Array<Error> = [
+          {
+            href: '#details',
+            text: 'Add details of the adjustments needed to teaching, learning environment or materials',
+          },
+        ]
+        const expectedInvalidForm = JSON.stringify(requestBody)
+
+        // When
+        await validate(teachingAdjustmentsSchema({ journey: 'create' }))(req, res, next)
+
+        // Then
+        expect(req.body).toEqual(requestBody)
+        expect(next).not.toHaveBeenCalled()
+        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+        expect(res.redirectWithErrors).toHaveBeenCalledWith(
+          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/teaching-adjustments',
+          expectedErrors,
+        )
+      },
+    )
+
+    it('sad path - validation of details field length validation fails', async () => {
+      // Given
+      const requestBody = { adjustmentsNeeded: 'YES', details: 'a'.repeat(4001) }
+      req.body = requestBody
+
+      const expectedErrors: Array<Error> = [
+        { href: '#details', text: 'Details of adjustments to the teaching must be 4000 characters or less' },
+      ]
+      const expectedInvalidForm = JSON.stringify(requestBody)
+
+      // When
+      await validate(teachingAdjustmentsSchema({ journey: 'create' }))(req, res, next)
+
+      // Then
+      expect(req.body).toEqual(requestBody)
+      expect(next).not.toHaveBeenCalled()
+      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+      expect(res.redirectWithErrors).toHaveBeenCalledWith(
+        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/teaching-adjustments',
+        expectedErrors,
+      )
+    })
+  })
+
+  describe('sad path tests for review journey', () => {
+    it.each([
+      { adjustmentsNeeded: '', details: undefined },
+      { adjustmentsNeeded: undefined, details: undefined },
+      { adjustmentsNeeded: null, details: undefined },
+      { adjustmentsNeeded: 'a-non-supported-value', details: undefined },
+      { adjustmentsNeeded: 'N', details: undefined },
+      { adjustmentsNeeded: 'Y', details: undefined },
+    ])(
+      'sad path - validation of adjustmentsNeeded field fails - adjustmentsNeeded: $adjustmentsNeeded, details: $details',
+      async requestBody => {
+        // Given
+        req.body = requestBody
+
+        const expectedErrors: Array<Error> = [
+          {
+            href: '#adjustmentsNeeded',
+            text: 'Select if the person needs any adjustments to teaching, learning environment or materials',
+          },
+        ]
+        const expectedInvalidForm = JSON.stringify(requestBody)
+
+        // When
+        await validate(teachingAdjustmentsSchema({ journey: 'review' }))(req, res, next)
+
+        // Then
+        expect(req.body).toEqual(requestBody)
+        expect(next).not.toHaveBeenCalled()
+        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+        expect(res.redirectWithErrors).toHaveBeenCalledWith(
+          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/teaching-adjustments',
+          expectedErrors,
+        )
+      },
+    )
+
+    it.each([
+      { adjustmentsNeeded: 'YES', details: '' },
+      { adjustmentsNeeded: 'YES', details: undefined },
+      { adjustmentsNeeded: 'YES', details: null },
+    ])(
+      'sad path - validation of details field fails - adjustmentsNeeded: $adjustmentsNeeded, details: $details',
+      async requestBody => {
+        // Given
+        req.body = requestBody
+
+        const expectedErrors: Array<Error> = [
+          {
+            href: '#details',
+            text: 'Enter details of the adjustments to teaching, learning environment or materials',
+          },
+        ]
+        const expectedInvalidForm = JSON.stringify(requestBody)
+
+        // When
+        await validate(teachingAdjustmentsSchema({ journey: 'review' }))(req, res, next)
+
+        // Then
+        expect(req.body).toEqual(requestBody)
+        expect(next).not.toHaveBeenCalled()
+        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+        expect(res.redirectWithErrors).toHaveBeenCalledWith(
+          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/teaching-adjustments',
+          expectedErrors,
+        )
+      },
+    )
+
+    it('sad path - validation of details field length validation fails', async () => {
+      // Given
+      const requestBody = { adjustmentsNeeded: 'YES', details: 'a'.repeat(4001) }
+      req.body = requestBody
+
+      const expectedErrors: Array<Error> = [
+        { href: '#details', text: 'Details of adjustments to the teaching must be 4000 characters or less' },
+      ]
+      const expectedInvalidForm = JSON.stringify(requestBody)
+
+      // When
+      await validate(teachingAdjustmentsSchema({ journey: 'review' }))(req, res, next)
+
+      // Then
+      expect(req.body).toEqual(requestBody)
+      expect(next).not.toHaveBeenCalled()
+      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+      expect(res.redirectWithErrors).toHaveBeenCalledWith(
+        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/teaching-adjustments',
+        expectedErrors,
+      )
+    })
   })
 })

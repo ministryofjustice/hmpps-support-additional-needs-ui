@@ -193,7 +193,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.post('/:journeyId/teaching-adjustments', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    validate(teachingAdjustmentsSchema),
+    validate(teachingAdjustmentsSchema({ journey: 'create' })),
     asyncMiddleware(teachingAdjustmentsController.submitTeachingAdjustmentsForm),
   ])
 

@@ -39,6 +39,7 @@ import ReviewExistingStrengthsController from './review-existing-needs/reviewExi
 import ReviewExistingChallengesController from './review-existing-needs/reviewExistingChallengesController'
 import ReviewExistingConditionsController from './review-existing-needs/reviewExistingConditionsController'
 import ReviewExistingSupportStrategiesController from './review-existing-needs/reviewExistingSupportStrategiesController'
+import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -64,6 +65,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const reviewExistingChallengesController = new ReviewExistingChallengesController()
   const reviewExistingConditionsController = new ReviewExistingConditionsController()
   const reviewExistingSupportStrategiesController = new ReviewExistingSupportStrategiesController()
+  const teachingAdjustmentsController = new TeachingAdjustmentsController()
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
@@ -209,14 +211,13 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   router.get('/:journeyId/teaching-adjustments', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Teaching adjustments')
-    },
+    asyncMiddleware(teachingAdjustmentsController.getTeachingAdjustmentsView),
   ])
   router.post('/:journeyId/teaching-adjustments', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    validate(teachingAdjustmentsSchema),
+    validate(teachingAdjustmentsSchema({ journey: 'review' })),
+    asyncMiddleware(teachingAdjustmentsController.submitTeachingAdjustmentsForm),
   ])
 
   router.get('/:journeyId/specific-teaching-skills', [
