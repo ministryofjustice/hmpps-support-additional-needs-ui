@@ -7,9 +7,7 @@ import SearchSortDirection from '../../enums/searchSortDirection'
 import config from '../../config'
 import { Result } from '../../utils/result/result'
 import { PrisonUser } from '../../interfaces/hmppsUser'
-
-const DEFAULT_SORT_FIELD = SearchSortField.PRISONER_NAME
-const DEFAULT_SORT_DIRECTION = SearchSortDirection.ASC
+import ApplicationAction from '../../enums/applicationAction'
 
 const searchRoutes = (services: Services): Router => {
   const router = Router({ mergeParams: true })
@@ -17,13 +15,20 @@ const searchRoutes = (services: Services): Router => {
   const searchController = new SearchController()
 
   const performSearch = async (req: Request, res: Response, next: NextFunction) => {
-    const sortOptions = ((req.query.sort as string) || `${DEFAULT_SORT_FIELD},${DEFAULT_SORT_DIRECTION}`)
+    const { defaultSortField, defaultSortDirection } = res.locals.userHasPermissionTo(
+      ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES_ON_SEARCH,
+    )
+      ? { defaultSortField: SearchSortField.DEADLINE_DATE, defaultSortDirection: SearchSortDirection.ASC }
+      : { defaultSortField: SearchSortField.PRISONER_NAME, defaultSortDirection: SearchSortDirection.ASC }
+
+    const sortOptions = ((req.query.sort as string) || `${defaultSortField},${defaultSortDirection}`)
       .trim()
       .split(',')
       .map(value => value.trim().toUpperCase())
-    const sortField = Object.values(SearchSortField).find(value => value === sortOptions[0]) || DEFAULT_SORT_FIELD
+
+    const sortField = Object.values(SearchSortField).find(value => value === sortOptions[0]) || defaultSortField
     const sortDirection =
-      Object.values(SearchSortDirection).find(value => value === sortOptions[1]) || DEFAULT_SORT_DIRECTION
+      Object.values(SearchSortDirection).find(value => value === sortOptions[1]) || defaultSortDirection
 
     const searchTerm = (req.query.searchTerm as string) || ''
     const page = parseInt((req.query.page as string) || '1', 10)

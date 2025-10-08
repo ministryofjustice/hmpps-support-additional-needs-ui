@@ -29,6 +29,8 @@ export const user: HmppsUser = {
 
 export const flashProvider = jest.fn()
 
+const userHasPermissionTo = jest.fn()
+
 function appSetup(services: Services, production: boolean, userSupplier: () => HmppsUser): Express {
   const app = express()
 
@@ -41,6 +43,7 @@ function appSetup(services: Services, production: boolean, userSupplier: () => H
     req.flash = flashProvider
     res.locals = {
       user: { ...req.user } as HmppsUser,
+      userHasPermissionTo,
     }
     next()
   })

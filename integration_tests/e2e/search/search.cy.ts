@@ -2,6 +2,7 @@ import type { Person } from 'supportAdditionalNeedsApiClient'
 import Page from '../../pages/page'
 import SearchPage from '../../pages/search/searchPage'
 import OverviewPage from '../../pages/profile/overviewPage'
+import SearchSortField from '../../../server/enums/searchSortField'
 
 /**
  * Cypress scenarios for the Search page.
@@ -18,7 +19,6 @@ context('Search screen', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] })
-    cy.signIn()
 
     // Generate 725 Prisoner Search Summaries that will be displayed on the Search page by virtue of using them in the search API stub.
     // 725 is a very specific number and is used because it will mean we have 15 pages (14 pages of 50, plus 1 of 25)
@@ -33,6 +33,7 @@ context('Search screen', () => {
           page: idx + 1,
           pageOfPrisoners: pageOfPeople,
           totalRecords: 725,
+          sortBy: SearchSortField.DEADLINE_DATE,
         })
       })
     })
@@ -40,6 +41,7 @@ context('Search screen', () => {
 
   it('should be able to navigate directly to the search page', () => {
     // Given
+    cy.signIn()
     const expectedResultCount = 725
 
     // When
@@ -54,7 +56,8 @@ context('Search screen', () => {
 
   it('should display service unavailable message given search API returns a 500', () => {
     // Given
-    cy.task('stubSearchByPrison500Error')
+    cy.signIn()
+    cy.task('stubSearchByPrison500Error', { sortBy: SearchSortField.DEADLINE_DATE })
 
     // When
     cy.visit('/search')
@@ -68,6 +71,7 @@ context('Search screen', () => {
   describe('pagination', () => {
     it('should display pagination controls, displaying 1 to 10 with the next link, on the first page of the search results', () => {
       // Given
+      cy.signIn()
 
       // When
       cy.visit('/search')
@@ -88,6 +92,7 @@ context('Search screen', () => {
 
     it('should display pagination controls, displaying 2 to 11 with the next and previous links, on the 7th page of the search results', () => {
       // Given
+      cy.signIn()
       cy.visit('/search')
       const searchPage = Page.verifyOnPage(SearchPage)
 
@@ -113,6 +118,7 @@ context('Search screen', () => {
 
   it('should be able to click a prisoner on the search page to arrive on the Overview page', () => {
     // Given
+    cy.signIn()
     const firstPersonOnFirstPage: Person = peopleGroupedByPageRequest[0][0]
     cy.task('getPrisonerById', firstPersonOnFirstPage.prisonNumber)
     cy.task('stubGetPlanActionStatus', { prisonNumber: firstPersonOnFirstPage.prisonNumber })
@@ -125,34 +131,40 @@ context('Search screen', () => {
     // When
     Page.verifyOnPage(OverviewPage)
   })
-})
 
-context('Search screen for users with different permissions', () => {
-  it('should show the basic search page given user does not have the manager role', () => {
-    // Given
-    cy.task('reset')
-    cy.task('stubSignIn', { roles: ['ROLE_SOME_ROLE_THAT_IS_NOT_SAN_MANAGER'] })
-    cy.signIn()
+  context('Search screen for users with different permissions', () => {
+    it('should show the basic search page given user does not have the manager role', () => {
+      // Given
+      cy.task('stubSignIn', { roles: ['ROLE_SOME_ROLE_THAT_IS_NOT_SAN_MANAGER'] })
+      cy.signIn()
+      peopleGroupedByPageRequest.forEach((pageOfPeople, idx) => {
+        cy.task('stubSearchByPrison', {
+          page: idx + 1,
+          pageOfPrisoners: pageOfPeople,
+          totalRecords: 725,
+          sortBy: SearchSortField.PRISONER_NAME,
+        })
+      })
 
-    // When
-    cy.visit('/search')
+      // When
+      cy.visit('/search')
 
-    // Then
-    Page.verifyOnPage(SearchPage) //
-      .doesNotHaveStatusAndDueDateColumnsDisplayed()
-  })
+      // Then
+      Page.verifyOnPage(SearchPage) //
+        .doesNotHaveStatusAndDueDateColumnsDisplayed()
+    })
 
-  it('should show the search page with all columns given user does have the manager role', () => {
-    // Given
-    cy.task('reset')
-    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] })
-    cy.signIn()
+    it('should show the search page with all columns given user does have the manager role', () => {
+      // Given
+      cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] })
+      cy.signIn()
 
-    // When
-    cy.visit('/search')
+      // When
+      cy.visit('/search')
 
-    // Then
-    Page.verifyOnPage(SearchPage) //
-      .hasStatusAndDueDateColumnsDisplayed()
+      // Then
+      Page.verifyOnPage(SearchPage) //
+        .hasStatusAndDueDateColumnsDisplayed()
+    })
   })
 })
