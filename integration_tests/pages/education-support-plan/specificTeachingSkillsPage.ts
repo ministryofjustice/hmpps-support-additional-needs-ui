@@ -21,6 +21,11 @@ export default class SpecificTeachingSkillsPage extends Page {
     return this
   }
 
+  clearDetails(): SpecificTeachingSkillsPage {
+    this.detailsField().clear()
+    return this
+  }
+
   private radio = (value: YesNoValue): PageElement => cy.get(`.govuk-radios__input[value='${value}']`)
 
   private detailsField = (): PageElement => cy.get('textarea[name=details]')
