@@ -1,3 +1,4 @@
+import { addDays, format, startOfToday } from 'date-fns'
 import Page from '../../../pages/page'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
 import Error404Page from '../../../pages/error404'
@@ -15,14 +16,22 @@ import ReviewExistingChallengesPage from '../../../pages/education-support-plan/
 import ReviewExistingConditionsPage from '../../../pages/education-support-plan/reviewExistingConditionsPage'
 import ReviewExistingSupportStrategiesPage from '../../../pages/education-support-plan/reviewExistingSupportStrategiesPage'
 import TeachingAdjustmentsPage from '../../../pages/education-support-plan/teachingAdjustmentsPage'
+import aPlanActionStatus from '../../../../server/testsupport/planActionStatusTestDataBuilder'
 
 context('Review an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
+  const tomorrow = format(addDays(startOfToday(), 1), 'yyyy-MM-dd')
 
   beforeEach(() => {
     cy.task('reset')
     cy.task('getPrisonerById', prisonNumber)
-    cy.task('stubGetPlanActionStatus', { prisonNumber })
+    cy.task('stubGetPlanActionStatus', {
+      prisonNumber,
+      planActionStatus: aPlanActionStatus({
+        status: 'REVIEW_DUE',
+        reviewDeadlineDate: tomorrow,
+      }),
+    })
     cy.task('stubGetStrengths', { prisonNumber })
     cy.task('stubGetChallenges', { prisonNumber })
     cy.task('stubGetConditions', { prisonNumber })
@@ -47,7 +56,10 @@ context('Review an Education Support Plan', () => {
     cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] }) // user has the role that gives them permission to review ELSPs)
     cy.signIn()
 
-    cy.visit(`/education-support-plan/${prisonNumber}/review/who-reviewed-the-plan`)
+    cy.visit(`/profile/${prisonNumber}/overview`)
+    Page.verifyOnPage(OverviewPage) //
+      .actionsCardContainsEducationSupportPlanActions()
+      .clickReviewEducationSupportPlanButton()
 
     // When
     Page.verifyOnPage(WhoReviewedThePlanPage) //

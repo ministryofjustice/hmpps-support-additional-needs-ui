@@ -1,27 +1,31 @@
 import { SuperAgentRequest } from 'superagent'
 import type { PlanActionStatus } from 'supportAdditionalNeedsApiClient'
 import { stubFor } from '../wiremock'
+import aPlanActionStatus from '../../../server/testsupport/planActionStatusTestDataBuilder'
 
-const stubGetPlanActionStatus = (
-  options: { prisonNumber?: string; planActionStatus?: PlanActionStatus } = { prisonNumber: 'G6115VJ' },
-): SuperAgentRequest =>
+const stubGetPlanActionStatus = (options?: {
+  prisonNumber?: string
+  planActionStatus?: PlanActionStatus
+}): SuperAgentRequest =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: `/support-additional-needs-api/profile/${options.prisonNumber}/plan-action-status`,
+      urlPattern: `/support-additional-needs-api/profile/${options?.prisonNumber || 'G6115VJ'}/plan-action-status`,
     },
     response: {
       status: 200,
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      jsonBody: options.planActionStatus ?? {
-        status: 'PLAN_DECLINED',
-        planCreationDeadlineDate: '2025-10-01',
-        reviewDeadlineDate: null,
-        exemptionReason: 'EXEMPT_REFUSED_TO_ENGAGE',
-        exemptionDetail: 'Chris feels he does not need a support plan',
-        exemptionRecordedAt: '2025-10-02',
-        exemptionRecordedBy: 'Alex Smith',
-      },
+      jsonBody:
+        options?.planActionStatus ||
+        aPlanActionStatus({
+          status: 'PLAN_DECLINED',
+          planCreationDeadlineDate: '2025-10-01',
+          reviewDeadlineDate: null,
+          exemptionReason: 'EXEMPT_REFUSED_TO_ENGAGE',
+          exemptionDetail: 'Chris feels he does not need a support plan',
+          exemptionRecordedAt: '2025-10-02',
+          exemptionRecordedBy: 'Alex Smith',
+        }),
     },
   })
 

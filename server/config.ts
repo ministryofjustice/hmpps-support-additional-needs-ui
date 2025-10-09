@@ -2,7 +2,6 @@ import { AgentConfig } from '@ministryofjustice/hmpps-rest-client'
 
 const production = process.env.NODE_ENV === 'production'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const toBoolean = (value: unknown): boolean => {
   return value === 'true'
 }
@@ -149,5 +148,6 @@ export default {
   searchUiDefaultPaginationPageSize: Number(get('SEARCH_UI_DEFAULT_PAGINATION_PAGE_SIZE', 50, requiredInProduction)),
   featureToggles: {
     // someToggleEnabled: toBoolean(get('SOME_TOGGLE_ENABLED', false)),
+    reviewsEnabled: toBoolean(get('REVIEWS_ENABLED', false)),
   },
 }
