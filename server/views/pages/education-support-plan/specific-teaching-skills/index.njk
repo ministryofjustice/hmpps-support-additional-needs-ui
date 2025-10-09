@@ -1,7 +1,7 @@
 {% extends "../layout.njk" %}
 
 {% set pageId = 'education-support-plan-specific-teaching-skills' %}
-{% set pageTitle = "Create an education support plan - Needs specific teacher knowledge or skills" %}
+{% set pageTitle = 'Review an education support plan - Review need for teacher with specific knowledge or skills' if mode == 'review' else 'Create an education support plan - Needs specific teacher knowledge or skills' %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -19,12 +19,27 @@
               value: form.details,
               type: "text",
               label: {
-                text: "Add details",
+                text: "Edit details" if mode == 'review' and currentAnswer != "No" else "Add details",
                 attributes: { "aria-live": "polite" }
               },
               attributes: { "aria-label" : "Give details of any required teaching skills" },
               errorMessage: errors | findError('details')
             }) }}
+          {% endset %}
+
+          {% set hintText %}
+            <p class="govuk-hint">
+              For example, British Sign Language or autism training.
+            </p>
+            {% if mode == 'review' %}
+              {% set currentAnswer %}
+                <h3 class="govuk-heading-s">Current answer</h3>
+                <p class="govuk-body app-u-multiline-text">{{ currentAnswer }}</p>
+              {% endset %}
+              {{ govukInsetText({
+                html: currentAnswer
+              }) }}
+            {% endif %}
           {% endset %}
 
           {{ govukRadios({
@@ -37,7 +52,7 @@
               }
             },
             hint: {
-              text: 'For example, British Sign Language or autism training.'
+              text: hintText
             },
             items: [
               {

@@ -40,6 +40,7 @@ import ReviewExistingChallengesController from './review-existing-needs/reviewEx
 import ReviewExistingConditionsController from './review-existing-needs/reviewExistingConditionsController'
 import ReviewExistingSupportStrategiesController from './review-existing-needs/reviewExistingSupportStrategiesController'
 import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
+import SpecificTeachingSkillsController from './specific-teaching-skills/specificTeachingSkillsController'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -66,6 +67,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const reviewExistingConditionsController = new ReviewExistingConditionsController()
   const reviewExistingSupportStrategiesController = new ReviewExistingSupportStrategiesController()
   const teachingAdjustmentsController = new TeachingAdjustmentsController()
+  const specificTeachingSkillsController = new SpecificTeachingSkillsController()
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
@@ -223,14 +225,13 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   router.get('/:journeyId/specific-teaching-skills', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Teacher knowledge/skills')
-    },
+    asyncMiddleware(specificTeachingSkillsController.getSpecificTeachingSkillsView),
   ])
   router.post('/:journeyId/specific-teaching-skills', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    validate(specificTeachingSkillsSchema),
+    validate(specificTeachingSkillsSchema({ journey: 'review' })),
+    asyncMiddleware(specificTeachingSkillsController.submitSpecificTeachingSkillsForm),
   ])
 
   router.get('/:journeyId/exam-arrangements', [
