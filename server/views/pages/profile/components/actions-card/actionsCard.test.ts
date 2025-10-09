@@ -14,6 +14,7 @@ const njkEnv = nunjucks.configure([
 
 njkEnv //
   .addFilter('formatDate', formatDateFilter)
+  .addGlobal('featureToggles', { reviewsEnabled: true })
 
 const planCreationDeadlineDate = startOfToday()
 const planReviewDeadlineDate = addMonths(planCreationDeadlineDate, 3)
@@ -65,6 +66,7 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN')
     expect($('[data-qa=decline-education-support-plan-button]').length).toEqual(1)
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN')
   })
 
   it('should render the actions card component given the user has permissions for no actions', () => {
@@ -89,10 +91,12 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN')
   })
 
   it('should render the actions card component given the user only has permission to record ALN screeners', () => {
     // Given
+    userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
@@ -121,11 +125,13 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN')
   })
 
   it('should render the actions card component given the user only has permission to view deadlines and statuses', () => {
     // Given
     userHasPermissionTo.mockReturnValueOnce(true)
+    userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
@@ -152,10 +158,12 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN')
   })
 
   it('should render the actions card component given the user only has permission to record challenges', () => {
     // Given
+    userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
@@ -184,10 +192,12 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN')
   })
 
   it('should render the actions card component given the user only has permission to record strengths', () => {
     // Given
+    userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
@@ -216,10 +226,12 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN')
   })
 
   it('should render the actions card component given the user only has permission to record support strategies', () => {
     // Given
+    userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
@@ -248,10 +260,12 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN')
   })
 
   it('should render the actions card component given the user only has permission to record conditions', () => {
     // Given
+    userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(false)
@@ -280,6 +294,7 @@ describe('Tests for Profile pages actions card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_EDUCATION_LEARNER_SUPPORT_PLAN')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN')
   })
 
   it.each([
@@ -289,6 +304,8 @@ describe('Tests for Profile pages actions card component', () => {
     { planStatus: PlanActionStatus.PLAN_OVERDUE, expectedElementSelector: 'plan-overdue-tag' },
     { planStatus: PlanActionStatus.INACTIVE_PLAN, expectedElementSelector: 'inactive-plan-tag' },
     { planStatus: PlanActionStatus.PLAN_DECLINED, expectedElementSelector: 'plan-declined-tag' },
+    { planStatus: PlanActionStatus.REVIEW_DUE, expectedElementSelector: 'review-due-tag' },
+    { planStatus: PlanActionStatus.REVIEW_OVERDUE, expectedElementSelector: 'review-overdue-tag' },
   ])(
     'should render the actions card component with the correct tag given the user has permission to view deadlines and statuses and a plan status of $planStatus',
     ({ planStatus, expectedElementSelector }) => {
@@ -309,12 +326,7 @@ describe('Tests for Profile pages actions card component', () => {
     },
   )
 
-  it.each([
-    //
-    PlanActionStatus.REVIEW_DUE,
-    PlanActionStatus.REVIEW_OVERDUE,
-    PlanActionStatus.NO_PLAN,
-  ])(
+  it.each([PlanActionStatus.NO_PLAN])(
     'should render the actions card component without a tag given the user has permission to view deadlines and statuses and a plan status of unsupported type %s',
     planStatus => {
       // Given
@@ -461,6 +473,52 @@ describe('Tests for Profile pages actions card component', () => {
     //
     PlanActionStatus.REVIEW_DUE,
     PlanActionStatus.REVIEW_OVERDUE,
+  ])(
+    'should render the actions card component with a link to review an ELSP given the user has permission to review ELSPs and a plan status of %s',
+    planStatus => {
+      // Given
+      userHasPermissionTo.mockReturnValue(true)
+      const params = {
+        ...templateParams,
+        planStatus,
+      }
+
+      // When
+      const content = nunjucks.render(template, params)
+      const $ = cheerio.load(content)
+
+      // Then
+      expect($('[data-qa=review-education-support-plan-button]').length).toEqual(1)
+    },
+  )
+
+  it.each([
+    //
+    PlanActionStatus.REVIEW_DUE,
+    PlanActionStatus.REVIEW_OVERDUE,
+  ])(
+    'should render the actions card component without a link to review an ELSP given the user does not have permission to review ELSPs and a plan status of %s',
+    planStatus => {
+      // Given
+      userHasPermissionTo.mockReturnValue(false)
+      const params = {
+        ...templateParams,
+        planStatus,
+      }
+
+      // When
+      const content = nunjucks.render(template, params)
+      const $ = cheerio.load(content)
+
+      // Then
+      expect($('[data-qa=review-education-support-plan-button]').length).toEqual(0)
+    },
+  )
+
+  it.each([
+    //
+    PlanActionStatus.REVIEW_DUE,
+    PlanActionStatus.REVIEW_OVERDUE,
     PlanActionStatus.ACTIVE_PLAN,
     PlanActionStatus.INACTIVE_PLAN,
     PlanActionStatus.PLAN_DECLINED,
@@ -539,6 +597,8 @@ describe('Tests for Profile pages actions card component', () => {
   it.each([
     //
     PlanActionStatus.ACTIVE_PLAN,
+    PlanActionStatus.REVIEW_OVERDUE,
+    PlanActionStatus.REVIEW_DUE,
   ])('should render the actions card component with the plan review due date given a plan status of %s', planStatus => {
     // Given
     const params = {
@@ -561,8 +621,6 @@ describe('Tests for Profile pages actions card component', () => {
     //
     PlanActionStatus.PLAN_DUE,
     PlanActionStatus.PLAN_OVERDUE,
-    PlanActionStatus.REVIEW_OVERDUE,
-    PlanActionStatus.REVIEW_DUE,
     PlanActionStatus.NEEDS_PLAN,
     PlanActionStatus.INACTIVE_PLAN,
     PlanActionStatus.PLAN_DECLINED,
