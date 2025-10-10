@@ -21,8 +21,18 @@ export default class LearningNeedsSupportPractitionerSupportPage extends Page {
     return this
   }
 
+  clearDetails(): LearningNeedsSupportPractitionerSupportPage {
+    this.detailsField().clear()
+    return this
+  }
+
   enterNumberOfHoursSupport(value: number): LearningNeedsSupportPractitionerSupportPage {
     this.supportHoursField().clear().type(String(value), { delay: 0 })
+    return this
+  }
+
+  clearNumberOfHoursSupport(): LearningNeedsSupportPractitionerSupportPage {
+    this.supportHoursField().clear()
     return this
   }
 

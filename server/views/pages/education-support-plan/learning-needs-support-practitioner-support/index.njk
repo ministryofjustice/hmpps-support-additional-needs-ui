@@ -1,7 +1,7 @@
 {% extends "../layout.njk" %}
 
 {% set pageId = 'education-support-plan-lnsp-support' %}
-{% set pageTitle = "Create an education support plan - Needs specific learning needs support" %}
+{% set pageTitle = 'Review an education support plan - Review needs specific learning needs support' if mode == 'review' else 'Create an education support plan - Needs specific learning needs support' %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -45,6 +45,24 @@
 
           {% endset %}
 
+          {% set hintText %}
+            <p class="govuk-hint">
+              For example from prison learning needs support staff, a peer mentor, Shannon Trust or dyslexia tutor.
+            </p>
+            {% if mode == 'review' %}
+              {% set currentAnswer %}
+                <h3 class="govuk-heading-s">Current answer</h3>
+                <p class="govuk-body app-u-multiline-text">{{ currentAnswer }}</p>
+                {% if currentAnswer != 'No' %}
+                  <p class="govuk-body">Recommended hours: {{ currentSupportHours }}</p>
+                {% endif %}
+              {% endset %}
+              {{ govukInsetText({
+                html: currentAnswer
+              }) }}
+            {% endif %}
+          {% endset %}
+
           {{ govukRadios({
             name: "supportRequired",
             fieldset: {
@@ -53,6 +71,9 @@
                 isPageHeading: true,
                 classes: "govuk-fieldset__legend--l"
               }
+            },
+            hint: {
+              html: hintText
             },
             items: [
               {
