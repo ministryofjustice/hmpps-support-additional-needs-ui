@@ -233,7 +233,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.post('/:journeyId/lnsp-support', [
     checkEducationSupportPlanDtoExistsInJourneyData,
-    validate(learningNeedsSupportPractitionerSupportSchema),
+    validate(learningNeedsSupportPractitionerSupportSchema({ journey: 'create' })),
     asyncMiddleware(lnspController.submitLnspSupportForm),
   ])
 
