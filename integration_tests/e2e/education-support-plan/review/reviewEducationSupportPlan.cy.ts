@@ -17,6 +17,7 @@ import ReviewExistingConditionsPage from '../../../pages/education-support-plan/
 import ReviewExistingSupportStrategiesPage from '../../../pages/education-support-plan/reviewExistingSupportStrategiesPage'
 import TeachingAdjustmentsPage from '../../../pages/education-support-plan/teachingAdjustmentsPage'
 import SpecificTeachingSkillsPage from '../../../pages/education-support-plan/specificTeachingSkillsPage'
+import ExamArrangementsPage from '../../../pages/education-support-plan/examArrangementsPage'
 import aPlanActionStatus from '../../../../server/testsupport/planActionStatusTestDataBuilder'
 
 context('Review an Education Support Plan', () => {
@@ -176,7 +177,18 @@ context('Review an Education Support Plan', () => {
       .hasFieldInError('details')
       // Set a new answer and submit to the next page
       .enterDetails('Teacher with some degree of BSL proficiency would be useful')
-    // .submitPageTo(ExamArrangementsPage)
+      .submitPageTo(ExamArrangementsPage)
+
+    Page.verifyOnPage(ExamArrangementsPage)
+      .hasNoErrors()
+      // ELSP already has an answer to Exam Arrangements - clear the answer to trigger a validation error
+      .clearDetails()
+      .submitPageTo(ExamArrangementsPage)
+      .hasErrorCount(1)
+      .hasFieldInError('details')
+      // Answer No and submit to the next page
+      .selectExamArrangementsNotRequired()
+    //  .submitPageTo(LearningNeedsSupportPractitionerSupportPage)
 
     // TODO - flesh out this test, page by page, as each page in the review journey is implemented
   })

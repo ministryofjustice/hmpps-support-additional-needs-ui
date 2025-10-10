@@ -41,6 +41,7 @@ import ReviewExistingConditionsController from './review-existing-needs/reviewEx
 import ReviewExistingSupportStrategiesController from './review-existing-needs/reviewExistingSupportStrategiesController'
 import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
 import SpecificTeachingSkillsController from './specific-teaching-skills/specificTeachingSkillsController'
+import ExamArrangementsController from './exam-arrangements/examArrangementsController'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -68,6 +69,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const reviewExistingSupportStrategiesController = new ReviewExistingSupportStrategiesController()
   const teachingAdjustmentsController = new TeachingAdjustmentsController()
   const specificTeachingSkillsController = new SpecificTeachingSkillsController()
+  const examArrangementsController = new ExamArrangementsController()
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
@@ -237,14 +239,13 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   router.get('/:journeyId/exam-arrangements', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Exam access arrangements')
-    },
+    asyncMiddleware(examArrangementsController.getExamArrangementsView),
   ])
   router.post('/:journeyId/exam-arrangements', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
     validate(examArrangementsSchema),
+    asyncMiddleware(examArrangementsController.submitExamArrangementsForm),
   ])
 
   router.get('/:journeyId/lnsp-support', [
