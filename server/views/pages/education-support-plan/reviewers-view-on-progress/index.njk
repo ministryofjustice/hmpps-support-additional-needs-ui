@@ -10,6 +10,9 @@
       <div class="govuk-form-group">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
+        {%- set questionText %}
+          {{- "What is your view on " + prisonerSummary | formatFirst_name_Last_name + "'s progress?" if planReviewedByLoggedInUser else "What is the reviewer’s view on " + prisonerSummary | formatFirst_name_Last_name + "'s progress?" }}
+        {% endset %}
         {{ govukTextarea({
           id: "reviewersViewOnProgress",
           name: "reviewersViewOnProgress",
@@ -17,7 +20,7 @@
           value: form.reviewersViewOnProgress,
           type: "text",
           label: {
-            text: "What is you view on " + prisonerSummary | formatFirst_name_Last_name + "'s progress?",
+            text: questionText | safe,
             classes: "govuk-label--l",
             isPageHeading: true
           },
