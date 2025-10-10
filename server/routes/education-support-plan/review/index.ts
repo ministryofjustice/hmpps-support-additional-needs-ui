@@ -43,6 +43,7 @@ import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjust
 import SpecificTeachingSkillsController from './specific-teaching-skills/specificTeachingSkillsController'
 import ExamArrangementsController from './exam-arrangements/examArrangementsController'
 import LearningNeedsSupportPractitionerSupportController from './learning-needs-support-practitioner-support/learningNeedsSupportPractitionerSupportController'
+import AdditionalInformationController from './additional-information/additionalInformationController'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -72,6 +73,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const specificTeachingSkillsController = new SpecificTeachingSkillsController()
   const examArrangementsController = new ExamArrangementsController()
   const lnspController = new LearningNeedsSupportPractitionerSupportController()
+  const additionalInformationController = new AdditionalInformationController()
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
@@ -265,14 +267,13 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   router.get('/:journeyId/additional-information', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Additional information')
-    },
+    asyncMiddleware(additionalInformationController.getAdditionalInformationView),
   ])
   router.post('/:journeyId/additional-information', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
     validate(additionalInformationSchema),
+    asyncMiddleware(additionalInformationController.submitAdditionalInformationForm),
   ])
 
   router.get('/:journeyId/next-review-date', [
