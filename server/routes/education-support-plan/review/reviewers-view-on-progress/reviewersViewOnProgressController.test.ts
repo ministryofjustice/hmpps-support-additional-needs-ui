@@ -42,6 +42,7 @@ describe('reviewersViewOnProgressController', () => {
         reviewersViewOnProgress: 'Chris has made average progress',
       },
       mode: 'review',
+      planReviewedByLoggedInUser: true,
     }
 
     // When
@@ -59,7 +60,7 @@ describe('reviewersViewOnProgressController', () => {
     res.locals.invalidForm = invalidForm
 
     const expectedViewTemplate = 'pages/education-support-plan/reviewers-view-on-progress/index'
-    const expectedViewModel = { prisonerSummary, form: invalidForm, mode: 'review' }
+    const expectedViewModel = { prisonerSummary, form: invalidForm, mode: 'review', planReviewedByLoggedInUser: true }
 
     // When
     await controller.getReviewersViewOnProgressView(req, res, next)

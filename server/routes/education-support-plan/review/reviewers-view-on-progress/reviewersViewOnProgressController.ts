@@ -6,9 +6,15 @@ export default class ReviewersViewOnProgressController {
     const { prisonerSummary, invalidForm } = res.locals
     const { reviewEducationSupportPlanDto } = req.journeyData
 
+    const { planReviewedByLoggedInUser } = reviewEducationSupportPlanDto
     const reviewersViewOnProgressForm = invalidForm ?? this.populateFormFromDto(reviewEducationSupportPlanDto)
 
-    const viewRenderArgs = { prisonerSummary, form: reviewersViewOnProgressForm, mode: 'review' }
+    const viewRenderArgs = {
+      prisonerSummary,
+      form: reviewersViewOnProgressForm,
+      mode: 'review',
+      planReviewedByLoggedInUser,
+    }
     return res.render('pages/education-support-plan/reviewers-view-on-progress/index', viewRenderArgs)
   }
 
