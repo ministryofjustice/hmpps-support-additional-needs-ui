@@ -1,7 +1,7 @@
 {% extends "../layout.njk" %}
 
 {% set pageId = 'education-support-plan-exam-arrangements' %}
-{% set pageTitle = "Create an education support plan - Needs access arrangements for exams or assessments" %}
+{% set pageTitle = 'Review an education support plan - Review access arrangements for exams or assessments' if mode == 'review' else 'Create an education support plan - Needs access arrangements for exams or assessments' %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -30,6 +30,18 @@
             }) }}
           {% endset %}
 
+          {% set hintText %}
+            {% if mode == 'review' %}
+              {% set currentAnswer %}
+                <h3 class="govuk-heading-s">Current answer</h3>
+                <p class="govuk-body app-u-multiline-text">{{ currentAnswer }}</p>
+              {% endset %}
+              {{ govukInsetText({
+                html: currentAnswer
+              }) }}
+            {% endif %}
+          {% endset %}
+
           {{ govukRadios({
             name: "arrangementsNeeded",
             fieldset: {
@@ -38,6 +50,9 @@
                 isPageHeading: true,
                 classes: "govuk-fieldset__legend--l"
               }
+            },
+            hint: {
+              text: hintText
             },
             items: [
               {
