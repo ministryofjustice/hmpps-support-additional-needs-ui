@@ -28,7 +28,7 @@ describe('learningNeedsSupportPractitionerSupportSchema', () => {
     req.body = requestBody
 
     // When
-    await validate(learningNeedsSupportPractitionerSupportSchema)(req, res, next)
+    await validate(learningNeedsSupportPractitionerSupportSchema())(req, res, next)
 
     // Then
     expect(req.body).toEqual(requestBody)
@@ -37,29 +37,111 @@ describe('learningNeedsSupportPractitionerSupportSchema', () => {
     expect(res.redirectWithErrors).not.toHaveBeenCalled()
   })
 
-  it.each([
-    { supportRequired: '', details: undefined },
-    { supportRequired: undefined, details: undefined },
-    { supportRequired: null, details: undefined },
-    { supportRequired: 'a-non-supported-value', details: undefined },
-    { supportRequired: 'N', details: undefined },
-    { supportRequired: 'Y', details: undefined },
-  ])(
-    'sad path - validation of supportRequired field fails - supportRequired: $supportRequired, details: $details',
-    async requestBody => {
+  describe('sad path tests for create journey', () => {
+    it.each([
+      { supportRequired: '', details: undefined },
+      { supportRequired: undefined, details: undefined },
+      { supportRequired: null, details: undefined },
+      { supportRequired: 'a-non-supported-value', details: undefined },
+      { supportRequired: 'N', details: undefined },
+      { supportRequired: 'Y', details: undefined },
+    ])(
+      'sad path - validation of supportRequired field fails - supportRequired: $supportRequired, details: $details',
+      async requestBody => {
+        // Given
+        req.body = requestBody
+
+        const expectedErrors: Array<Error> = [
+          {
+            href: '#supportRequired',
+            text: 'Select if you recommend the person has specific learning needs support',
+          },
+        ]
+        const expectedInvalidForm = JSON.stringify(requestBody)
+
+        // When
+        await validate(learningNeedsSupportPractitionerSupportSchema({ journey: 'create' }))(req, res, next)
+
+        // Then
+        expect(req.body).toEqual(requestBody)
+        expect(next).not.toHaveBeenCalled()
+        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+        expect(res.redirectWithErrors).toHaveBeenCalledWith(
+          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
+          expectedErrors,
+        )
+      },
+    )
+
+    it.each([
+      { supportRequired: 'YES', details: '', supportHours: '10' },
+      { supportRequired: 'YES', details: undefined, supportHours: '10' },
+      { supportRequired: 'YES', details: null, supportHours: '10' },
+    ])(
+      'sad path - validation of details field fails - supportRequired: $supportRequired, details: $details',
+      async requestBody => {
+        // Given
+        req.body = requestBody
+
+        const expectedErrors: Array<Error> = [{ href: '#details', text: 'Enter details of any support required' }]
+        const expectedInvalidForm = JSON.stringify(requestBody)
+
+        // When
+        await validate(learningNeedsSupportPractitionerSupportSchema({ journey: 'create' }))(req, res, next)
+
+        // Then
+        expect(req.body).toEqual(requestBody)
+        expect(next).not.toHaveBeenCalled()
+        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+        expect(res.redirectWithErrors).toHaveBeenCalledWith(
+          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
+          expectedErrors,
+        )
+      },
+    )
+
+    it.each([
+      { supportRequired: 'YES', details: 'Some support is required', supportHours: null },
+      { supportRequired: 'YES', details: 'Some support is required', supportHours: undefined },
+      { supportRequired: 'YES', details: 'Some support is required', supportHours: '-1' },
+      { supportRequired: 'YES', details: 'Some support is required', supportHours: 'two' },
+    ])(
+      'sad path - validation of supportHours field fails - supportRequired: $supportRequired, supportHours: $supportHours',
+      async requestBody => {
+        // Given
+        req.body = requestBody
+
+        const expectedErrors: Array<Error> = [
+          { href: '#supportHours', text: 'You must enter a number of hours of support even if that number is 0' },
+        ]
+        const expectedInvalidForm = JSON.stringify(requestBody)
+
+        // When
+        await validate(learningNeedsSupportPractitionerSupportSchema({ journey: 'create' }))(req, res, next)
+
+        // Then
+        expect(req.body).toEqual(requestBody)
+        expect(next).not.toHaveBeenCalled()
+        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+        expect(res.redirectWithErrors).toHaveBeenCalledWith(
+          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
+          expectedErrors,
+        )
+      },
+    )
+
+    it('sad path - validation of details field length validation fails', async () => {
       // Given
+      const requestBody = { supportRequired: 'YES', details: 'a'.repeat(4001), supportHours: '10' }
       req.body = requestBody
 
       const expectedErrors: Array<Error> = [
-        {
-          href: '#supportRequired',
-          text: 'Select if you recommend the person has specific learning needs support',
-        },
+        { href: '#details', text: 'Details of required support must be 4000 characters or less' },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
 
       // When
-      await validate(learningNeedsSupportPractitionerSupportSchema)(req, res, next)
+      await validate(learningNeedsSupportPractitionerSupportSchema({ journey: 'create' }))(req, res, next)
 
       // Then
       expect(req.body).toEqual(requestBody)
@@ -69,54 +151,21 @@ describe('learningNeedsSupportPractitionerSupportSchema', () => {
         '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
         expectedErrors,
       )
-    },
-  )
+    })
 
-  it.each([
-    { supportRequired: 'YES', details: '', supportHours: '10' },
-    { supportRequired: 'YES', details: undefined, supportHours: '10' },
-    { supportRequired: 'YES', details: null, supportHours: '10' },
-  ])(
-    'sad path - validation of details field fails - supportRequired: $supportRequired, details: $details',
-    async requestBody => {
+    it('sad path - validation of both details and supportHours fields fails', async () => {
       // Given
-      req.body = requestBody
-
-      const expectedErrors: Array<Error> = [{ href: '#details', text: 'Enter details of any support required' }]
-      const expectedInvalidForm = JSON.stringify(requestBody)
-
-      // When
-      await validate(learningNeedsSupportPractitionerSupportSchema)(req, res, next)
-
-      // Then
-      expect(req.body).toEqual(requestBody)
-      expect(next).not.toHaveBeenCalled()
-      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
-      expect(res.redirectWithErrors).toHaveBeenCalledWith(
-        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
-        expectedErrors,
-      )
-    },
-  )
-
-  it.each([
-    { supportRequired: 'YES', details: 'Some support is required', supportHours: null },
-    { supportRequired: 'YES', details: 'Some support is required', supportHours: undefined },
-    { supportRequired: 'YES', details: 'Some support is required', supportHours: '-1' },
-    { supportRequired: 'YES', details: 'Some support is required', supportHours: 'two' },
-  ])(
-    'sad path - validation of supportHours field fails - supportRequired: $supportRequired, supportHours: $supportHours',
-    async requestBody => {
-      // Given
+      const requestBody = { supportRequired: 'YES', details: '', supportHours: '-1' }
       req.body = requestBody
 
       const expectedErrors: Array<Error> = [
+        { href: '#details', text: 'Enter details of any support required' },
         { href: '#supportHours', text: 'You must enter a number of hours of support even if that number is 0' },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
 
       // When
-      await validate(learningNeedsSupportPractitionerSupportSchema)(req, res, next)
+      await validate(learningNeedsSupportPractitionerSupportSchema({ journey: 'create' }))(req, res, next)
 
       // Then
       expect(req.body).toEqual(requestBody)
@@ -126,53 +175,145 @@ describe('learningNeedsSupportPractitionerSupportSchema', () => {
         '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
         expectedErrors,
       )
-    },
-  )
-
-  it('sad path - validation of details field length validation fails', async () => {
-    // Given
-    const requestBody = { supportRequired: 'YES', details: 'a'.repeat(4001), supportHours: '10' }
-    req.body = requestBody
-
-    const expectedErrors: Array<Error> = [
-      { href: '#details', text: 'Details of required support must be 4000 characters or less' },
-    ]
-    const expectedInvalidForm = JSON.stringify(requestBody)
-
-    // When
-    await validate(learningNeedsSupportPractitionerSupportSchema)(req, res, next)
-
-    // Then
-    expect(req.body).toEqual(requestBody)
-    expect(next).not.toHaveBeenCalled()
-    expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
-    expect(res.redirectWithErrors).toHaveBeenCalledWith(
-      '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
-      expectedErrors,
-    )
+    })
   })
 
-  it('sad path - validation of both details and supportHours fields fails', async () => {
-    // Given
-    const requestBody = { supportRequired: 'YES', details: '', supportHours: '-1' }
-    req.body = requestBody
+  describe('sad path tests for review journey', () => {
+    it.each([
+      { supportRequired: '', details: undefined },
+      { supportRequired: undefined, details: undefined },
+      { supportRequired: null, details: undefined },
+      { supportRequired: 'a-non-supported-value', details: undefined },
+      { supportRequired: 'N', details: undefined },
+      { supportRequired: 'Y', details: undefined },
+    ])(
+      'sad path - validation of supportRequired field fails - supportRequired: $supportRequired, details: $details',
+      async requestBody => {
+        // Given
+        req.body = requestBody
 
-    const expectedErrors: Array<Error> = [
-      { href: '#details', text: 'Enter details of any support required' },
-      { href: '#supportHours', text: 'You must enter a number of hours of support even if that number is 0' },
-    ]
-    const expectedInvalidForm = JSON.stringify(requestBody)
+        const expectedErrors: Array<Error> = [
+          {
+            href: '#supportRequired',
+            text: 'Select if you recommend the person has specific learning needs support',
+          },
+        ]
+        const expectedInvalidForm = JSON.stringify(requestBody)
 
-    // When
-    await validate(learningNeedsSupportPractitionerSupportSchema)(req, res, next)
+        // When
+        await validate(learningNeedsSupportPractitionerSupportSchema({ journey: 'review' }))(req, res, next)
 
-    // Then
-    expect(req.body).toEqual(requestBody)
-    expect(next).not.toHaveBeenCalled()
-    expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
-    expect(res.redirectWithErrors).toHaveBeenCalledWith(
-      '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
-      expectedErrors,
+        // Then
+        expect(req.body).toEqual(requestBody)
+        expect(next).not.toHaveBeenCalled()
+        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+        expect(res.redirectWithErrors).toHaveBeenCalledWith(
+          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
+          expectedErrors,
+        )
+      },
     )
+
+    it.each([
+      { supportRequired: 'YES', details: '', supportHours: '10' },
+      { supportRequired: 'YES', details: undefined, supportHours: '10' },
+      { supportRequired: 'YES', details: null, supportHours: '10' },
+    ])(
+      'sad path - validation of details field fails - supportRequired: $supportRequired, details: $details',
+      async requestBody => {
+        // Given
+        req.body = requestBody
+
+        const expectedErrors: Array<Error> = [{ href: '#details', text: 'Enter details of recommended support' }]
+        const expectedInvalidForm = JSON.stringify(requestBody)
+
+        // When
+        await validate(learningNeedsSupportPractitionerSupportSchema({ journey: 'review' }))(req, res, next)
+
+        // Then
+        expect(req.body).toEqual(requestBody)
+        expect(next).not.toHaveBeenCalled()
+        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+        expect(res.redirectWithErrors).toHaveBeenCalledWith(
+          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
+          expectedErrors,
+        )
+      },
+    )
+
+    it.each([
+      { supportRequired: 'YES', details: 'Some support is required', supportHours: null },
+      { supportRequired: 'YES', details: 'Some support is required', supportHours: undefined },
+      { supportRequired: 'YES', details: 'Some support is required', supportHours: '-1' },
+      { supportRequired: 'YES', details: 'Some support is required', supportHours: 'two' },
+    ])(
+      'sad path - validation of supportHours field fails - supportRequired: $supportRequired, supportHours: $supportHours',
+      async requestBody => {
+        // Given
+        req.body = requestBody
+
+        const expectedErrors: Array<Error> = [{ href: '#supportHours', text: 'Enter recommended number of hours' }]
+        const expectedInvalidForm = JSON.stringify(requestBody)
+
+        // When
+        await validate(learningNeedsSupportPractitionerSupportSchema({ journey: 'review' }))(req, res, next)
+
+        // Then
+        expect(req.body).toEqual(requestBody)
+        expect(next).not.toHaveBeenCalled()
+        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+        expect(res.redirectWithErrors).toHaveBeenCalledWith(
+          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
+          expectedErrors,
+        )
+      },
+    )
+
+    it('sad path - validation of details field length validation fails', async () => {
+      // Given
+      const requestBody = { supportRequired: 'YES', details: 'a'.repeat(4001), supportHours: '10' }
+      req.body = requestBody
+
+      const expectedErrors: Array<Error> = [
+        { href: '#details', text: 'Details of required support must be 4000 characters or less' },
+      ]
+      const expectedInvalidForm = JSON.stringify(requestBody)
+
+      // When
+      await validate(learningNeedsSupportPractitionerSupportSchema({ journey: 'review' }))(req, res, next)
+
+      // Then
+      expect(req.body).toEqual(requestBody)
+      expect(next).not.toHaveBeenCalled()
+      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+      expect(res.redirectWithErrors).toHaveBeenCalledWith(
+        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
+        expectedErrors,
+      )
+    })
+
+    it('sad path - validation of both details and supportHours fields fails', async () => {
+      // Given
+      const requestBody = { supportRequired: 'YES', details: '', supportHours: '-1' }
+      req.body = requestBody
+
+      const expectedErrors: Array<Error> = [
+        { href: '#details', text: 'Enter details of recommended support' },
+        { href: '#supportHours', text: 'Enter recommended number of hours' },
+      ]
+      const expectedInvalidForm = JSON.stringify(requestBody)
+
+      // When
+      await validate(learningNeedsSupportPractitionerSupportSchema({ journey: 'review' }))(req, res, next)
+
+      // Then
+      expect(req.body).toEqual(requestBody)
+      expect(next).not.toHaveBeenCalled()
+      expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
+      expect(res.redirectWithErrors).toHaveBeenCalledWith(
+        '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/lnsp-support',
+        expectedErrors,
+      )
+    })
   })
 })

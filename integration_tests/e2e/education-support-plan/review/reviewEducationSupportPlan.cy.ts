@@ -19,6 +19,7 @@ import TeachingAdjustmentsPage from '../../../pages/education-support-plan/teach
 import SpecificTeachingSkillsPage from '../../../pages/education-support-plan/specificTeachingSkillsPage'
 import ExamArrangementsPage from '../../../pages/education-support-plan/examArrangementsPage'
 import aPlanActionStatus from '../../../../server/testsupport/planActionStatusTestDataBuilder'
+import LearningNeedsSupportPractitionerSupportPage from '../../../pages/education-support-plan/learningNeedsSupportPractitionerSupportPage'
 
 context('Review an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -188,7 +189,20 @@ context('Review an Education Support Plan', () => {
       .hasFieldInError('details')
       // Answer No and submit to the next page
       .selectExamArrangementsNotRequired()
-    //  .submitPageTo(LearningNeedsSupportPractitionerSupportPage)
+      .submitPageTo(LearningNeedsSupportPractitionerSupportPage)
+
+    Page.verifyOnPage(LearningNeedsSupportPractitionerSupportPage) //
+      .hasNoErrors()
+      // ELSP already has LNSP answers - clear the answer to trigger a validation error
+      .clearDetails()
+      .clearNumberOfHoursSupport()
+      .submitPageTo(LearningNeedsSupportPractitionerSupportPage)
+      .hasErrorCount(2)
+      .hasFieldInError('details')
+      .hasFieldInError('supportHours')
+      // Answer No and submit to the next page
+      .selectLnspSupportNotRequired()
+    // .submitPageTo(AdditionalInformationPage)
 
     // TODO - flesh out this test, page by page, as each page in the review journey is implemented
   })
