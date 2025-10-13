@@ -1,7 +1,7 @@
 {% extends "../layout.njk" %}
 
 {% set pageId = 'education-support-plan-review-support-plan' %}
-{% set pageTitle = "Create an education support plan - Review date" %}
+{% set pageTitle = ('Review' if mode == 'review' else 'Create') + ' an education support plan - Review date' %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -13,6 +13,14 @@
 
           <h1 class="govuk-heading-l">Set a review date for {{ prisonerSummary | formatFirst_name_Last_name }}'s education support plan</h1>
 
+          {% set hintText %}
+            {% if not featureToggles.reviewsEnabled %}
+              Must be within 3 months of plan creation. Cannot be in the month of October 2025
+            {% else %}
+              {{ 'Must be within 3 months' if mode == 'review' else 'Must be within 3 months of plan creation' }}
+            {% endif %}
+          {% endset %}
+
           {{ mojDatePicker({
             name: "reviewDate",
             value: form.reviewDate,
@@ -21,7 +29,7 @@
               text: "Review date"
             },
             hint: {
-              text: "Must be within 3 months of plan creation" if featureToggles.reviewsEnabled else "Must be within 3 months of plan creation. Cannot be in the month of October 2025"
+              text: hintText
             },
             errorMessage: errors | findError('reviewDate')
           }) }}
