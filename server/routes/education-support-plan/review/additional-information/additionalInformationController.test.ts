@@ -15,7 +15,6 @@ describe('additionalInformationController', () => {
   } as unknown as Request
   const res = {
     redirect: jest.fn(),
-    redirectWithErrors: jest.fn(),
     render: jest.fn(),
     locals: { prisonerSummary },
   } as unknown as Response
@@ -42,6 +41,8 @@ describe('additionalInformationController', () => {
       form: {
         additionalInformation: 'Chris is very open about his issues and is a pleasure to talk to.',
       },
+      mode: 'review',
+      currentAnswer: 'Chris is very open about his issues and is a pleasure to talk to.',
     }
 
     // When
@@ -59,7 +60,12 @@ describe('additionalInformationController', () => {
     res.locals.invalidForm = invalidForm
 
     const expectedViewTemplate = 'pages/education-support-plan/additional-information/index'
-    const expectedViewModel = { prisonerSummary, form: invalidForm }
+    const expectedViewModel = {
+      prisonerSummary,
+      form: invalidForm,
+      mode: 'review',
+      currentAnswer: 'Chris is very open about his issues and is a pleasure to talk to.',
+    }
 
     // When
     await controller.getAdditionalInformationView(req, res, next)

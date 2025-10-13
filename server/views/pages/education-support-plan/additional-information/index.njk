@@ -1,7 +1,7 @@
 {% extends "../layout.njk" %}
 
 {% set pageId = 'education-support-plan-additional-information' %}
-{% set pageTitle = "Create an education support plan - Any other details" %}
+{% set pageTitle = 'Review an education support plan - Review any other details' if mode == 'review' else 'Create an education support plan - Any other details' %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -10,6 +10,18 @@
       <form class="form" method="post" novalidate="">
         <div class="govuk-form-group">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {% set hintText %}
+            {% if mode == 'review' %}
+              {% set currentAnswer %}
+                <h3 class="govuk-heading-s">Current answer</h3>
+                <p class="govuk-body app-u-multiline-text">{{ currentAnswer }}</p>
+              {% endset %}
+              {{ govukInsetText({
+                html: currentAnswer
+              }) }}
+            {% endif %}
+          {% endset %}
 
           {{ govukTextarea({
             id: "additionalInformation",
@@ -21,6 +33,9 @@
               text: "Are there any other details you would like to include? (optional)",
               classes: "govuk-label--l",
               isPageHeading: true
+            },
+            hint: {
+              html: hintText
             },
             attributes: { "aria-label" : "Enter any additional information that you would like to include" },
             errorMessage: errors | findError('additionalInformation')
