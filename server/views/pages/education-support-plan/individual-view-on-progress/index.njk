@@ -36,7 +36,7 @@
             <fieldset class="govuk-fieldset">
               <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Or</legend>
               <div class="govuk-checkboxes__item">
-                <input class="govuk-checkboxes__input" id="prisonerDeclinedBeingPartOfReview" name="prisonerDeclinedBeingPartOfReview" type="checkbox" value="true" {{ 'checked' if form.prisonerDeclinedBeingPartOfReview == 'true' }}>
+                <input class="govuk-checkboxes__input" id="prisonerDeclinedBeingPartOfReview" name="prisonerDeclinedBeingPartOfReview" type="checkbox" value="true" {{ 'checked' if form.prisonerDeclinedBeingPartOfReview === true }}>
                 <label class="govuk-label govuk-checkboxes__label" for="prisonerDeclinedBeingPartOfReview">
                   {{ prisonerSummary | formatFirst_name_Last_name }} declined being part of this review
                 </label>

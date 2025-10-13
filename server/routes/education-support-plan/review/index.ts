@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
@@ -45,10 +45,12 @@ import ExamArrangementsController from './exam-arrangements/examArrangementsCont
 import LearningNeedsSupportPractitionerSupportController from './learning-needs-support-practitioner-support/learningNeedsSupportPractitionerSupportController'
 import AdditionalInformationController from './additional-information/additionalInformationController'
 import ReviewSupportPlanController from './review-support-plan/reviewSupportPlanController'
+import CheckYourAnswersController from './check-your-answers/checkYourAnswersController'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
     additionalLearningNeedsService,
+    auditService,
     challengeService,
     conditionService,
     educationSupportPlanService,
@@ -76,6 +78,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const lnspController = new LearningNeedsSupportPractitionerSupportController()
   const additionalInformationController = new AdditionalInformationController()
   const reviewSupportPlanController = new ReviewSupportPlanController()
+  const checkYourAnswersController = new CheckYourAnswersController(educationSupportPlanService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
@@ -293,11 +296,13 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   router.get('/:journeyId/check-your-answers', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Check your answers')
-    },
+    asyncMiddleware(checkYourAnswersController.getCheckYourAnswersView),
   ])
-  router.post('/:journeyId/check-your-answers', [checkEducationSupportPlanDtoExistsInJourneyData])
+  router.post('/:journeyId/check-your-answers', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
+    // asyncMiddleware(checkYourAnswersController.submitCheckYourAnswersForm),
+  ])
 
   return router
 }

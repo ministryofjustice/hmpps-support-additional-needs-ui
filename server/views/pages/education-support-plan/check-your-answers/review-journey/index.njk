@@ -1,0 +1,224 @@
+{% extends "../../../../partials/layout.njk" %}
+
+{% set pageId = 'education-support-plan-check-your-answers' %}
+{% set pageTitle = "Review an education support plan - Check education support plan review" %}
+
+{% block beforeContent %}
+  <p class="govuk-body">Review an education support plan</p>
+
+  {% if errorSavingEducationSupportPlan %}
+    <div class="hmpps-api-error-banner govuk-!-margin-bottom-4" data-qa="api-error-banner">
+      <p>Sorry, there is a problem with the service</p>
+      <p>There was a problem saving the education support plan review. Try again later.</p>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">Check {{ prisonerSummary | formatFirst_name_Last_name }}'s eduction support plan review</h1>
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          <dl class="govuk-summary-list govuk-!-margin-bottom-8">
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                Are you reviewing the plan?
+              </dt>
+              <dd class="govuk-summary-list__value" data-qa="who-reviewed-the-plan">
+                {{ reviewEducationSupportPlanDto.planReviewedByLoggedInUser | formatYesNo }}
+                {% if not reviewEducationSupportPlanDto.planReviewedByLoggedInUser %}
+                  <div>
+                    {{ reviewEducationSupportPlanDto.planReviewedByOtherFullName }}
+                    <br/>
+                    {{ reviewEducationSupportPlanDto.planReviewedByOtherJobRole }}
+                  </div>
+                {% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="who-reviewed-the-plan?submitToCheckAnswers=true" data-qa="who-reviewed-the-plan-change-link">
+                  Change<span class="govuk-visually-hidden"> who met with the prisoner to review their education support plan</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                Other people consulted or involved
+              </dt>
+              <dd class="govuk-summary-list__value" data-qa="other-people-consulted">
+                {{ reviewEducationSupportPlanDto.wereOtherPeopleConsulted | formatYesNo }}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="other-people-consulted?submitToCheckAnswers=true" data-qa="other-people-consulted-change-link">
+                  Change<span class="govuk-visually-hidden"> who else was consulted or involved to review the education support plan</span>
+                </a>
+              </dd>
+            </div>
+
+            {% if reviewEducationSupportPlanDto.wereOtherPeopleConsulted %}
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                  Details of people consulted or involved
+                </dt>
+                <dd class="govuk-summary-list__value" data-qa="other-people-consulted-list">
+                  <dl class="app-u-description-list">
+                    {% for person in reviewEducationSupportPlanDto.otherPeopleConsulted %}
+                      <dt>Name: </dt>
+                      <dd data-qa="other-consulted-name">{{ person.name }}</dd>
+                      <dt>Job role: </dt>
+                      <dd data-qa="other-consulted-job-role">{{ person.jobRole }}</dd>
+                    {% endfor %}
+                  </dl>
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                  <a class="govuk-link" href="other-people-consulted/list?submitToCheckAnswers=true" data-qa="other-people-consulted-list-change-link">
+                    Change<span class="govuk-visually-hidden"> who else was consulted or involved to review the education support plan</span>
+                  </a>
+                </dd>
+              </div>
+            {% endif %}
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                Prisoner view on progress
+              </dt>
+              <dd class="govuk-summary-list__value" data-qa="individual-view-on-progress">
+                <span class="app-u-multiline-text">{{ reviewEducationSupportPlanDto.prisonerViewOnProgress if not reviewEducationSupportPlanDto.prisonerDeclinedBeingPartOfReview else 'Prisoner refused review' }}</span>
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="individual-view-on-progress?submitToCheckAnswers=true" data-qa="individual-view-on-progress-change-link">
+                  Change<span class="govuk-visually-hidden"> details of the prisoner's view of their progress</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                Reviewer view on progress
+              </dt>
+              <dd class="govuk-summary-list__value" data-qa="reviewers-view-on-progress">
+                <span class="app-u-multiline-text">{{ reviewEducationSupportPlanDto.reviewersViewOnProgress }}</span>
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="reviewers-view-on-progress?submitToCheckAnswers=true" data-qa="reviewers-view-on-progress-change-link">
+                  Change<span class="govuk-visually-hidden"> details of the reviewer's view of the progress</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                Adjustments to teaching, learning environment or materials
+              </dt>
+              <dd class="govuk-summary-list__value" data-qa="teaching-adjustments">
+                {{ educationSupportPlanDto.teachingAdjustmentsNeeded | formatYesNo }}
+                {% if educationSupportPlanDto.teachingAdjustmentsNeeded %}
+                  <span class="app-u-multiline-text">{{ educationSupportPlanDto.teachingAdjustments }}</span>
+                {% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="teaching-adjustments?submitToCheckAnswers=true" data-qa="teaching-adjustments-change-link">
+                  Change<span class="govuk-visually-hidden"> details of any required teaching, learning environment or material adjustments</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                Teacher knowledge or skills
+              </dt>
+              <dd class="govuk-summary-list__value" data-qa="specific-teaching-skills">
+                {{ educationSupportPlanDto.specificTeachingSkillsNeeded | formatYesNo }}
+                {% if educationSupportPlanDto.specificTeachingSkillsNeeded %}
+                  <span class="app-u-multiline-text">{{ educationSupportPlanDto.specificTeachingSkills }}</span>
+                {% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="specific-teaching-skills?submitToCheckAnswers=true" data-qa="specific-teaching-skills-change-link">
+                  Change<span class="govuk-visually-hidden"> details of any required teaching skills</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                Exam access arrangements
+              </dt>
+              <dd class="govuk-summary-list__value" data-qa="exam-arrangements">
+                {{ educationSupportPlanDto.examArrangementsNeeded | formatYesNo }}
+                {% if educationSupportPlanDto.examArrangementsNeeded %}
+                  <span class="app-u-multiline-text">{{ educationSupportPlanDto.examArrangements }}</span>
+                {% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="exam-arrangements?submitToCheckAnswers=true" data-qa="exam-arrangements-change-link">
+                  Change<span class="govuk-visually-hidden"> details of any required access arrangements for exams</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                Learning needs support
+              </dt>
+              <dd class="govuk-summary-list__value" data-qa="lnsp-support">
+                {{ educationSupportPlanDto.lnspSupportNeeded | formatYesNo }}
+                {% if educationSupportPlanDto.lnspSupportNeeded %}
+                  <span class="app-u-multiline-text">{{ educationSupportPlanDto.lnspSupport }}</span>
+                  Recommended hours: {{ educationSupportPlanDto.lnspSupportHours }}
+                {% endif %}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="lnsp-support?submitToCheckAnswers=true" data-qa="lnsp-support-change-link">
+                  Change<span class="govuk-visually-hidden"> details of any required access arrangements for exams</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                Any other details
+              </dt>
+              <dd class="govuk-summary-list__value" data-qa="additional-information">
+                <span class="app-u-multiline-text">{{ educationSupportPlanDto.additionalInformation | default("None entered", true) }}</span>
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="additional-information?submitToCheckAnswers=true" data-qa="additional-information-change-link">
+                  Change<span class="govuk-visually-hidden"> any additional information</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
+                Review date
+              </dt>
+              <dd class="govuk-summary-list__value" data-qa="review-date">
+                {{ reviewEducationSupportPlanDto.reviewDate | formatDate('d MMMM yyyy') }}
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="next-review-date?submitToCheckAnswers=true" data-qa="review-date-change-link">
+                  Change<span class="govuk-visually-hidden"> the review date of the education support plan</span>
+                </a>
+              </dd>
+            </div>
+
+          </dl>
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Submit review",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
