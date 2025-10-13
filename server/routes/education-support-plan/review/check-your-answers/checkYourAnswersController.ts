@@ -10,13 +10,15 @@ export default class CheckYourAnswersController {
   ) {}
 
   getCheckYourAnswersView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    const { educationSupportPlanDto } = req.journeyData
+    const { educationSupportPlanDto, reviewEducationSupportPlanDto } = req.journeyData
 
     const viewRenderArgs = {
-      dto: educationSupportPlanDto,
+      educationSupportPlanDto,
+      reviewEducationSupportPlanDto,
       errorSavingEducationSupportPlan: req.flash('pageHasApiErrors')[0] != null,
+      mode: 'review',
     }
-    return res.render('pages/education-support-plan/check-your-answers/create-journey/index', viewRenderArgs)
+    return res.render('pages/education-support-plan/check-your-answers/review-journey/index', viewRenderArgs)
   }
 
   submitCheckYourAnswersForm: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -32,13 +34,14 @@ export default class CheckYourAnswersController {
       req.flash('pageHasApiErrors', 'true')
       return res.redirect('check-your-answers')
     }
-    this.auditService.logCreateEducationLearnerSupportPlan(this.createEducationLearnerSupportPlanAuditData(req)) // no need to wait for response
+    this.auditService.logReviewEducationLearnerSupportPlan(this.reviewEducationLearnerSupportPlanAuditData(req)) // no need to wait for response
     req.journeyData.educationSupportPlanDto = undefined
+    req.journeyData.reviewEducationSupportPlanDto = undefined
 
-    return res.redirectWithSuccess(`/profile/${prisonNumber}/overview`, 'Education support plan created')
+    return res.redirectWithSuccess(`/profile/${prisonNumber}/overview`, 'Review of education support plan recorded')
   }
 
-  private createEducationLearnerSupportPlanAuditData = (req: Request): BaseAuditData => {
+  private reviewEducationLearnerSupportPlanAuditData = (req: Request): BaseAuditData => {
     return {
       details: {},
       subjectType: 'PRISONER_ID',

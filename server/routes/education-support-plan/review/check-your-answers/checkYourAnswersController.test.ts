@@ -3,6 +3,7 @@ import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupp
 import CheckYourAnswersController from './checkYourAnswersController'
 import EducationSupportPlanService from '../../../../services/educationSupportPlanService'
 import AuditService from '../../../../services/auditService'
+import aValidReviewEducationSupportPlanDto from '../../../../testsupport/reviewEducationSupportPlanDtoTestDataBuilder'
 
 jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/educationSupportPlanService')
@@ -15,6 +16,7 @@ describe('checkYourAnswersController', () => {
   const username = 'A_USER'
   const prisonNumber = 'A1234BC'
   const educationSupportPlanDto = aValidEducationSupportPlanDto({ prisonNumber })
+  const reviewEducationSupportPlanDto = aValidReviewEducationSupportPlanDto({ prisonNumber })
 
   const flash = jest.fn()
 
@@ -39,6 +41,7 @@ describe('checkYourAnswersController', () => {
     req.body = {}
     req.journeyData = {
       educationSupportPlanDto,
+      reviewEducationSupportPlanDto,
     }
   })
 
@@ -46,10 +49,12 @@ describe('checkYourAnswersController', () => {
     // Given
     flash.mockReturnValue([])
 
-    const expectedViewTemplate = 'pages/education-support-plan/check-your-answers/create-journey/index'
+    const expectedViewTemplate = 'pages/education-support-plan/check-your-answers/review-journey/index'
     const expectedViewModel = {
-      dto: aValidEducationSupportPlanDto(),
+      educationSupportPlanDto,
+      reviewEducationSupportPlanDto,
       errorSavingEducationSupportPlan: false,
+      mode: 'review',
     }
 
     // When
@@ -63,10 +68,12 @@ describe('checkYourAnswersController', () => {
     // Given
     flash.mockReturnValue(['true'])
 
-    const expectedViewTemplate = 'pages/education-support-plan/check-your-answers/create-journey/index'
+    const expectedViewTemplate = 'pages/education-support-plan/check-your-answers/review-journey/index'
     const expectedViewModel = {
-      dto: aValidEducationSupportPlanDto(),
+      educationSupportPlanDto,
+      reviewEducationSupportPlanDto,
       errorSavingEducationSupportPlan: true,
+      mode: 'review',
     }
 
     // When
@@ -88,14 +95,15 @@ describe('checkYourAnswersController', () => {
     await controller.submitCheckYourAnswersForm(req, res, next)
 
     // Then
-    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Education support plan created')
+    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Review of education support plan recorded')
     expect(req.journeyData.educationSupportPlanDto).toBeUndefined()
+    expect(req.journeyData.reviewEducationSupportPlanDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
     expect(educationSupportPlanService.createEducationSupportPlan).toHaveBeenCalledWith(
       username,
       educationSupportPlanDto,
     )
-    expect(auditService.logCreateEducationLearnerSupportPlan).toHaveBeenCalledWith(
+    expect(auditService.logReviewEducationLearnerSupportPlan).toHaveBeenCalledWith(
       expect.objectContaining({
         subjectId: prisonNumber,
         subjectType: 'PRISONER_ID',
@@ -116,11 +124,12 @@ describe('checkYourAnswersController', () => {
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
     expect(req.journeyData.educationSupportPlanDto).toEqual(educationSupportPlanDto)
+    expect(req.journeyData.reviewEducationSupportPlanDto).toEqual(reviewEducationSupportPlanDto)
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
     expect(educationSupportPlanService.createEducationSupportPlan).toHaveBeenCalledWith(
       username,
       educationSupportPlanDto,
     )
-    expect(auditService.logCreateEducationLearnerSupportPlan).not.toHaveBeenCalled()
+    expect(auditService.logReviewEducationLearnerSupportPlan).not.toHaveBeenCalled()
   })
 })
