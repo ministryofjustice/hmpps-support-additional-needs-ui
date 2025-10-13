@@ -11,14 +11,11 @@
         <div class="govuk-form-group">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-          <h1 class="govuk-heading-l">Set a review date for {{ prisonerSummary | formatFirst_name_Last_name }}'s education support plan</h1>
-
           {% set hintText %}
-            {% if not featureToggles.reviewsEnabled %}
-              Must be within 3 months of plan creation. Cannot be in the month of October 2025
-            {% else %}
-              {{ 'Must be within 3 months' if mode == 'review' else 'Must be within 3 months of plan creation' }}
-            {% endif %}
+            <p class="govuk-body">
+              Review date must be within 3 months. {{ 'Cannot be in the month of October 2025' if not featureToggles.reviewsEnabled }}
+            </p>
+            <p class="govuk-hint">For example, 17/5/2026"</p>
           {% endset %}
 
           {{ mojDatePicker({
@@ -26,10 +23,12 @@
             value: form.reviewDate,
             id: "reviewDate",
             label: {
-              text: "Review date"
+              text: "Set a review date for " + prisonerSummary | formatFirst_name_Last_name + "'s education support plan",
+              classes: "govuk-label--l",
+              isPageHeading: true
             },
             hint: {
-              text: hintText
+              html: hintText
             },
             errorMessage: errors | findError('reviewDate')
           }) }}
