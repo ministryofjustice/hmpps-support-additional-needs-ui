@@ -1,4 +1,4 @@
-import { addDays, format, startOfToday } from 'date-fns'
+import { addDays, addWeeks, format, startOfToday } from 'date-fns'
 import Page from '../../../pages/page'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
 import Error404Page from '../../../pages/error404'
@@ -18,9 +18,10 @@ import ReviewExistingSupportStrategiesPage from '../../../pages/education-suppor
 import TeachingAdjustmentsPage from '../../../pages/education-support-plan/teachingAdjustmentsPage'
 import SpecificTeachingSkillsPage from '../../../pages/education-support-plan/specificTeachingSkillsPage'
 import ExamArrangementsPage from '../../../pages/education-support-plan/examArrangementsPage'
-import aPlanActionStatus from '../../../../server/testsupport/planActionStatusTestDataBuilder'
 import LearningNeedsSupportPractitionerSupportPage from '../../../pages/education-support-plan/learningNeedsSupportPractitionerSupportPage'
 import AdditionalInformationPage from '../../../pages/education-support-plan/additionalInformationPage'
+import ReviewSupportPlanPage from '../../../pages/education-support-plan/reviewSupportPlanPage'
+import aPlanActionStatus from '../../../../server/testsupport/planActionStatusTestDataBuilder'
 
 context('Review an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -59,6 +60,8 @@ context('Review an Education Support Plan', () => {
     // Given
     cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] }) // user has the role that gives them permission to review ELSPs)
     cy.signIn()
+
+    const reviewDate = addWeeks(startOfToday(), 10)
 
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
@@ -222,7 +225,21 @@ Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. M
       .hasFieldInError('additionalInformation')
       // enter the fields and submit the form to the next page
       .enterAdditionalInformation('Chris was engaged and happy to review his plan today')
-    // .submitPageTo(ReviewSupportPlanPage)
+      .submitPageTo(ReviewSupportPlanPage)
+
+    Page.verifyOnPage(ReviewSupportPlanPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(ReviewSupportPlanPage)
+      .hasErrorCount(1)
+      .hasFieldInError('reviewDate')
+      // submit the page with an invalid format date
+      .setReviewDate('3rd January 2022')
+      .submitPageTo(ReviewSupportPlanPage)
+      .hasErrorCount(1)
+      .hasFieldInError('reviewDate')
+      // enter the fields and submit the form to the next page
+      .setReviewDate(format(reviewDate, 'd/M/yyyy'))
+    //  .submitPageTo(CheckYourAnswersPage)
 
     // TODO - flesh out this test, page by page, as each page in the review journey is implemented
   })

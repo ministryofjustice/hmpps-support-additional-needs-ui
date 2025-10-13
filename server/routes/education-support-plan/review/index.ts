@@ -44,6 +44,7 @@ import SpecificTeachingSkillsController from './specific-teaching-skills/specifi
 import ExamArrangementsController from './exam-arrangements/examArrangementsController'
 import LearningNeedsSupportPractitionerSupportController from './learning-needs-support-practitioner-support/learningNeedsSupportPractitionerSupportController'
 import AdditionalInformationController from './additional-information/additionalInformationController'
+import ReviewSupportPlanController from './review-support-plan/reviewSupportPlanController'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -74,6 +75,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const examArrangementsController = new ExamArrangementsController()
   const lnspController = new LearningNeedsSupportPractitionerSupportController()
   const additionalInformationController = new AdditionalInformationController()
+  const reviewSupportPlanController = new ReviewSupportPlanController()
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
@@ -279,14 +281,13 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   router.get('/:journeyId/next-review-date', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Set next review date')
-    },
+    asyncMiddleware(reviewSupportPlanController.getReviewSupportPlanView),
   ])
   router.post('/:journeyId/next-review-date', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
     validate(reviewSupportPlanSchema),
+    asyncMiddleware(reviewSupportPlanController.submitReviewSupportPlanForm),
   ])
 
   router.get('/:journeyId/check-your-answers', [
