@@ -68,6 +68,16 @@ declare module 'dto' {
     prisonerViewOnProgress?: string
     prisonerDeclinedBeingPartOfReview?: boolean
     reviewersViewOnProgress?: string
+    teachingAdjustmentsNeeded?: boolean
+    teachingAdjustments?: string
+    specificTeachingSkillsNeeded?: boolean
+    specificTeachingSkills?: string
+    examArrangementsNeeded?: boolean
+    examArrangements?: string
+    additionalInformation?: string
+    lnspSupportNeeded?: boolean
+    lnspSupport?: string
+    lnspSupportHours?: number
     reviewExistingNeeds?: boolean
     reviewDate?: Date
   }

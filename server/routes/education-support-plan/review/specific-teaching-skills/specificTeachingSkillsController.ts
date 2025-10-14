@@ -1,16 +1,17 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import type { EducationSupportPlanDto } from 'dto'
+import type { EducationSupportPlanDto, ReviewEducationSupportPlanDto } from 'dto'
 import YesNoValue from '../../../../enums/yesNoValue'
 
 export default class SpecificTeachingSkillsController {
   getSpecificTeachingSkillsView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { prisonerSummary, invalidForm } = res.locals
-    const { educationSupportPlanDto } = req.journeyData
+    const { educationSupportPlanDto, reviewEducationSupportPlanDto } = req.journeyData
 
     const currentAnswer = educationSupportPlanDto.specificTeachingSkillsNeeded
       ? educationSupportPlanDto.specificTeachingSkills
       : 'No'
-    const specificTeachingSkillsForm = invalidForm ?? this.populateFormFromDto(educationSupportPlanDto)
+    const specificTeachingSkillsForm =
+      invalidForm ?? this.populateFormFromDto(reviewEducationSupportPlanDto, educationSupportPlanDto)
 
     const viewRenderArgs = { prisonerSummary, form: specificTeachingSkillsForm, mode: 'review', currentAnswer }
     return res.render('pages/education-support-plan/specific-teaching-skills/index', viewRenderArgs)
@@ -23,20 +24,24 @@ export default class SpecificTeachingSkillsController {
     return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'exam-arrangements' : 'check-your-answers')
   }
 
-  private populateFormFromDto = (dto: EducationSupportPlanDto) => {
-    if (dto.specificTeachingSkillsNeeded == null) {
-      return {}
-    }
+  private populateFormFromDto = (
+    reviewEducationSupportPlanDto: ReviewEducationSupportPlanDto,
+    educationSupportPlanDto: EducationSupportPlanDto,
+  ) => {
+    const dtoToBaseFormOn: EducationSupportPlanDto | ReviewEducationSupportPlanDto =
+      reviewEducationSupportPlanDto.specificTeachingSkillsNeeded != null
+        ? reviewEducationSupportPlanDto
+        : educationSupportPlanDto
     return {
-      skillsRequired: dto.specificTeachingSkillsNeeded ? YesNoValue.YES : YesNoValue.NO,
-      details: dto.specificTeachingSkills,
+      skillsRequired: dtoToBaseFormOn.specificTeachingSkillsNeeded ? YesNoValue.YES : YesNoValue.NO,
+      details: dtoToBaseFormOn.specificTeachingSkills,
     }
   }
 
   private updateDtoFromForm = (req: Request, form: { skillsRequired: YesNoValue; details?: string }) => {
-    const { educationSupportPlanDto } = req.journeyData
-    educationSupportPlanDto.specificTeachingSkillsNeeded = form.skillsRequired === YesNoValue.YES
-    educationSupportPlanDto.specificTeachingSkills = form.details
-    req.journeyData.educationSupportPlanDto = educationSupportPlanDto
+    const { reviewEducationSupportPlanDto } = req.journeyData
+    reviewEducationSupportPlanDto.specificTeachingSkillsNeeded = form.skillsRequired === YesNoValue.YES
+    reviewEducationSupportPlanDto.specificTeachingSkills = form.details
+    req.journeyData.reviewEducationSupportPlanDto = reviewEducationSupportPlanDto
   }
 }

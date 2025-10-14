@@ -30,12 +30,12 @@
                 Are you reviewing the plan?
               </dt>
               <dd class="govuk-summary-list__value" data-qa="who-reviewed-the-plan">
-                {{ reviewEducationSupportPlanDto.planReviewedByLoggedInUser | formatYesNo }}
-                {% if not reviewEducationSupportPlanDto.planReviewedByLoggedInUser %}
+                {{ dto.planReviewedByLoggedInUser | formatYesNo }}
+                {% if not dto.planReviewedByLoggedInUser %}
                   <div>
-                    {{ reviewEducationSupportPlanDto.planReviewedByOtherFullName }}
+                    {{ dto.planReviewedByOtherFullName }}
                     <br/>
-                    {{ reviewEducationSupportPlanDto.planReviewedByOtherJobRole }}
+                    {{ dto.planReviewedByOtherJobRole }}
                   </div>
                 {% endif %}
               </dd>
@@ -51,7 +51,7 @@
                 Other people consulted or involved
               </dt>
               <dd class="govuk-summary-list__value" data-qa="other-people-consulted">
-                {{ reviewEducationSupportPlanDto.wereOtherPeopleConsulted | formatYesNo }}
+                {{ dto.wereOtherPeopleConsulted | formatYesNo }}
               </dd>
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="other-people-consulted?submitToCheckAnswers=true" data-qa="other-people-consulted-change-link">
@@ -60,14 +60,14 @@
               </dd>
             </div>
 
-            {% if reviewEducationSupportPlanDto.wereOtherPeopleConsulted %}
+            {% if dto.wereOtherPeopleConsulted %}
               <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key govuk-!-width-one-quarter">
                   Details of people consulted or involved
                 </dt>
                 <dd class="govuk-summary-list__value" data-qa="other-people-consulted-list">
                   <dl class="app-u-description-list">
-                    {% for person in reviewEducationSupportPlanDto.otherPeopleConsulted %}
+                    {% for person in dto.otherPeopleConsulted %}
                       <dt>Name: </dt>
                       <dd data-qa="other-consulted-name">{{ person.name }}</dd>
                       <dt>Job role: </dt>
@@ -88,7 +88,7 @@
                 Prisoner view on progress
               </dt>
               <dd class="govuk-summary-list__value" data-qa="individual-view-on-progress">
-                <span class="app-u-multiline-text">{{ reviewEducationSupportPlanDto.prisonerViewOnProgress if not reviewEducationSupportPlanDto.prisonerDeclinedBeingPartOfReview else 'Prisoner refused review' }}</span>
+                <span class="app-u-multiline-text">{{ dto.prisonerViewOnProgress if not dto.prisonerDeclinedBeingPartOfReview else 'Prisoner refused review' }}</span>
               </dd>
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="individual-view-on-progress?submitToCheckAnswers=true" data-qa="individual-view-on-progress-change-link">
@@ -102,7 +102,7 @@
                 Reviewer view on progress
               </dt>
               <dd class="govuk-summary-list__value" data-qa="reviewers-view-on-progress">
-                <span class="app-u-multiline-text">{{ reviewEducationSupportPlanDto.reviewersViewOnProgress }}</span>
+                <span class="app-u-multiline-text">{{ dto.reviewersViewOnProgress }}</span>
               </dd>
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="reviewers-view-on-progress?submitToCheckAnswers=true" data-qa="reviewers-view-on-progress-change-link">
@@ -116,9 +116,9 @@
                 Adjustments to teaching, learning environment or materials
               </dt>
               <dd class="govuk-summary-list__value" data-qa="teaching-adjustments">
-                {{ educationSupportPlanDto.teachingAdjustmentsNeeded | formatYesNo }}
-                {% if educationSupportPlanDto.teachingAdjustmentsNeeded %}
-                  <span class="app-u-multiline-text">{{ educationSupportPlanDto.teachingAdjustments }}</span>
+                {{ dto.teachingAdjustmentsNeeded | formatYesNo }}
+                {% if dto.teachingAdjustmentsNeeded %}
+                  <span class="app-u-multiline-text">{{ dto.teachingAdjustments }}</span>
                 {% endif %}
               </dd>
               <dd class="govuk-summary-list__actions">
@@ -133,9 +133,9 @@
                 Teacher knowledge or skills
               </dt>
               <dd class="govuk-summary-list__value" data-qa="specific-teaching-skills">
-                {{ educationSupportPlanDto.specificTeachingSkillsNeeded | formatYesNo }}
-                {% if educationSupportPlanDto.specificTeachingSkillsNeeded %}
-                  <span class="app-u-multiline-text">{{ educationSupportPlanDto.specificTeachingSkills }}</span>
+                {{ dto.specificTeachingSkillsNeeded | formatYesNo }}
+                {% if dto.specificTeachingSkillsNeeded %}
+                  <span class="app-u-multiline-text">{{ dto.specificTeachingSkills }}</span>
                 {% endif %}
               </dd>
               <dd class="govuk-summary-list__actions">
@@ -150,9 +150,9 @@
                 Exam access arrangements
               </dt>
               <dd class="govuk-summary-list__value" data-qa="exam-arrangements">
-                {{ educationSupportPlanDto.examArrangementsNeeded | formatYesNo }}
-                {% if educationSupportPlanDto.examArrangementsNeeded %}
-                  <span class="app-u-multiline-text">{{ educationSupportPlanDto.examArrangements }}</span>
+                {{ dto.examArrangementsNeeded | formatYesNo }}
+                {% if dto.examArrangementsNeeded %}
+                  <span class="app-u-multiline-text">{{ dto.examArrangements }}</span>
                 {% endif %}
               </dd>
               <dd class="govuk-summary-list__actions">
@@ -167,10 +167,10 @@
                 Learning needs support
               </dt>
               <dd class="govuk-summary-list__value" data-qa="lnsp-support">
-                {{ educationSupportPlanDto.lnspSupportNeeded | formatYesNo }}
-                {% if educationSupportPlanDto.lnspSupportNeeded %}
-                  <span class="app-u-multiline-text">{{ educationSupportPlanDto.lnspSupport }}</span>
-                  Recommended hours: {{ educationSupportPlanDto.lnspSupportHours }}
+                {{ dto.lnspSupportNeeded | formatYesNo }}
+                {% if dto.lnspSupportNeeded %}
+                  <span class="app-u-multiline-text">{{ dto.lnspSupport }}</span>
+                  Recommended hours: {{ dto.lnspSupportHours }}
                 {% endif %}
               </dd>
               <dd class="govuk-summary-list__actions">
@@ -185,7 +185,7 @@
                 Any other details
               </dt>
               <dd class="govuk-summary-list__value" data-qa="additional-information">
-                <span class="app-u-multiline-text">{{ educationSupportPlanDto.additionalInformation | default("None entered", true) }}</span>
+                <span class="app-u-multiline-text">{{ dto.additionalInformation | default("None entered", true) }}</span>
               </dd>
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="additional-information?submitToCheckAnswers=true" data-qa="additional-information-change-link">
@@ -199,7 +199,7 @@
                 Review date
               </dt>
               <dd class="govuk-summary-list__value" data-qa="review-date">
-                {{ reviewEducationSupportPlanDto.reviewDate | formatDate('d MMMM yyyy') }}
+                {{ dto.reviewDate | formatDate('d MMMM yyyy') }}
               </dd>
               <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="next-review-date?submitToCheckAnswers=true" data-qa="review-date-change-link">

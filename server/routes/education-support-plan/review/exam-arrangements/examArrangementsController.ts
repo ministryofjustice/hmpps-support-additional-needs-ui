@@ -1,16 +1,17 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import type { EducationSupportPlanDto } from 'dto'
+import type { EducationSupportPlanDto, ReviewEducationSupportPlanDto } from 'dto'
 import YesNoValue from '../../../../enums/yesNoValue'
 
 export default class ExamArrangementsController {
   getExamArrangementsView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { prisonerSummary, invalidForm } = res.locals
-    const { educationSupportPlanDto } = req.journeyData
+    const { educationSupportPlanDto, reviewEducationSupportPlanDto } = req.journeyData
 
     const currentAnswer = educationSupportPlanDto.examArrangementsNeeded
       ? educationSupportPlanDto.examArrangements
       : 'No'
-    const examArrangementsForm = invalidForm ?? this.populateFormFromDto(educationSupportPlanDto)
+    const examArrangementsForm =
+      invalidForm ?? this.populateFormFromDto(reviewEducationSupportPlanDto, educationSupportPlanDto)
 
     const viewRenderArgs = { prisonerSummary, form: examArrangementsForm, mode: 'review', currentAnswer }
     return res.render('pages/education-support-plan/exam-arrangements/index', viewRenderArgs)
@@ -23,20 +24,24 @@ export default class ExamArrangementsController {
     return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'lnsp-support' : 'check-your-answers')
   }
 
-  private populateFormFromDto = (dto: EducationSupportPlanDto) => {
-    if (dto.examArrangementsNeeded == null) {
-      return {}
-    }
+  private populateFormFromDto = (
+    reviewEducationSupportPlanDto: ReviewEducationSupportPlanDto,
+    educationSupportPlanDto: EducationSupportPlanDto,
+  ) => {
+    const dtoToBaseFormOn: EducationSupportPlanDto | ReviewEducationSupportPlanDto =
+      reviewEducationSupportPlanDto.examArrangementsNeeded != null
+        ? reviewEducationSupportPlanDto
+        : educationSupportPlanDto
     return {
-      arrangementsNeeded: dto.examArrangementsNeeded ? YesNoValue.YES : YesNoValue.NO,
-      details: dto.examArrangements,
+      arrangementsNeeded: dtoToBaseFormOn.examArrangementsNeeded ? YesNoValue.YES : YesNoValue.NO,
+      details: dtoToBaseFormOn.examArrangements,
     }
   }
 
   private updateDtoFromForm = (req: Request, form: { arrangementsNeeded: YesNoValue; details?: string }) => {
-    const { educationSupportPlanDto } = req.journeyData
-    educationSupportPlanDto.examArrangementsNeeded = form.arrangementsNeeded === YesNoValue.YES
-    educationSupportPlanDto.examArrangements = form.details
-    req.journeyData.educationSupportPlanDto = educationSupportPlanDto
+    const { reviewEducationSupportPlanDto } = req.journeyData
+    reviewEducationSupportPlanDto.examArrangementsNeeded = form.arrangementsNeeded === YesNoValue.YES
+    reviewEducationSupportPlanDto.examArrangements = form.details
+    req.journeyData.reviewEducationSupportPlanDto = reviewEducationSupportPlanDto
   }
 }

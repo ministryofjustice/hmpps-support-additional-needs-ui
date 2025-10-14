@@ -1,16 +1,17 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import type { EducationSupportPlanDto } from 'dto'
+import type { EducationSupportPlanDto, ReviewEducationSupportPlanDto } from 'dto'
 import { isEmpty } from '../../../../utils/validation/textValueValidator'
 
 export default class AdditionalInformationController {
   getAdditionalInformationView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { prisonerSummary, invalidForm } = res.locals
-    const { educationSupportPlanDto } = req.journeyData
+    const { educationSupportPlanDto, reviewEducationSupportPlanDto } = req.journeyData
 
     const currentAnswer = !isEmpty(educationSupportPlanDto.additionalInformation)
       ? educationSupportPlanDto.additionalInformation
       : 'None entered'
-    const additionalInformationForm = invalidForm ?? this.populateFormFromDto(educationSupportPlanDto)
+    const additionalInformationForm =
+      invalidForm ?? this.populateFormFromDto(reviewEducationSupportPlanDto, educationSupportPlanDto)
 
     const viewRenderArgs = { prisonerSummary, form: additionalInformationForm, mode: 'review', currentAnswer }
     return res.render('pages/education-support-plan/additional-information/index', viewRenderArgs)
@@ -23,16 +24,20 @@ export default class AdditionalInformationController {
     return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'next-review-date' : 'check-your-answers')
   }
 
-  private populateFormFromDto = (dto: EducationSupportPlanDto) => {
-    if (dto.additionalInformation == null) {
-      return {}
-    }
-    return { additionalInformation: dto.additionalInformation }
+  private populateFormFromDto = (
+    reviewEducationSupportPlanDto: ReviewEducationSupportPlanDto,
+    educationSupportPlanDto: EducationSupportPlanDto,
+  ) => {
+    const dtoToBaseFormOn: EducationSupportPlanDto | ReviewEducationSupportPlanDto =
+      reviewEducationSupportPlanDto.additionalInformation != null
+        ? reviewEducationSupportPlanDto
+        : educationSupportPlanDto
+    return { additionalInformation: dtoToBaseFormOn.additionalInformation }
   }
 
   private updateDtoFromForm = (req: Request, form: { additionalInformation: string }) => {
-    const { educationSupportPlanDto } = req.journeyData
-    educationSupportPlanDto.additionalInformation = form.additionalInformation
-    req.journeyData.educationSupportPlanDto = educationSupportPlanDto
+    const { reviewEducationSupportPlanDto } = req.journeyData
+    reviewEducationSupportPlanDto.additionalInformation = form.additionalInformation
+    req.journeyData.reviewEducationSupportPlanDto = reviewEducationSupportPlanDto
   }
 }
