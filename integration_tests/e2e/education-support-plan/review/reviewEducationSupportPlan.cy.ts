@@ -21,7 +21,11 @@ import ExamArrangementsPage from '../../../pages/education-support-plan/examArra
 import LearningNeedsSupportPractitionerSupportPage from '../../../pages/education-support-plan/learningNeedsSupportPractitionerSupportPage'
 import AdditionalInformationPage from '../../../pages/education-support-plan/additionalInformationPage'
 import ReviewSupportPlanPage from '../../../pages/education-support-plan/reviewSupportPlanPage'
+import CheckYourAnswersPage from '../../../pages/education-support-plan/checkYourAnswersPage'
 import aPlanActionStatus from '../../../../server/testsupport/planActionStatusTestDataBuilder'
+import { postRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
+import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
+import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
 
 context('Review an Education Support Plan', () => {
   const prisonNumber = 'A00001A'
@@ -42,6 +46,7 @@ context('Review an Education Support Plan', () => {
     cy.task('stubGetConditions', { prisonNumber })
     cy.task('stubGetSupportStrategies', { prisonNumber })
     cy.task('stubGetEducationSupportPlan', prisonNumber)
+    cy.task('stubReviewEducationSupportPlan', prisonNumber)
   })
 
   it('should be able to navigate directly to the review Education Support Plan page', () => {
@@ -239,9 +244,62 @@ Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. M
       .hasFieldInError('reviewDate')
       // enter the fields and submit the form to the next page
       .setReviewDate(format(reviewDate, 'd/M/yyyy'))
-    //  .submitPageTo(CheckYourAnswersPage)
+      .submitPageTo(CheckYourAnswersPage)
 
-    // TODO - flesh out this test, page by page, as each page in the review journey is implemented
+    Page.verifyOnPage(CheckYourAnswersPage) //
+      .submitPageTo(OverviewPage)
+
+    // Then
+    Page.verifyOnPage(OverviewPage) //
+      .hasSuccessMessage('Review of education support plan recorded')
+    cy.wiremockVerify(
+      postRequestedFor(
+        urlEqualTo(`/support-additional-needs-api/profile/${prisonNumber}/education-support-plan/review`),
+      ).withRequestBody(
+        matchingJsonPath(
+          '$[?(' +
+            "@.prisonId == 'BXI' && " +
+            "@.reviewCreatedBy.name == 'Joe Bloggs' && " +
+            "@.reviewCreatedBy.jobRole == 'Peer Mentor' && " +
+            '@.otherContributors.size() == 2 && ' +
+            "@.otherContributors[0].name == 'A Teacher' && " +
+            "@.otherContributors[0].jobRole == 'Teacher' && " +
+            "@.otherContributors[1].name == 'Another Teacher' && " +
+            "@.otherContributors[1].jobRole == 'Teacher' && " +
+            "@.prisonerFeedback == 'Chris is happy with his progress so far' && " +
+            '@.prisonerDeclinedFeedback == false && ' +
+            "@.reviewerFeedback == 'Chris is working hard to improve his progress' && " +
+            '@.updateEducationSupportPlan.anyChanges == true && ' +
+            '@.updateEducationSupportPlan.teachingAdjustments == null && ' +
+            "@.updateEducationSupportPlan.specificTeachingSkills == 'Teacher with some degree of BSL proficiency would be useful' && " +
+            '@.updateEducationSupportPlan.examAccessArrangements == null && ' +
+            '@.updateEducationSupportPlan.lnspSupport == null && ' +
+            '@.updateEducationSupportPlan.lnspSupportHours == null && ' +
+            "@.updateEducationSupportPlan.detail == 'Chris was engaged and happy to review his plan today' && " +
+            `@.nextReviewDate == '${format(reviewDate, 'yyyy-MM-dd')}'` +
+            ')]',
+        ),
+      ),
+    )
+  })
+
+  it('should not review a prisoners Education Support Plan given API returns an error response', () => {
+    // Given
+    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] }) // user has the role that gives them permission to review ELSPs)
+    cy.signIn()
+    cy.task('stubReviewEducationSupportPlan500Error', prisonNumber)
+
+    cy.recordEducationSupportPlanReviewToArriveOnCheckYourAnswers({ prisonNumber })
+
+    // When
+    Page.verifyOnPage(CheckYourAnswersPage) //
+      .apiErrorBannerIsNotDisplayed()
+    Page.verifyOnPage(CheckYourAnswersPage) //
+      .submitPageTo(CheckYourAnswersPage) // Submit the page but expect to stay on the Check Your Answers page due to API error
+
+    // Then
+    Page.verifyOnPage(CheckYourAnswersPage) //
+      .apiErrorBannerIsDisplayed()
   })
 
   it('should not be able to review Education Support Plan given prisoner does not have an ELSP', () => {

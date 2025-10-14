@@ -13,5 +13,7 @@ declare namespace Cypress {
     createEducationSupportPlanToArriveOnCheckYourAnswers(options?: { prisonNumber?: string; reviewDate?: Date })
 
     recordAlnScreenerToArriveOnCheckYourAnswers(options?: { prisonNumber?: string; screenerDate?: Date })
+
+    recordEducationSupportPlanReviewToArriveOnCheckYourAnswers(options?: { prisonNumber?: string; reviewDate?: Date })
   }
 }
