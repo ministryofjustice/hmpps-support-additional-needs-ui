@@ -39,11 +39,10 @@ const aValidReviewEducationSupportPlanDto = (
     ? options?.otherPeopleConsulted || [aValidPlanContributor()]
     : null,
   prisonerViewOnProgress:
-    options?.prisonerDeclinedBeingPartOfReview === false
+    options?.prisonerDeclinedBeingPartOfReview === true
       ? null
       : options?.prisonerViewOnProgress || 'Chris is happy with his progress',
-  prisonerDeclinedBeingPartOfReview:
-    options?.prisonerDeclinedBeingPartOfReview === false ? false : options?.prisonerDeclinedBeingPartOfReview || true,
+  prisonerDeclinedBeingPartOfReview: options?.prisonerDeclinedBeingPartOfReview === true,
   reviewersViewOnProgress: options?.reviewersViewOnProgress || 'Chris has made incredible progress',
   reviewDate: options?.reviewDate === null ? null : options?.reviewDate || addMonths(startOfToday(), 2),
   teachingAdjustmentsNeeded: options?.teachingAdjustments !== null,

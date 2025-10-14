@@ -1,5 +1,4 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import type { EducationSupportPlanDto, ReviewEducationSupportPlanDto } from 'dto'
 import { EducationSupportPlanService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
 import AuditService, { BaseAuditData } from '../../../../services/auditService'
@@ -22,11 +21,8 @@ export default class CheckYourAnswersController {
   }
 
   submitCheckYourAnswersForm: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    const { educationSupportPlanDto, reviewEducationSupportPlanDto } = req.journeyData
+    const { educationSupportPlanDto } = req.journeyData
     const { prisonNumber } = educationSupportPlanDto
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const anyChanges = this.anyChangesToSupportPlan(reviewEducationSupportPlanDto, educationSupportPlanDto)
 
     const { apiErrorCallback } = res.locals
     const apiResult = await Result.wrap(
@@ -52,35 +48,5 @@ export default class CheckYourAnswersController {
       who: req.user?.username ?? 'UNKNOWN',
       correlationId: req.id,
     }
-  }
-
-  /**
-   * Returns 'true' if the [ReviewEducationSupportPlanDto] would result in a change to the prisoner's ELSP
-   * The significant questions/sections of the ELSP are:
-   *   * teaching adjustments (teachingAdjustmentsNeeded and teachingAdjustments properties)
-   *   * teaching skills (specificTeachingSkillsNeeded and specificTeachingSkills properties)
-   *   * exam access arrangements (examArrangementsNeeded and examArrangements properties)
-   *   * LNSP support (lnspSupportNeeded, lnspSupport and lnspSupportHours properties)
-   *   * Additional information (additionalInformation property)
-   *
-   * If any of the above properties have changed then it represents a change to the prisoner's ELSP
-   */
-  private anyChangesToSupportPlan = (
-    reviewEducationSupportPlanDto: ReviewEducationSupportPlanDto,
-    educationSupportPlanDto: EducationSupportPlanDto,
-  ): boolean => {
-    return (
-      educationSupportPlanDto.teachingAdjustmentsNeeded !== reviewEducationSupportPlanDto.teachingAdjustmentsNeeded ||
-      educationSupportPlanDto.teachingAdjustments !== reviewEducationSupportPlanDto.teachingAdjustments ||
-      educationSupportPlanDto.specificTeachingSkillsNeeded !==
-        reviewEducationSupportPlanDto.specificTeachingSkillsNeeded ||
-      educationSupportPlanDto.specificTeachingSkills !== reviewEducationSupportPlanDto.specificTeachingSkills ||
-      educationSupportPlanDto.examArrangementsNeeded !== reviewEducationSupportPlanDto.examArrangementsNeeded ||
-      educationSupportPlanDto.examArrangements !== reviewEducationSupportPlanDto.examArrangements ||
-      educationSupportPlanDto.lnspSupportNeeded !== reviewEducationSupportPlanDto.lnspSupportNeeded ||
-      educationSupportPlanDto.lnspSupport !== reviewEducationSupportPlanDto.lnspSupport ||
-      educationSupportPlanDto.lnspSupportHours !== reviewEducationSupportPlanDto.lnspSupportHours ||
-      educationSupportPlanDto.additionalInformation !== reviewEducationSupportPlanDto.additionalInformation
-    )
   }
 }

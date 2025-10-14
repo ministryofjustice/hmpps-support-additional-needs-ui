@@ -24,6 +24,7 @@ import { aValidAlnScreeners } from '../testsupport/alnScreenerResponseTestDataBu
 import { aValidSupportStrategyListResponse } from '../testsupport/supportStrategyResponseTestDataBuilder'
 import { aValidCreateSupportStrategiesRequest } from '../testsupport/supportStrategyRequestTestDataBuilder'
 import aPlanActionStatus from '../testsupport/planActionStatusTestDataBuilder'
+import { aSupportPlanReviewRequest } from '../testsupport/supportPlanReviewRequestTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -1155,6 +1156,61 @@ describe('supportAdditionalNeedsApiClient', () => {
 
       // When
       const actual = await supportAdditionalNeedsApiClient.getPlanActionStatus(prisonNumber, username).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('reviewEducationSupportPlan', () => {
+    it('should review a prisoners education support plan', async () => {
+      // Given
+      const supportPlanReviewRequest = aSupportPlanReviewRequest()
+
+      supportAdditionalNeedsApi
+        .post(`/profile/${prisonNumber}/education-support-plan/review`, requestBody =>
+          isEqual(requestBody, supportPlanReviewRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(201)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.reviewEducationSupportPlan(
+        prisonNumber,
+        username,
+        supportPlanReviewRequest,
+      )
+
+      // Then
+      expect(actual).toEqual({})
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const supportPlanReviewRequest = aSupportPlanReviewRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .post(`/profile/${prisonNumber}/education-support-plan/review`, requestBody =>
+          isEqual(requestBody, supportPlanReviewRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .reviewEducationSupportPlan(prisonNumber, username, supportPlanReviewRequest)
+        .catch(e => e)
 
       // Then
       expect(actual).toEqual(expectedError)
