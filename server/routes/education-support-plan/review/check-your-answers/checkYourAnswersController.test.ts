@@ -51,8 +51,7 @@ describe('checkYourAnswersController', () => {
 
     const expectedViewTemplate = 'pages/education-support-plan/check-your-answers/review-journey/index'
     const expectedViewModel = {
-      educationSupportPlanDto,
-      reviewEducationSupportPlanDto,
+      dto: reviewEducationSupportPlanDto,
       errorSavingEducationSupportPlan: false,
       mode: 'review',
     }
@@ -70,8 +69,7 @@ describe('checkYourAnswersController', () => {
 
     const expectedViewTemplate = 'pages/education-support-plan/check-your-answers/review-journey/index'
     const expectedViewModel = {
-      educationSupportPlanDto,
-      reviewEducationSupportPlanDto,
+      dto: reviewEducationSupportPlanDto,
       errorSavingEducationSupportPlan: true,
       mode: 'review',
     }

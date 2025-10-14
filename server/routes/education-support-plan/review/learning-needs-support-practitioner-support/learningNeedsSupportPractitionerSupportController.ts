@@ -1,15 +1,16 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import type { EducationSupportPlanDto } from 'dto'
+import type { EducationSupportPlanDto, ReviewEducationSupportPlanDto } from 'dto'
 import YesNoValue from '../../../../enums/yesNoValue'
 
 export default class LearningNeedsSupportPractitionerSupportController {
   getLnspSupportView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { prisonerSummary, invalidForm } = res.locals
-    const { educationSupportPlanDto } = req.journeyData
+    const { educationSupportPlanDto, reviewEducationSupportPlanDto } = req.journeyData
 
     const currentAnswer = educationSupportPlanDto.lnspSupportNeeded ? educationSupportPlanDto.lnspSupport : 'No'
     const currentSupportHours = educationSupportPlanDto.lnspSupportHours
-    const lnspSupportForm = invalidForm ?? this.populateFormFromDto(educationSupportPlanDto)
+    const lnspSupportForm =
+      invalidForm ?? this.populateFormFromDto(reviewEducationSupportPlanDto, educationSupportPlanDto)
 
     const viewRenderArgs = {
       prisonerSummary,
@@ -28,14 +29,16 @@ export default class LearningNeedsSupportPractitionerSupportController {
     return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'additional-information' : 'check-your-answers')
   }
 
-  private populateFormFromDto = (dto: EducationSupportPlanDto) => {
-    if (dto.lnspSupportNeeded == null) {
-      return {}
-    }
+  private populateFormFromDto = (
+    reviewEducationSupportPlanDto: ReviewEducationSupportPlanDto,
+    educationSupportPlanDto: EducationSupportPlanDto,
+  ) => {
+    const dtoToBaseFormOn: EducationSupportPlanDto | ReviewEducationSupportPlanDto =
+      reviewEducationSupportPlanDto.lnspSupportNeeded != null ? reviewEducationSupportPlanDto : educationSupportPlanDto
     return {
-      supportRequired: dto.lnspSupportNeeded ? YesNoValue.YES : YesNoValue.NO,
-      details: dto.lnspSupport,
-      supportHours: dto.lnspSupportHours,
+      supportRequired: dtoToBaseFormOn.lnspSupportNeeded ? YesNoValue.YES : YesNoValue.NO,
+      details: dtoToBaseFormOn.lnspSupport,
+      supportHours: dtoToBaseFormOn.lnspSupportHours,
     }
   }
 
@@ -43,10 +46,10 @@ export default class LearningNeedsSupportPractitionerSupportController {
     req: Request,
     form: { supportRequired: YesNoValue; details?: string; supportHours?: number },
   ) => {
-    const { educationSupportPlanDto } = req.journeyData
-    educationSupportPlanDto.lnspSupportNeeded = form.supportRequired === YesNoValue.YES
-    educationSupportPlanDto.lnspSupport = form.details
-    educationSupportPlanDto.lnspSupportHours = form.supportHours ? Number(form.supportHours) : undefined
-    req.journeyData.educationSupportPlanDto = educationSupportPlanDto
+    const { reviewEducationSupportPlanDto } = req.journeyData
+    reviewEducationSupportPlanDto.lnspSupportNeeded = form.supportRequired === YesNoValue.YES
+    reviewEducationSupportPlanDto.lnspSupport = form.details
+    reviewEducationSupportPlanDto.lnspSupportHours = form.supportHours ? Number(form.supportHours) : undefined
+    req.journeyData.reviewEducationSupportPlanDto = reviewEducationSupportPlanDto
   }
 }

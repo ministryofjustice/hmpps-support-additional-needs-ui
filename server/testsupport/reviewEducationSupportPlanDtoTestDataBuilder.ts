@@ -20,6 +20,12 @@ const aValidReviewEducationSupportPlanDto = (
     prisonerDeclinedBeingPartOfReview?: boolean
     reviewersViewOnProgress?: string
     reviewDate?: Date
+    teachingAdjustments?: string
+    specificTeachingSkills?: string
+    examArrangements?: string
+    additionalInformation?: string
+    lnspSupport?: string
+    lnspSupportHours?: number
   },
 ): ReviewEducationSupportPlanDto => ({
   prisonNumber: options?.prisonNumber ?? 'A1234BC',
@@ -40,6 +46,31 @@ const aValidReviewEducationSupportPlanDto = (
     options?.prisonerDeclinedBeingPartOfReview === false ? false : options?.prisonerDeclinedBeingPartOfReview || true,
   reviewersViewOnProgress: options?.reviewersViewOnProgress || 'Chris has made incredible progress',
   reviewDate: options?.reviewDate === null ? null : options?.reviewDate || addMonths(startOfToday(), 2),
+  teachingAdjustmentsNeeded: options?.teachingAdjustments !== null,
+  teachingAdjustments:
+    options?.teachingAdjustments === null
+      ? null
+      : options?.teachingAdjustments || 'Use simpler examples to help students understand concepts',
+  specificTeachingSkillsNeeded: options?.specificTeachingSkills !== null,
+  specificTeachingSkills:
+    options?.specificTeachingSkills === null
+      ? null
+      : options?.specificTeachingSkills || 'Teacher with BSL proficiency required',
+  examArrangementsNeeded: options?.examArrangements !== null,
+  examArrangements:
+    options?.examArrangements === null
+      ? null
+      : options?.examArrangements || 'Escort to the exam room 10 minutes before everyone else',
+  additionalInformation:
+    options?.additionalInformation === null
+      ? null
+      : options?.additionalInformation || 'Chris is very open about his issues and is a pleasure to talk to.',
+  lnspSupportNeeded: options?.lnspSupport !== null,
+  lnspSupport:
+    options?.lnspSupport === null
+      ? null
+      : options?.lnspSupport || 'Chris will need text reading to him as he cannot read himself',
+  lnspSupportHours: options?.lnspSupport === null ? null : (options?.lnspSupportHours ?? 10),
   ...validDtoAuditFields(options),
 })
 
