@@ -47,7 +47,6 @@ export const dataAccess = () => {
 
   return {
     applicationInfo,
-    hmppsAuthClient,
     hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
     journeyDataStore: config.redis.enabled
       ? new RedisJourneyDataStore(createRedisClient('journeyData:'))
@@ -73,7 +72,6 @@ export type DataAccess = ReturnType<typeof dataAccess>
 
 export {
   AuthenticationClient,
-  HmppsAuditClient,
   type JourneyDataStore,
   ManageUsersApiClient,
   PrisonRegisterClient,
