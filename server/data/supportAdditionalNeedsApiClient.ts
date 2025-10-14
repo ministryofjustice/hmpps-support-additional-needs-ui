@@ -17,6 +17,7 @@ import type {
   SearchByPrisonResponse,
   StrengthListResponse,
   SupportStrategyListResponse,
+  SupportPlanReviewRequest,
   UpdatePlanCreationStatusRequest,
 } from 'supportAdditionalNeedsApiClient'
 import config from '../config'
@@ -250,6 +251,20 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/plan-action-status`,
         errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async reviewEducationSupportPlan(
+    prisonNumber: string,
+    username: string,
+    supportPlanReviewRequest: SupportPlanReviewRequest,
+  ): Promise<void> {
+    return this.post<void>(
+      {
+        path: `/profile/${prisonNumber}/education-support-plan/review`,
+        data: supportPlanReviewRequest,
       },
       asSystem(username),
     )

@@ -43,4 +43,7 @@ declare module 'supportAdditionalNeedsApiClient' {
   export type AlnStrength = components['schemas']['ALNStrength']
 
   export type PlanActionStatus = components['schemas']['PlanActionStatus']
+
+  export type SupportPlanReviewRequest = components['schemas']['SupportPlanReviewRequest']
+  export type UpdateEducationSupportPlanRequest = components['schemas']['UpdateEducationSupportPlanRequest']
 }
