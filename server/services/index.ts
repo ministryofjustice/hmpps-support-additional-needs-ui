@@ -14,6 +14,7 @@ import ReferenceDataService from './referenceDataService'
 import StrengthService from './strengthService'
 import SupportStrategyService from './supportStrategyService'
 import AdditionalLearningNeedsScreenerService from './additionalLearningNeedsScreenerService'
+import EducationSupportPlanReviewService from './educationSupportPlanReviewService'
 
 export const services = () => {
   const {
@@ -49,6 +50,7 @@ export const services = () => {
     strengthService: new StrengthService(supportAdditionalNeedsApiClient),
     supportStrategyService: new SupportStrategyService(supportAdditionalNeedsApiClient),
     additionalLearningNeedsService: new AdditionalLearningNeedsScreenerService(supportAdditionalNeedsApiClient),
+    educationSupportPlanReviewService: new EducationSupportPlanReviewService(supportAdditionalNeedsApiClient),
   }
 }
 
@@ -60,6 +62,7 @@ export {
   ChallengeService,
   ConditionService,
   CuriousService,
+  EducationSupportPlanReviewService,
   EducationSupportPlanService,
   EducationSupportPlanScheduleService,
   JourneyDataService,

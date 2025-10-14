@@ -1,17 +1,19 @@
 import { Request, Response } from 'express'
 import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
 import CheckYourAnswersController from './checkYourAnswersController'
-import EducationSupportPlanService from '../../../../services/educationSupportPlanService'
+import EducationSupportPlanReviewService from '../../../../services/educationSupportPlanReviewService'
 import AuditService from '../../../../services/auditService'
 import aValidReviewEducationSupportPlanDto from '../../../../testsupport/reviewEducationSupportPlanDtoTestDataBuilder'
 
 jest.mock('../../../../services/auditService')
-jest.mock('../../../../services/educationSupportPlanService')
+jest.mock('../../../../services/educationSupportPlanReviewService')
 
 describe('checkYourAnswersController', () => {
-  const educationSupportPlanService = new EducationSupportPlanService(null) as jest.Mocked<EducationSupportPlanService>
+  const educationSupportPlanReviewService = new EducationSupportPlanReviewService(
+    null,
+  ) as jest.Mocked<EducationSupportPlanReviewService>
   const auditService = new AuditService(null) as jest.Mocked<AuditService>
-  const controller = new CheckYourAnswersController(educationSupportPlanService, auditService)
+  const controller = new CheckYourAnswersController(educationSupportPlanReviewService, auditService)
 
   const username = 'A_USER'
   const prisonNumber = 'A1234BC'
@@ -83,9 +85,7 @@ describe('checkYourAnswersController', () => {
 
   it('should submit form and redirect to next route given calling API is successful', async () => {
     // Given
-    educationSupportPlanService.createEducationSupportPlan.mockResolvedValue(
-      aValidEducationSupportPlanDto({ prisonNumber }),
-    )
+    educationSupportPlanReviewService.recordEducationSupportPlanReview.mockResolvedValue(null)
 
     const expectedNextRoute = `/profile/${prisonNumber}/overview`
 
@@ -97,8 +97,9 @@ describe('checkYourAnswersController', () => {
     expect(req.journeyData.educationSupportPlanDto).toBeUndefined()
     expect(req.journeyData.reviewEducationSupportPlanDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
-    expect(educationSupportPlanService.createEducationSupportPlan).toHaveBeenCalledWith(
+    expect(educationSupportPlanReviewService.recordEducationSupportPlanReview).toHaveBeenCalledWith(
       username,
+      reviewEducationSupportPlanDto,
       educationSupportPlanDto,
     )
     expect(auditService.logReviewEducationLearnerSupportPlan).toHaveBeenCalledWith(
@@ -112,7 +113,9 @@ describe('checkYourAnswersController', () => {
 
   it('should submit form and redirect to next route given calling API is not successful', async () => {
     // Given
-    educationSupportPlanService.createEducationSupportPlan.mockRejectedValue(new Error('Internal Server Error'))
+    educationSupportPlanReviewService.recordEducationSupportPlanReview.mockRejectedValue(
+      new Error('Internal Server Error'),
+    )
 
     const expectedNextRoute = 'check-your-answers'
 
@@ -124,8 +127,9 @@ describe('checkYourAnswersController', () => {
     expect(req.journeyData.educationSupportPlanDto).toEqual(educationSupportPlanDto)
     expect(req.journeyData.reviewEducationSupportPlanDto).toEqual(reviewEducationSupportPlanDto)
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
-    expect(educationSupportPlanService.createEducationSupportPlan).toHaveBeenCalledWith(
+    expect(educationSupportPlanReviewService.recordEducationSupportPlanReview).toHaveBeenCalledWith(
       username,
+      reviewEducationSupportPlanDto,
       educationSupportPlanDto,
     )
     expect(auditService.logReviewEducationLearnerSupportPlan).not.toHaveBeenCalled()

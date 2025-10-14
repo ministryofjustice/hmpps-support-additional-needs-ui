@@ -21,6 +21,10 @@ import ChallengeType from '../../server/enums/challengeType'
 import AddStrengthsPage from '../pages/additional-learning-needs-screener/addStrengthsPage'
 import StrengthType from '../../server/enums/strengthType'
 import AdditionalLearningNeedsScreenerCheckYourAnswersPage from '../pages/additional-learning-needs-screener/checkYourAnswersPage'
+import WhoReviewedThePlanPage from '../pages/education-support-plan/whoReviewedThePlanPage'
+import PlanReviewedByValue from '../../server/enums/planReviewedByValue'
+import IndividualViewOnProgressPage from '../pages/education-support-plan/individualViewOnProgressPage'
+import ReviewersViewOnProgressPage from '../pages/education-support-plan/reviewersViewOnProgressPage'
 
 Cypress.Commands.add('signIn', (options = { failOnStatusCode: true }) => {
   cy.request('/')
@@ -95,5 +99,49 @@ Cypress.Commands.add(
       .selectStrength(StrengthType.NONE)
       //
       .submitPageTo(AdditionalLearningNeedsScreenerCheckYourAnswersPage)
+  },
+)
+
+Cypress.Commands.add(
+  'recordEducationSupportPlanReviewToArriveOnCheckYourAnswers',
+  (options?: { prisonNumber?: string; reviewDate?: Date }) => {
+    const reviewDate = options?.reviewDate || addMonths(startOfToday(), 3)
+
+    cy.visit(`/education-support-plan/${options?.prisonNumber || 'G6115VJ'}/review/who-reviewed-the-plan`)
+
+    Page.verifyOnPage(WhoReviewedThePlanPage) //
+      .selectWhoReviewedThePlan(PlanReviewedByValue.MYSELF)
+      .submitPageTo(OtherPeopleConsultedPage)
+      //
+      .selectOtherPeopleWereNotConsulted()
+      .submitPageTo(IndividualViewOnProgressPage)
+      //
+      .enterPrisonersViewOnProgress('Chris is happy with his progress so far')
+      .deSelectPrisonerDeclinedBeingPartOfReview()
+      .submitPageTo(ReviewersViewOnProgressPage)
+      //
+      .enterReviewersViewOnProgress('Chris is working hard to improve his progress')
+      .submitPageTo(ReviewExistingNeedsPage)
+      //
+      .selectDoNotReviewExistingNeeds()
+      .submitPageTo(TeachingAdjustmentsPage)
+      //
+      .selectTeachingAdjustmentsNotRequired()
+      .submitPageTo(SpecificTeachingSkillsPage)
+      //
+      .selectSpecificTeachingSkillsNotRequired()
+      .submitPageTo(ExamArrangementsPage)
+      //
+      .selectExamArrangementsNotRequired()
+      .submitPageTo(LearningNeedsSupportPractitionerSupportPage)
+      //
+      .selectLnspSupportNotRequired()
+      .submitPageTo(AdditionalInformationPage)
+      //
+      .clearAdditionalInformation()
+      .submitPageTo(ReviewSupportPlanPage)
+      //
+      .setReviewDate(format(reviewDate, 'd/M/yyyy'))
+      .submitPageTo(EducationSupportPlanCheckYourAnswersPage)
   },
 )

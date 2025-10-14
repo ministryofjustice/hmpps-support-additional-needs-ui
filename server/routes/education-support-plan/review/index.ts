@@ -53,6 +53,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
     auditService,
     challengeService,
     conditionService,
+    educationSupportPlanReviewService,
     educationSupportPlanService,
     journeyDataService,
     prisonService,
@@ -78,7 +79,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const lnspController = new LearningNeedsSupportPractitionerSupportController()
   const additionalInformationController = new AdditionalInformationController()
   const reviewSupportPlanController = new ReviewSupportPlanController()
-  const checkYourAnswersController = new CheckYourAnswersController(educationSupportPlanService, auditService)
+  const checkYourAnswersController = new CheckYourAnswersController(educationSupportPlanReviewService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
@@ -301,7 +302,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   router.post('/:journeyId/check-your-answers', [
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
-    // asyncMiddleware(checkYourAnswersController.submitCheckYourAnswersForm),
+    asyncMiddleware(checkYourAnswersController.submitCheckYourAnswersForm),
   ])
 
   return router

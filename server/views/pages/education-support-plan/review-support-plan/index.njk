@@ -15,7 +15,7 @@
             <p class="govuk-body">
               Review date must be within 3 months. {{ 'Cannot be in the month of October 2025' if not featureToggles.reviewsEnabled }}
             </p>
-            <p class="govuk-hint">For example, 17/5/2026"</p>
+            <p class="govuk-hint">For example, 17/5/2026</p>
           {% endset %}
 
           {{ mojDatePicker({

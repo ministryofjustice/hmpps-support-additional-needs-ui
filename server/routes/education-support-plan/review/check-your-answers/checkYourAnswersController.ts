@@ -1,11 +1,11 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import { EducationSupportPlanService } from '../../../../services'
+import { EducationSupportPlanReviewService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
 import AuditService, { BaseAuditData } from '../../../../services/auditService'
 
 export default class CheckYourAnswersController {
   constructor(
-    private readonly educationSupportPlanService: EducationSupportPlanService,
+    private readonly educationSupportPlanReviewService: EducationSupportPlanReviewService,
     private readonly auditService: AuditService,
   ) {}
 
@@ -21,12 +21,16 @@ export default class CheckYourAnswersController {
   }
 
   submitCheckYourAnswersForm: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
-    const { educationSupportPlanDto } = req.journeyData
+    const { educationSupportPlanDto, reviewEducationSupportPlanDto } = req.journeyData
     const { prisonNumber } = educationSupportPlanDto
 
     const { apiErrorCallback } = res.locals
     const apiResult = await Result.wrap(
-      this.educationSupportPlanService.createEducationSupportPlan(req.user.username, educationSupportPlanDto),
+      this.educationSupportPlanReviewService.recordEducationSupportPlanReview(
+        req.user.username,
+        reviewEducationSupportPlanDto,
+        educationSupportPlanDto,
+      ),
       apiErrorCallback,
     )
     if (!apiResult.isFulfilled()) {
