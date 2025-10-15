@@ -19,7 +19,7 @@
               value: form.details,
               type: "text",
               label: {
-                text: "Add recommended support details for each course and the roles needed",
+                text: ("Edit" if mode == 'review' and currentAnswer != "No" else "Add") + " recommended support details for each course and the roles needed",
                 attributes: { "aria-live": "polite" }
               },
               attributes: { "aria-label" : "Give details of any support an LNSP is expected to provide" },
