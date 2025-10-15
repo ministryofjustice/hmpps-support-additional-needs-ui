@@ -19,7 +19,7 @@
               value: form.details,
               type: "text",
               label: {
-                text: "Add details",
+                text: "Edit details" if mode == 'review' and currentAnswer != "No" else "Add details",
                 attributes: { "aria-live": "polite" }
               },
               hint: {
