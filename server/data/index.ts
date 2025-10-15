@@ -72,6 +72,7 @@ export type DataAccess = ReturnType<typeof dataAccess>
 
 export {
   AuthenticationClient,
+  HmppsAuditClient,
   type JourneyDataStore,
   ManageUsersApiClient,
   PrisonRegisterClient,

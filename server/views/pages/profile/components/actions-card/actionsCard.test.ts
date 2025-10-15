@@ -473,6 +473,7 @@ describe('Tests for Profile pages actions card component', () => {
     //
     PlanActionStatus.REVIEW_DUE,
     PlanActionStatus.REVIEW_OVERDUE,
+    PlanActionStatus.ACTIVE_PLAN,
   ])(
     'should render the actions card component with a link to review an ELSP given the user has permission to review ELSPs and a plan status of %s',
     planStatus => {
@@ -496,6 +497,7 @@ describe('Tests for Profile pages actions card component', () => {
     //
     PlanActionStatus.REVIEW_DUE,
     PlanActionStatus.REVIEW_OVERDUE,
+    PlanActionStatus.ACTIVE_PLAN,
   ])(
     'should render the actions card component without a link to review an ELSP given the user does not have permission to review ELSPs and a plan status of %s',
     planStatus => {
@@ -539,6 +541,33 @@ describe('Tests for Profile pages actions card component', () => {
 
       // Then
       expect($('[data-qa=decline-education-support-plan-button]').length).toEqual(0)
+    },
+  )
+
+  it.each([
+    //
+    PlanActionStatus.PLAN_OVERDUE,
+    PlanActionStatus.PLAN_DUE,
+    PlanActionStatus.NEEDS_PLAN,
+    PlanActionStatus.INACTIVE_PLAN,
+    PlanActionStatus.PLAN_DECLINED,
+    PlanActionStatus.NO_PLAN,
+  ])(
+    'should render the actions card component without link to review an ELSP given the user has permission to review ELSPs and a plan status of unsupported type %s',
+    planStatus => {
+      // Given
+      userHasPermissionTo.mockReturnValue(true)
+      const params = {
+        ...templateParams,
+        planStatus,
+      }
+
+      // When
+      const content = nunjucks.render(template, params)
+      const $ = cheerio.load(content)
+
+      // Then
+      expect($('[data-qa=review-education-support-plan-button]').length).toEqual(0)
     },
   )
 
