@@ -100,7 +100,7 @@
 
         {% if featureToggles.reviewsEnabled %}
           {% if userHasPermissionTo('REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN') %}
-            {% if ['REVIEW_DUE', 'REVIEW_OVERDUE'].indexOf(planStatus) > -1 %}
+            {% if ['REVIEW_DUE', 'REVIEW_OVERDUE', 'ACTIVE_PLAN'].indexOf(planStatus) > -1 %}
               <li>
                 <a class="govuk-link" data-qa="review-education-support-plan-button" href="/education-support-plan/{{ prisonerSummary.prisonNumber }}/review/who-reviewed-the-plan">
                   <span>
