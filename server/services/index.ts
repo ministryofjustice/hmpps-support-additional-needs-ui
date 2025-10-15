@@ -29,12 +29,10 @@ export const services = () => {
     supportAdditionalNeedsApiClient,
     curiousApiClient,
     referenceDataStore,
-    hmppsAuthClient,
   } = dataAccess()
 
   return {
     applicationInfo,
-    hmppsAuthClient,
     auditService: new AuditService(hmppsAuditClient),
     journeyDataService: new JourneyDataService(journeyDataStore),
     prisonerService: new PrisonerService(prisonerSearchStore, prisonerSearchClient),
