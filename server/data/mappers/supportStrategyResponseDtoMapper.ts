@@ -3,7 +3,7 @@ import type { SupportStrategyListResponse, SupportStrategyResponse } from 'suppo
 import toReferenceAndAuditable from './referencedAndAuditableMapper'
 
 const toSupportStrategyResponseDtos = (apiResponse: SupportStrategyListResponse): SupportStrategyResponseDto[] => {
-  return (apiResponse.supportStrategies as Array<SupportStrategyResponse>).map(toSupportStrategyResponseDto)
+  return ((apiResponse?.supportStrategies || []) as Array<SupportStrategyResponse>).map(toSupportStrategyResponseDto)
 }
 
 const toSupportStrategyResponseDto = (supportStrategyResponse: SupportStrategyResponse): SupportStrategyResponseDto =>
