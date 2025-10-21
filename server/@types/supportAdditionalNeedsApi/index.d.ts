@@ -148,38 +148,6 @@ export interface paths {
     patch?: never
     trace?: never
   }
-  '/profile/{prisonNumber}/set-up-data': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['createPersonInEducationWithNeeds']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/profile/{prisonNumber}/education-trigger': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['educationTriggerSimulation']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
   '/profile/{prisonNumber}/education-support-plan': {
     parameters: {
       query?: never
@@ -203,7 +171,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    get?: never
+    get: operations['getReviews']
     put?: never
     post: operations['createReview']
     delete?: never
@@ -238,22 +206,6 @@ export interface paths {
     get: operations['getChallenges']
     put?: never
     post: operations['createChallenges']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/profile/{prisonNumber}/aln-trigger': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get?: never
-    put?: never
-    post: operations['alnTriggerSimulation']
     delete?: never
     options?: never
     head?: never
@@ -887,60 +839,6 @@ export interface components {
        */
       strengths: components['schemas']['StrengthResponse'][]
     }
-    EducationNeedRequest: {
-      prisonId: string
-      alnNeed: boolean
-      lddNeed: boolean
-      conditionSelfDeclared: boolean
-      conditionConfirmed: boolean
-      challengeNotALN: boolean
-      strengthNotALN: boolean
-      alnScreener: boolean
-      inEducation: boolean
-    }
-    PlanCreationScheduleEntity: {
-      prisonNumber: string
-      /** Format: date */
-      deadlineDate?: string
-      /** Format: date */
-      earliestStartDate?: string
-      /** @enum {string} */
-      status:
-        | 'SCHEDULED'
-        | 'EXEMPT_SYSTEM_TECHNICAL_ISSUE'
-        | 'EXEMPT_PRISONER_TRANSFER'
-        | 'EXEMPT_PRISONER_RELEASE'
-        | 'EXEMPT_PRISONER_DEATH'
-        | 'EXEMPT_PRISONER_MERGE'
-        | 'EXEMPT_PRISONER_NOT_COMPLY'
-        | 'EXEMPT_NOT_IN_EDUCATION'
-        | 'EXEMPT_NO_NEED'
-        | 'EXEMPT_UNKNOWN'
-        | 'COMPLETED'
-      exemptionReason?: string
-      exemptionDetail?: string
-      needSources: (
-        | 'LDD_SCREENER'
-        | 'ALN_SCREENER'
-        | 'CONDITION_SELF_DECLARED'
-        | 'CONDITION_CONFIRMED_DIAGNOSIS'
-        | 'CHALLENGE_NOT_ALN_SCREENER'
-      )[]
-      createdAtPrison: string
-      updatedAtPrison: string
-      /** Format: int32 */
-      version?: number
-      /** Format: uuid */
-      id: string
-      /** Format: uuid */
-      reference: string
-      createdBy?: string
-      /** Format: date-time */
-      createdAt?: string
-      updatedBy?: string
-      /** Format: date-time */
-      updatedAt?: string
-    }
     CreateEducationSupportPlanRequest: {
       /**
        * @description The Prison identifier.
@@ -1351,6 +1249,12 @@ export interface components {
        */
       reference: string
       /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the plan creation is due.  If this date is null then there is no dead line date. eg when a person has a need identified  after they are enrolled in education.
+       * @example 2023-11-19
+       */
+      deadlineDate: string
+      /**
        * @example null
        * @enum {string}
        */
@@ -1414,12 +1318,6 @@ export interface components {
        * @example 2023-11-19
        */
       earliestStartDate?: string
-      /**
-       * Format: date
-       * @description An ISO-8601 date representing date that the plan creation is due.  If this date is null then there is no dead line date. eg when a person has a need identified  after they are enrolled in education.
-       * @example 2023-11-19
-       */
-      deadlineDate?: string
       /**
        * Format: date
        * @description If the status of this Plan Creation Schedule is COMPLETED, this field is an ISO-8601 date representing  date that the Education Support Plan was created. This field will only have a value when the status of the  Plan Creation Schedule is COMPLETED, and reflects the date the Education Support Plan was created  (rather than the Plan Creation Schedule)
@@ -1588,7 +1486,7 @@ export interface components {
       releaseDate?: string
       /**
        * Format: date
-       * @description Either the plan creation,or review deadline date.
+       * @description Either the plan creation,or review deadline date.   Only returned when the planStatus is PLAN_OVERDUE, PLAN_DUE, REVIEW_OVERDUE, REVIEW_DUE, ACTIVE_PLAN.
        * @example 2035-11-01
        */
       deadlineDate?: string
@@ -1629,6 +1527,12 @@ export interface components {
        * @example c88a6c48-97e2-4c04-93b5-98619966447b
        */
       reference: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the Review is due. This date can be null. For example the person was in education and had a cataract which meant they had a visual support need.  The ELSP was created for the person. At some point in the future the cataract was removed and  so the plan was updated removing this need education ends for this person.  Then the person is enrolled in education once again. After enrolling a new need is identified (say)  ADHD then the plan will have a review schedule generated but because the person had already started  education the deadline date will be blank and therefore the review is optional and not subject to  the KPI requirements.
+       * @example 2023-11-19
+       */
+      deadlineDate: string
       /**
        * @example null
        * @enum {string}
@@ -1689,12 +1593,6 @@ export interface components {
       updatedAtPrison: string
       /**
        * Format: date
-       * @description An ISO-8601 date representing date that the Review is due. This date can be null. For example the person was in education and had a cataract which meant they had a visual support need.  The ELSP was created for the person. At some point in the future the cataract was removed and  so the plan was updated removing this need education ends for this person.  Then the person is enrolled in education once again. After enrolling a new need is identified (say)  ADHD then the plan will have a review schedule generated but because the person had already started  education the deadline date will be blank and therefore the review is optional and not subject to  the KPI requirements.
-       * @example 2023-11-19
-       */
-      deadlineDate?: string
-      /**
-       * Format: date
        * @description If the status of this Review Schedule is COMPLETED, this field is an ISO-8601 date representing  date that the Review was created. This field will only have a value when the status of the  Review Schedule is COMPLETED, and reflects the date the Review was completed.
        * @example 2023-11-19
        */
@@ -1750,13 +1648,13 @@ export interface components {
         | 'NO_PLAN'
       /**
        * Format: date
-       * @description An ISO-8601 date representing date that the plan creation is due.
+       * @description An ISO-8601 date representing date that the plan creation is due.   Only returned when the status is PLAN_OVERDUE, PLAN_DUE, REVIEW_OVERDUE, REVIEW_DUE, ACTIVE_PLAN.
        * @example 2023-11-19
        */
       planCreationDeadlineDate?: string
       /**
        * Format: date
-       * @description An ISO-8601 date representing date that the next plan review is due.
+       * @description An ISO-8601 date representing date that the next plan review is due.   Only returned when the status is PLAN_OVERDUE, PLAN_DUE, REVIEW_OVERDUE, REVIEW_DUE, ACTIVE_PLAN.
        * @example 2023-11-19
        */
       reviewDeadlineDate?: string
@@ -1781,6 +1679,82 @@ export interface components {
        * @example 2025-10-04
        */
       exemptionRecordedAt?: string
+    }
+    EducationSupportPlanReviewResponse: {
+      /**
+       * @description Whether or not the prisoner took part in the review.
+       * @example true
+       */
+      prisonerDeclinedFeedback: boolean
+      /**
+       * @description Details of any feedback from the prisoner.
+       * @example My support needs have been fully met by the course provider.
+       */
+      prisonerFeedback: string
+      /**
+       * @description Details of any feedback from the reviewer.
+       * @example As noted by the Mr Smith, his support needs have been fully met.
+       */
+      reviewerFeedback: string
+      /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
+      /**
+       * @description Optional details of who created the Review. If not present the review was created by the createdBy/createdByDisplayName fields.
+       * @example null
+       */
+      reviewCreatedBy?: components['schemas']['ReviewContributor']
+      /**
+       * @description Optional list of other people involved in the creation of the review.
+       * @example null
+       */
+      otherContributors?: components['schemas']['ReviewContributor'][]
+    }
+    PlanReviewsResponse: {
+      /**
+       * @description A List containing zero or more EducationSupportPlanReviewResponse.
+       * @example null
+       */
+      reviews: components['schemas']['EducationSupportPlanReviewResponse'][]
     }
     ALNScreenerResponse: {
       /**
@@ -2132,52 +2106,6 @@ export interface operations {
       }
     }
   }
-  createPersonInEducationWithNeeds: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        prisonNumber: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['EducationNeedRequest']
-      }
-    }
-    responses: {
-      /** @description Created */
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          '*/*': components['schemas']['PlanCreationScheduleEntity']
-        }
-      }
-    }
-  }
-  educationTriggerSimulation: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        prisonNumber: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Created */
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-    }
-  }
   getEducationSupportPlan: {
     parameters: {
       query?: never
@@ -2222,6 +2150,28 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['EducationSupportPlanResponse']
+        }
+      }
+    }
+  }
+  getReviews: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PlanReviewsResponse']
         }
       }
     }
@@ -2343,26 +2293,6 @@ export interface operations {
         content: {
           '*/*': components['schemas']['ChallengeListResponse']
         }
-      }
-    }
-  }
-  alnTriggerSimulation: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        prisonNumber: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description Created */
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
       }
     }
   }

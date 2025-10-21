@@ -13,6 +13,7 @@ import type {
   EducationSupportPlanResponse,
   PlanActionStatus,
   PlanCreationSchedulesResponse,
+  PlanReviewsResponse,
   ReferenceDataListResponse,
   SearchByPrisonResponse,
   StrengthListResponse,
@@ -265,6 +266,16 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/education-support-plan/review`,
         data: supportPlanReviewRequest,
+      },
+      asSystem(username),
+    )
+  }
+
+  async getEducationSupportPlanReviews(prisonNumber: string, username: string): Promise<PlanReviewsResponse> {
+    return this.get<PlanReviewsResponse>(
+      {
+        path: `/profile/${prisonNumber}/education-support-plan/review`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
       },
       asSystem(username),
     )
