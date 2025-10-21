@@ -1,0 +1,107 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% set educationSupportPlanReviews = params.educationSupportPlanReviews %}
+{% set prisonerSummary = params.prisonerSummary %}
+
+{% if educationSupportPlanReviews.length > 0 %}
+  {% set reviewsSortedByDate = educationSupportPlanReviews | sort(attribute = 'createdAt', reverse = true) %}
+  {% set mostRecentReview = reviewsSortedByDate[0] %}
+  {% set allPreviousReviews = reviewsSortedByDate.slice(1) %}
+
+  <div class="govuk-summary-card" data-qa="education-support-plan-review-individuals-view-on-progress-summary-card">
+    <div class="govuk-summary-card__content">
+      <h3 class="govuk-heading-s">{{ prisonerSummary | formatFirst_name_Last_name }}'s view on progress</h3>
+      <p class="govuk-body app-u-multiline-text">{{ mostRecentReview.prisonerViewOnProgress if not mostRecentReview.prisonerDeclinedBeingPartOfReview else 'Prisoner refused review' }}</p>
+      {% if allPreviousReviews.length > 0 %}
+        {% set previousPrisonerViewsOnProgress %}
+          <ul class="govuk-list">
+            {% for previousReview in allPreviousReviews %}
+              <li>
+                <p class="govuk-body app-u-multiline-text govuk-!-margin-bottom-2">{{ previousReview.prisonerViewOnProgress if not previousReview.prisonerDeclinedBeingPartOfReview else 'Prisoner refused review' }}</p>
+                <p class="govuk-hint">Added {{ previousReview.createdAt | formatDate('d MMM yyyy') }}</p>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endset %}
+        {{ govukDetails({
+          summaryText: "Previous views on progress",
+          html: previousPrisonerViewsOnProgress
+        }) }}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="govuk-summary-card" data-qa="education-support-plan-review-reviewers-view-on-progress-summary-card">
+    <div class="govuk-summary-card__content">
+      <h3 class="govuk-heading-s">Reviewer's view on progress</h3>
+      <p class="govuk-body app-u-multiline-text">{{ mostRecentReview.reviewersViewOnProgress }}</p>
+      {% if allPreviousReviews.length > 0 %}
+        {% set previousReviewerViewsOnProgress %}
+          <ul class="govuk-list">
+            {% for previousReview in allPreviousReviews %}
+              <li>
+                <p class="govuk-body app-u-multiline-text govuk-!-margin-bottom-2">{{ previousReview.reviewersViewOnProgress }}</p>
+                <p class="govuk-hint">Added {{ previousReview.createdAt | formatDate('d MMM yyyy') }}</p>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endset %}
+        {{ govukDetails({
+          summaryText: "Previous views on progress",
+          html: previousReviewerViewsOnProgress
+        }) }}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="govuk-summary-card" data-qa="education-support-plan-last-review-audit-fields-summary-card">
+    <div class="govuk-summary-card__content">
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Reviewed by
+          </dt>
+          <dd class="govuk-summary-list__value" data-qa="reviewed-by">
+            {{ mostRecentReview.createdByDisplayName if mostRecentReview.planReviewedByLoggedInUser else mostRecentReview.planReviewedByOtherFullName + ' (' + mostRecentReview.planReviewedByOtherJobRole + ')' }}
+          </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Review recorded by
+          </dt>
+          <dd class="govuk-summary-list__value" data-qa="review-recorded-by">
+            {{ mostRecentReview.createdByDisplayName }}
+          </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Reviewed on
+          </dt>
+          <dd class="govuk-summary-list__value" data-qa="reviewed-on">
+            {{ mostRecentReview.createdAt | formatDate('d MMM yyyy') }}
+          </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Other people consulted or involved
+          </dt>
+          <dd class="govuk-summary-list__value" data-qa="review-people-consulted">
+            {% if mostRecentReview.wereOtherPeopleConsulted %}
+              <ul class="govuk-list">
+                {% for person in mostRecentReview.otherPeopleConsulted %}
+                  <li>{{ person.name }} {{ '(' + person.jobRole + ')' if person.jobRole != 'N/A' }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              No
+            {% endif %}
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+{% endif %}

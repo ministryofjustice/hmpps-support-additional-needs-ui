@@ -4,10 +4,24 @@
    params: {
      prisonerSummary
      educationSupportPlan
+     planHasNotBeenReviewed
    }
 #}
 {% macro renderEducationSupportPlan(params) %}
   {%- include "./renderEducationSupportPlan.njk" -%}
+{% endmacro %}
+
+
+{# Component to render the Education Support Plan Reviews
+
+   Data supplied to this component:
+   params: {
+     prisonerSummary
+     educationSupportPlanReviews
+   }
+#}
+{% macro renderEducationSupportPlanReviews(params) %}
+  {%- include "./renderEducationSupportPlanReviews.njk" -%}
 {% endmacro %}
 
 
