@@ -54,11 +54,6 @@ export default class EducationSupportPlanPage extends ProfilePage {
     return this
   }
 
-  hasPrisonersViewOnSupportNeeded(expected: string): EducationSupportPlanPage {
-    this.individualSupportRequirements().should('contain.text', expected)
-    return this
-  }
-
   showsPlanDeclinedRecordedBy(expectedRecordedBy: string, expectedRecordedAt: string): EducationSupportPlanPage {
     this.educationSupportPlanSummaryCard().should('not.exist')
     this.declinedEducationSupportPlanSummaryCard().should('be.visible')
@@ -86,8 +81,6 @@ export default class EducationSupportPlanPage extends ProfilePage {
   private additionalInformation = (): PageElement => cy.get('[data-qa=additional-information]')
 
   private ehcp = (): PageElement => cy.get('[data-qa=education-health-care-plan]')
-
-  private individualSupportRequirements = (): PageElement => cy.get('[data-qa=individual-support-requirements]')
 
   private declinedEducationSupportPlanSummaryCard = (): PageElement =>
     cy.get('[data-qa=declined-education-support-plan-summary-card]')

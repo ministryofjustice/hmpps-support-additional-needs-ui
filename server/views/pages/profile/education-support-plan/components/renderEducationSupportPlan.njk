@@ -1,4 +1,5 @@
 {% set educationSupportPlan = params.educationSupportPlan %}
+{% set planHasNotBeenReviewed = params.planHasNotBeenReviewed %}
 {% set prisonerSummary = params.prisonerSummary %}
 
 <div class="govuk-summary-card" data-qa="education-support-plan-summary-card">
@@ -69,67 +70,55 @@
   </div>
 </div>
 
-<div class="govuk-summary-card" data-qa="education-support-plan-persons-view-summary-card">
-  <div class="govuk-summary-card__content">
-    <dl class="govuk-summary-list">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          {{ prisonerSummary | formatFirst_name_Last_name }}'s view on the support needed
-        </dt>
-        <dd class="govuk-summary-list__value" data-qa="individual-support-requirements">
-          <span class="app-u-multiline-text">{{ educationSupportPlan.individualSupport | default('None', true) }}</span>
-        </dd>
-      </div>
-    </dl>
+{% if planHasNotBeenReviewed %}
+  {# Only display the ELSP Creation Audit fields if the ELSP has not been reviewed #}
+  <div class="govuk-summary-card" data-qa="education-support-plan-created-audit-fields-summary-card">
+    <div class="govuk-summary-card__content">
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Created by
+          </dt>
+          <dd class="govuk-summary-list__value" data-qa="plan-created-by">
+            {{ educationSupportPlan.createdByDisplayName if educationSupportPlan.planCreatedByLoggedInUser else educationSupportPlan.planCreatedByOtherFullName + ' (' + educationSupportPlan.planCreatedByOtherJobRole + ')' }}
+          </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Created on
+          </dt>
+          <dd class="govuk-summary-list__value" data-qa="plan-created-on">
+            {{ educationSupportPlan.createdAt | formatDate('d MMM yyyy') }}
+          </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Plan recorded by
+          </dt>
+          <dd class="govuk-summary-list__value" data-qa="plan-recorded-by">
+            {{ educationSupportPlan.createdByDisplayName }}
+          </dd>
+        </div>
+
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Other people consulted or involved
+          </dt>
+          <dd class="govuk-summary-list__value" data-qa="plan-people-consulted">
+            {% if educationSupportPlan.wereOtherPeopleConsulted %}
+              <ul class="govuk-list">
+                {% for person in educationSupportPlan.otherPeopleConsulted %}
+                  <li>{{ person.name }} {{ '(' + person.jobRole + ')' if person.jobRole != 'N/A' }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              No
+            {% endif %}
+          </dd>
+        </div>
+      </dl>
+    </div>
   </div>
-</div>
-
-<div class="govuk-summary-card" data-qa="education-support-plan-created-audit-fields-summary-card">
-  <div class="govuk-summary-card__content">
-    <dl class="govuk-summary-list">
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Created by
-        </dt>
-        <dd class="govuk-summary-list__value" data-qa="plan-created-by">
-          {{ educationSupportPlan.createdByDisplayName if educationSupportPlan.planCreatedByLoggedInUser else educationSupportPlan.planCreatedByOtherFullName + ' (' + educationSupportPlan.planCreatedByOtherJobRole + ')' }}
-        </dd>
-      </div>
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Created on
-        </dt>
-        <dd class="govuk-summary-list__value" data-qa="plan-created-on">
-          {{ educationSupportPlan.createdAt | formatDate('d MMM yyyy') }}
-        </dd>
-      </div>
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Plan recorded by
-        </dt>
-        <dd class="govuk-summary-list__value" data-qa="plan-recorded-by">
-          {{ educationSupportPlan.createdByDisplayName }}
-        </dd>
-      </div>
-
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          Other people consulted or involved
-        </dt>
-        <dd class="govuk-summary-list__value" data-qa="plan-people-consulted">
-          {% if educationSupportPlan.wereOtherPeopleConsulted %}
-            <ul class="govuk-list">
-              {% for person in educationSupportPlan.otherPeopleConsulted %}
-                <li>{{ person.name }} {{ '(' + person.jobRole + ')' if person.jobRole != 'N/A' }}</li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            No
-          {% endif %}
-        </dd>
-      </div>
-    </dl>
-  </div>
-</div>
+{% endif %}

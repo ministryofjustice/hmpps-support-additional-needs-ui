@@ -21,9 +21,10 @@ context('Profile Education Support Plan Page', () => {
     cy.task('getPrisonerById', prisonNumber)
   })
 
-  it('should render the education support plan page given the prisoner has an Education Support Plan', () => {
+  it('should render the education support plan page given the prisoner has an Education Support Plan and no reviews', () => {
     // Given
     cy.task('stubGetEducationSupportPlan', prisonNumber)
+    cy.task('stubGetEducationSupportPlanReviews404Error', prisonNumber)
     cy.task('stubGetPlanActionStatus', {
       prisonNumber,
       planActionStatus: aPlanActionStatus({
@@ -43,7 +44,33 @@ context('Profile Education Support Plan Page', () => {
       .hasLearningNeedsSupport('Chris will need text reading to him as he cannot read himself')
       .hasOtherDetails('Chris responded well to the discussion about his learning needs and education plan')
       .doesNotHaveCurrentEhcp()
-      .hasPrisonersViewOnSupportNeeded('Chris is feeling positive and is keen to learn')
+
+      .apiErrorBannerIsNotDisplayed()
+  })
+
+  it('should render the education support plan page given the prisoner has an Education Support Plan and some previous reviews', () => {
+    // Given
+    cy.task('stubGetEducationSupportPlan', prisonNumber)
+    cy.task('stubGetEducationSupportPlanReviews', prisonNumber)
+    cy.task('stubGetPlanActionStatus', {
+      prisonNumber,
+      planActionStatus: aPlanActionStatus({
+        status: 'REVIEW_DUE',
+        reviewDeadlineDate: format(nextWeek, 'yyyy-MM-dd'),
+      }),
+    })
+
+    // When
+    cy.visit(`/profile/${prisonNumber}/education-support-plan`)
+
+    // Then
+    Page.verifyOnPage(EducationSupportPlanPage) //
+      .hasAdjustmentsToTeachingEnvironment('Use simpler examples to help students understand concepts')
+      .hasSpecificTeacherKnowledgeRequired('Teacher with BSL proficiency required')
+      .hasExamAccessArrangements('Escort to the exam room 10 minutes before everyone else')
+      .hasLearningNeedsSupport('Chris will need text reading to him as he cannot read himself')
+      .hasOtherDetails('Chris responded well to the discussion about his learning needs and education plan')
+      .doesNotHaveCurrentEhcp()
 
       .apiErrorBannerIsNotDisplayed()
   })
@@ -51,6 +78,7 @@ context('Profile Education Support Plan Page', () => {
   it('should render the education support plan page given the prisoner has declined an Education Support Plan', () => {
     // Given
     cy.task('stubGetEducationSupportPlan404Error', prisonNumber)
+    cy.task('stubGetEducationSupportPlanReviews404Error', prisonNumber)
     cy.task('stubGetPlanActionStatus', {
       prisonNumber,
       planActionStatus: aPlanActionStatus({
@@ -74,6 +102,7 @@ context('Profile Education Support Plan Page', () => {
   it('should render the education support plan page given the prisoner has no plan yet and the schedule is overdue', () => {
     // Given
     cy.task('stubGetEducationSupportPlan404Error', prisonNumber)
+    cy.task('stubGetEducationSupportPlanReviews404Error', prisonNumber)
     cy.task('stubGetPlanActionStatus', {
       prisonNumber,
       planActionStatus: aPlanActionStatus({
@@ -95,6 +124,19 @@ context('Profile Education Support Plan Page', () => {
   it('should render the education support plan page given the API to get the Education Support Plan returns an error', () => {
     // Given
     cy.task('stubGetEducationSupportPlan500Error', prisonNumber)
+    cy.task('stubGetPlanActionStatus', { prisonNumber })
+
+    // When
+    cy.visit(`/profile/${prisonNumber}/education-support-plan`)
+
+    // Then
+    Page.verifyOnPage(EducationSupportPlanPage) //
+      .apiErrorBannerIsDisplayed()
+  })
+
+  it('should render the education support plan page given the API to get the Education Support Plan Reviews returns an error', () => {
+    // Given
+    cy.task('stubGetEducationSupportPlanReviews500Error', prisonNumber)
     cy.task('stubGetPlanActionStatus', { prisonNumber })
 
     // When

@@ -1,6 +1,7 @@
 {% extends "../layout.njk" %}
 {% from "../components/actions-card/macro.njk" import actionsCard %}
 {% from "./components/macro.njk" import renderEducationSupportPlan %}
+{% from "./components/macro.njk" import renderEducationSupportPlanReviews %}
 {% from "./components/macro.njk" import noEducationSupportPlan %}
 {% from "./components/macro.njk" import declinedEducationSupportPlan %}
 {% from "./components/macro.njk" import errorRetrievingApiData %}
@@ -13,12 +14,14 @@
 
     {% set educationSupportPlanFulFilled = educationSupportPlan.isFulfilled() %}
     {% set educationSupportPlan = educationSupportPlan.value if educationSupportPlanFulFilled else {} %}
+    {% set educationSupportPlanReviewsFulFilled = educationSupportPlanReviews.isFulfilled() %}
+    {% set educationSupportPlanReviews = educationSupportPlanReviews.value if educationSupportPlanReviewsFulFilled else [] %}
     {% set educationSupportPlanLifecycleStatusFulFilled = educationSupportPlanLifecycleStatus.isFulfilled() %}
     {% set educationSupportPlanLifecycleStatus = educationSupportPlanLifecycleStatus.value if educationSupportPlanLifecycleStatusFulFilled else {} %}
 
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
-      {% if educationSupportPlanFulFilled and educationSupportPlanLifecycleStatusFulFilled %}
+      {% if educationSupportPlanFulFilled and educationSupportPlanReviewsFulFilled and educationSupportPlanLifecycleStatusFulFilled %}
 
         {% if educationSupportPlanLifecycleStatus.status === 'PLAN_DECLINED' %}
 
@@ -42,7 +45,13 @@
 
             {{ renderEducationSupportPlan({
               prisonerSummary: prisonerSummary,
-              educationSupportPlan: educationSupportPlan
+              educationSupportPlan: educationSupportPlan,
+              planHasNotBeenReviewed: educationSupportPlanReviews.length === 0
+            }) }}
+
+            {{ renderEducationSupportPlanReviews({
+              prisonerSummary: prisonerSummary,
+              educationSupportPlanReviews: educationSupportPlanReviews
             }) }}
 
           {% else %}
