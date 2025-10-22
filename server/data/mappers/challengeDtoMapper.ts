@@ -4,7 +4,7 @@ import { parseISO } from 'date-fns'
 import toReferenceAndAuditable from './referencedAndAuditableMapper'
 
 const toChallengeDto = (apiResponse: ChallengeListResponse): ChallengeResponseDto[] => {
-  return (apiResponse.challenges as Array<ChallengeResponse>).map(challenge => toChallengeResponseDto(challenge))
+  return (apiResponse?.challenges || []).map(toChallengeResponseDto)
 }
 
 const toChallengeResponseDto = (challenge: ChallengeResponse): ChallengeResponseDto => {
