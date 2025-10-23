@@ -146,6 +146,7 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     return this.get<ChallengeListResponse>(
       {
         path: `/profile/${prisonNumber}/challenges`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
       },
       asSystem(username),
     )
