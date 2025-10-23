@@ -47,3 +47,8 @@ dl.app-u-description-list {
     margin: 0;
   }
 }
+
+.disable-link {
+  pointer-events: none;
+  cursor: default;
+}
