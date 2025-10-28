@@ -148,6 +148,7 @@ export default {
   searchUiDefaultPaginationPageSize: Number(get('SEARCH_UI_DEFAULT_PAGINATION_PAGE_SIZE', 50, requiredInProduction)),
   featureToggles: {
     // someToggleEnabled: toBoolean(get('SOME_TOGGLE_ENABLED', false)),
-    reviewsEnabled: toBoolean(get('REVIEWS_ENABLED', false)),
+    reviewsEnabled: toBoolean(get('REVIEWS_ENABLED', false, requiredInProduction)),
+    editAndArchiveEnabled: toBoolean(get('EDIT_AND_ARCHIVE_ENABLED', false, requiredInProduction)),
   },
 }

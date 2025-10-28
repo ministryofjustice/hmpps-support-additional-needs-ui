@@ -134,7 +134,8 @@ A changelog for the service is available [here](./CHANGELOG.md)
 ## Feature Toggles
 Features can be toggled by setting the relevant environment variable.
 
-| Name                 | Default Value | Type     | Description                                         |
-|----------------------|---------------|----------|-----------------------------------------------------|
-| SOME_TOGGLE_ENABLED  | false         | Boolean  | Example feature toggle, for demonstration purposes. |
-| REVIEWS_ENABLED      | false         | Boolean  | Set to true to enable the reviews journey.          |
+| Name                     | Default Value | Type     | Description                                                                                                     |
+|--------------------------|---------------|----------|-----------------------------------------------------------------------------------------------------------------|
+| SOME_TOGGLE_ENABLED      | false         | Boolean  | Example feature toggle, for demonstration purposes.                                                             |
+| REVIEWS_ENABLED          | false         | Boolean  | Set to true to enable the reviews journey.                                                                      |
+| EDIT_AND_ARCHIVE_ENABLED | false         | Boolean  | Set to true to enable the edit & archive journeys for conditions, strengths, challenges and support strategies. |
