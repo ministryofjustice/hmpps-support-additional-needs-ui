@@ -1,21 +1,22 @@
 import { Request, Response } from 'express'
 import ChallengeService from '../../services/challengeService'
-import retrieveChallenges from './retrieveChallenges'
+import retrieveChallenge from './retrieveChallenge'
 import aValidChallengeResponseDto from '../../testsupport/challengeResponseDtoTestDataBuilder'
 
 jest.mock('../../services/challengeService')
 
-describe('retrieveChallenges', () => {
+describe('retrieveChallenge', () => {
   const mockedChallengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
 
-  const requestHandler = retrieveChallenges(mockedChallengeService)
+  const requestHandler = retrieveChallenge(mockedChallengeService)
   const prisonNumber = 'A1234BC'
+  const challengeReference = '02b21586-02a3-4938-a4c6-95d76f098f7d'
   const username = 'a-dps-user'
 
   const apiErrorCallback = jest.fn()
   const req = {
     user: { username },
-    params: { prisonNumber },
+    params: { prisonNumber, challengeReference },
   } as unknown as Request
   const res = {
     render: jest.fn(),
@@ -28,18 +29,18 @@ describe('retrieveChallenges', () => {
     res.locals = { user: undefined, apiErrorCallback }
   })
 
-  it('should retrieve challenges and store in res.locals', async () => {
+  it('should retrieve challenge and store in res.locals', async () => {
     // Given
-    const expectedChallenges = [aValidChallengeResponseDto()]
-    mockedChallengeService.getChallenges.mockResolvedValue(expectedChallenges)
+    const expectedChallenge = aValidChallengeResponseDto({ prisonNumber, reference: challengeReference })
+    mockedChallengeService.getChallenge.mockResolvedValue(expectedChallenge)
 
     // When
     await requestHandler(req, res, next)
 
     // Then
-    expect(res.locals.challenges.isFulfilled()).toEqual(true)
-    expect(res.locals.challenges.value).toEqual(expectedChallenges)
-    expect(mockedChallengeService.getChallenges).toHaveBeenCalled()
+    expect(res.locals.challenge.isFulfilled()).toEqual(true)
+    expect(res.locals.challenge.value).toEqual(expectedChallenge)
+    expect(mockedChallengeService.getChallenge).toHaveBeenCalledWith(username, prisonNumber, challengeReference)
     expect(next).toHaveBeenCalled()
     expect(apiErrorCallback).not.toHaveBeenCalled()
   })
@@ -47,14 +48,14 @@ describe('retrieveChallenges', () => {
   it('should store unfulfilled result on res.locals given service returns an error', async () => {
     // Given
     const error = new Error('An error occurred')
-    mockedChallengeService.getChallenges.mockRejectedValue(error)
+    mockedChallengeService.getChallenge.mockRejectedValue(error)
 
     // When
     await requestHandler(req, res, next)
 
     // Then
-    expect(res.locals.challenges.isFulfilled()).toEqual(false)
-    expect(mockedChallengeService.getChallenges).toHaveBeenCalledWith(username, prisonNumber)
+    expect(res.locals.challenge.isFulfilled()).toEqual(false)
+    expect(mockedChallengeService.getChallenge).toHaveBeenCalledWith(username, prisonNumber, challengeReference)
     expect(next).toHaveBeenCalled()
     expect(apiErrorCallback).toHaveBeenCalledWith(error)
   })

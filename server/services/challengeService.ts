@@ -2,7 +2,7 @@ import type { ChallengeDto, ChallengeResponseDto } from 'dto'
 import { SupportAdditionalNeedsApiClient } from '../data'
 import { toCreateChallengesRequest } from '../data/mappers/createChallengesRequestMapper'
 import logger from '../../logger'
-import { toChallengeDto } from '../data/mappers/challengeDtoMapper'
+import { toChallengeDto, toChallengeResponseDto } from '../data/mappers/challengeDtoMapper'
 
 export default class ChallengeService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -22,9 +22,27 @@ export default class ChallengeService {
   async getChallenges(username: string, prisonNumber: string): Promise<Array<ChallengeResponseDto>> {
     try {
       const challengeListResponse = await this.supportAdditionalNeedsApiClient.getChallenges(prisonNumber, username)
-      return toChallengeDto(challengeListResponse)
+      return toChallengeDto(prisonNumber, challengeListResponse)
     } catch (e) {
       logger.error(`Error getting Challenges for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
+
+  async getChallenge(
+    username: string,
+    prisonNumber: string,
+    challengeReference: string,
+  ): Promise<ChallengeResponseDto> {
+    try {
+      const challengeListResponse = await this.supportAdditionalNeedsApiClient.getChallenge(
+        prisonNumber,
+        challengeReference,
+        username,
+      )
+      return toChallengeResponseDto(prisonNumber, challengeListResponse)
+    } catch (e) {
+      logger.error(`Error getting Challenge for [${prisonNumber}]`, e)
       throw e
     }
   }

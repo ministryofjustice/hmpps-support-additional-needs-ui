@@ -131,6 +131,7 @@ describe('additionalLearningNeedsScreenerService', () => {
       })
       supportAdditionalNeedsApiClient.getAdditionalLearningNeedsScreeners.mockResolvedValue(alnScreeners)
       const expectedChallengeResponseDto = aValidChallengeResponseDto({
+        prisonNumber,
         symptoms: 'John struggles to read text on white background',
         fromALNScreener: true,
         challengeTypeCode: ChallengeType.WRITING,
