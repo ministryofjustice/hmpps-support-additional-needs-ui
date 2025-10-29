@@ -6,6 +6,7 @@ import ChallengeIdentificationSource from '../enums/challengeIdentificationSourc
 
 const aValidChallengeResponseDto = (
   options?: DtoAuditFields & {
+    prisonNumber?: string
     challengeTypeCode?: ChallengeType
     challengeCategory?: ChallengeCategory
     symptoms?: string
@@ -16,6 +17,7 @@ const aValidChallengeResponseDto = (
     alnScreenerDate?: Date
   },
 ): ChallengeResponseDto => ({
+  prisonNumber: options?.prisonNumber || 'A1234BC',
   challengeTypeCode: options?.challengeTypeCode || ChallengeType.READING_COMPREHENSION,
   challengeCategory: options?.challengeCategory || ChallengeCategory.LITERACY_SKILLS,
   symptoms:

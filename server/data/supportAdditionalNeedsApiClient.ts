@@ -4,6 +4,7 @@ import type {
   AlnScreenerRequest,
   ALNScreeners,
   ChallengeListResponse,
+  ChallengeResponse,
   ConditionListResponse,
   CreateChallengesRequest,
   CreateConditionsRequest,
@@ -146,6 +147,16 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     return this.get<ChallengeListResponse>(
       {
         path: `/profile/${prisonNumber}/challenges`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async getChallenge(prisonNumber: string, challengeReference: string, username: string): Promise<ChallengeResponse> {
+    return this.get<ChallengeResponse>(
+      {
+        path: `/profile/${prisonNumber}/challenges/${challengeReference}`,
         errorHandler: restClientErrorHandler({ ignore404: true }),
       },
       asSystem(username),

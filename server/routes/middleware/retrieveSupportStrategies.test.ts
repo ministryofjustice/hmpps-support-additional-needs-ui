@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import SupportStrategyService from '../../services/supportStrategyService'
 import retrieveSupportStrategies from './retrieveSupportStrategies'
-import { aValidSupportStrategyResponse } from '../../testsupport/supportStrategyResponseTestDataBuilder'
+import aValidSupportStrategyResponseDto from '../../testsupport/supportStrategyResponseDtoTestDataBuilder'
 
 jest.mock('../../services/supportStrategyService')
 
@@ -30,15 +30,15 @@ describe('retrieveSupportStrategies', () => {
 
   it('should retrieve current support strategies and store in res.locals', async () => {
     // Given
-    const expectedSupportStrategy = [aValidSupportStrategyResponse()]
-    mockedSupportStrategyService.getSupportStrategies.mockResolvedValue(expectedSupportStrategy)
+    const expectedSupportStrategies = [aValidSupportStrategyResponseDto()]
+    mockedSupportStrategyService.getSupportStrategies.mockResolvedValue(expectedSupportStrategies)
 
     // When
     await requestHandler(req, res, next)
 
     // Then
     expect(res.locals.supportStrategies.isFulfilled()).toEqual(true)
-    expect(res.locals.supportStrategies.value).toEqual(expectedSupportStrategy)
+    expect(res.locals.supportStrategies.value).toEqual(expectedSupportStrategies)
     expect(mockedSupportStrategyService.getSupportStrategies).toHaveBeenCalled()
     expect(next).toHaveBeenCalled()
     expect(apiErrorCallback).not.toHaveBeenCalled()

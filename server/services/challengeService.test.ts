@@ -16,6 +16,7 @@ describe('challengeService', () => {
 
   const prisonNumber = 'A1234BC'
   const username = 'some-username'
+  const challengeReference = '12345678-1234-1234-1234-123456789012'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -118,6 +119,72 @@ describe('challengeService', () => {
       // Then
       expect(actual).toEqual(expectedError)
       expect(supportAdditionalNeedsApiClient.getChallenges).toHaveBeenCalledWith(prisonNumber, username)
+    })
+  })
+
+  describe('getChallenge', () => {
+    it('should get challenge', async () => {
+      // Given
+      const challengeResponse = aValidChallengeResponse({
+        alnScreenerDate: null,
+        fromALNScreener: false,
+        symptoms: 'John struggles to read text on white background',
+        howIdentifiedOther: 'John was seen to have other challenges',
+      })
+      supportAdditionalNeedsApiClient.getChallenge.mockResolvedValue(challengeResponse)
+
+      const expectedChallenge = aValidChallengeResponseDto({
+        alnScreenerDate: null,
+        fromALNScreener: false,
+        symptoms: 'John struggles to read text on white background',
+        howIdentifiedOther: 'John was seen to have other challenges',
+      })
+
+      // When
+      const actual = await service.getChallenge(username, prisonNumber, challengeReference)
+
+      // Then
+      expect(actual).toEqual(expectedChallenge)
+      expect(supportAdditionalNeedsApiClient.getChallenge).toHaveBeenCalledWith(
+        prisonNumber,
+        challengeReference,
+        username,
+      )
+    })
+
+    it('should return null given API returns null', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.getChallenge.mockResolvedValue(null)
+
+      const expectedChallenge = null as ChallengeResponseDto
+
+      // When
+      const actual = await service.getChallenge(username, prisonNumber, challengeReference)
+
+      // Then
+      expect(actual).toEqual(expectedChallenge)
+      expect(supportAdditionalNeedsApiClient.getChallenge).toHaveBeenCalledWith(
+        prisonNumber,
+        challengeReference,
+        username,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.getChallenge.mockRejectedValue(expectedError)
+
+      // When
+      const actual = await service.getChallenge(username, prisonNumber, challengeReference).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.getChallenge).toHaveBeenCalledWith(
+        prisonNumber,
+        challengeReference,
+        username,
+      )
     })
   })
 })

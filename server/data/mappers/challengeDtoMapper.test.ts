@@ -5,6 +5,8 @@ import type { ChallengeResponseDto } from 'dto'
 import { toChallengeDto } from './challengeDtoMapper'
 
 describe('toChallengeDto', () => {
+  const prisonNumber = 'A1234BC'
+
   it('should map a single challenge correctly', () => {
     const testRef = 'abcdef'
     const apiResponse: ChallengeListResponse = {
@@ -33,10 +35,11 @@ describe('toChallengeDto', () => {
       ],
     }
 
-    const result = toChallengeDto(apiResponse)
+    const result = toChallengeDto(prisonNumber, apiResponse)
 
     expect(result).toHaveLength(1)
     expect(result[0]).toEqual<ChallengeResponseDto>({
+      prisonNumber,
       createdAtPrison: 'PR001',
       challengeCategory: 'EMOTIONS_FEELINGS',
       createdAt: parseISO('2025-07-25T12:00:00.000Z'),
@@ -107,10 +110,11 @@ describe('toChallengeDto', () => {
       ],
     }
 
-    const result = toChallengeDto(apiResponse)
+    const result = toChallengeDto(prisonNumber, apiResponse)
 
     expect(result).toHaveLength(2)
     expect(result[0]).toEqual<ChallengeResponseDto>({
+      prisonNumber,
       createdAtPrison: 'PR001',
       challengeCategory: 'EMOTIONS_FEELINGS',
       createdAt: parseISO('2025-07-25T12:00:00.000Z'),
@@ -130,6 +134,7 @@ describe('toChallengeDto', () => {
       challengeTypeCode: 'TYPE001',
     })
     expect(result[1]).toEqual<ChallengeResponseDto>({
+      prisonNumber,
       createdAtPrison: 'PR001',
       challengeCategory: 'EMOTIONS_FEELINGS',
       createdAt: parseISO('2025-07-25T12:00:00.000Z'),
@@ -152,7 +157,7 @@ describe('toChallengeDto', () => {
 
   it('should handle empty `challenges` array', () => {
     const apiResponse: ChallengeListResponse = { challenges: [] }
-    const result = toChallengeDto(apiResponse)
+    const result = toChallengeDto(prisonNumber, apiResponse)
 
     expect(result).toHaveLength(0)
   })
