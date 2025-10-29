@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import type { ChallengeDto } from 'dto'
-import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import { PrisonUser } from '../../../interfaces/hmppsUser'
 
 /**
  * Middleware function to check whether a [ChallengeDto] exists in the journeyData for the prisoner referenced in the request URL.
