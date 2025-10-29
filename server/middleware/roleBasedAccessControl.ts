@@ -14,13 +14,27 @@ const rolesForAction = (): Record<ApplicationAction, Array<ApplicationRole>> => 
   [ApplicationAction.RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_CHALLENGES]: [],
+  [ApplicationAction.EDIT_CHALLENGES]: [ApplicationRole.ROLE_SAN_EDITOR, ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.ARCHIVE_CHALLENGES]: [ApplicationRole.ROLE_SAN_EDITOR, ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_STRENGTHS]: [],
+  [ApplicationAction.EDIT_STRENGTHS]: [ApplicationRole.ROLE_SAN_EDITOR, ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.ARCHIVE_STRENGTHS]: [ApplicationRole.ROLE_SAN_EDITOR, ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_SUPPORT_STRATEGIES]: [],
+  [ApplicationAction.EDIT_SUPPORT_STRATEGIES]: [
+    ApplicationRole.ROLE_SAN_EDITOR,
+    ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
+  ],
+  [ApplicationAction.ARCHIVE_SUPPORT_STRATEGIES]: [
+    ApplicationRole.ROLE_SAN_EDITOR,
+    ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
+  ],
   [ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS]: [],
   [ApplicationAction.RECORD_DIAGNOSED_CONDITIONS]: [
     ApplicationRole.ROLE_SAN_EDITOR,
     ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
   ],
+  [ApplicationAction.EDIT_CONDITIONS]: [ApplicationRole.ROLE_SAN_EDITOR, ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.ARCHIVE_CONDITIONS]: [ApplicationRole.ROLE_SAN_EDITOR, ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_ALN_SCREENER]: [],
   [ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE]: [
     ApplicationRole.ROLE_SAN_EDITOR,
