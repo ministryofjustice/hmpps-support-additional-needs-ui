@@ -86,9 +86,15 @@ const pageViewEventMap: Record<string, Page> = {
   '/strengths/:prisonNumber/create/:journeyId/select-category': Page.CREATE_STRENGTH_CATEGORY,
   '/strengths/:prisonNumber/create/:journeyId/detail': Page.CREATE_STRENGTH_DETAILS,
 
+  // Edit strengths routes
+  '/strengths/:prisonNumber/:strengthReference/edit/:journeyId/detail': Page.EDIT_STRENGTH_DETAILS,
+
   // Create challenges routes
   '/challenges/:prisonNumber/create/:journeyId/select-category': Page.CREATE_CHALLENGE_CATEGORY,
   '/challenges/:prisonNumber/create/:journeyId/detail': Page.CREATE_CHALLENGE_DETAILS,
+
+  // Edit challenges routes
+  '/challenges/:prisonNumber/:challengeReference/edit/:journeyId/detail': Page.EDIT_CHALLENGE_DETAILS,
 
   // Record ALN Screener routes
   '/aln-screener/:prisonNumber/create/:journeyId/screener-date': Page.RECORD_ALN_SCREENER_DATE,
@@ -100,9 +106,16 @@ const pageViewEventMap: Record<string, Page> = {
   '/conditions/:prisonNumber/create/:journeyId/select-conditions': Page.CREATE_CONDITIONS_SELECT_CONDITIONS,
   '/conditions/:prisonNumber/create/:journeyId/details': Page.CREATE_CONDITIONS_DETAILS,
 
+  // Edit conditions routes
+  '/conditions/:prisonNumber/:conditionReference/edit/:journeyId/details': Page.EDIT_CONDITIONS_DETAILS,
+
   // Create Support Strategies routes
   '/support-strategies/:prisonNumber/create/:journeyId/select-category': Page.CREATE_SUPPORT_STRATEGY_CATEGORY,
   '/support-strategies/:prisonNumber/create/:journeyId/detail': Page.CREATE_SUPPORT_STRATEGY_DETAILS,
+
+  // Edit Support Strategies routes
+  '/support-strategies/:prisonNumber/:supportStrategyReference/edit/:journeyId/detail':
+    Page.EDIT_SUPPORT_STRATEGY_DETAILS,
 
   // Non audit routes. These routes do not raise an audit event
   '/': null,
@@ -110,10 +123,14 @@ const pageViewEventMap: Record<string, Page> = {
   '/education-support-plan/:prisonNumber/refuse-plan/reason': null,
   '/education-support-plan/:prisonNumber/review/who-reviewed-the-plan': null,
   '/strengths/:prisonNumber/create/select-category': null,
+  '/strengths/:prisonNumber/:strengthReference/edit/detail': null,
   '/challenges/:prisonNumber/create/select-category': null,
+  '/challenges/:prisonNumber/:challengeReference/edit/detail': null,
   '/aln-screener/:prisonNumber/create/screener-date': null,
   '/conditions/:prisonNumber/create/select-conditions': null,
+  '/conditions/:prisonNumber/:conditionReference/edit/details': null,
   '/support-strategies/:prisonNumber/create/select-category': null,
+  '/support-strategies/:prisonNumber/:supportStrategyReference/edit/detail': null,
 }
 
 export default function auditMiddleware({ auditService }: Services) {

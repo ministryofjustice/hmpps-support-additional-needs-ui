@@ -62,13 +62,14 @@ const stubCreateChallenges500Error = (prisonNumber = 'G6115VJ'): SuperAgentReque
     },
   })
 
-const stubGetChallenges = (
-  options: { prisonNumber: string; challenges?: Array<ChallengeResponse> } = { prisonNumber: 'G6115VJ' },
-): SuperAgentRequest =>
+const stubGetChallenges = (options: {
+  prisonNumber: string
+  challenges?: Array<ChallengeResponse>
+}): SuperAgentRequest =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: `/support-additional-needs-api/profile/${options.prisonNumber}/challenges`,
+      urlPattern: `/support-additional-needs-api/profile/${options?.prisonNumber || 'G6115VJ'}/challenges`,
     },
     response: {
       status: 200,
@@ -140,10 +141,95 @@ const stubGetChallenges500Error = (prisonNumber = 'G6115VJ'): SuperAgentRequest 
     },
   })
 
+const stubGetChallenge = (options: {
+  prisonNumber: string
+  challengeReference?: string
+  challenge?: ChallengeResponse
+}): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: `/support-additional-needs-api/profile/${options?.prisonNumber || 'G6115VJ'}/challenges/${options?.challengeReference || 'c88a6c48-97e2-4c04-93b5-98619966447b'}`,
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: options.challenge ?? {
+        reference: 'c88a6c48-97e2-4c04-93b5-98619966447b',
+        createdBy: 'asmith_gen',
+        createdByDisplayName: 'Alex Smith',
+        createdAt: '2023-06-19T09:39:44Z',
+        createdAtPrison: 'MDI',
+        updatedBy: 'asmith_gen',
+        updatedByDisplayName: 'Alex Smith',
+        updatedAt: '2023-06-19T09:39:44Z',
+        updatedAtPrison: 'MDI',
+        symptoms: 'John is not good at long division',
+        howIdentified: ['EDUCATION_SKILLS_WORK'],
+        challengeType: {
+          code: 'NUMERACY_SKILLS_DEFAULT',
+          description: 'Numeracy Skills',
+          categoryCode: 'NUMERACY_SKILLS',
+          categoryDescription: 'Numeracy Skills',
+          areaCode: 'COGNITION_LEARNING',
+          areaDescription: 'Cognition & Learning',
+          listSequence: 0,
+          active: true,
+        },
+        fromALNScreener: false,
+        active: true,
+      },
+    },
+  })
+
+const stubGetChallenge404Error = (options?: {
+  prisonNumber?: string
+  challengeReference?: string
+}): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: `/support-additional-needs-api/profile/${options?.prisonNumber || 'G6115VJ'}/challenges/${options?.challengeReference || 'c88a6c48-97e2-4c04-93b5-98619966447b'}`,
+    },
+    response: {
+      status: 404,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        status: 404,
+        developerMessage: 'Challenge not found',
+      },
+    },
+  })
+
+const stubGetChallenge500Error = (options?: {
+  prisonNumber?: string
+  challengeReference?: string
+}): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: `/support-additional-needs-api/profile/${options?.prisonNumber || 'G6115VJ'}/challenges/${options?.challengeReference || 'c88a6c48-97e2-4c04-93b5-98619966447b'}`,
+    },
+    response: {
+      status: 500,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        status: 500,
+        errorCode: null,
+        userMessage: 'An unexpected error occurred',
+        developerMessage: 'An unexpected error occurred',
+        moreInfo: null,
+      },
+    },
+  })
+
 export default {
   stubCreateChallenges,
   stubCreateChallenges500Error,
   stubGetChallenges,
   stubGetChallenges404Error,
   stubGetChallenges500Error,
+  stubGetChallenge,
+  stubGetChallenge404Error,
+  stubGetChallenge500Error,
 }
