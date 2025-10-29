@@ -3,22 +3,27 @@ import type { ChallengeResponseDto } from 'dto'
 import { parseISO } from 'date-fns'
 import toReferenceAndAuditable from './referencedAndAuditableMapper'
 
-const toChallengeDto = (apiResponse: ChallengeListResponse): ChallengeResponseDto[] => {
-  return (apiResponse?.challenges || []).map(toChallengeResponseDto)
+const toChallengeDto = (prisonNumber: string, apiResponse: ChallengeListResponse): ChallengeResponseDto[] => {
+  return ((apiResponse?.challenges || []) as Array<ChallengeResponse>).map(challenge =>
+    toChallengeResponseDto(prisonNumber, challenge),
+  )
 }
 
-const toChallengeResponseDto = (challenge: ChallengeResponse): ChallengeResponseDto => {
-  return {
-    ...toReferenceAndAuditable(challenge),
-    fromALNScreener: challenge.fromALNScreener,
-    challengeTypeCode: challenge.challengeType.code,
-    challengeCategory: challenge.challengeType.categoryCode,
-    symptoms: challenge.symptoms,
-    howIdentified: challenge.howIdentified,
-    active: challenge.active,
-    howIdentifiedOther: challenge.howIdentifiedOther,
-    alnScreenerDate: challenge.alnScreenerDate ? parseISO(challenge.alnScreenerDate) : null,
-  } as ChallengeResponseDto
+const toChallengeResponseDto = (prisonNumber: string, challenge: ChallengeResponse): ChallengeResponseDto => {
+  return challenge
+    ? {
+        ...toReferenceAndAuditable(challenge),
+        prisonNumber,
+        fromALNScreener: challenge.fromALNScreener,
+        challengeTypeCode: challenge.challengeType.code,
+        challengeCategory: challenge.challengeType.categoryCode,
+        symptoms: challenge.symptoms,
+        howIdentified: challenge.howIdentified,
+        active: challenge.active,
+        howIdentifiedOther: challenge.howIdentifiedOther,
+        alnScreenerDate: challenge.alnScreenerDate ? parseISO(challenge.alnScreenerDate) : null,
+      }
+    : null
 }
 
 export { toChallengeDto, toChallengeResponseDto }
