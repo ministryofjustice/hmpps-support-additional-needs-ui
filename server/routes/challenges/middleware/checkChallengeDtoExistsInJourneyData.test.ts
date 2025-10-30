@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import checkChallengeDtoExistsInJourneyData from './checkChallengeDtoExistsInJourneyData'
-import aValidChallengeDto from '../../../../testsupport/challengeDtoTestDataBuilder'
+import aValidChallengeDto from '../../../testsupport/challengeDtoTestDataBuilder'
 
 describe('checkChallengeDtoExistsInJourneyData', () => {
   const prisonNumber = 'A1234BC'

@@ -14,7 +14,7 @@ export default class DetailController {
 
   getDetailView = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
-    const { challengeDto } = req.journeyData
+    const challengeDto = req.journeyData.challengeDto as ChallengeDto
 
     const detailForm = invalidForm
       ? {
@@ -35,7 +35,7 @@ export default class DetailController {
     const detailsForm = { ...req.body }
     this.updateDtoFromForm(req, detailsForm)
 
-    const { challengeDto } = req.journeyData
+    const challengeDto = req.journeyData.challengeDto as ChallengeDto
     const { apiErrorCallback } = res.locals
     const apiResult = await Result.wrap(
       this.challengeService.createChallenges(req.user.username, [challengeDto]),
