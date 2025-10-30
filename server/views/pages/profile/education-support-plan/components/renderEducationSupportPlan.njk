@@ -71,7 +71,22 @@
 </div>
 
 {% if planHasNotBeenReviewed %}
-  {# Only display the ELSP Creation Audit fields if the ELSP has not been reviewed #}
+  {# Only display the Prisoner's view on support needed, and ELSP Creation Audit fields if the ELSP has not been reviewed #}
+  <div class="govuk-summary-card" data-qa="education-support-plan-persons-view-summary-card">
+    <div class="govuk-summary-card__content">
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            {{ prisonerSummary | formatFirst_name_Last_name }}'s view on the support needed
+          </dt>
+          <dd class="govuk-summary-list__value" data-qa="individual-support-requirements">
+            <span class="app-u-multiline-text">{{ educationSupportPlan.individualSupport | default('None', true) }}</span>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
   <div class="govuk-summary-card" data-qa="education-support-plan-created-audit-fields-summary-card">
     <div class="govuk-summary-card__content">
       <dl class="govuk-summary-list">
