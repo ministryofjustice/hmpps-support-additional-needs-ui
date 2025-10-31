@@ -3,9 +3,9 @@ import OverviewPage from '../../../pages/profile/overviewPage'
 import { postRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
-import SelectChallengeCategoryPage from '../../../pages/challenges/selectChallengeCategoryPage'
+import ChallengeCategoryPage from '../../../pages/challenges/challengeCategoryPage'
 import ChallengesPage from '../../../pages/profile/challengesPage'
-import AddChallengeDetailPage from '../../../pages/challenges/addChallengeDetailPage'
+import ChallengeDetailPage from '../../../pages/challenges/challengeDetailPage'
 import ChallengeIdentificationSource from '../../../../server/enums/challengeIdentificationSource'
 import ChallengeType from '../../../../server/enums/challengeType'
 
@@ -28,7 +28,7 @@ context('Create a Challenge', () => {
     cy.visit(`/challenges/${prisonNumber}/create/select-category`)
 
     // Then
-    Page.verifyOnPage(SelectChallengeCategoryPage)
+    Page.verifyOnPage(ChallengeCategoryPage)
   })
 
   it('should create a prisoners Challenge, triggering validation on every screen', () => {
@@ -39,31 +39,31 @@ context('Create a Challenge', () => {
       .clickAddChallengesButton()
 
     // When
-    Page.verifyOnPage(SelectChallengeCategoryPage) //
+    Page.verifyOnPage(ChallengeCategoryPage) //
       // submit the page without answering the question to trigger a validation error
-      .submitPageTo(SelectChallengeCategoryPage)
+      .submitPageTo(ChallengeCategoryPage)
       .hasErrorCount(1)
       .hasFieldInError('category')
       // select a category and submit the form to the next page
       .selectCategory(ChallengeType.EMOTIONS_FEELINGS_DEFAULT)
-      .submitPageTo(AddChallengeDetailPage)
+      .submitPageTo(ChallengeDetailPage)
 
-    Page.verifyOnPage(AddChallengeDetailPage)
+    Page.verifyOnPage(ChallengeDetailPage)
       .hasPageHeading('Add emotions and feelings challenge')
       // submit the page without answering the question to trigger a validation error
-      .submitPageTo(AddChallengeDetailPage)
+      .submitPageTo(ChallengeDetailPage)
       .hasErrorCount(2)
       .hasFieldInError('description')
       .hasFieldInError('howIdentified')
       // enter a description only and submit
       .enterDescription('Chris struggles showing empathy when dealing with others')
-      .submitPageTo(AddChallengeDetailPage)
+      .submitPageTo(ChallengeDetailPage)
       .hasErrorCount(1)
       .hasFieldInError('howIdentified')
       // select how the challenge was identified, including Other, but do not enter a reason
       .selectHowChallengeIdentified(ChallengeIdentificationSource.FORMAL_PROCESSES)
       .selectHowChallengeIdentified(ChallengeIdentificationSource.OTHER)
-      .submitPageTo(AddChallengeDetailPage)
+      .submitPageTo(ChallengeDetailPage)
       .hasErrorCount(1)
       .hasFieldInError('howIdentifiedOther')
       // enter the detail for Other and submit
@@ -99,20 +99,20 @@ context('Create a Challenge', () => {
 
     cy.visit(`/challenges/${prisonNumber}/create/select-category`)
 
-    Page.verifyOnPage(SelectChallengeCategoryPage)
+    Page.verifyOnPage(ChallengeCategoryPage)
       .selectCategory(ChallengeType.EMOTIONS_FEELINGS_DEFAULT)
-      .submitPageTo(AddChallengeDetailPage)
+      .submitPageTo(ChallengeDetailPage)
       .enterDescription('Chris struggles showing empathy when dealing with others')
       .selectHowChallengeIdentified(ChallengeIdentificationSource.FORMAL_PROCESSES)
 
     // When
-    Page.verifyOnPage(AddChallengeDetailPage) //
+    Page.verifyOnPage(ChallengeDetailPage) //
       .apiErrorBannerIsNotDisplayed()
-    Page.verifyOnPage(AddChallengeDetailPage) //
-      .submitPageTo(AddChallengeDetailPage) // Submit the page but expect to stay on the Add Challenge Detail page due to API error
+    Page.verifyOnPage(ChallengeDetailPage) //
+      .submitPageTo(ChallengeDetailPage) // Submit the page but expect to stay on the Add Challenge Detail page due to API error
 
     // Then
-    Page.verifyOnPage(AddChallengeDetailPage) //
+    Page.verifyOnPage(ChallengeDetailPage) //
       .apiErrorBannerIsDisplayed()
   })
 })

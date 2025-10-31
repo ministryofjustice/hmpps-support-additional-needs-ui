@@ -1,8 +1,7 @@
 import { Request, Response } from 'express'
-import type { ChallengeDto } from 'dto'
 import DetailController from './detailController'
 import ChallengeService from '../../../../services/challengeService'
-import aValidChallengeDto from '../../../../testsupport/challengeDtoTestDataBuilder'
+import aValidChallengeResponseDto from '../../../../testsupport/challengeResponseDtoTestDataBuilder'
 import ChallengeIdentificationSource from '../../../../enums/challengeIdentificationSource'
 import ChallengeType from '../../../../enums/challengeType'
 import AuditService from '../../../../services/auditService'
@@ -16,14 +15,14 @@ describe('detailController', () => {
   const controller = new DetailController(mockedChallengeService, auditService)
 
   const username = 'FRED_123'
-  const prisonId = 'BXI'
   const prisonNumber = 'A1234BC'
+  const challengeReference = '518d65dc-2866-46a7-94c0-ffb331e66061'
 
   const flash = jest.fn()
 
   const req = {
-    user: { username },
     session: {},
+    user: { username },
     journeyData: {},
     body: {},
     params: { prisonNumber },
@@ -34,7 +33,7 @@ describe('detailController', () => {
     redirectWithErrors: jest.fn(),
     redirectWithSuccess: jest.fn(),
     render: jest.fn(),
-    locals: {},
+    locals: { user: { username, activeCaseLoadId: 'BXI' } },
   } as unknown as Response
   const next = jest.fn()
 
@@ -42,13 +41,13 @@ describe('detailController', () => {
     jest.resetAllMocks()
     req.body = {}
     req.journeyData = {
-      challengeDto: {
-        ...aValidChallengeDto(),
+      challengeDto: aValidChallengeResponseDto({
+        reference: challengeReference,
         challengeTypeCode: ChallengeType.ARITHMETIC,
-        symptoms: undefined,
-        howIdentified: undefined,
-        howIdentifiedOther: undefined,
-      },
+        symptoms: 'Has difficulty adding up',
+        howIdentified: [ChallengeIdentificationSource.CONVERSATIONS],
+        howIdentifiedOther: null,
+      }),
     }
   })
 
@@ -57,15 +56,16 @@ describe('detailController', () => {
     flash.mockReturnValue([])
     res.locals.invalidForm = undefined
 
-    const expectedViewTemplate = 'pages/challenges/detail/create-journey/index'
+    const expectedViewTemplate = 'pages/challenges/detail/edit-journey/index'
     const expectedViewModel = {
       category: ChallengeType.ARITHMETIC,
       errorRecordingChallenge: false,
       form: {
-        howIdentified: [] as Array<ChallengeIdentificationSource>,
-        howIdentifiedOther: undefined as string,
-        description: undefined as string,
+        description: 'Has difficulty adding up',
+        howIdentified: [ChallengeIdentificationSource.CONVERSATIONS],
+        howIdentifiedOther: null as string,
       },
+      mode: 'edit',
     }
 
     // When
@@ -83,11 +83,12 @@ describe('detailController', () => {
     }
     res.locals.invalidForm = invalidForm
 
-    const expectedViewTemplate = 'pages/challenges/detail/create-journey/index'
+    const expectedViewTemplate = 'pages/challenges/detail/edit-journey/index'
     const expectedViewModel = {
       category: ChallengeType.ARITHMETIC,
       form: invalidForm,
       errorRecordingChallenge: false,
+      mode: 'edit',
     }
 
     // When
@@ -100,40 +101,41 @@ describe('detailController', () => {
 
   it('should submit form and redirect to next route given calling API is successful', async () => {
     // Given
-    const challengeDto: ChallengeDto = {
-      ...aValidChallengeDto({ prisonNumber, prisonId }),
-      symptoms: undefined,
-      howIdentified: undefined,
-      howIdentifiedOther: undefined,
-    }
-    req.journeyData = { challengeDto }
+    const challengeResponseDto = aValidChallengeResponseDto({ prisonNumber, reference: challengeReference })
+    req.journeyData = { challengeDto: challengeResponseDto }
     req.body = {
       description: 'A description of the challenge',
       howIdentified: [ChallengeIdentificationSource.CONVERSATIONS, ChallengeIdentificationSource.OTHER],
-      howIdentifiedOther: 'It has been mentioned to me in passing',
+      howIdentifiedOther: 'Other prisoners often mention this to me in passing',
     }
+    mockedChallengeService.updateChallenge.mockResolvedValue(null)
 
-    mockedChallengeService.createChallenges.mockResolvedValue(null)
-
-    const expectedChallengeDto = aValidChallengeDto({
-      prisonNumber,
-      prisonId,
+    const expectedChallengeDto = {
+      ...challengeResponseDto,
+      prisonId: 'BXI',
       symptoms: 'A description of the challenge',
       howIdentified: [ChallengeIdentificationSource.CONVERSATIONS, ChallengeIdentificationSource.OTHER],
-      howIdentifiedOther: 'It has been mentioned to me in passing',
-    })
+      howIdentifiedOther: 'Other prisoners often mention this to me in passing',
+    }
     const expectedNextRoute = `/profile/${prisonNumber}/challenges`
 
     // When
     await controller.submitDetailForm(req, res, next)
 
     // Then
-    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Challenge added')
+    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Challenge updated')
     expect(req.journeyData.challengeDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
-    expect(mockedChallengeService.createChallenges).toHaveBeenCalledWith(username, [expectedChallengeDto])
-    expect(auditService.logCreateChallenge).toHaveBeenCalledWith(
+    expect(mockedChallengeService.updateChallenge).toHaveBeenCalledWith(
+      username,
+      challengeReference,
+      expectedChallengeDto,
+    )
+    expect(auditService.logEditChallenge).toHaveBeenCalledWith(
       expect.objectContaining({
+        details: {
+          challengeReference,
+        },
         subjectId: prisonNumber,
         subjectType: 'PRISONER_ID',
         who: username,
@@ -143,28 +145,23 @@ describe('detailController', () => {
 
   it('should submit form and redirect to next route given calling API is not successful', async () => {
     // Given
-    const challengeDto: ChallengeDto = {
-      ...aValidChallengeDto({ prisonNumber, prisonId }),
-      symptoms: undefined,
-      howIdentified: undefined,
-      howIdentifiedOther: undefined,
-    }
-    req.journeyData = { challengeDto }
+    const challengeResponseDto = aValidChallengeResponseDto({ prisonNumber, reference: challengeReference })
+    req.journeyData = { challengeDto: challengeResponseDto }
     req.body = {
       description: 'A description of the challenge',
       howIdentified: [ChallengeIdentificationSource.CONVERSATIONS, ChallengeIdentificationSource.OTHER],
       howIdentifiedOther: 'Other prisoners often mention this to me in passing',
     }
 
-    mockedChallengeService.createChallenges.mockRejectedValue(new Error('Internal Server Error'))
+    mockedChallengeService.updateChallenge.mockRejectedValue(new Error('Internal Server Error'))
 
-    const expectedChallengeDto = aValidChallengeDto({
-      prisonNumber,
-      prisonId,
+    const expectedChallengeDto = {
+      ...challengeResponseDto,
+      prisonId: 'BXI',
       symptoms: 'A description of the challenge',
       howIdentified: [ChallengeIdentificationSource.CONVERSATIONS, ChallengeIdentificationSource.OTHER],
       howIdentifiedOther: 'Other prisoners often mention this to me in passing',
-    })
+    }
     const expectedNextRoute = 'detail'
 
     // When
@@ -172,9 +169,13 @@ describe('detailController', () => {
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
-    expect(req.journeyData.challengeDto).toEqual(challengeDto)
+    expect(req.journeyData.challengeDto).toEqual(challengeResponseDto)
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
-    expect(mockedChallengeService.createChallenges).toHaveBeenCalledWith(username, [expectedChallengeDto])
-    expect(auditService.logCreateChallenge).not.toHaveBeenCalled()
+    expect(mockedChallengeService.updateChallenge).toHaveBeenCalledWith(
+      username,
+      challengeReference,
+      expectedChallengeDto,
+    )
+    expect(auditService.logEditChallenge).not.toHaveBeenCalled()
   })
 })

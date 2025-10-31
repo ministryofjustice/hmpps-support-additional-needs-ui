@@ -1,17 +1,20 @@
-{% extends "../layout.njk" %}
+{% extends "../../layout.njk" %}
 
-{% set pageId = 'create-challenge-detail' %}
-{% set pageTitle = "Add challenge - Add challenge category" %}
+{% set pageId = 'challenge-detail' %}
+{% set pageTitle = "Edit challenge - Edit challenge details" %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-l">Add {{ category | formatChallengeTypeScreenValue | lower }} challenge</h1>
+      <h1 class="govuk-heading-l">Edit description of {{ prisonerSummary | formatFirst_name_Last_name }}'s challenge</h1>
     </div>
   </div>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Category of challenge</h2>
+      <p class="govuk-body">{{ category | formatChallengeTypeScreenValue }}</p>
+
       <form class="form" method="post" novalidate="">
         <div class="govuk-form-group">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
@@ -58,6 +61,9 @@
                 text: "How was this challenge identified?",
                 classes: "govuk-fieldset__legend--m"
               }
+            },
+            hint: {
+              text: 'Select all that apply'
             },
             items: [
               {
@@ -110,7 +116,7 @@
 
         {{ govukButton({
           id: "submit-button",
-          text: "Add challenge",
+          text: "Update challenge",
           type: "submit",
           attributes: {"data-qa": "submit-button"},
           preventDoubleClick: true
