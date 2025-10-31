@@ -1,3 +1,12 @@
 {% from "./macro.njk" import challengesSummaryCard %}
 
-{{ challengesSummaryCard(challenge, prisonNamesById) }}
+{{ challengesSummaryCard({
+  challengesData: challengesData,
+  prisonNamesById: prisonNamesById,
+  showActions: showActions,
+  userHasPermissionTo: userHasPermissionTo,
+  title: title,
+  id: id,
+  classes: classes,
+  attributes: attributes
+}) }}
