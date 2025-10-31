@@ -59,8 +59,24 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    get?: never
+    get: operations['getSupportStrategy']
     put: operations['updateSupportStrategy']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/support-strategies/{supportStrategyReference}/archive': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['archiveSupportStrategy']
     post?: never
     delete?: never
     options?: never
@@ -75,7 +91,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    get?: never
+    get: operations['getStrength']
     put: operations['updateStrength']
     post?: never
     delete?: never
@@ -91,7 +107,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    get?: never
+    get: operations['getCondition']
     put: operations['updateCondition']
     post?: never
     delete?: never
@@ -107,7 +123,7 @@ export interface paths {
       path?: never
       cookie?: never
     }
-    get?: never
+    get: operations['getChallenge']
     put: operations['updateChallenge']
     post?: never
     delete?: never
@@ -244,6 +260,26 @@ export interface paths {
     patch: operations['updatePlanCreationScheduleStatus']
     trace?: never
   }
+  '/subject-access-request': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Provides content for a prisoner to satisfy the needs of a subject access request on their behalf
+     * @description Requires role SAR_DATA_ACCESS or additional role as specified by hmpps.sar.additionalAccessRole configuration.
+     */
+    get: operations['getSarContentByReference']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/search/prisons/{prisonId}/people': {
     parameters: {
       query?: never
@@ -369,8 +405,11 @@ export interface components {
       messagesFoundCount: number
     }
     UpdateSupportStrategyRequest: {
-      /** @example null */
-      active: boolean
+      /**
+       * @description Optional further explanation or description of this strategy
+       * @example null
+       */
+      detail: string
       /**
        * @description The Prison identifier.
        * @example BXI
@@ -422,6 +461,48 @@ export interface components {
     }
     SupportStrategyResponse: {
       /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
+      /**
        * Format: uuid
        * @example null
        */
@@ -430,6 +511,41 @@ export interface components {
       supportStrategyType: components['schemas']['ReferenceData']
       /** @example null */
       active: boolean
+      /** @example null */
+      detail?: string
+    }
+    UpdateStrengthRequest: {
+      /**
+       * @description Optional details about the symptoms of this strength
+       * @example John is great at reading.
+       */
+      symptoms: string
+      /**
+       * @description The list of enums as to how this strength was identified. Multiple reasons may apply.
+       * @example null
+       */
+      howIdentified: (
+        | 'EDUCATION_SKILLS_WORK'
+        | 'WIDER_PRISON'
+        | 'CONVERSATIONS'
+        | 'COLLEAGUE_INFO'
+        | 'FORMAL_PROCESSES'
+        | 'SELF_DISCLOSURE'
+        | 'OTHER_SCREENING_TOOL'
+        | 'OTHER'
+      )[]
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+      /**
+       * @description Details about how this strength was identified when the OTHER IdentificationSource enum option is chosen
+       * @example The trainer noticed that John was great at reading.
+       */
+      howIdentifiedOther?: string
+    }
+    StrengthResponse: {
       /**
        * @description The DPS username of the person who created this resource.
        * @example asmith_gen
@@ -472,22 +588,6 @@ export interface components {
        * @example BXI
        */
       updatedAtPrison: string
-      /** @example null */
-      detail?: string
-    }
-    UpdateStrengthRequest: {
-      /**
-       * @description Whether or not the strength is active
-       * @example null
-       */
-      active: boolean
-      /**
-       * @description The Prison identifier.
-       * @example BXI
-       */
-      prisonId: string
-    }
-    StrengthResponse: {
       /**
        * Format: uuid
        * @description The unique reference of this strength
@@ -506,48 +606,6 @@ export interface components {
        * @example null
        */
       active: boolean
-      /**
-       * @description The DPS username of the person who created this resource.
-       * @example asmith_gen
-       */
-      createdBy: string
-      /**
-       * @description The display name of the person who created this resource.
-       * @example Alex Smith
-       */
-      createdByDisplayName: string
-      /**
-       * Format: date-time
-       * @description An ISO-8601 timestamp representing when this resource was created.
-       * @example 2023-06-19T09:39:44Z
-       */
-      createdAt: string
-      /**
-       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
-       * @example BXI
-       */
-      createdAtPrison: string
-      /**
-       * @description The DPS username of the person who last updated this resource.
-       * @example asmith_gen
-       */
-      updatedBy: string
-      /**
-       * @description The display name of the person who last updated this resource.
-       * @example Alex Smith
-       */
-      updatedByDisplayName: string
-      /**
-       * Format: date-time
-       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
-       * @example 2023-06-19T09:39:44Z
-       */
-      updatedAt: string
-      /**
-       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
-       * @example BXI
-       */
-      updatedAtPrison: string
       /**
        * Format: date
        * @description The date that the screener was recorded that has this strength
@@ -581,17 +639,69 @@ export interface components {
     }
     UpdateConditionRequest: {
       /**
-       * @description Whether or not the condition is active
+       * @example null
+       * @enum {string}
+       */
+      source: 'SELF_DECLARED' | 'CONFIRMED_DIAGNOSIS'
+      /**
+       * @description additional detail about the condition
        * @example null
        */
-      active: boolean
+      conditionDetails: string
       /**
        * @description The Prison identifier.
        * @example BXI
        */
       prisonId: string
+      /**
+       * @description more granular information about the condition
+       * @example (for Mental Health) Social Anxiety
+       */
+      conditionName?: string
     }
     ConditionResponse: {
+      /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
       /**
        * Format: uuid
        * @description The unique reference of this condition
@@ -611,6 +721,49 @@ export interface components {
        */
       active: boolean
       /**
+       * @description more granular information about the condition
+       * @example (for Mental Health) Social Anxiety
+       */
+      conditionName?: string
+      /**
+       * @description additional detail about the condition
+       * @example null
+       */
+      conditionDetails?: string
+    }
+    UpdateChallengeRequest: {
+      /**
+       * @description Details about the symptoms of this challenge
+       * @example John struggles to read text on white background.
+       */
+      symptoms: string
+      /**
+       * @description The list of enums as to how this challenge was identified. Multiple reasons may apply.
+       * @example null
+       */
+      howIdentified: (
+        | 'EDUCATION_SKILLS_WORK'
+        | 'WIDER_PRISON'
+        | 'CONVERSATIONS'
+        | 'COLLEAGUE_INFO'
+        | 'FORMAL_PROCESSES'
+        | 'SELF_DISCLOSURE'
+        | 'OTHER_SCREENING_TOOL'
+        | 'OTHER'
+      )[]
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
+      /**
+       * @description Details about how this challenge was identified when the OTHER IdentificationSource enum option is chosen
+       * @example The trainer noticed that John could read better on a cream background.
+       */
+      howIdentifiedOther?: string
+    }
+    ChallengeResponse: {
+      /**
        * @description The DPS username of the person who created this resource.
        * @example asmith_gen
        */
@@ -652,30 +805,6 @@ export interface components {
        * @example BXI
        */
       updatedAtPrison: string
-      /**
-       * @description more granular information about the condition
-       * @example (for Mental Health) Social Anxiety
-       */
-      conditionName?: string
-      /**
-       * @description additional detail about the condition
-       * @example null
-       */
-      conditionDetails?: string
-    }
-    UpdateChallengeRequest: {
-      /**
-       * @description Whether or not the challenge is active
-       * @example null
-       */
-      active: boolean
-      /**
-       * @description The Prison identifier.
-       * @example BXI
-       */
-      prisonId: string
-    }
-    ChallengeResponse: {
       /**
        * Format: uuid
        * @description The unique reference of this challenge
@@ -694,48 +823,6 @@ export interface components {
        * @example null
        */
       active: boolean
-      /**
-       * @description The DPS username of the person who created this resource.
-       * @example asmith_gen
-       */
-      createdBy: string
-      /**
-       * @description The display name of the person who created this resource.
-       * @example Alex Smith
-       */
-      createdByDisplayName: string
-      /**
-       * Format: date-time
-       * @description An ISO-8601 timestamp representing when this resource was created.
-       * @example 2023-06-19T09:39:44Z
-       */
-      createdAt: string
-      /**
-       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
-       * @example BXI
-       */
-      createdAtPrison: string
-      /**
-       * @description The DPS username of the person who last updated this resource.
-       * @example asmith_gen
-       */
-      updatedBy: string
-      /**
-       * @description The display name of the person who last updated this resource.
-       * @example Alex Smith
-       */
-      updatedByDisplayName: string
-      /**
-       * Format: date-time
-       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
-       * @example 2023-06-19T09:39:44Z
-       */
-      updatedAt: string
-      /**
-       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
-       * @example BXI
-       */
-      updatedAtPrison: string
       /**
        * Format: date
        * @description The date that the screener was recorded that has this challenge
@@ -809,7 +896,7 @@ export interface components {
       prisonId: string
       /**
        * @description Optional details about the symptoms of this strength
-       * @example John struggles is great at reading.
+       * @example John is great at reading.
        */
       symptoms?: string
       /**
@@ -911,16 +998,6 @@ export interface components {
     }
     EducationSupportPlanResponse: {
       /**
-       * @description Whether there is a current Education Health Care Plan in place for the person.
-       * @example true
-       */
-      hasCurrentEhcp: boolean
-      /**
-       * @description Details of education support that the person feels they need or would benefit from.
-       * @example Chris is sensitive to loud noises and has asked for a quieter position in a calm classroom.
-       */
-      individualSupport: string
-      /**
        * @description The DPS username of the person who created this resource.
        * @example asmith_gen
        */
@@ -962,6 +1039,16 @@ export interface components {
        * @example BXI
        */
       updatedAtPrison: string
+      /**
+       * @description Whether there is a current Education Health Care Plan in place for the person.
+       * @example true
+       */
+      hasCurrentEhcp: boolean
+      /**
+       * @description Details of education support that the person feels they need or would benefit from.
+       * @example Chris is sensitive to loud noises and has asked for a quieter position in a calm classroom.
+       */
+      individualSupport: string
       /**
        * @description Optional details of who created the Education Support Plan. If not present the plan was created by the createdBy/createdByDisplayName fields.
        * @example null
@@ -1243,34 +1330,6 @@ export interface components {
     }
     PlanCreationScheduleResponse: {
       /**
-       * Format: uuid
-       * @description The unique reference of this plan creation schedule
-       * @example c88a6c48-97e2-4c04-93b5-98619966447b
-       */
-      reference: string
-      /**
-       * Format: date
-       * @description An ISO-8601 date representing date that the plan creation is due.  If this date is null then there is no dead line date. eg when a person has a need identified  after they are enrolled in education.
-       * @example 2023-11-19
-       */
-      deadlineDate: string
-      /**
-       * @example null
-       * @enum {string}
-       */
-      status:
-        | 'SCHEDULED'
-        | 'EXEMPT_SYSTEM_TECHNICAL_ISSUE'
-        | 'EXEMPT_PRISONER_TRANSFER'
-        | 'EXEMPT_PRISONER_RELEASE'
-        | 'EXEMPT_PRISONER_DEATH'
-        | 'EXEMPT_PRISONER_MERGE'
-        | 'EXEMPT_PRISONER_NOT_COMPLY'
-        | 'EXEMPT_NOT_IN_EDUCATION'
-        | 'EXEMPT_NO_NEED'
-        | 'EXEMPT_UNKNOWN'
-        | 'COMPLETED'
-      /**
        * @description The DPS username of the person who created this resource.
        * @example asmith_gen
        */
@@ -1312,6 +1371,34 @@ export interface components {
        * @example BXI
        */
       updatedAtPrison: string
+      /**
+       * Format: uuid
+       * @description The unique reference of this plan creation schedule
+       * @example c88a6c48-97e2-4c04-93b5-98619966447b
+       */
+      reference: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the plan creation is due.  If this date is null then there is no dead line date. eg when a person has a need identified  after they are enrolled in education.
+       * @example 2023-11-19
+       */
+      deadlineDate: string
+      /**
+       * @example null
+       * @enum {string}
+       */
+      status:
+        | 'SCHEDULED'
+        | 'EXEMPT_SYSTEM_TECHNICAL_ISSUE'
+        | 'EXEMPT_PRISONER_TRANSFER'
+        | 'EXEMPT_PRISONER_RELEASE'
+        | 'EXEMPT_PRISONER_DEATH'
+        | 'EXEMPT_PRISONER_MERGE'
+        | 'EXEMPT_PRISONER_NOT_COMPLY'
+        | 'EXEMPT_NOT_IN_EDUCATION'
+        | 'EXEMPT_NO_NEED'
+        | 'EXEMPT_UNKNOWN'
+        | 'COMPLETED'
       /**
        * Format: date
        * @description An ISO-8601 date representing earliest date that the plan can be created.  If this date is null then there is no restriction. eg when a person has a need identified  after they are enrolled in education.
@@ -1373,6 +1460,40 @@ export interface components {
        * @example null
        */
       planCreationSchedules: components['schemas']['PlanCreationScheduleResponse'][]
+    }
+    Attachment: {
+      /**
+       * Format: int32
+       * @description The number of the attachment which will match any corresponding reference in the content section
+       */
+      attachmentNumber: number
+      /** @description The name or description of the attachment which will be included in the report */
+      name: string
+      /** @description The content type of the attachment */
+      contentType: string
+      /** @description The url to be used to download the attachment file */
+      url: string
+      /**
+       * Format: int32
+       * @description The size of the attachment file in bytes
+       */
+      filesize: number
+      /** @description The filename of attachment file */
+      filename: string
+    }
+    HmppsSubjectAccessRequestContent: {
+      /** @description The content of the subject access request response */
+      content: unknown
+      /** @description The details of any attachments for the subject access request response */
+      attachments?: components['schemas']['Attachment'][]
+    }
+    ErrorResponse: {
+      /** Format: int32 */
+      status: number
+      errorCode?: string
+      userMessage?: string
+      developerMessage?: string
+      moreInfo?: string
     }
     PaginationMetaData: {
       /**
@@ -1522,34 +1643,6 @@ export interface components {
     }
     ReviewScheduleResponse: {
       /**
-       * Format: uuid
-       * @description The unique reference of this Review
-       * @example c88a6c48-97e2-4c04-93b5-98619966447b
-       */
-      reference: string
-      /**
-       * Format: date
-       * @description An ISO-8601 date representing date that the Review is due. This date can be null. For example the person was in education and had a cataract which meant they had a visual support need.  The ELSP was created for the person. At some point in the future the cataract was removed and  so the plan was updated removing this need education ends for this person.  Then the person is enrolled in education once again. After enrolling a new need is identified (say)  ADHD then the plan will have a review schedule generated but because the person had already started  education the deadline date will be blank and therefore the review is optional and not subject to  the KPI requirements.
-       * @example 2023-11-19
-       */
-      deadlineDate: string
-      /**
-       * @example null
-       * @enum {string}
-       */
-      status:
-        | 'SCHEDULED'
-        | 'EXEMPT_SYSTEM_TECHNICAL_ISSUE'
-        | 'EXEMPT_PRISONER_TRANSFER'
-        | 'EXEMPT_PRISONER_RELEASE'
-        | 'EXEMPT_PRISONER_DEATH'
-        | 'EXEMPT_PRISONER_MERGE'
-        | 'EXEMPT_PRISONER_NOT_COMPLY'
-        | 'EXEMPT_NOT_IN_EDUCATION'
-        | 'EXEMPT_NO_NEED'
-        | 'EXEMPT_UNKNOWN'
-        | 'COMPLETED'
-      /**
        * @description The DPS username of the person who created this resource.
        * @example asmith_gen
        */
@@ -1591,6 +1684,34 @@ export interface components {
        * @example BXI
        */
       updatedAtPrison: string
+      /**
+       * Format: uuid
+       * @description The unique reference of this Review
+       * @example c88a6c48-97e2-4c04-93b5-98619966447b
+       */
+      reference: string
+      /**
+       * Format: date
+       * @description An ISO-8601 date representing date that the Review is due. This date can be null. For example the person was in education and had a cataract which meant they had a visual support need.  The ELSP was created for the person. At some point in the future the cataract was removed and  so the plan was updated removing this need education ends for this person.  Then the person is enrolled in education once again. After enrolling a new need is identified (say)  ADHD then the plan will have a review schedule generated but because the person had already started  education the deadline date will be blank and therefore the review is optional and not subject to  the KPI requirements.
+       * @example 2023-11-19
+       */
+      deadlineDate: string
+      /**
+       * @example null
+       * @enum {string}
+       */
+      status:
+        | 'SCHEDULED'
+        | 'EXEMPT_SYSTEM_TECHNICAL_ISSUE'
+        | 'EXEMPT_PRISONER_TRANSFER'
+        | 'EXEMPT_PRISONER_RELEASE'
+        | 'EXEMPT_PRISONER_DEATH'
+        | 'EXEMPT_PRISONER_MERGE'
+        | 'EXEMPT_PRISONER_NOT_COMPLY'
+        | 'EXEMPT_NOT_IN_EDUCATION'
+        | 'EXEMPT_NO_NEED'
+        | 'EXEMPT_UNKNOWN'
+        | 'COMPLETED'
       /**
        * Format: date
        * @description If the status of this Review Schedule is COMPLETED, this field is an ISO-8601 date representing  date that the Review was created. This field will only have a value when the status of the  Review Schedule is COMPLETED, and reflects the date the Review was completed.
@@ -1682,21 +1803,6 @@ export interface components {
     }
     EducationSupportPlanReviewResponse: {
       /**
-       * @description Whether or not the prisoner took part in the review.
-       * @example true
-       */
-      prisonerDeclinedFeedback: boolean
-      /**
-       * @description Details of any feedback from the prisoner.
-       * @example My support needs have been fully met by the course provider.
-       */
-      prisonerFeedback: string
-      /**
-       * @description Details of any feedback from the reviewer.
-       * @example As noted by the Mr Smith, his support needs have been fully met.
-       */
-      reviewerFeedback: string
-      /**
        * @description The DPS username of the person who created this resource.
        * @example asmith_gen
        */
@@ -1739,6 +1845,21 @@ export interface components {
        */
       updatedAtPrison: string
       /**
+       * @description Whether or not the prisoner took part in the review.
+       * @example true
+       */
+      prisonerDeclinedFeedback: boolean
+      /**
+       * @description Details of any feedback from the prisoner.
+       * @example My support needs have been fully met by the course provider.
+       */
+      prisonerFeedback: string
+      /**
+       * @description Details of any feedback from the reviewer.
+       * @example As noted by the Mr Smith, his support needs have been fully met.
+       */
+      reviewerFeedback: string
+      /**
        * @description Optional details of who created the Review. If not present the review was created by the createdBy/createdByDisplayName fields.
        * @example null
        */
@@ -1757,6 +1878,48 @@ export interface components {
       reviews: components['schemas']['EducationSupportPlanReviewResponse'][]
     }
     ALNScreenerResponse: {
+      /**
+       * @description The DPS username of the person who created this resource.
+       * @example asmith_gen
+       */
+      createdBy: string
+      /**
+       * @description The display name of the person who created this resource.
+       * @example Alex Smith
+       */
+      createdByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was created.
+       * @example 2023-06-19T09:39:44Z
+       */
+      createdAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
+       * @example BXI
+       */
+      createdAtPrison: string
+      /**
+       * @description The DPS username of the person who last updated this resource.
+       * @example asmith_gen
+       */
+      updatedBy: string
+      /**
+       * @description The display name of the person who last updated this resource.
+       * @example Alex Smith
+       */
+      updatedByDisplayName: string
+      /**
+       * Format: date-time
+       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
+       * @example 2023-06-19T09:39:44Z
+       */
+      updatedAt: string
+      /**
+       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
+       * @example BXI
+       */
+      updatedAtPrison: string
       /**
        * Format: uuid
        * @description The unique reference of this ALN screener
@@ -1779,48 +1942,6 @@ export interface components {
        * @example null
        */
       strengths: components['schemas']['StrengthResponse'][]
-      /**
-       * @description The DPS username of the person who created this resource.
-       * @example asmith_gen
-       */
-      createdBy: string
-      /**
-       * @description The display name of the person who created this resource.
-       * @example Alex Smith
-       */
-      createdByDisplayName: string
-      /**
-       * Format: date-time
-       * @description An ISO-8601 timestamp representing when this resource was created.
-       * @example 2023-06-19T09:39:44Z
-       */
-      createdAt: string
-      /**
-       * @description The identifier of the prison that the prisoner was resident at when this resource was created.
-       * @example BXI
-       */
-      createdAtPrison: string
-      /**
-       * @description The DPS username of the person who last updated this resource.
-       * @example asmith_gen
-       */
-      updatedBy: string
-      /**
-       * @description The display name of the person who last updated this resource.
-       * @example Alex Smith
-       */
-      updatedByDisplayName: string
-      /**
-       * Format: date-time
-       * @description An ISO-8601 timestamp representing when this resource was last updated. This will be the same as the created date if it has not yet been updated.
-       * @example 2023-06-19T09:39:44Z
-       */
-      updatedAt: string
-      /**
-       * @description The identifier of the prison that the prisoner was resident at when this resource was updated.
-       * @example BXI
-       */
-      updatedAtPrison: string
     }
     ALNScreeners: {
       /**
@@ -1902,6 +2023,29 @@ export interface operations {
       }
     }
   }
+  getSupportStrategy: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+        supportStrategyReference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['SupportStrategyResponse']
+        }
+      }
+    }
+  }
   updateSupportStrategy: {
     parameters: {
       query?: never
@@ -1925,6 +2069,50 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['SupportStrategyResponse']
+        }
+      }
+    }
+  }
+  archiveSupportStrategy: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+        supportStrategyReference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  getStrength: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+        strengthReference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['StrengthResponse']
         }
       }
     }
@@ -1956,6 +2144,29 @@ export interface operations {
       }
     }
   }
+  getCondition: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+        conditionReference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ConditionResponse']
+        }
+      }
+    }
+  }
   updateCondition: {
     parameters: {
       query?: never
@@ -1979,6 +2190,29 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['ConditionResponse']
+        }
+      }
+    }
+  }
+  getChallenge: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+        challengeReference: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ChallengeResponse']
         }
       }
     }
@@ -2364,6 +2598,80 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['PlanCreationSchedulesResponse']
+        }
+      }
+    }
+  }
+  getSarContentByReference: {
+    parameters: {
+      query?: {
+        /** @description NOMIS Prison Reference Number */
+        prn?: string
+        /** @description nDelius Case Reference Number */
+        crn?: string
+        /** @description Optional parameter denoting minimum date of event occurrence which should be returned in the response */
+        fromDate?: string
+        /** @description Optional parameter denoting maximum date of event occurrence which should be returned in the response */
+        toDate?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Request successfully processed - content found */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['HmppsSubjectAccessRequestContent']
+        }
+      }
+      /** @description Request successfully processed - no content found */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+      /** @description Subject Identifier is not recognised by this service */
+      209: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': Record<string, never>
+        }
+      }
+      /** @description The client does not have authorisation to make this request */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden, requires an appropriate role */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unexpected error occurred */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
         }
       }
     }

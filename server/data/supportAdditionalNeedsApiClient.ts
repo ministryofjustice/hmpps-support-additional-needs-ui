@@ -20,6 +20,7 @@ import type {
   StrengthListResponse,
   SupportStrategyListResponse,
   SupportPlanReviewRequest,
+  UpdateChallengeRequest,
   UpdatePlanCreationStatusRequest,
 } from 'supportAdditionalNeedsApiClient'
 import config from '../config'
@@ -158,6 +159,21 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/challenges/${challengeReference}`,
         errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async updateChallenge(
+    prisonNumber: string,
+    challengeReference: string,
+    username: string,
+    updateChallengeRequest: UpdateChallengeRequest,
+  ): Promise<void> {
+    return this.put<void>(
+      {
+        path: `/profile/${prisonNumber}/challenges/${challengeReference}`,
+        data: updateChallengeRequest,
       },
       asSystem(username),
     )
