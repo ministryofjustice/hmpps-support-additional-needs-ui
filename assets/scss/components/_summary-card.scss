@@ -1,0 +1,17 @@
+.govuk-summary-card {
+
+  .actions-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    @include govuk-responsive-margin(3, 'bottom');
+
+    & > * {
+      margin: 0;
+    }
+
+    ul {
+      min-width: fit-content;
+    }
+  }
+}

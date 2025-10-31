@@ -1,10 +1,35 @@
+{% from "govuk/macros/attributes.njk" import govukAttributes %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
-{% if challenge %}
-      <div class="govuk-summary-list__row" data-qa="challenge-summary-list-row-non-aln-{{ challenge.challengeTypeCode }}">
+{#- Set classes for this component #}
+{%- set classNames = "govuk-summary-card" -%}
+{%- if params.classes %}
+  {% set classNames = classNames + " " + params.classes %}
+{% endif %}
 
-            <p class="govuk-body govuk-!-margin-top-3"
-               data-qa="non-aln-challenge-symptoms">{{ challenge.symptoms }}</p>
+{#- Define component attributes #}
+{%- set componentAttributes %} class="{{ classNames }}" {{- govukAttributes(params.attributes) -}} {% if params.id %} id="{{ params.id }}"{% endif %}{% endset %}
+
+{% set nonAlnChallenges = params.challengesData.nonAlnChallenges %}
+{% set latestAlnScreener = params.challengesData.latestAlnScreener %}
+{% set challengesFromMostRecentAlnScreener = latestAlnScreener.challenges %}
+{% set prisonNamesById = params.prisonNamesById %}
+{% set showActions = params.showActions %}
+{% set userHasPermissionTo = params.userHasPermissionTo %}
+
+{% if nonAlnChallenges | length or challengesFromMostRecentAlnScreener | length %}
+  <div {{ componentAttributes | safe }}>
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">{{ params.title }}</h2>
+    </div>
+
+    <div class="govuk-summary-card__content govuk-!-padding-top-0">
+      <div class="govuk-summary-list">
+
+        {# Render non-ALN challenges first #}
+        {% for challenge in nonAlnChallenges %}
+          <div class="govuk-summary-list__row non-aln-challenge" data-qa="{{ challenge.challengeTypeCode }}">
+            <p class="govuk-body govuk-!-margin-top-3" data-qa="non-aln-challenge-symptoms">{{ challenge.symptoms }}</p>
 
             {% set howIdentifiedContent %}
               <ul class="govuk-list govuk-!-font-size-16">
@@ -21,9 +46,61 @@
                 "data-qa": "non-aln-challenge-how-identified"
               }
             }) }}
-          {% set prisonName = prisonNamesById[challenge.updatedAtPrison] | default(challenge.updatedAtPrison) %}
-            <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="non-aln-challenge-audit">
-              Added on {{ challenge.updatedAt | formatDate('d MMMM yyyy') }} by {{ challenge.updatedByDisplayName }}, {{ prisonName }}
+
+            <div class="actions-wrapper">
+              <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="non-aln-challenge-audit">
+                {% set prisonName = prisonNamesById[challenge.updatedAtPrison] | default(challenge.updatedAtPrison) %}
+                Last updated {{ challenge.updatedAt | formatDate('d MMM yyyy') }} by {{ challenge.updatedByDisplayName }}, {{ prisonName }}
+              </p>
+
+              {% if featureToggles.editAndArchiveEnabled %}
+                {% if showActions %}
+                  <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                    {% if userHasPermissionTo('EDIT_CHALLENGES') %}
+                      <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-!-font-weight-regular" href="/challenges/{{ challenge.prisonNumber }}/{{ challenge.reference }}/edit/detail" data-qa="edit-challenge-button">Edit</a>
+                      </li>
+                    {% endif %}
+                    {% if userHasPermissionTo('ARCHIVE_CHALLENGES') %}
+                      <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-!-font-weight-regular" href="/challenges/{{ challenge.prisonNumber }}/{{ challenge.reference }}/archive" data-qa="archive-challenge-button">Move to history</a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+
+        {# Render challenges from the most recent ALN Screener #}
+        {% if challengesFromMostRecentAlnScreener | length %}
+          <div class="govuk-summary-list__row aln-challenges">
+            <ul class="govuk-list govuk-!-margin-top-3">
+              {% for challenge in challengesFromMostRecentAlnScreener %}
+                {% set expanderContent %}
+                  <p class="app-u-multiline-text">{{ challenge.challengeTypeCode | challengeSupportTextLookup | default("Support strategy guidance not available") }}</p>
+                {% endset %}
+                <li>
+                  {{ govukDetails({
+                    summaryText: challenge.challengeTypeCode | formatChallengeTypeScreenValue,
+                    html: expanderContent,
+                    classes: "govuk-!-margin-top-3",
+                    attributes: {
+                      "data-qa": "aln-challenge-detail"
+                    }
+                  }) }}
+                </li>
+              {% endfor %}
+            </ul>
+
+            <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-challenges-audit">
+              {% set prisonName = prisonNamesById[latestAlnScreener.createdAtPrison] | default(latestAlnScreener.createdAtPrison) %}
+              From Additional Learning Needs Screener completed on {{ latestAlnScreener.screenerDate | formatDate('d MMM yyyy') }}, {{ prisonName }}
             </p>
+          </div>
+        {% endif %}
       </div>
+    </div>
+  </div>
 {% endif %}

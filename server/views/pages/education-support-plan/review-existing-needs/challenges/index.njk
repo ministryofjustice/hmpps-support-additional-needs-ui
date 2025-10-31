@@ -1,6 +1,5 @@
 {% extends "../../layout.njk" %}
 {% from "../../../../components/challenges-summary-card/macro.njk" import challengesSummaryCard %}
-{% from "../../../../components/challenges-summary-card/macro.njk" import alnChallengesSummaryCard %}
 
 {% set pageId = 'education-support-plan-review-existing-challenges' %}
 {% set pageTitle = ('Review' if mode == 'review' else 'Create') + ' an education support plan - Review challenges' %}
@@ -18,22 +17,15 @@
 
           {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
           {% for challengeCategory, challengesData in groupedChallenges %}
-            <div class="govuk-summary-card" data-qa="challenges-summary-card-{{ challengeCategory }}">
-              <div class="govuk-summary-card__title-wrapper">
-                <h2 class="govuk-summary-card__title">{{ challengeCategory | formatChallengeCategoryScreenValue }}</h2>
-              </div>
-              <div class="govuk-summary-card__content govuk-!-padding-top-0">
-                <div class="govuk-summary-list">
-                  {# Render non-ALN challenges first #}
-                  {% for challenge in challengesData.nonAlnChallenges %}
-                    {{  challengesSummaryCard(challenge, prisonNamesById) }}
-                  {% endfor %}
-
-                  {# Render challenges from the most recent ALN Screener #}
-                  {{ alnChallengesSummaryCard(challengesData.latestAlnScreener, prisonNamesById) }}
-                </div>
-              </div>
-            </div>
+            {{ challengesSummaryCard({
+              challengesData: challengesData,
+              prisonNamesById: prisonNamesById,
+              showActions: false,
+              title: challengeCategory | formatChallengeCategoryScreenValue,
+              attributes: {
+                'data-qa': 'challenges-summary-card-' + challengeCategory
+              }
+            }) }}
           {% endfor %}
 
         {% else %}

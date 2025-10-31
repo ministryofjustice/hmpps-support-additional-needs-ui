@@ -1,7 +1,24 @@
-{% macro challengesSummaryCard(challenge, prisonNamesById) %}
-  {%- include "./template.njk" -%}
-{% endmacro %}
+{# Challenges Summary Card macro
 
-{% macro alnChallengesSummaryCard(latestAlnScreener, prisonNamesById) %}
-  {%- include "./aln_template.njk" -%}
+Data supplied to this macro:
+  params: {
+    challengesData: {
+      nonAlnChallenges: Array<ChallengeResponseDto> - Array of non-ALN Screener challenges
+      latestAlnScreener: {
+        screenerDate: Date - the Date of the latest ALN Screener
+        createdAtPrison: string - the prisonId where the latest ALN Screener was recorded
+        challenges: Array<ChallengeResponseDto> - Array of challenges on the latest ALN Screener
+      }
+    }
+    prisonNamesById: Object of key value pairs, where the key is the prison ID, and the value is the prison name
+    showActions: boolean to determine whether Actions links are rendered
+    userHasPermissionTo: function that determines user permissions
+    title: string - Summary Card title
+    id: string
+    classes: string
+    attributes: Object of key value pairs of additonal attributes to add the to the component
+  }
+#}
+{% macro challengesSummaryCard(params) %}
+  {%- include "./template.njk" -%}
 {% endmacro %}

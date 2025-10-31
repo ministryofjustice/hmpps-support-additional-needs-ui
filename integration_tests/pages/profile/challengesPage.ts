@@ -21,23 +21,19 @@ export default class ChallengesPage extends ProfilePage {
 
   hasNonAlnChallenges(category: ChallengeCategory, ...challengeType: Array<ChallengeType>): ChallengesPage {
     challengeType.forEach(challenge =>
-      this.challengeCategorySummaryCard(category)
-        .find(`[data-qa=challenge-summary-list-row-non-aln-${challenge}]`)
-        .should('be.visible'),
+      this.challengeCategorySummaryCard(category).find(`.non-aln-challenge[data-qa=${challenge}]`).should('be.visible'),
     )
     return this
   }
 
   hasNoNonAlnChallenges(category: ChallengeCategory): ChallengesPage {
-    this.challengeCategorySummaryCard(category)
-      .find(`[data-qa*=challenge-summary-list-row-non-aln-]`)
-      .should('not.exist')
+    this.challengeCategorySummaryCard(category).find('.non-aln-challenge').should('not.exist')
     return this
   }
 
   hasAlnChallenges(category: ChallengeCategory, ...challenges: Array<string>): ChallengesPage {
     this.challengeCategorySummaryCard(category)
-      .find(`[data-qa=aln-challenge-summary-list-row] li`)
+      .find('.aln-challenges li')
       .then(listItems => {
         cy.wrap(listItems).should('have.length', challenges.length)
         listItems.each((index, element) => {
