@@ -5,6 +5,9 @@ import aValidChallengeDto from '../testsupport/challengeDtoTestDataBuilder'
 import { aValidCreateChallengesRequest } from '../testsupport/challengeRequestTestDataBuilder'
 import { aValidChallengeListResponse, aValidChallengeResponse } from '../testsupport/challengeResponseTestDataBuilder'
 import aValidChallengeResponseDto from '../testsupport/challengeResponseDtoTestDataBuilder'
+import ChallengeType from '../enums/challengeType'
+import ChallengeIdentificationSource from '../enums/challengeIdentificationSource'
+import anUpdateChallengeRequest from '../testsupport/updateChallengeRequestTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -184,6 +187,74 @@ describe('challengeService', () => {
         prisonNumber,
         challengeReference,
         username,
+      )
+    })
+  })
+
+  describe('updateChallenge', () => {
+    it('should update challenge', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.updateChallenge.mockResolvedValue(null)
+
+      const challengeDto = aValidChallengeDto({
+        prisonNumber,
+        prisonId: 'BXI',
+        challengeTypeCode: ChallengeType.READING_COMPREHENSION,
+        symptoms: 'John struggles to read text on white background',
+        howIdentified: [ChallengeIdentificationSource.WIDER_PRISON, ChallengeIdentificationSource.OTHER],
+        howIdentifiedOther: 'The trainer noticed that John could read better on a cream background',
+      })
+
+      const expectedUpdateChallengeRequest = anUpdateChallengeRequest({
+        prisonId: 'BXI',
+        symptoms: 'John struggles to read text on white background',
+        howIdentified: [ChallengeIdentificationSource.WIDER_PRISON, ChallengeIdentificationSource.OTHER],
+        howIdentifiedOther: 'The trainer noticed that John could read better on a cream background',
+      })
+
+      // When
+      await service.updateChallenge(username, challengeReference, challengeDto)
+
+      // Then
+      expect(supportAdditionalNeedsApiClient.updateChallenge).toHaveBeenCalledWith(
+        prisonNumber,
+        challengeReference,
+        username,
+        expectedUpdateChallengeRequest,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.updateChallenge.mockRejectedValue(expectedError)
+
+      const challengeDto = aValidChallengeDto({
+        prisonNumber,
+        prisonId: 'BXI',
+        challengeTypeCode: ChallengeType.READING_COMPREHENSION,
+        symptoms: 'John struggles to read text on white background',
+        howIdentified: [ChallengeIdentificationSource.WIDER_PRISON, ChallengeIdentificationSource.OTHER],
+        howIdentifiedOther: 'The trainer noticed that John could read better on a cream background',
+      })
+
+      const expectedUpdateChallengeRequest = anUpdateChallengeRequest({
+        prisonId: 'BXI',
+        symptoms: 'John struggles to read text on white background',
+        howIdentified: [ChallengeIdentificationSource.WIDER_PRISON, ChallengeIdentificationSource.OTHER],
+        howIdentifiedOther: 'The trainer noticed that John could read better on a cream background',
+      })
+
+      // When
+      const actual = await service.updateChallenge(username, challengeReference, challengeDto).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.updateChallenge).toHaveBeenCalledWith(
+        prisonNumber,
+        challengeReference,
+        username,
+        expectedUpdateChallengeRequest,
       )
     })
   })

@@ -26,6 +26,7 @@ import { aValidCreateSupportStrategiesRequest } from '../testsupport/supportStra
 import aPlanActionStatus from '../testsupport/planActionStatusTestDataBuilder'
 import { aSupportPlanReviewRequest } from '../testsupport/supportPlanReviewRequestTestDataBuilder'
 import { aPlanReviewsResponse } from '../testsupport/planReviewsResponseTestDataBuilder'
+import anUpdateChallengeRequest from '../testsupport/updateChallengeRequestTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -1086,6 +1087,62 @@ describe('supportAdditionalNeedsApiClient', () => {
       // When
       const actual = await supportAdditionalNeedsApiClient
         .getChallenge(prisonNumber, challengeReference, username)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('updateChallenge', () => {
+    it('should update a prisoners challenge', async () => {
+      // Given
+      const updateChallengeRequest = anUpdateChallengeRequest()
+
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/challenges/${challengeReference}`, requestBody =>
+          isEqual(requestBody, updateChallengeRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(204)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.updateChallenge(
+        prisonNumber,
+        challengeReference,
+        username,
+        updateChallengeRequest,
+      )
+
+      // Then
+      expect(actual).toEqual({})
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const updateChallengeRequest = anUpdateChallengeRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/challenges/${challengeReference}`, requestBody =>
+          isEqual(requestBody, updateChallengeRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .updateChallenge(prisonNumber, challengeReference, username, updateChallengeRequest)
         .catch(e => e)
 
       // Then
