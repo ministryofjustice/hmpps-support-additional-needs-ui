@@ -1,22 +1,27 @@
 import Page, { PageElement } from '../page'
 import ChallengeIdentificationSource from '../../../server/enums/challengeIdentificationSource'
 
-export default class AddChallengeDetailPage extends Page {
+export default class ChallengeDetailPage extends Page {
   constructor() {
-    super('create-challenge-detail')
+    super('challenge-detail')
   }
 
-  enterDescription(value: string): AddChallengeDetailPage {
+  enterDescription(value: string): ChallengeDetailPage {
     this.descriptionField().clear().type(value, { delay: 0 })
     return this
   }
 
-  enterOtherHowChallengeIdentified(value: string): AddChallengeDetailPage {
+  clearDescription(): ChallengeDetailPage {
+    this.descriptionField().clear()
+    return this
+  }
+
+  enterOtherHowChallengeIdentified(value: string): ChallengeDetailPage {
     this.otherIdentificationSourceField().clear().type(value, { delay: 0 })
     return this
   }
 
-  selectHowChallengeIdentified(option: ChallengeIdentificationSource): AddChallengeDetailPage {
+  selectHowChallengeIdentified(option: ChallengeIdentificationSource): ChallengeDetailPage {
     this.checkbox(option).then(checkbox => {
       if (!checkbox.attr('checked')) {
         cy.wrap(checkbox).click()
@@ -25,7 +30,7 @@ export default class AddChallengeDetailPage extends Page {
     return this
   }
 
-  deSelectHowChallengeIdentified(option: ChallengeIdentificationSource): AddChallengeDetailPage {
+  deSelectHowChallengeIdentified(option: ChallengeIdentificationSource): ChallengeDetailPage {
     this.checkbox(option).then(checkbox => {
       if (checkbox.attr('checked')) {
         cy.wrap(checkbox).click()

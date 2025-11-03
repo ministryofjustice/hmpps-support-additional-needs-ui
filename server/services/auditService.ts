@@ -74,6 +74,7 @@ enum AuditableUserAction {
   RECORD_ALN_SCREENER = 'RECORD_ALN_SCREENER',
   CREATE_STRENGTH = 'CREATE_STRENGTH',
   CREATE_CHALLENGE = 'CREATE_CHALLENGE',
+  EDIT_CHALLENGE = 'EDIT_CHALLENGE',
   CREATE_CONDITION = 'CREATE_CONDITION',
   CREATE_SUPPORT_STRATEGY = 'CREATE_SUPPORT_STRATEGY',
 }
@@ -134,6 +135,13 @@ export default class AuditService {
     return this.logAuditEvent({
       ...baseAuditData,
       what: AuditableUserAction.CREATE_CHALLENGE,
+    })
+  }
+
+  async logEditChallenge(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.EDIT_CHALLENGE,
     })
   }
 

@@ -1,12 +1,12 @@
 import Page, { PageElement } from '../page'
 import ChallengeType from '../../../server/enums/challengeType'
 
-export default class SelectChallengeCategoryPage extends Page {
+export default class ChallengeCategoryPage extends Page {
   constructor() {
-    super('create-challenge-select-category')
+    super('challenge-select-category')
   }
 
-  selectCategory(value: ChallengeType): SelectChallengeCategoryPage {
+  selectCategory(value: ChallengeType): ChallengeCategoryPage {
     this.radioButton(value).click()
     return this
   }
