@@ -1,7 +1,9 @@
 import ProfilePage from './profilePage'
-import { PageElement } from '../page'
+import Page, { PageElement } from '../page'
 import StrengthCategory from '../../../server/enums/strengthCategory'
 import StrengthType from '../../../server/enums/strengthType'
+import zeroIndexed from '../../utils/zeroIndexed'
+import StrengthDetailPage from '../strengths/strengthDetailPage'
 
 export default class StrengthsPage extends ProfilePage {
   constructor() {
@@ -9,14 +11,24 @@ export default class StrengthsPage extends ProfilePage {
     this.activeTabIs('Strengths')
   }
 
+  clickToEditNthNonAlnStrength(index: number): StrengthDetailPage {
+    this.nonAlnCStrengths().eq(zeroIndexed(index)).find('[data-qa=edit-strength-button]').click()
+    return Page.verifyOnPage(StrengthDetailPage)
+  }
+
   hasStrengthsSummaryCard(category: StrengthCategory): StrengthsPage {
     this.strengthCategorySummaryCard(category).should('be.visible')
     return this
   }
 
+  hasNoStrengthsSummaryCard(category: StrengthCategory): StrengthsPage {
+    this.strengthCategorySummaryCard(category).should('not.exist')
+    return this
+  }
+
   hasNonAlnStrengths(category: StrengthCategory, ...strengthType: Array<StrengthType>): StrengthsPage {
     strengthType.forEach(strength =>
-      this.strengthCategorySummaryCard(category).find(`[data-qa=${strength}].non-aln-strength`).should('be.visible'),
+      this.strengthCategorySummaryCard(category).find(`.non-aln-strength[data-qa=${strength}]`).should('be.visible'),
     )
     return this
   }
@@ -52,4 +64,6 @@ export default class StrengthsPage extends ProfilePage {
 
   private strengthCategorySummaryCard = (category: StrengthCategory): PageElement =>
     cy.get(`[data-qa=strengths-summary-card_${category}]`)
+
+  private nonAlnCStrengths = (): PageElement => cy.get('.govuk-summary-list__row.non-aln-strength')
 }

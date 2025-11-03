@@ -1,12 +1,19 @@
 import ProfilePage from './profilePage'
-import { PageElement } from '../page'
+import Page, { PageElement } from '../page'
 import ChallengeCategory from '../../../server/enums/challengeCategory'
 import ChallengeType from '../../../server/enums/challengeType'
+import ChallengeDetailPage from '../challenges/challengeDetailPage'
+import zeroIndexed from '../../utils/zeroIndexed'
 
 export default class ChallengesPage extends ProfilePage {
   constructor() {
     super('profile-challenges')
     this.activeTabIs('Challenges')
+  }
+
+  clickToEditNthNonAlnChallenge(index: number): ChallengeDetailPage {
+    this.nonAlnChallenges().eq(zeroIndexed(index)).find('[data-qa=edit-challenge-button]').click()
+    return Page.verifyOnPage(ChallengeDetailPage)
   }
 
   hasChallengesSummaryCard(category: ChallengeCategory): ChallengesPage {
@@ -57,4 +64,6 @@ export default class ChallengesPage extends ProfilePage {
 
   private challengeCategorySummaryCard = (category: ChallengeCategory): PageElement =>
     cy.get(`[data-qa=challenges-summary-card-${category}]`)
+
+  private nonAlnChallenges = (): PageElement => cy.get('.govuk-summary-list__row.non-aln-challenge')
 }

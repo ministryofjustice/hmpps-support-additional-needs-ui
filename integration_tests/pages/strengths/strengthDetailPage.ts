@@ -11,6 +11,11 @@ export default class StrengthDetailPage extends Page {
     return this
   }
 
+  clearDescription(): StrengthDetailPage {
+    this.descriptionField().clear()
+    return this
+  }
+
   enterOtherHowStrengthIdentified(value: string): StrengthDetailPage {
     this.otherIdentificationSourceField().clear().type(value, { delay: 0 })
     return this
