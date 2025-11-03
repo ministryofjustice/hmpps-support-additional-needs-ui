@@ -7,8 +7,6 @@ import WhoCreatedThePlanPage from '../education-support-plan/whoCreatedThePlanPa
 import ReasonPage from '../education-support-plan/refuse-plan/reasonPage'
 import SelectSupportStrategyCategoryPage from '../support-strategies/selectSupportStrategyCategoryPage'
 import WhoReviewedThePlanPage from '../education-support-plan/whoReviewedThePlanPage'
-import ChallengeDetailPage from '../challenges/challengeDetailPage'
-import zeroIndexed from '../../utils/zeroIndexed'
 
 export default abstract class ProfilePage extends Page {
   hasSuccessMessage<T extends ProfilePage>(message: string): T {
@@ -79,11 +77,6 @@ export default abstract class ProfilePage extends Page {
     return this
   }
 
-  clickToEditNthNonAlnChallenge(index: number): ChallengeDetailPage {
-    this.nonAlnChallenges().eq(zeroIndexed(index)).find('[data-qa=edit-challenge-button]').click()
-    return Page.verifyOnPage(ChallengeDetailPage)
-  }
-
   private tabBarLink = (targetTab: string): PageElement => cy.get(`.moj-sub-navigation__link:contains('${targetTab}')`)
 
   private activeTab = (): PageElement => cy.get('.moj-sub-navigation__link[aria-current=page]')
@@ -113,6 +106,4 @@ export default abstract class ProfilePage extends Page {
 
   private educationSupportPlanActionItems = (): PageElement =>
     cy.get('[data-qa=education-support-plan-action-items] li')
-
-  private nonAlnChallenges = (): PageElement => cy.get('.govuk-summary-list__row.non-aln-challenge')
 }
