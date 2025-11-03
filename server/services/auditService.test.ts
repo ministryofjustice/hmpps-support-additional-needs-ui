@@ -259,6 +259,37 @@ describe('Audit service', () => {
     })
   })
 
+  describe('logEditStrength', () => {
+    it('should send Edit Strength event audit message', async () => {
+      // Given
+
+      const baseArchiveAuditData: BaseAuditData = {
+        correlationId: '49380145-d73d-4ad2-8460-f26b039249cc',
+        details: { challengeReference: '94429db1-c063-459e-8479-8fe2440dbfbd' },
+        subjectId: 'A1234BC',
+        subjectType: 'PRISONER_ID',
+        who: 'a-dps-user',
+      }
+
+      // When
+      const actual = await auditService.logEditStrength(baseArchiveAuditData)
+
+      // Then
+      expect(actual).toEqual(expectedSqsMessageResponse)
+      expect(hmppsAuditClient.sendMessage).toHaveBeenCalledWith(
+        {
+          what: 'EDIT_STRENGTH',
+          correlationId: '49380145-d73d-4ad2-8460-f26b039249cc',
+          details: { challengeReference: '94429db1-c063-459e-8479-8fe2440dbfbd' },
+          subjectId: 'A1234BC',
+          subjectType: 'PRISONER_ID',
+          who: 'a-dps-user',
+        },
+        expectedHmppsAuditClientToThrowOnError,
+      )
+    })
+  })
+
   describe('logCreateCondition', () => {
     it('should send Create Condition event audit message', async () => {
       // Given

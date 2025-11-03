@@ -1,9 +1,8 @@
 import { Request, Response } from 'express'
-import type { StrengthDto } from 'dto'
 import DetailController from './detailController'
-import aValidStrengthDto from '../../../../testsupport/strengthDtoTestDataBuilder'
-import StrengthIdentificationSource from '../../../../enums/strengthIdentificationSource'
 import StrengthService from '../../../../services/strengthService'
+import { aValidStrengthResponseDto } from '../../../../testsupport/strengthResponseDtoTestDataBuilder'
+import StrengthIdentificationSource from '../../../../enums/strengthIdentificationSource'
 import StrengthType from '../../../../enums/strengthType'
 import AuditService from '../../../../services/auditService'
 
@@ -15,9 +14,9 @@ describe('detailController', () => {
   const auditService = new AuditService(null) as jest.Mocked<AuditService>
   const controller = new DetailController(strengthService, auditService)
 
-  const username = 'A_USER'
-  const prisonId = 'MDI'
+  const username = 'FRED_123'
   const prisonNumber = 'A1234BC'
+  const strengthReference = '518d65dc-2866-46a7-94c0-ffb331e66061'
 
   const flash = jest.fn()
 
@@ -34,7 +33,7 @@ describe('detailController', () => {
     redirectWithErrors: jest.fn(),
     redirectWithSuccess: jest.fn(),
     render: jest.fn(),
-    locals: {},
+    locals: { user: { username, activeCaseLoadId: 'BXI' } },
   } as unknown as Response
   const next = jest.fn()
 
@@ -42,30 +41,31 @@ describe('detailController', () => {
     jest.resetAllMocks()
     req.body = {}
     req.journeyData = {
-      strengthDto: {
-        ...aValidStrengthDto(),
-        strengthTypeCode: StrengthType.ACTIVE_LISTENING,
-        symptoms: undefined,
-        howIdentified: undefined,
-        howIdentifiedOther: undefined,
-      },
+      strengthDto: aValidStrengthResponseDto({
+        reference: strengthReference,
+        strengthTypeCode: StrengthType.ARITHMETIC,
+        symptoms: 'Has difficulty adding up',
+        howIdentified: [StrengthIdentificationSource.CONVERSATIONS],
+        howIdentifiedOther: null,
+      }),
     }
   })
 
-  it('should render view given no previously submitted invalid form', async () => {
+  it('should render the view when there is no previously submitted invalid form', async () => {
     // Given
     flash.mockReturnValue([])
     res.locals.invalidForm = undefined
 
-    const expectedViewTemplate = 'pages/strengths/detail/create-journey/index'
+    const expectedViewTemplate = 'pages/strengths/detail/edit-journey/index'
     const expectedViewModel = {
-      category: StrengthType.ACTIVE_LISTENING,
-      form: {
-        description: undefined as string,
-        howIdentified: [] as Array<StrengthIdentificationSource>,
-        howIdentifiedOther: undefined as string,
-      },
+      category: StrengthType.ARITHMETIC,
       errorRecordingStrength: false,
+      form: {
+        description: 'Has difficulty adding up',
+        howIdentified: [StrengthIdentificationSource.CONVERSATIONS],
+        howIdentifiedOther: null as string,
+      },
+      mode: 'edit',
     }
 
     // When
@@ -73,7 +73,6 @@ describe('detailController', () => {
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
-    expect(flash).toHaveBeenCalledWith('pageHasApiErrors')
   })
 
   it('should render view given previously submitted invalid form', async () => {
@@ -84,35 +83,12 @@ describe('detailController', () => {
     }
     res.locals.invalidForm = invalidForm
 
-    const expectedViewTemplate = 'pages/strengths/detail/create-journey/index'
+    const expectedViewTemplate = 'pages/strengths/detail/edit-journey/index'
     const expectedViewModel = {
-      category: StrengthType.ACTIVE_LISTENING,
+      category: StrengthType.ARITHMETIC,
       form: invalidForm,
       errorRecordingStrength: false,
-    }
-
-    // When
-    await controller.getDetailView(req, res, next)
-
-    // Then
-    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
-    expect(flash).toHaveBeenCalledWith('pageHasApiErrors')
-  })
-
-  it('should render view given given api errors from previous submission', async () => {
-    // Given
-    flash.mockReturnValue(['true'])
-    res.locals.invalidForm = undefined
-
-    const expectedViewTemplate = 'pages/strengths/detail/create-journey/index'
-    const expectedViewModel = {
-      category: StrengthType.ACTIVE_LISTENING,
-      form: {
-        description: undefined as string,
-        howIdentified: [] as Array<StrengthIdentificationSource>,
-        howIdentifiedOther: undefined as string,
-      },
-      errorRecordingStrength: true,
+      mode: 'edit',
     }
 
     // When
@@ -125,40 +101,37 @@ describe('detailController', () => {
 
   it('should submit form and redirect to next route given calling API is successful', async () => {
     // Given
-    const strengthDto: StrengthDto = {
-      ...aValidStrengthDto({ prisonNumber, prisonId }),
-      symptoms: undefined,
-      howIdentified: undefined,
-      howIdentifiedOther: undefined,
-    }
-    req.journeyData = { strengthDto }
+    const strengthResponseDto = aValidStrengthResponseDto({ prisonNumber, reference: strengthReference })
+    req.journeyData = { strengthDto: strengthResponseDto }
     req.body = {
       description: 'A description of the strength',
       howIdentified: [StrengthIdentificationSource.CONVERSATIONS, StrengthIdentificationSource.OTHER],
       howIdentifiedOther: 'Other prisoners often mention this to me in passing',
     }
+    strengthService.updateStrength.mockResolvedValue(null)
 
-    strengthService.createStrengths.mockResolvedValue(null)
-
-    const expectedStrengthDto = aValidStrengthDto({
-      prisonNumber,
-      prisonId,
+    const expectedStrengthDto = {
+      ...strengthResponseDto,
+      prisonId: 'BXI',
       symptoms: 'A description of the strength',
       howIdentified: [StrengthIdentificationSource.CONVERSATIONS, StrengthIdentificationSource.OTHER],
       howIdentifiedOther: 'Other prisoners often mention this to me in passing',
-    })
+    }
     const expectedNextRoute = `/profile/${prisonNumber}/strengths`
 
     // When
     await controller.submitDetailForm(req, res, next)
 
     // Then
-    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Strength added')
+    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Strength updated')
     expect(req.journeyData.strengthDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
-    expect(strengthService.createStrengths).toHaveBeenCalledWith(username, [expectedStrengthDto])
-    expect(auditService.logCreateStrength).toHaveBeenCalledWith(
+    expect(strengthService.updateStrength).toHaveBeenCalledWith(username, strengthReference, expectedStrengthDto)
+    expect(auditService.logEditStrength).toHaveBeenCalledWith(
       expect.objectContaining({
+        details: {
+          strengthReference,
+        },
         subjectId: prisonNumber,
         subjectType: 'PRISONER_ID',
         who: username,
@@ -168,28 +141,23 @@ describe('detailController', () => {
 
   it('should submit form and redirect to next route given calling API is not successful', async () => {
     // Given
-    const strengthDto: StrengthDto = {
-      ...aValidStrengthDto({ prisonNumber, prisonId }),
-      symptoms: undefined,
-      howIdentified: undefined,
-      howIdentifiedOther: undefined,
-    }
-    req.journeyData = { strengthDto }
+    const strengthResponseDto = aValidStrengthResponseDto({ prisonNumber, reference: strengthReference })
+    req.journeyData = { strengthDto: strengthResponseDto }
     req.body = {
       description: 'A description of the strength',
       howIdentified: [StrengthIdentificationSource.CONVERSATIONS, StrengthIdentificationSource.OTHER],
       howIdentifiedOther: 'Other prisoners often mention this to me in passing',
     }
 
-    strengthService.createStrengths.mockRejectedValue(new Error('Internal Server Error'))
+    strengthService.updateStrength.mockRejectedValue(new Error('Internal Server Error'))
 
-    const expectedStrengthDto = aValidStrengthDto({
-      prisonNumber,
-      prisonId,
+    const expectedStrengthDto = {
+      ...strengthResponseDto,
+      prisonId: 'BXI',
       symptoms: 'A description of the strength',
       howIdentified: [StrengthIdentificationSource.CONVERSATIONS, StrengthIdentificationSource.OTHER],
       howIdentifiedOther: 'Other prisoners often mention this to me in passing',
-    })
+    }
     const expectedNextRoute = 'detail'
 
     // When
@@ -197,9 +165,9 @@ describe('detailController', () => {
 
     // Then
     expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
-    expect(req.journeyData.strengthDto).toEqual(strengthDto)
+    expect(req.journeyData.strengthDto).toEqual(strengthResponseDto)
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
-    expect(strengthService.createStrengths).toHaveBeenCalledWith(username, [expectedStrengthDto])
-    expect(auditService.logCreateStrength).not.toHaveBeenCalled()
+    expect(strengthService.updateStrength).toHaveBeenCalledWith(username, strengthReference, expectedStrengthDto)
+    expect(auditService.logEditStrength).not.toHaveBeenCalled()
   })
 })

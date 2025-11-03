@@ -73,6 +73,7 @@ enum AuditableUserAction {
   UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN_SCHEDULE = 'UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN_SCHEDULE',
   RECORD_ALN_SCREENER = 'RECORD_ALN_SCREENER',
   CREATE_STRENGTH = 'CREATE_STRENGTH',
+  EDIT_STRENGTH = 'EDIT_STRENGTH',
   CREATE_CHALLENGE = 'CREATE_CHALLENGE',
   EDIT_CHALLENGE = 'EDIT_CHALLENGE',
   CREATE_CONDITION = 'CREATE_CONDITION',
@@ -128,6 +129,13 @@ export default class AuditService {
     return this.logAuditEvent({
       ...baseAuditData,
       what: AuditableUserAction.CREATE_STRENGTH,
+    })
+  }
+
+  async logEditStrength(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.EDIT_STRENGTH,
     })
   }
 

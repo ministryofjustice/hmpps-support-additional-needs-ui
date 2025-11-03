@@ -5,8 +5,7 @@ import StrengthType from '../../../../enums/strengthType'
 export default class SelectCategoryController {
   getSelectCategoryView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
-    const { strengthDto } = req.journeyData
-
+    const strengthDto = req.journeyData.strengthDto as StrengthDto
     const selectCategoryForm = invalidForm ?? this.populateFormFromDto(strengthDto)
 
     const viewRenderArgs = { form: selectCategoryForm }
