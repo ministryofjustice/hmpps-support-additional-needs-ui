@@ -16,7 +16,7 @@ import { aValidChallengeListResponse, aValidChallengeResponse } from '../testsup
 import { aValidCreateConditionsRequest } from '../testsupport/conditionRequestTestDataBuilder'
 import { aValidConditionListResponse } from '../testsupport/conditionResponseTestDataBuilder'
 import { aValidReferenceDataListResponse } from '../testsupport/referenceDataResponseTestDataBuilder'
-import { aValidStrengthListResponse } from '../testsupport/strengthResponseTestDataBuilder'
+import { aValidStrengthListResponse, aValidStrengthResponse } from '../testsupport/strengthResponseTestDataBuilder'
 import { aValidCreateStrengthsRequest } from '../testsupport/strengthRequestTestDataBuilder'
 import ReferenceDataDomain from '../enums/referenceDataDomain'
 import { aValidAlnScreenerRequest } from '../testsupport/alnScreenerRequestTestDataBuilder'
@@ -27,6 +27,7 @@ import aPlanActionStatus from '../testsupport/planActionStatusTestDataBuilder'
 import { aSupportPlanReviewRequest } from '../testsupport/supportPlanReviewRequestTestDataBuilder'
 import { aPlanReviewsResponse } from '../testsupport/planReviewsResponseTestDataBuilder'
 import anUpdateChallengeRequest from '../testsupport/updateChallengeRequestTestDataBuilder'
+import anUpdateStrengthRequest from '../testsupport/updateStrengthRequestTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -34,6 +35,7 @@ describe('supportAdditionalNeedsApiClient', () => {
   const prisonNumber = 'A1234BC'
   const prisonId = 'BXI'
   const challengeReference = '748f6f21-d900-40ca-a5bd-f887503481de'
+  const strengthReference = '219ad763-b349-4007-aaf4-cba7f5c0417c'
 
   const mockAuthenticationClient = {
     getToken: jest.fn(),
@@ -835,6 +837,129 @@ describe('supportAdditionalNeedsApiClient', () => {
 
       // When
       const actual = await supportAdditionalNeedsApiClient.getStrengths(prisonNumber, username).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('getStrength', () => {
+    it('should get strength for a prisoner', async () => {
+      // Given
+      const expectedResponse = aValidStrengthResponse()
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/strengths/${strengthReference}`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, expectedResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getStrength(prisonNumber, strengthReference, username)
+
+      // Then
+      expect(actual).toEqual(expectedResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should return null given API returns a not found error', async () => {
+      // Given
+      const apiErrorResponse = {
+        status: 404,
+        userMessage: 'Not found',
+        developerMessage: 'Not found',
+      }
+
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/strengths/${strengthReference}`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(404, apiErrorResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getStrength(prisonNumber, strengthReference, username)
+
+      // Then
+      expect(actual).toBeNull()
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/strengths/${strengthReference}`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .thrice()
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .getStrength(prisonNumber, strengthReference, username)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('updateStrength', () => {
+    it('should update a prisoners strength', async () => {
+      // Given
+      const updateStrengthRequest = anUpdateStrengthRequest()
+
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/strengths/${strengthReference}`, requestBody =>
+          isEqual(requestBody, updateStrengthRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(204)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.updateStrength(
+        prisonNumber,
+        strengthReference,
+        username,
+        updateStrengthRequest,
+      )
+
+      // Then
+      expect(actual).toEqual({})
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const updateStrengthRequest = anUpdateStrengthRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/strengths/${strengthReference}`, requestBody =>
+          isEqual(requestBody, updateStrengthRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .updateStrength(prisonNumber, strengthReference, username, updateStrengthRequest)
+        .catch(e => e)
 
       // Then
       expect(actual).toEqual(expectedError)

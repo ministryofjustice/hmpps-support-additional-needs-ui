@@ -1,6 +1,11 @@
 import { parseISO } from 'date-fns'
 import type { AlnScreenerList, AlnScreenerResponseDto } from 'dto'
-import type { ALNScreenerResponse, ALNScreeners, ChallengeResponse } from 'supportAdditionalNeedsApiClient'
+import type {
+  ALNScreenerResponse,
+  ALNScreeners,
+  ChallengeResponse,
+  StrengthResponse,
+} from 'supportAdditionalNeedsApiClient'
 import toReferenceAndAuditable from './referencedAndAuditableMapper'
 import { toStrengthResponseDto } from './strengthResponseDtoMapper'
 import { toChallengeResponseDto } from './challengeDtoMapper'
@@ -22,7 +27,9 @@ const toAlnScreenerResponseDto = (
   challenges: ((alnScreenerResponse.challenges || []) as Array<ChallengeResponse>).map(challenge =>
     toChallengeResponseDto(prisonNumber, challenge),
   ),
-  strengths: alnScreenerResponse.strengths.map(toStrengthResponseDto),
+  strengths: ((alnScreenerResponse.strengths || []) as Array<StrengthResponse>).map(strength =>
+    toStrengthResponseDto(prisonNumber, strength),
+  ),
 })
 
 export { toAlnScreenerList, toAlnScreenerResponseDto }

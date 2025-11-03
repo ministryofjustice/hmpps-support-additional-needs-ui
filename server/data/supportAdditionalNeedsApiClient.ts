@@ -18,10 +18,12 @@ import type {
   ReferenceDataListResponse,
   SearchByPrisonResponse,
   StrengthListResponse,
+  StrengthResponse,
   SupportStrategyListResponse,
   SupportPlanReviewRequest,
   UpdateChallengeRequest,
   UpdatePlanCreationStatusRequest,
+  UpdateStrengthRequest,
 } from 'supportAdditionalNeedsApiClient'
 import config from '../config'
 import logger from '../../logger'
@@ -222,6 +224,31 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/strengths`,
         errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async getStrength(prisonNumber: string, strengthReference: string, username: string): Promise<StrengthResponse> {
+    return this.get<StrengthResponse>(
+      {
+        path: `/profile/${prisonNumber}/strengths/${strengthReference}`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async updateStrength(
+    prisonNumber: string,
+    strengthReference: string,
+    username: string,
+    updateStrengthRequest: UpdateStrengthRequest,
+  ): Promise<void> {
+    return this.put<void>(
+      {
+        path: `/profile/${prisonNumber}/strengths/${strengthReference}`,
+        data: updateStrengthRequest,
       },
       asSystem(username),
     )

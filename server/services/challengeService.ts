@@ -48,13 +48,13 @@ export default class ChallengeService {
     }
   }
 
-  async updateChallenge(username: string, challengerReference: string, challenge: ChallengeDto): Promise<void> {
+  async updateChallenge(username: string, challengeReference: string, challenge: ChallengeDto): Promise<void> {
     const { prisonNumber } = challenge
     try {
       const updateChallengeRequest = toUpdateChallengeRequest(challenge)
       await this.supportAdditionalNeedsApiClient.updateChallenge(
         prisonNumber,
-        challengerReference,
+        challengeReference,
         username,
         updateChallengeRequest,
       )
