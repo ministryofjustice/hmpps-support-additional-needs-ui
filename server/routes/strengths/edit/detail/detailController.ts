@@ -1,10 +1,11 @@
-import { NextFunction, Request, Response } from 'express'
-import type { StrengthDto } from 'dto'
+import { NextFunction, Request, RequestHandler, Response } from 'express'
+import type { StrengthResponseDto } from 'dto'
 import StrengthIdentificationSource from '../../../../enums/strengthIdentificationSource'
-import { AuditService, StrengthService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
+import { AuditService, StrengthService } from '../../../../services'
 import { asArray } from '../../../../utils/utils'
 import { BaseAuditData } from '../../../../services/auditService'
+import { PrisonUser } from '../../../../interfaces/hmppsUser'
 
 export default class DetailController {
   constructor(
@@ -14,7 +15,7 @@ export default class DetailController {
 
   getDetailView = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
-    const strengthDto = req.journeyData.strengthDto as StrengthDto
+    const strengthDto = req.journeyData.strengthDto as StrengthResponseDto
 
     const detailForm = invalidForm
       ? {
@@ -26,19 +27,25 @@ export default class DetailController {
     const viewRenderArgs = {
       form: detailForm,
       category: strengthDto.strengthTypeCode,
+      mode: 'edit',
       errorRecordingStrength: req.flash('pageHasApiErrors')[0] != null,
     }
-    return res.render('pages/strengths/detail/create-journey/index', viewRenderArgs)
+    return res.render('pages/strengths/detail/edit-journey/index', viewRenderArgs)
   }
 
-  submitDetailForm = async (req: Request, res: Response, next: NextFunction) => {
-    const detailForm = { ...req.body }
-    this.updateDtoFromForm(req, detailForm)
+  submitDetailForm: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+    const detailsForm = { ...req.body }
+    this.updateDtoFromForm(req, detailsForm)
 
-    const strengthDto = req.journeyData.strengthDto as StrengthDto
+    const { activeCaseLoadId, username } = res.locals.user as PrisonUser
+
+    const strengthResponseDto = req.journeyData.strengthDto as StrengthResponseDto
+    const { reference } = strengthResponseDto
+    const strengthDto = { ...strengthResponseDto, prisonId: activeCaseLoadId }
+
     const { apiErrorCallback } = res.locals
     const apiResult = await Result.wrap(
-      this.strengthService.createStrengths(req.user.username, [strengthDto]),
+      this.strengthService.updateStrength(username, reference, strengthDto),
       apiErrorCallback,
     )
     if (!apiResult.isFulfilled()) {
@@ -46,18 +53,10 @@ export default class DetailController {
       return res.redirect('detail')
     }
 
-    const { prisonNumber } = strengthDto
+    const { prisonNumber } = strengthResponseDto
     req.journeyData.strengthDto = undefined
-    this.auditService.logCreateStrength(this.createStrengthAuditData(req)) // no need to wait for response
-    return res.redirectWithSuccess(`/profile/${prisonNumber}/strengths`, 'Strength added')
-  }
-
-  private populateFormFromDto = (dto: StrengthDto) => {
-    return {
-      description: dto.symptoms,
-      howIdentified: dto.howIdentified || [],
-      howIdentifiedOther: dto.howIdentifiedOther,
-    }
+    this.auditService.logEditStrength(this.editStrengthsAuditData(req, strengthResponseDto)) // no need to wait for response
+    return res.redirectWithSuccess(`/profile/${prisonNumber}/strengths`, 'Strength updated')
   }
 
   private updateDtoFromForm = (
@@ -71,9 +70,19 @@ export default class DetailController {
     req.journeyData.strengthDto = strengthDto
   }
 
-  private createStrengthAuditData = (req: Request): BaseAuditData => {
+  private populateFormFromDto = (strengthDto: StrengthResponseDto) => {
     return {
-      details: {},
+      description: strengthDto.symptoms,
+      howIdentified: strengthDto.howIdentified || [],
+      howIdentifiedOther: strengthDto.howIdentifiedOther,
+    }
+  }
+
+  private editStrengthsAuditData = (req: Request, strengthDto: StrengthResponseDto): BaseAuditData => {
+    return {
+      details: {
+        strengthReference: strengthDto.reference,
+      },
       subjectType: 'PRISONER_ID',
       subjectId: req.params.prisonNumber,
       who: req.user?.username ?? 'UNKNOWN',

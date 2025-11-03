@@ -6,6 +6,7 @@ import type {
   RefuseEducationSupportPlanDto,
   ReviewEducationSupportPlanDto,
   StrengthDto,
+  StrengthResponseDto,
   SupportStrategyDto,
 } from 'dto'
 import { HmppsUser } from '../../interfaces/hmppsUser'
@@ -32,7 +33,7 @@ export declare global {
       refuseEducationSupportPlanDto?: RefuseEducationSupportPlanDto
       challengeDto?: ChallengeDto | ChallengeResponseDto
       conditionsList?: ConditionsList
-      strengthDto?: StrengthDto
+      strengthDto?: StrengthDto | StrengthResponseDto
       supportStrategyDto?: SupportStrategyDto
       alnScreenerDto?: AlnScreenerDto
     }

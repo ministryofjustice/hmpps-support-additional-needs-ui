@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import logger from '../../../../../logger'
+import logger from '../../../../logger'
 
 /**
  * Middleware function to check that the [StrengthDto] exists in the journeyData.

@@ -1,14 +1,21 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
+import DetailController from './detail/detailController'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import { validate } from '../../../middleware/validationMiddleware'
+import detailSchema from '../validationSchemas/detailSchema'
+import retrieveStrengthResponseDtoIfNotInJourneyData from '../middleware/retrieveStrengthResponseDtoIfNotInJourneyData'
+import checkStrengthDtoExistsInJourneyData from '../middleware/checkStrengthDtoExistsInJourneyData'
 
 const editStrengthsRoutes = (services: Services): Router => {
-  const { journeyDataService } = services
-
+  const { auditService, journeyDataService, strengthService } = services
   const router = Router({ mergeParams: true })
+
+  const detailController = new DetailController(strengthService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.EDIT_STRENGTHS),
@@ -17,11 +24,13 @@ const editStrengthsRoutes = (services: Services): Router => {
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
 
   router.get('/:journeyId/detail', [
-    // TODO - implement retrieveStrengthResponseDtoIfNotInJourneyData,
-    // TODO - replace with a controller method
-    async (req: Request, res: Response) => {
-      res.send('Edit strength - detail page')
-    },
+    retrieveStrengthResponseDtoIfNotInJourneyData(strengthService),
+    asyncMiddleware(detailController.getDetailView),
+  ])
+  router.post('/:journeyId/detail', [
+    checkStrengthDtoExistsInJourneyData,
+    validate(detailSchema),
+    asyncMiddleware(detailController.submitDetailForm),
   ])
 
   return router
