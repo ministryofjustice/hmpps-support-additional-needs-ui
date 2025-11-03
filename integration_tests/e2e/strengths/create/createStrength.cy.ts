@@ -2,7 +2,7 @@ import Page from '../../../pages/page'
 import OverviewPage from '../../../pages/profile/overviewPage'
 import SelectStrengthCategoryPage from '../../../pages/strengths/selectStrengthCategoryPage'
 import StrengthsPage from '../../../pages/profile/strengthsPage'
-import AddStrengthDetailPage from '../../../pages/strengths/addStrengthDetailPage'
+import StrengthDetailPage from '../../../pages/strengths/strengthDetailPage'
 import StrengthIdentificationSource from '../../../../server/enums/strengthIdentificationSource'
 import { postRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
@@ -47,24 +47,24 @@ context('Create a Strength', () => {
       .hasFieldInError('category')
       // select a category and submit the form to the next page
       .selectCategory(StrengthType.EMOTIONS_FEELINGS_DEFAULT)
-      .submitPageTo(AddStrengthDetailPage)
+      .submitPageTo(StrengthDetailPage)
 
-    Page.verifyOnPage(AddStrengthDetailPage)
+    Page.verifyOnPage(StrengthDetailPage)
       .hasPageHeading('Add emotions and feelings strength')
       // submit the page without answering the question to trigger a validation error
-      .submitPageTo(AddStrengthDetailPage)
+      .submitPageTo(StrengthDetailPage)
       .hasErrorCount(2)
       .hasFieldInError('description')
       .hasFieldInError('howIdentified')
       // enter a description only and submit
       .enterDescription('Chris shows strong empathy when dealing with others')
-      .submitPageTo(AddStrengthDetailPage)
+      .submitPageTo(StrengthDetailPage)
       .hasErrorCount(1)
       .hasFieldInError('howIdentified')
       // select how the strength was identified, including Other, but do not enter a reason
       .selectHowStrengthIdentified(StrengthIdentificationSource.FORMAL_PROCESSES)
       .selectHowStrengthIdentified(StrengthIdentificationSource.OTHER)
-      .submitPageTo(AddStrengthDetailPage)
+      .submitPageTo(StrengthDetailPage)
       .hasErrorCount(1)
       .hasFieldInError('howIdentifiedOther')
       // enter the detail for Other and submit
@@ -102,18 +102,18 @@ context('Create a Strength', () => {
 
     Page.verifyOnPage(SelectStrengthCategoryPage)
       .selectCategory(StrengthType.EMOTIONS_FEELINGS_DEFAULT)
-      .submitPageTo(AddStrengthDetailPage)
+      .submitPageTo(StrengthDetailPage)
       .enterDescription('Chris shows strong empathy when dealing with others')
       .selectHowStrengthIdentified(StrengthIdentificationSource.FORMAL_PROCESSES)
 
     // When
-    Page.verifyOnPage(AddStrengthDetailPage) //
+    Page.verifyOnPage(StrengthDetailPage) //
       .apiErrorBannerIsNotDisplayed()
-    Page.verifyOnPage(AddStrengthDetailPage) //
-      .submitPageTo(AddStrengthDetailPage) // Submit the page but expect to stay on the Add Strengths Detail page due to API error
+    Page.verifyOnPage(StrengthDetailPage) //
+      .submitPageTo(StrengthDetailPage) // Submit the page but expect to stay on the Add Strengths Detail page due to API error
 
     // Then
-    Page.verifyOnPage(AddStrengthDetailPage) //
+    Page.verifyOnPage(StrengthDetailPage) //
       .apiErrorBannerIsDisplayed()
   })
 })

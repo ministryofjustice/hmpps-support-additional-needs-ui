@@ -21,11 +21,13 @@ njkEnv //
   .addFilter('formatDate', formatDateFilter)
   .addFilter('formatStrengthTypeScreenValue', formatStrengthTypeScreenValueFilter)
   .addFilter('formatStrengthIdentificationSourceScreenValue', formatStrengthIdentificationSourceScreenValueFilter)
+  .addGlobal('featureToggles', { editAndArchiveEnabled: true })
 
 const prisonNamesById = {
   BXI: 'Brixton (HMP)',
   LEI: 'Leeds (HMP)',
 }
+const userHasPermissionTo = jest.fn()
 const templateParams = {
   title: 'Literacy skills',
   strengthsData: {
@@ -37,11 +39,17 @@ const templateParams = {
     },
   },
   prisonNamesById,
+  userHasPermissionTo,
+  showActions: true,
 }
 
 const template = 'strengthsSummaryCard.test.njk'
 
 describe('Tests for Strengths Summary Card component', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
   it('should render the component given non-ALN and ALN strengths', () => {
     // Given
     const params = {
@@ -112,7 +120,7 @@ describe('Tests for Strengths Summary Card component', () => {
       `I have seen and experienced John's written text before`,
     ) // 'other' text
     expect(firstStrength.find('[data-qa=non-aln-strength-audit]').text().trim()).toEqual(
-      'Added on 10 February 2025 by Person 1, Leeds (HMP)',
+      'Last updated 10 Feb 2025 by Person 1, Leeds (HMP)',
     )
 
     const secondStrength = nonAlnStrengths.eq(1)
@@ -122,7 +130,7 @@ describe('Tests for Strengths Summary Card component', () => {
       'Direct observation in education, skills and work',
     ) // EDUCATION_SKILLS_WORK
     expect(secondStrength.find('[data-qa=non-aln-strength-audit]').text().trim()).toEqual(
-      'Added on 10 February 2025 by Person 1, Leeds (HMP)',
+      'Last updated 10 Feb 2025 by Person 1, Leeds (HMP)',
     )
 
     // assert ALN strengths
@@ -130,7 +138,7 @@ describe('Tests for Strengths Summary Card component', () => {
     expect(alnStrengths.length).toEqual(1)
     expect(alnStrengths.eq(0).text().trim()).toEqual('Language and communication skills') // LANGUAGE_COMM_SKILLS_DEFAULT
     expect($('[data-qa=aln-strengths-audit]').text().trim()).toEqual(
-      'From Additional Learning Needs Screener completed on 13 June 2025, Brixton (HMP)',
+      'From Additional Learning Needs Screener completed on 13 Jun 2025, Brixton (HMP)',
     )
   })
 
@@ -177,7 +185,7 @@ describe('Tests for Strengths Summary Card component', () => {
       `I have seen and experienced John's written text before`,
     ) // 'other' text
     expect(firstStrength.find('[data-qa=non-aln-strength-audit]').text().trim()).toEqual(
-      'Added on 10 February 2025 by Person 1, Leeds (HMP)',
+      'Last updated 10 Feb 2025 by Person 1, Leeds (HMP)',
     )
 
     // assert ALN strengths
@@ -227,7 +235,7 @@ describe('Tests for Strengths Summary Card component', () => {
     expect(alnStrengths.length).toEqual(1)
     expect(alnStrengths.eq(0).text().trim()).toEqual('Language and communication skills') // LANGUAGE_COMM_SKILLS_DEFAULT
     expect($('[data-qa=aln-strengths-audit]').text().trim()).toEqual(
-      'From Additional Learning Needs Screener completed on 13 June 2025, Brixton (HMP)',
+      'From Additional Learning Needs Screener completed on 13 Jun 2025, Brixton (HMP)',
     )
   })
 
@@ -274,7 +282,7 @@ describe('Tests for Strengths Summary Card component', () => {
     expect(alnStrengths.length).toEqual(1)
     expect(alnStrengths.eq(0).text().trim()).toEqual('Language and communication skills') // LANGUAGE_COMM_SKILLS_DEFAULT
     expect($('[data-qa=aln-strengths-audit]').text().trim()).toEqual(
-      'From Additional Learning Needs Screener completed on 13 June 2025, BXI',
+      'From Additional Learning Needs Screener completed on 13 Jun 2025, BXI',
     )
   })
 
@@ -297,5 +305,132 @@ describe('Tests for Strengths Summary Card component', () => {
 
     // Then
     expect(content.trim()).toEqual('')
+  })
+
+  it('should not render any actions given the showActions flag is false', () => {
+    const params = {
+      ...templateParams,
+      strengthsData: {
+        ...templateParams.strengthsData,
+        nonAlnStrengths: [aValidStrengthResponseDto()],
+      },
+      showActions: false,
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    const nonAlnStrengths = $('.govuk-summary-list__row.non-aln-strength')
+    expect(nonAlnStrengths.length).toEqual(1)
+    expect(nonAlnStrengths.eq(0).find('.govuk-summary-card__actions').length).toEqual(0)
+    expect(userHasPermissionTo).not.toHaveBeenCalled()
+  })
+
+  it('should not render any actions given the showActions flag is true but the user does not have any permissions', () => {
+    userHasPermissionTo.mockReturnValue(false)
+
+    const params = {
+      ...templateParams,
+      strengthsData: {
+        ...templateParams.strengthsData,
+        nonAlnStrengths: [aValidStrengthResponseDto()],
+      },
+      showActions: true,
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    const nonAlnStrengths = $('.govuk-summary-list__row.non-aln-strength')
+    expect(nonAlnStrengths.length).toEqual(1)
+    expect(nonAlnStrengths.eq(0).find('.govuk-summary-card__actions').length).toEqual(1)
+    expect(nonAlnStrengths.eq(0).find('[data-qa=edit-strength-button]').length).toEqual(0)
+    expect(nonAlnStrengths.eq(0).find('[data-qa=archive-strength-button]').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('EDIT_STRENGTHS')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('ARCHIVE_STRENGTHS')
+  })
+
+  it('should render edit strength action given the showActions flag is true and the user only has permission to edit strengths', () => {
+    userHasPermissionTo.mockReturnValueOnce(true)
+    userHasPermissionTo.mockReturnValueOnce(false)
+
+    const params = {
+      ...templateParams,
+      strengthsData: {
+        ...templateParams.strengthsData,
+        nonAlnStrengths: [aValidStrengthResponseDto()],
+      },
+      showActions: true,
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    const nonAlnStrengths = $('.govuk-summary-list__row.non-aln-strength')
+    expect(nonAlnStrengths.length).toEqual(1)
+    expect(nonAlnStrengths.eq(0).find('.govuk-summary-card__actions').length).toEqual(1)
+    expect(nonAlnStrengths.eq(0).find('[data-qa=edit-strength-button]').length).toEqual(1)
+    expect(nonAlnStrengths.eq(0).find('[data-qa=archive-strength-button]').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('EDIT_STRENGTHS')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('ARCHIVE_STRENGTHS')
+  })
+
+  it('should render archive strength action given the showActions flag is true and the user only has permission to archive strengths', () => {
+    userHasPermissionTo.mockReturnValueOnce(false)
+    userHasPermissionTo.mockReturnValueOnce(true)
+
+    const params = {
+      ...templateParams,
+      strengthsData: {
+        ...templateParams.strengthsData,
+        nonAlnStrengths: [aValidStrengthResponseDto()],
+      },
+      showActions: true,
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    const nonAlnStrengths = $('.govuk-summary-list__row.non-aln-strength')
+    expect(nonAlnStrengths.length).toEqual(1)
+    expect(nonAlnStrengths.eq(0).find('.govuk-summary-card__actions').length).toEqual(1)
+    expect(nonAlnStrengths.eq(0).find('[data-qa=edit-strength-button]').length).toEqual(0)
+    expect(nonAlnStrengths.eq(0).find('[data-qa=archive-strength-button]').length).toEqual(1)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('EDIT_STRENGTHS')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('ARCHIVE_STRENGTHS')
+  })
+
+  it('should render both strength actions given the showActions flag is true and the user has permissions to edit and archive strengths', () => {
+    userHasPermissionTo.mockReturnValue(true)
+
+    const params = {
+      ...templateParams,
+      strengthsData: {
+        ...templateParams.strengthsData,
+        nonAlnStrengths: [aValidStrengthResponseDto()],
+      },
+      showActions: true,
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    const nonAlnStrengths = $('.govuk-summary-list__row.non-aln-strength')
+    expect(nonAlnStrengths.length).toEqual(1)
+    expect(nonAlnStrengths.eq(0).find('.govuk-summary-card__actions').length).toEqual(1)
+    expect(nonAlnStrengths.eq(0).find('[data-qa=edit-strength-button]').length).toEqual(1)
+    expect(nonAlnStrengths.eq(0).find('[data-qa=archive-strength-button]').length).toEqual(1)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('EDIT_STRENGTHS')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('ARCHIVE_STRENGTHS')
   })
 })
