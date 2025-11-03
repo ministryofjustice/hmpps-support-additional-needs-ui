@@ -56,20 +56,18 @@
           </span>
         {% endif %}
 
-        {% if featureToggles.reviewsEnabled %}
-          {% if planStatus == 'REVIEW_DUE' %}
-            <span class="govuk-tag govuk-tag--yellow govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="review-due-tag">
-              Review due
-            </span>
-            <p class="govuk-body" data-qa="plan-review-due-date">Review due {{ planReviewDeadlineDate | formatDate('d MMM yyyy') }}</p>
-          {% endif %}
+        {% if planStatus == 'REVIEW_DUE' %}
+          <span class="govuk-tag govuk-tag--yellow govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="review-due-tag">
+            Review due
+          </span>
+          <p class="govuk-body" data-qa="plan-review-due-date">Review due {{ planReviewDeadlineDate | formatDate('d MMM yyyy') }}</p>
+        {% endif %}
 
-          {% if planStatus == 'REVIEW_OVERDUE' %}
-            <span class="govuk-tag govuk-tag--red govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="review-overdue-tag">
-              Review overdue
-            </span>
-            <p class="govuk-body" data-qa="plan-review-due-date">Review due {{ planReviewDeadlineDate | formatDate('d MMM yyyy') }}</p>
-          {% endif %}
+        {% if planStatus == 'REVIEW_OVERDUE' %}
+          <span class="govuk-tag govuk-tag--red govuk-!-margin-top-2 govuk-!-margin-bottom-2" data-qa="review-overdue-tag">
+            Review overdue
+          </span>
+          <p class="govuk-body" data-qa="plan-review-due-date">Review due {{ planReviewDeadlineDate | formatDate('d MMM yyyy') }}</p>
         {% endif %}
       {% endif %}
 
@@ -100,18 +98,16 @@
           {% endif %}
         {% endif %}
 
-        {% if featureToggles.reviewsEnabled %}
-          {% if userHasPermissionTo('REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN') %}
-            {% if ['REVIEW_DUE', 'REVIEW_OVERDUE', 'ACTIVE_PLAN'].indexOf(planStatus) > -1 %}
-              <li>
-                <a class="govuk-link" data-qa="review-education-support-plan-button" href="/education-support-plan/{{ prisonerSummary.prisonNumber }}/review/who-reviewed-the-plan">
-                  <span>
-                    <img src="/assets/images/icon-document.svg" role="presentation" alt="" class="action-icon" />
-                    Review education support plan
-                  </span>
-                </a>
-              </li>
-            {% endif %}
+        {% if userHasPermissionTo('REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN') %}
+          {% if ['REVIEW_DUE', 'REVIEW_OVERDUE', 'ACTIVE_PLAN'].indexOf(planStatus) > -1 %}
+            <li>
+              <a class="govuk-link" data-qa="review-education-support-plan-button" href="/education-support-plan/{{ prisonerSummary.prisonNumber }}/review/who-reviewed-the-plan">
+                <span>
+                  <img src="/assets/images/icon-document.svg" role="presentation" alt="" class="action-icon" />
+                  Review education support plan
+                </span>
+              </a>
+            </li>
           {% endif %}
         {% endif %}
       </ul>

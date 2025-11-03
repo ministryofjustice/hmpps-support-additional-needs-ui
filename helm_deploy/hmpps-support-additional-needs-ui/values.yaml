@@ -51,7 +51,6 @@ generic-service:
     AUDIT_ENABLED: 'true'
     PRISONER_SEARCH_API_DEFAULT_PAGE_SIZE: "9999"
     SEARCH_UI_DEFAULT_PAGINATION_PAGE_SIZE: "50"
-    REVIEWS_ENABLED: true
     EDIT_AND_ARCHIVE_ENABLED: false
 
     # Comma delimited list of prison IDs that our service is rolled out into (active agencies)

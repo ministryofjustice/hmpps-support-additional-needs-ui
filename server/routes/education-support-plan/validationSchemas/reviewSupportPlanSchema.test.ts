@@ -3,7 +3,6 @@ import { addDays, addMonths, format, startOfToday, subDays } from 'date-fns'
 import type { Error } from '../../../filters/findErrorFilter'
 import { validate } from '../../../middleware/validationMiddleware'
 import reviewSupportPlanSchema from './reviewSupportPlanSchema'
-import config from '../../../config'
 
 describe('reviewSupportPlanSchema', () => {
   const todayDate = startOfToday()
@@ -28,7 +27,6 @@ describe('reviewSupportPlanSchema', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     req.originalUrl = '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/next-review-date'
-    jest.replaceProperty(config.featureToggles, 'reviewsEnabled', true)
   })
 
   it.each([{ reviewDate: today }, { reviewDate: threeMonthsAfterToday }])(
@@ -105,57 +103,4 @@ describe('reviewSupportPlanSchema', () => {
       )
     },
   )
-
-  // TODO - remove these tests when we have removed the code to prevent users entering an October date
-  describe('review feature is disabled; prevent users from entering a review date in october', () => {
-    beforeEach(() => {
-      jest.replaceProperty(config.featureToggles, 'reviewsEnabled', false)
-    })
-
-    it.each([
-      // { reviewDate: today },
-      { reviewDate: format(addMonths(todayDate, 1), 'd/M/yyyy') },
-      { reviewDate: threeMonthsAfterToday },
-    ])('happy path - validation passes - reviewDate: $reviewDate', async requestBody => {
-      // Given
-      req.body = requestBody
-
-      // When
-      await validate(reviewSupportPlanSchema)(req, res, next)
-
-      // Then
-      expect(req.body).toEqual(requestBody)
-      expect(next).toHaveBeenCalled()
-      expect(req.flash).not.toHaveBeenCalled()
-      expect(res.redirectWithErrors).not.toHaveBeenCalled()
-    })
-
-    it.each([{ reviewDate: '31/10/2025' }])(
-      'sad path - validation of reviewDate field fails due to being within October 2025  - reviewDate: $reviewDate',
-      async requestBody => {
-        // Given
-        req.body = requestBody
-
-        const expectedErrors: Array<Error> = [
-          {
-            href: '#reviewDate',
-            text: 'Review date cannot be in October 2025',
-          },
-        ]
-        const expectedInvalidForm = JSON.stringify(requestBody)
-
-        // When
-        await validate(reviewSupportPlanSchema)(req, res, next)
-
-        // Then
-        expect(req.body).toEqual(requestBody)
-        expect(next).not.toHaveBeenCalled()
-        expect(req.flash).toHaveBeenCalledWith('invalidForm', expectedInvalidForm)
-        expect(res.redirectWithErrors).toHaveBeenCalledWith(
-          '/education-support-plan/A1234BC/create/61375886-8ec3-4ed4-a017-a0525817f14a/next-review-date',
-          expectedErrors,
-        )
-      },
-    )
-  })
 })
