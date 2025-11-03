@@ -14,7 +14,6 @@ const njkEnv = nunjucks.configure([
 
 njkEnv //
   .addFilter('formatDate', formatDateFilter)
-  .addGlobal('featureToggles', { reviewsEnabled: true })
 
 const planCreationDeadlineDate = startOfToday()
 const planReviewDeadlineDate = addMonths(planCreationDeadlineDate, 3)
