@@ -36,12 +36,12 @@ export default class ChallengeService {
     challengeReference: string,
   ): Promise<ChallengeResponseDto> {
     try {
-      const challengeListResponse = await this.supportAdditionalNeedsApiClient.getChallenge(
+      const challengeResponse = await this.supportAdditionalNeedsApiClient.getChallenge(
         prisonNumber,
         challengeReference,
         username,
       )
-      return toChallengeResponseDto(prisonNumber, challengeListResponse)
+      return toChallengeResponseDto(prisonNumber, challengeResponse)
     } catch (e) {
       logger.error(`Error getting Challenge for [${prisonNumber}]`, e)
       throw e

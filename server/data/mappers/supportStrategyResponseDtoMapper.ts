@@ -2,17 +2,28 @@ import type { SupportStrategyResponseDto } from 'dto'
 import type { SupportStrategyListResponse, SupportStrategyResponse } from 'supportAdditionalNeedsApiClient'
 import toReferenceAndAuditable from './referencedAndAuditableMapper'
 
-const toSupportStrategyResponseDtos = (apiResponse: SupportStrategyListResponse): SupportStrategyResponseDto[] => {
-  return ((apiResponse?.supportStrategies || []) as Array<SupportStrategyResponse>).map(toSupportStrategyResponseDto)
+const toSupportStrategyResponseDtos = (
+  apiResponse: SupportStrategyListResponse,
+  prisonNumber: string,
+): SupportStrategyResponseDto[] => {
+  return ((apiResponse?.supportStrategies || []) as Array<SupportStrategyResponse>).map(supportStrategy =>
+    toSupportStrategyResponseDto(prisonNumber, supportStrategy),
+  )
 }
 
-const toSupportStrategyResponseDto = (supportStrategyResponse: SupportStrategyResponse): SupportStrategyResponseDto =>
-  ({
-    ...toReferenceAndAuditable(supportStrategyResponse),
-    supportStrategyTypeCode: supportStrategyResponse.supportStrategyType.code,
-    supportStrategyDetails: supportStrategyResponse.detail,
-    supportStrategyCategory: supportStrategyResponse.supportStrategyType.categoryCode,
-    active: supportStrategyResponse.active,
-  }) as SupportStrategyResponseDto
+const toSupportStrategyResponseDto = (
+  prisonNumber: string,
+  supportStrategyResponse: SupportStrategyResponse,
+): SupportStrategyResponseDto =>
+  supportStrategyResponse
+    ? {
+        ...toReferenceAndAuditable(supportStrategyResponse),
+        prisonNumber,
+        supportStrategyTypeCode: supportStrategyResponse.supportStrategyType.code,
+        supportStrategyDetails: supportStrategyResponse.detail,
+        supportStrategyCategory: supportStrategyResponse.supportStrategyType.categoryCode,
+        active: supportStrategyResponse.active,
+      }
+    : null
 
 export { toSupportStrategyResponseDto, toSupportStrategyResponseDtos }

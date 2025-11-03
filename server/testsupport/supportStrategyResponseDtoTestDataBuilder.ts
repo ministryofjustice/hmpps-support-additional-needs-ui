@@ -5,12 +5,14 @@ import SupportStrategyCategory from '../enums/supportStrategyCategory'
 
 const aValidSupportStrategyResponseDto = (
   options?: DtoAuditFields & {
+    prisonNumber?: string
     supportStrategyCategoryTypeCode?: SupportStrategyType
     supportStrategyCategory?: SupportStrategyCategory
     details?: string
     active?: boolean
   },
 ): SupportStrategyResponseDto => ({
+  prisonNumber: options?.prisonNumber || 'A1234BC',
   supportStrategyTypeCode: options?.supportStrategyCategoryTypeCode || SupportStrategyType.MEMORY,
   supportStrategyCategory: options?.supportStrategyCategory || SupportStrategyCategory.LITERACY_SKILLS,
   supportStrategyDetails:

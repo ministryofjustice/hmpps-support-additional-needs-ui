@@ -182,6 +182,7 @@ declare module 'dto' {
    * Response DTO representing a Support Strategy that the person has.
    */
   export interface SupportStrategyResponseDto extends ReferencedAndAuditable {
+    prisonNumber: string
     supportStrategyTypeCode?: SupportStrategyType
     supportStrategyDetails?: string
     supportStrategyCategory?: string

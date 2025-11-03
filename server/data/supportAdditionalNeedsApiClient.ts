@@ -20,10 +20,12 @@ import type {
   StrengthListResponse,
   StrengthResponse,
   SupportStrategyListResponse,
+  SupportStrategyResponse,
   SupportPlanReviewRequest,
   UpdateChallengeRequest,
   UpdatePlanCreationStatusRequest,
   UpdateStrengthRequest,
+  UpdateSupportStrategyRequest,
 } from 'supportAdditionalNeedsApiClient'
 import config from '../config'
 import logger from '../../logger'
@@ -273,6 +275,35 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/support-strategies`,
         errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async getSupportStrategy(
+    prisonNumber: string,
+    supportStrategyReference: string,
+    username: string,
+  ): Promise<SupportStrategyResponse> {
+    return this.get<SupportStrategyResponse>(
+      {
+        path: `/profile/${prisonNumber}/support-strategies/${supportStrategyReference}`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async updateSupportStrategy(
+    prisonNumber: string,
+    supportStrategyReference: string,
+    username: string,
+    updateSupportStrategyRequest: UpdateSupportStrategyRequest,
+  ): Promise<void> {
+    return this.put<void>(
+      {
+        path: `/profile/${prisonNumber}/support-strategies/${supportStrategyReference}`,
+        data: updateSupportStrategyRequest,
       },
       asSystem(username),
     )
