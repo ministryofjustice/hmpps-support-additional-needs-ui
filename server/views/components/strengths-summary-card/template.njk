@@ -13,6 +13,8 @@
 {% set nonAlnStrengths = params.strengthsData.nonAlnStrengths %}
 {% set latestAlnScreener = params.strengthsData.latestAlnScreener %}
 {% set strengthsFromMostRecentAlnScreener = latestAlnScreener.strengths %}
+{% set showActions = params.showActions %}
+{% set userHasPermissionTo = params.userHasPermissionTo %}
 
 {% if nonAlnStrengths | length or strengthsFromMostRecentAlnScreener | length %}
   <div {{ componentAttributes | safe }}>
@@ -44,10 +46,29 @@
               }
             }) }}
 
-            <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="non-aln-strength-audit">
-              {% set prisonName = params.prisonNamesById[strength.updatedAtPrison] | default(strength.updatedAtPrison) %}
-              Added on {{ strength.updatedAt | formatDate('d MMMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ strength.updatedByDisplayName }}, {{ prisonName }}</span>
-            </p>
+            <div class="actions-wrapper">
+              <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="non-aln-strength-audit">
+                {% set prisonName = params.prisonNamesById[strength.updatedAtPrison] | default(strength.updatedAtPrison) %}
+                Last updated {{ strength.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ strength.updatedByDisplayName }}, {{ prisonName }}</span>
+              </p>
+
+              {% if featureToggles.editAndArchiveEnabled %}
+                {% if showActions %}
+                  <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                    {% if userHasPermissionTo('EDIT_STRENGTHS') %}
+                      <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ strength.prisonNumber }}/{{ strength.reference }}/edit/detail" data-qa="edit-strength-button">Edit</a>
+                      </li>
+                    {% endif %}
+                    {% if userHasPermissionTo('ARCHIVE_STRENGTHS') %}
+                      <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ strength.prisonNumber }}/{{ strength.reference }}/archive" data-qa="archive-strength-button">Move to history</a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                {% endif %}
+              {% endif %}
+            </div>
           </div>
         {% endfor %}
 
@@ -62,7 +83,7 @@
 
             <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-strengths-audit">
               {% set prisonName = params.prisonNamesById[latestAlnScreener.createdAtPrison] | default(latestAlnScreener.createdAtPrison) %}
-              From Additional Learning Needs Screener completed on {{ latestAlnScreener.screenerDate | formatDate('d MMMM yyyy') }}, {{ prisonName }}
+              From Additional Learning Needs Screener completed on {{ latestAlnScreener.screenerDate | formatDate('d MMM yyyy') }}, {{ prisonName }}
             </p>
           </div>
         {% endif %}

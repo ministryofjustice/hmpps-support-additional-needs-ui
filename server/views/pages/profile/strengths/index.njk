@@ -23,13 +23,14 @@
         {% set groupedStrengths = groupedStrengths.value %}
 
         {% if groupedStrengths | length %}
-
           {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
           {% for strengthCategory, strengthsData in groupedStrengths %}
             {{ strengthsSummaryCard({
               title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
               strengthsData: strengthsData,
               prisonNamesById: prisonNamesById,
+              showActions: true,
+              userHasPermissionTo: userHasPermissionTo,
               attributes: {
                 'data-qa': 'strengths-summary-card_' + strengthCategory
               }

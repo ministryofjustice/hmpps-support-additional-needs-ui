@@ -1,22 +1,22 @@
 import Page, { PageElement } from '../page'
 import StrengthIdentificationSource from '../../../server/enums/strengthIdentificationSource'
 
-export default class AddStrengthDetailPage extends Page {
+export default class StrengthDetailPage extends Page {
   constructor() {
-    super('create-strength-detail')
+    super('strength-detail')
   }
 
-  enterDescription(value: string): AddStrengthDetailPage {
+  enterDescription(value: string): StrengthDetailPage {
     this.descriptionField().clear().type(value, { delay: 0 })
     return this
   }
 
-  enterOtherHowStrengthIdentified(value: string): AddStrengthDetailPage {
+  enterOtherHowStrengthIdentified(value: string): StrengthDetailPage {
     this.otherIdentificationSourceField().clear().type(value, { delay: 0 })
     return this
   }
 
-  selectHowStrengthIdentified(option: StrengthIdentificationSource): AddStrengthDetailPage {
+  selectHowStrengthIdentified(option: StrengthIdentificationSource): StrengthDetailPage {
     this.checkbox(option).then(checkbox => {
       if (!checkbox.attr('checked')) {
         cy.wrap(checkbox).click()
@@ -25,7 +25,7 @@ export default class AddStrengthDetailPage extends Page {
     return this
   }
 
-  deSelectHowStrengthIdentified(option: StrengthIdentificationSource): AddStrengthDetailPage {
+  deSelectHowStrengthIdentified(option: StrengthIdentificationSource): StrengthDetailPage {
     this.checkbox(option).then(checkbox => {
       if (checkbox.attr('checked')) {
         cy.wrap(checkbox).click()
