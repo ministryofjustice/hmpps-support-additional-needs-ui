@@ -157,6 +157,7 @@ declare module 'dto' {
    * DTO representing a Strength that the person has. IE. this DTO does not hold data about Strengths that will be passed to the API to create.
    */
   export interface StrengthResponseDto extends ReferencedAndAuditable {
+    prisonNumber: string
     strengthTypeCode: StrengthType
     strengthCategory: StrengthCategory
     symptoms?: string

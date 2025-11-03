@@ -5,11 +5,14 @@ import toReferenceAndAuditable from './referencedAndAuditableMapper'
 
 const toStrengthsList = (strengthListResponse: StrengthListResponse, prisonNumber: string): StrengthsList => ({
   prisonNumber,
-  strengths: strengthListResponse?.strengths.map(toStrengthResponseDto) || [],
+  strengths: ((strengthListResponse?.strengths || []) as Array<StrengthResponse>).map(strength =>
+    toStrengthResponseDto(prisonNumber, strength),
+  ),
 })
 
-const toStrengthResponseDto = (strengthResponse: StrengthResponse): StrengthResponseDto => ({
+const toStrengthResponseDto = (prisonNumber: string, strengthResponse: StrengthResponse): StrengthResponseDto => ({
   ...toReferenceAndAuditable(strengthResponse),
+  prisonNumber,
   strengthTypeCode: strengthResponse.strengthType.code,
   strengthCategory: strengthResponse.strengthType.categoryCode,
   symptoms: strengthResponse.symptoms,

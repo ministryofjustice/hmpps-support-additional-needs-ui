@@ -13,6 +13,7 @@ describe('strengthDtoMapper', () => {
     const apiResponse = aValidStrengthListResponse({
       strengths: [
         {
+          prisonNumber,
           active: true,
           fromALNScreener: false,
           symptoms: 'John can read and understand very well.',
@@ -30,6 +31,7 @@ describe('strengthDtoMapper', () => {
           updatedAtPrison: 'MDI',
         },
         {
+          prisonNumber,
           active: true,
           fromALNScreener: true,
           alnScreenerDate: '2023-06-19',
@@ -54,6 +56,7 @@ describe('strengthDtoMapper', () => {
       prisonNumber,
       strengths: [
         {
+          prisonNumber,
           active: true,
           fromALNScreener: false,
           alnScreenerDate: null,
@@ -73,6 +76,7 @@ describe('strengthDtoMapper', () => {
           updatedByDisplayName: 'Alex Smith',
         },
         {
+          prisonNumber,
           active: true,
           fromALNScreener: true,
           alnScreenerDate: parseISO('2023-06-19'),

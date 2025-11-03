@@ -14,6 +14,7 @@ const aValidStrengthsList = (options?: {
 
 const aValidStrengthResponseDto = (
   options?: DtoAuditFields & {
+    prisonNumber?: string
     strengthTypeCode?: StrengthType
     strengthCategory?: StrengthCategory
     symptoms?: string
@@ -24,6 +25,7 @@ const aValidStrengthResponseDto = (
     alnScreenerDate?: Date
   },
 ): StrengthResponseDto => ({
+  prisonNumber: options?.prisonNumber || 'A1234BC',
   strengthTypeCode: options?.strengthTypeCode || StrengthType.READING_COMPREHENSION,
   strengthCategory: options?.strengthCategory || StrengthCategory.LITERACY_SKILLS,
   symptoms:
