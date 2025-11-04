@@ -11,7 +11,7 @@ export default class SelectCategoryController {
 
   getSelectCategoryView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
-    const challengeDto = (req.journeyData.challengeDto || {}) as ChallengeDto
+    const challengeDto = req.journeyData.challengeDto as ChallengeDto
     const selectCategoryForm = invalidForm ?? this.populateFormFromDto(challengeDto)
 
     const viewRenderArgs = { form: selectCategoryForm }

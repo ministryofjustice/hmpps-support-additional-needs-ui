@@ -1,11 +1,11 @@
 import Page, { PageElement } from '../page'
 
-export default class AddSupportStrategyDetailPage extends Page {
+export default class SupportStrategyDetailPage extends Page {
   constructor() {
-    super('create-support-strategy-detail')
+    super('support-strategy-detail')
   }
 
-  enterDescription(value: string): AddSupportStrategyDetailPage {
+  enterDescription(value: string): SupportStrategyDetailPage {
     this.descriptionField().clear().type(value, { delay: 0 })
     return this
   }
