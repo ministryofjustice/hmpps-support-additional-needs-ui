@@ -29,7 +29,7 @@
         {# Render non-ALN challenges first #}
         {% for challenge in nonAlnChallenges %}
           <div class="govuk-summary-list__row non-aln-challenge" data-qa="{{ challenge.challengeTypeCode }}">
-            <p class="govuk-body govuk-!-margin-top-3" data-qa="non-aln-challenge-symptoms">{{ challenge.symptoms }}</p>
+            <p class="govuk-body govuk-!-margin-top-3 app-u-multiline-text" data-qa="non-aln-challenge-symptoms">{{ challenge.symptoms }}</p>
 
             {% set howIdentifiedContent %}
               <ul class="govuk-list govuk-!-font-size-16">

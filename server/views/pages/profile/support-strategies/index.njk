@@ -33,7 +33,7 @@
                     <div class="govuk-summary-list">
                       {% for supportStrategy in supportStrategyData %}
                         <div class="govuk-summary-list__row" data-qa="support-strategy-summary-list-row">
-                          <p class="govuk-body govuk-!-margin-top-3"
+                          <p class="govuk-body govuk-!-margin-top-3 app-u-multiline-text"
                              data-qa="support-strategy-details">{{ supportStrategy.supportStrategyDetails }}
                           </p>
                           {% set prisonName = prisonNamesById[supportStrategy.updatedAtPrison] | default(supportStrategy.updatedAtPrison) %}

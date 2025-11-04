@@ -28,7 +28,7 @@
         {# Render non-ALN strengths first #}
         {% for strength in nonAlnStrengths %}
           <div class="govuk-summary-list__row non-aln-strength" data-qa="{{ strength.strengthTypeCode }}">
-            <p class="govuk-body govuk-!-margin-top-3" data-qa="non-aln-strength-symptoms">{{ strength.symptoms }}</p>
+            <p class="govuk-body govuk-!-margin-top-3 app-u-multiline-text" data-qa="non-aln-strength-symptoms">{{ strength.symptoms }}</p>
 
             {% set expanderContent %}
               <ul class="govuk-list govuk-!-font-size-16">
