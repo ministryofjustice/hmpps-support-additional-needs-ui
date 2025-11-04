@@ -33,6 +33,7 @@ declare module 'supportAdditionalNeedsApiClient' {
   export type SupportStrategyRequest = components['schemas']['SupportStrategyRequest']
   export type SupportStrategyListResponse = components['schemas']['SupportStrategyListResponse']
   export type SupportStrategyResponse = components['schemas']['SupportStrategyResponse']
+  export type UpdateSupportStrategyRequest = components['schemas']['UpdateSupportStrategyRequest']
 
   export type ReferenceDataListResponse = components['schemas']['ReferenceDataListResponse']
   export type ReferenceData = components['schemas']['ReferenceData']

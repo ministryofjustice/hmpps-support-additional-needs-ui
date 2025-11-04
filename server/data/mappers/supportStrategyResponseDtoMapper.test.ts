@@ -7,6 +7,8 @@ import { toSupportStrategyResponseDtos } from './supportStrategyResponseDtoMappe
 import SupportStrategyCategory from '../../enums/supportStrategyCategory'
 
 describe('Support Strategy Response Mapper Test', () => {
+  const prisonNumber = 'A1234BC'
+
   it('should map a single support strategy correctly', () => {
     const testRef = 'abcdef'
     const apiResponse: SupportStrategyListResponse = {
@@ -28,10 +30,11 @@ describe('Support Strategy Response Mapper Test', () => {
       ],
     }
 
-    const result = toSupportStrategyResponseDtos(apiResponse)
+    const result = toSupportStrategyResponseDtos(apiResponse, prisonNumber)
 
     expect(result).toHaveLength(1)
     expect(result[0]).toEqual<SupportStrategyResponseDto>({
+      prisonNumber,
       createdAtPrison: 'BXI',
       supportStrategyCategory: SupportStrategyCategory.MEMORY,
       supportStrategyTypeCode: SupportStrategyType.MEMORY,
@@ -88,10 +91,11 @@ describe('Support Strategy Response Mapper Test', () => {
       ],
     }
 
-    const result = toSupportStrategyResponseDtos(apiResponse)
+    const result = toSupportStrategyResponseDtos(apiResponse, prisonNumber)
 
     expect(result).toHaveLength(2)
     expect(result[0]).toEqual<SupportStrategyResponseDto>({
+      prisonNumber,
       createdAtPrison: 'BXI',
       supportStrategyCategory: SupportStrategyCategory.MEMORY,
       supportStrategyTypeCode: SupportStrategyType.MEMORY,
@@ -107,6 +111,7 @@ describe('Support Strategy Response Mapper Test', () => {
       supportStrategyDetails: 'Make sure to repeat things 3 times',
     })
     expect(result[1]).toEqual<SupportStrategyResponseDto>({
+      prisonNumber,
       createdAtPrison: 'BXI',
       supportStrategyCategory: SupportStrategyCategory.ATTENTION_ORGANISING_TIME,
       supportStrategyTypeCode: SupportStrategyType.GENERAL,
@@ -125,7 +130,7 @@ describe('Support Strategy Response Mapper Test', () => {
 
   it('should handle empty `support strategies` array', () => {
     const apiResponse: SupportStrategyListResponse = { supportStrategies: [] }
-    const result = toSupportStrategyResponseDtos(apiResponse)
+    const result = toSupportStrategyResponseDtos(apiResponse, prisonNumber)
 
     expect(result).toHaveLength(0)
   })

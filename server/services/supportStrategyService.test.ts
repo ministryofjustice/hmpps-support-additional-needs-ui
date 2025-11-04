@@ -11,6 +11,7 @@ import {
 import aValidSupportStrategyResponseDto from '../testsupport/supportStrategyResponseDtoTestDataBuilder'
 import SupportStrategyType from '../enums/supportStrategyType'
 import SupportStrategyCategory from '../enums/supportStrategyCategory'
+import anUpdateSupportStrategyRequest from '../testsupport/updateSupportStrategyRequestTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -22,6 +23,7 @@ describe('supportStrategyService', () => {
 
   const prisonNumber = 'A1234BC'
   const username = 'some-username'
+  const supportStrategyReference = '12345678-1234-1234-1234-123456789012'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -141,6 +143,135 @@ describe('supportStrategyService', () => {
       // Then
       expect(actual).toEqual(expectedError)
       expect(supportAdditionalNeedsApiClient.getSupportStrategies).toHaveBeenCalledWith(prisonNumber, username)
+    })
+  })
+
+  describe('getSupportStrategy', () => {
+    it('should get supportStrategy', async () => {
+      // Given
+      const supportStrategyResponse = aValidSupportStrategyResponse({
+        supportStrategyCategory: SupportStrategyCategory.MEMORY,
+        supportStrategyType: SupportStrategyType.MEMORY,
+        detail: 'Using flash cards with John can help him retain facts',
+        active: true,
+      })
+      supportAdditionalNeedsApiClient.getSupportStrategy.mockResolvedValue(supportStrategyResponse)
+
+      const expectedSupportStrategy = aValidSupportStrategyResponseDto({
+        prisonNumber,
+        supportStrategyCategoryTypeCode: SupportStrategyType.MEMORY,
+        supportStrategyCategory: SupportStrategyCategory.MEMORY,
+        details: 'Using flash cards with John can help him retain facts',
+        active: true,
+      })
+
+      // When
+      const actual = await service.getSupportStrategy(username, prisonNumber, supportStrategyReference)
+
+      // Then
+      expect(actual).toEqual(expectedSupportStrategy)
+      expect(supportAdditionalNeedsApiClient.getSupportStrategy).toHaveBeenCalledWith(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+      )
+    })
+
+    it('should return null given API returns null', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.getSupportStrategy.mockResolvedValue(null)
+
+      const expectedSupportStrategy = null as SupportStrategyResponseDto
+
+      // When
+      const actual = await service.getSupportStrategy(username, prisonNumber, supportStrategyReference)
+
+      // Then
+      expect(actual).toEqual(expectedSupportStrategy)
+      expect(supportAdditionalNeedsApiClient.getSupportStrategy).toHaveBeenCalledWith(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.getSupportStrategy.mockRejectedValue(expectedError)
+
+      // When
+      const actual = await service.getSupportStrategy(username, prisonNumber, supportStrategyReference).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.getSupportStrategy).toHaveBeenCalledWith(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+      )
+    })
+  })
+
+  describe('updateSupportStrategy', () => {
+    it('should update supportStrategy', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.updateSupportStrategy.mockResolvedValue(null)
+
+      const supportStrategyDto = aValidSupportStrategyDto({
+        prisonNumber: 'A1234BC',
+        prisonId: 'BXI',
+        supportStrategyTypeCode: SupportStrategyType.MEMORY,
+        supportStrategyDetails: 'Using flash cards with John can help him retain facts',
+      })
+
+      const expectedUpdateSupportStrategyRequest = anUpdateSupportStrategyRequest({
+        prisonId: 'BXI',
+        detail: 'Using flash cards with John can help him retain facts',
+      })
+
+      // When
+      await service.updateSupportStrategy(username, supportStrategyReference, supportStrategyDto)
+
+      // Then
+      expect(supportAdditionalNeedsApiClient.updateSupportStrategy).toHaveBeenCalledWith(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+        expectedUpdateSupportStrategyRequest,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.updateSupportStrategy.mockRejectedValue(expectedError)
+
+      const supportStrategyDto = aValidSupportStrategyDto({
+        prisonNumber: 'A1234BC',
+        prisonId: 'BXI',
+        supportStrategyTypeCode: SupportStrategyType.MEMORY,
+        supportStrategyDetails: 'Using flash cards with John can help him retain facts',
+      })
+
+      const expectedUpdateSupportStrategyRequest = anUpdateSupportStrategyRequest({
+        prisonId: 'BXI',
+        detail: 'Using flash cards with John can help him retain facts',
+      })
+
+      // When
+      const actual = await service
+        .updateSupportStrategy(username, supportStrategyReference, supportStrategyDto)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.updateSupportStrategy).toHaveBeenCalledWith(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+        expectedUpdateSupportStrategyRequest,
+      )
     })
   })
 })

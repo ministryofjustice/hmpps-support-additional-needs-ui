@@ -33,12 +33,12 @@ export default class StrengthService {
 
   async getStrength(username: string, prisonNumber: string, strengthReference: string): Promise<StrengthResponseDto> {
     try {
-      const strengthListResponse = await this.supportAdditionalNeedsApiClient.getStrength(
+      const strengthResponse = await this.supportAdditionalNeedsApiClient.getStrength(
         prisonNumber,
         strengthReference,
         username,
       )
-      return toStrengthResponseDto(prisonNumber, strengthListResponse)
+      return toStrengthResponseDto(prisonNumber, strengthResponse)
     } catch (e) {
       logger.error(`Error getting Strength for [${prisonNumber}]`, e)
       throw e
