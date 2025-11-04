@@ -6,7 +6,7 @@ import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
 import SelectSupportStrategyCategoryPage from '../../../pages/support-strategies/selectSupportStrategyCategoryPage'
 import SupportStrategyType from '../../../../server/enums/supportStrategyType'
 import SupportStrategiesPage from '../../../pages/profile/supportStrategiesPage'
-import AddSupportStrategyDetailPage from '../../../pages/support-strategies/addSupportStrategyDetailPage'
+import SupportStrategyDetailPage from '../../../pages/support-strategies/supportStrategyDetailPage'
 
 context('Create a Support Strategy', () => {
   const prisonNumber = 'A00001A'
@@ -47,12 +47,12 @@ context('Create a Support Strategy', () => {
       .hasFieldInError('category')
       // select a category and submit the form to the next page
       .selectCategory(SupportStrategyType.EMOTIONS_FEELINGS_DEFAULT)
-      .submitPageTo(AddSupportStrategyDetailPage)
+      .submitPageTo(SupportStrategyDetailPage)
 
-    Page.verifyOnPage(AddSupportStrategyDetailPage)
+    Page.verifyOnPage(SupportStrategyDetailPage)
       .hasPageHeading('Description of emotions and feelings support strategy')
       // submit the page without answering the question to trigger a validation error
-      .submitPageTo(AddSupportStrategyDetailPage)
+      .submitPageTo(SupportStrategyDetailPage)
       .hasErrorCount(1)
       .hasFieldInError('description')
       // enter a description and submit
@@ -87,19 +87,19 @@ context('Create a Support Strategy', () => {
 
     Page.verifyOnPage(SelectSupportStrategyCategoryPage)
       .selectCategory(SupportStrategyType.EMOTIONS_FEELINGS_DEFAULT)
-      .submitPageTo(AddSupportStrategyDetailPage)
+      .submitPageTo(SupportStrategyDetailPage)
       .enterDescription(
         `Chris needs help understanding other people's views and feelings. He needs to be able to show empathy when dealing with others.`,
       )
 
     // When
-    Page.verifyOnPage(AddSupportStrategyDetailPage) //
+    Page.verifyOnPage(SupportStrategyDetailPage) //
       .apiErrorBannerIsNotDisplayed()
-    Page.verifyOnPage(AddSupportStrategyDetailPage) //
-      .submitPageTo(AddSupportStrategyDetailPage) // Submit the page but expect to stay on the Add Support Strategy Detail page due to API error
+    Page.verifyOnPage(SupportStrategyDetailPage) //
+      .submitPageTo(SupportStrategyDetailPage) // Submit the page but expect to stay on the Add Support Strategy Detail page due to API error
 
     // Then
-    Page.verifyOnPage(AddSupportStrategyDetailPage) //
+    Page.verifyOnPage(SupportStrategyDetailPage) //
       .apiErrorBannerIsDisplayed()
   })
 })

@@ -12,7 +12,7 @@ export default class DetailController {
 
   getDetailView = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
-    const { supportStrategyDto } = req.journeyData
+    const supportStrategyDto = req.journeyData.supportStrategyDto as SupportStrategyDto
 
     const detailForm = invalidForm ?? this.populateFormFromDto(supportStrategyDto)
 
@@ -21,7 +21,7 @@ export default class DetailController {
       category: supportStrategyDto.supportStrategyTypeCode,
       errorRecordingSupportStrategy: req.flash('pageHasApiErrors')[0] != null,
     }
-    return res.render('pages/support-strategies/detail/index', viewRenderArgs)
+    return res.render('pages/support-strategies/detail/create-journey/index', viewRenderArgs)
   }
 
   submitDetailForm = async (req: Request, res: Response, next: NextFunction) => {

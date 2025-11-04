@@ -5,8 +5,7 @@ import SupportStrategyType from '../../../../enums/supportStrategyType'
 export default class SelectCategoryController {
   getSelectCategoryView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { invalidForm } = res.locals
-    const { supportStrategyDto } = req.journeyData
-
+    const supportStrategyDto = req.journeyData.supportStrategyDto as SupportStrategyDto
     const selectCategoryForm = invalidForm ?? this.populateFormFromDto(supportStrategyDto)
 
     const viewRenderArgs = { form: selectCategoryForm }

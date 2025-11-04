@@ -52,7 +52,7 @@ describe('detailController', () => {
     flash.mockReturnValue([])
     res.locals.invalidForm = undefined
 
-    const expectedViewTemplate = 'pages/support-strategies/detail/index'
+    const expectedViewTemplate = 'pages/support-strategies/detail/create-journey/index'
     const expectedViewModel = {
       category: SupportStrategyType.MEMORY,
       form: {
@@ -77,7 +77,7 @@ describe('detailController', () => {
     }
     res.locals.invalidForm = invalidForm
 
-    const expectedViewTemplate = 'pages/support-strategies/detail/index'
+    const expectedViewTemplate = 'pages/support-strategies/detail/create-journey/index'
     const expectedViewModel = {
       category: SupportStrategyType.MEMORY,
       form: invalidForm,
@@ -97,7 +97,7 @@ describe('detailController', () => {
     flash.mockReturnValue(['true'])
     res.locals.invalidForm = undefined
 
-    const expectedViewTemplate = 'pages/support-strategies/detail/index'
+    const expectedViewTemplate = 'pages/support-strategies/detail/create-journey/index'
     const expectedViewModel = {
       category: SupportStrategyType.MEMORY,
       form: {
