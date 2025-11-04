@@ -6,6 +6,7 @@ import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDa
 import { Result } from '../../../../utils/result/result'
 import { formatSupportStrategyTypeScreenValueFilter } from '../../../../filters/formatSupportStrategyTypeFilter'
 import aPlanLifecycleStatusDto from '../../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
+import aValidSupportStrategyResponseDto from '../../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -23,6 +24,7 @@ njkEnv //
   .addFilter('formatFirst_name_Last_name', formatPrisonerNameFilter(NameFormat.First_name_Last_name))
   .addFilter('formatLast_name_comma_First_name', formatPrisonerNameFilter(NameFormat.Last_name_comma_First_name))
   .addFilter('formatSupportStrategyTypeScreenValue', formatSupportStrategyTypeScreenValueFilter)
+  .addGlobal('featureToggles', { editAndArchiveEnabled: true })
 
 const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',
@@ -87,7 +89,7 @@ describe('Profile support strategies page', () => {
       'Uses audio books and text-to-speech software',
     )
     expect(literacySkillsEntry.find('[data-qa=support-strategy-audit]').text().trim()).toEqual(
-      'Added on 1 January 2024 by John Smith, Brixton (HMP)',
+      'Last updated 1 Jan 2024 by John Smith, Brixton (HMP)',
     )
     expect($('[data-qa=support-strategy-summary-card-NUMERACY_SKILLS]').length).toEqual(1)
 
@@ -97,7 +99,7 @@ describe('Profile support strategies page', () => {
       'Requires additional time for mathematical tasks',
     )
     expect(numeracySkillsEntry.find('[data-qa=support-strategy-audit]').text().trim()).toEqual(
-      'Added on 2 January 2024 by Jane Doe, Leeds (HMP)',
+      'Last updated 2 Jan 2024 by Jane Doe, Leeds (HMP)',
     )
     expect($('[data-qa=no-support-strategies-summary-card]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
@@ -155,5 +157,103 @@ describe('Profile support strategies page', () => {
     // Then
     expect($('[data-qa=no-support-strategies-summary-card]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(1)
+  })
+
+  it('should not render any actions given the user does not have any permissions', () => {
+    userHasPermissionTo.mockReturnValue(false)
+
+    const params = {
+      ...templateParams,
+      supportStrategies: Result.fulfilled({
+        LITERACY_SKILLS: [aValidSupportStrategyResponseDto()],
+      }),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    const supportStrategies = $('[data-qa=support-strategy-summary-list-row]')
+    expect(supportStrategies.length).toEqual(1)
+    expect(supportStrategies.eq(0).find('.govuk-summary-card__actions').length).toEqual(1)
+    expect(supportStrategies.eq(0).find('[data-qa=edit-support-strategy-button]').length).toEqual(0)
+    expect(supportStrategies.eq(0).find('[data-qa=archive-support-strategy-button]').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('EDIT_SUPPORT_STRATEGIES')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('ARCHIVE_SUPPORT_STRATEGIES')
+  })
+
+  it('should render edit strength action given the user only has permission to edit strengths', () => {
+    userHasPermissionTo.mockReturnValueOnce(true)
+    userHasPermissionTo.mockReturnValueOnce(false)
+
+    const params = {
+      ...templateParams,
+      supportStrategies: Result.fulfilled({
+        LITERACY_SKILLS: [aValidSupportStrategyResponseDto()],
+      }),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    const supportStrategies = $('[data-qa=support-strategy-summary-list-row]')
+    expect(supportStrategies.length).toEqual(1)
+    expect(supportStrategies.eq(0).find('.govuk-summary-card__actions').length).toEqual(1)
+    expect(supportStrategies.eq(0).find('[data-qa=edit-support-strategy-button]').length).toEqual(1)
+    expect(supportStrategies.eq(0).find('[data-qa=archive-support-strategy-button]').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('EDIT_SUPPORT_STRATEGIES')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('ARCHIVE_SUPPORT_STRATEGIES')
+  })
+
+  it('should render archive strength action given the user only has permission to archive strengths', () => {
+    userHasPermissionTo.mockReturnValueOnce(false)
+    userHasPermissionTo.mockReturnValueOnce(true)
+
+    const params = {
+      ...templateParams,
+      supportStrategies: Result.fulfilled({
+        LITERACY_SKILLS: [aValidSupportStrategyResponseDto()],
+      }),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    const supportStrategies = $('[data-qa=support-strategy-summary-list-row]')
+    expect(supportStrategies.length).toEqual(1)
+    expect(supportStrategies.eq(0).find('.govuk-summary-card__actions').length).toEqual(1)
+    expect(supportStrategies.eq(0).find('[data-qa=edit-support-strategy-button]').length).toEqual(0)
+    expect(supportStrategies.eq(0).find('[data-qa=archive-support-strategy-button]').length).toEqual(1)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('EDIT_SUPPORT_STRATEGIES')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('ARCHIVE_SUPPORT_STRATEGIES')
+  })
+
+  it('should render both strength actions given the user has permissions to edit and archive strengths', () => {
+    userHasPermissionTo.mockReturnValue(true)
+
+    const params = {
+      ...templateParams,
+      supportStrategies: Result.fulfilled({
+        LITERACY_SKILLS: [aValidSupportStrategyResponseDto()],
+      }),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    const supportStrategies = $('[data-qa=support-strategy-summary-list-row]')
+    expect(supportStrategies.length).toEqual(1)
+    expect(supportStrategies.eq(0).find('.govuk-summary-card__actions').length).toEqual(1)
+    expect(supportStrategies.eq(0).find('[data-qa=edit-support-strategy-button]').length).toEqual(1)
+    expect(supportStrategies.eq(0).find('[data-qa=archive-support-strategy-button]').length).toEqual(1)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('EDIT_SUPPORT_STRATEGIES')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('ARCHIVE_SUPPORT_STRATEGIES')
   })
 })
