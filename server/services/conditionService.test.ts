@@ -1,11 +1,13 @@
 import { parseISO } from 'date-fns'
+import type { ConditionDto } from 'dto'
 import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiClient'
 import ConditionService from './conditionService'
-import { aValidConditionsList } from '../testsupport/conditionDtoTestDataBuilder'
-import { aValidCreateConditionsRequest } from '../testsupport/conditionRequestTestDataBuilder'
-import { aValidConditionListResponse } from '../testsupport/conditionResponseTestDataBuilder'
+import { aValidConditionDto, aValidConditionsList } from '../testsupport/conditionDtoTestDataBuilder'
+import { aValidConditionRequest, aValidCreateConditionsRequest } from '../testsupport/conditionRequestTestDataBuilder'
+import { aValidConditionListResponse, aValidConditionResponse } from '../testsupport/conditionResponseTestDataBuilder'
 import ConditionType from '../enums/conditionType'
 import ConditionSource from '../enums/conditionSource'
+import anUpdateConditionRequest from '../testsupport/updateConditionRequestTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -17,6 +19,7 @@ describe('conditionService', () => {
 
   const prisonNumber = 'A1234BC'
   const username = 'some-username'
+  const conditionReference = '12345678-1234-1234-1234-123456789012'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -25,8 +28,10 @@ describe('conditionService', () => {
   describe('createConditions', () => {
     it('should create conditions', async () => {
       // Given
-      const unPersistedConditions = aValidConditionsList()
-      const expectedCreateConditionsRequest = aValidCreateConditionsRequest()
+      const unPersistedConditions = aValidConditionsList({ conditions: [aValidConditionDto({ prisonId: 'BXI' })] })
+      const expectedCreateConditionsRequest = aValidCreateConditionsRequest({
+        conditions: [aValidConditionRequest({ prisonId: 'BXI' })],
+      })
 
       supportAdditionalNeedsApiClient.createConditions.mockResolvedValue(null)
 
@@ -46,8 +51,10 @@ describe('conditionService', () => {
       const expectedError = new Error('Internal Server Error')
       supportAdditionalNeedsApiClient.createConditions.mockRejectedValue(expectedError)
 
-      const unPersistedConditions = aValidConditionsList()
-      const expectedCreateConditionsRequest = aValidCreateConditionsRequest()
+      const unPersistedConditions = aValidConditionsList({ conditions: [aValidConditionDto({ prisonId: 'BXI' })] })
+      const expectedCreateConditionsRequest = aValidCreateConditionsRequest({
+        conditions: [aValidConditionRequest({ prisonId: 'BXI' })],
+      })
 
       // When
       const actual = await service.createConditions(username, unPersistedConditions).catch(e => e)
@@ -71,6 +78,8 @@ describe('conditionService', () => {
       const expectedConditionsList = aValidConditionsList({
         conditions: [
           {
+            prisonNumber,
+            prisonId: null,
             active: true,
             conditionDetails:
               'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
@@ -97,35 +106,169 @@ describe('conditionService', () => {
       expect(actual).toEqual(expectedConditionsList)
       expect(supportAdditionalNeedsApiClient.getConditions).toHaveBeenCalledWith(prisonNumber, username)
     })
-  })
 
-  it('should return empty ConditionsList given API returns null', async () => {
-    // Given
-    supportAdditionalNeedsApiClient.getConditions.mockResolvedValue(null)
+    it('should return empty ConditionsList given API returns null', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.getConditions.mockResolvedValue(null)
 
-    const expectedConditionsList = aValidConditionsList({
-      prisonNumber,
-      conditions: [],
+      const expectedConditionsList = aValidConditionsList({
+        prisonNumber,
+        conditions: [],
+      })
+
+      // When
+      const actual = await service.getConditions(username, prisonNumber)
+
+      // Then
+      expect(actual).toEqual(expectedConditionsList)
+      expect(supportAdditionalNeedsApiClient.getConditions).toHaveBeenCalledWith(prisonNumber, username)
     })
 
-    // When
-    const actual = await service.getConditions(username, prisonNumber)
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.getConditions.mockRejectedValue(expectedError)
 
-    // Then
-    expect(actual).toEqual(expectedConditionsList)
-    expect(supportAdditionalNeedsApiClient.getConditions).toHaveBeenCalledWith(prisonNumber, username)
+      // When
+      const actual = await service.getConditions(username, prisonNumber).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.getConditions).toHaveBeenCalledWith(prisonNumber, username)
+    })
   })
 
-  it('should rethrow error given API client throws error', async () => {
-    // Given
-    const expectedError = new Error('Internal Server Error')
-    supportAdditionalNeedsApiClient.getConditions.mockRejectedValue(expectedError)
+  describe('getCondition', () => {
+    it('should get condition', async () => {
+      // Given
+      const conditionResponse = aValidConditionResponse({
+        conditionTypeCode: ConditionType.DYSLEXIA,
+        source: ConditionSource.SELF_DECLARED,
+        conditionDetails: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+        conditionName: 'Phonological dyslexia',
+      })
+      supportAdditionalNeedsApiClient.getCondition.mockResolvedValue(conditionResponse)
 
-    // When
-    const actual = await service.getConditions(username, prisonNumber).catch(e => e)
+      const expectedCondition = aValidConditionDto({
+        prisonId: null,
+        prisonNumber,
+        conditionTypeCode: ConditionType.DYSLEXIA,
+        source: ConditionSource.SELF_DECLARED,
+        conditionDetails: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+        conditionName: 'Phonological dyslexia',
+      })
 
-    // Then
-    expect(actual).toEqual(expectedError)
-    expect(supportAdditionalNeedsApiClient.getConditions).toHaveBeenCalledWith(prisonNumber, username)
+      // When
+      const actual = await service.getCondition(username, prisonNumber, conditionReference)
+
+      // Then
+      expect(actual).toEqual(expectedCondition)
+      expect(supportAdditionalNeedsApiClient.getCondition).toHaveBeenCalledWith(
+        prisonNumber,
+        conditionReference,
+        username,
+      )
+    })
+
+    it('should return null given API returns null', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.getCondition.mockResolvedValue(null)
+
+      const expectedCondition = null as ConditionDto
+
+      // When
+      const actual = await service.getCondition(username, prisonNumber, conditionReference)
+
+      // Then
+      expect(actual).toEqual(expectedCondition)
+      expect(supportAdditionalNeedsApiClient.getCondition).toHaveBeenCalledWith(
+        prisonNumber,
+        conditionReference,
+        username,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.getCondition.mockRejectedValue(expectedError)
+
+      // When
+      const actual = await service.getCondition(username, prisonNumber, conditionReference).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.getCondition).toHaveBeenCalledWith(
+        prisonNumber,
+        conditionReference,
+        username,
+      )
+    })
+  })
+
+  describe('updateCondition', () => {
+    it('should update condition', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.updateCondition.mockResolvedValue(null)
+
+      const conditionDto = aValidConditionDto({
+        prisonId: 'BXI',
+        conditionTypeCode: ConditionType.DYSLEXIA,
+        source: ConditionSource.SELF_DECLARED,
+        conditionDetails: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+        conditionName: 'Phonological dyslexia',
+      })
+
+      const expectedUpdateConditionRequest = anUpdateConditionRequest({
+        prisonId: 'BXI',
+        source: ConditionSource.SELF_DECLARED,
+        conditionDetails: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+        conditionName: 'Phonological dyslexia',
+      })
+
+      // When
+      await service.updateCondition(username, conditionReference, conditionDto)
+
+      // Then
+      expect(supportAdditionalNeedsApiClient.updateCondition).toHaveBeenCalledWith(
+        prisonNumber,
+        conditionReference,
+        username,
+        expectedUpdateConditionRequest,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.updateCondition.mockRejectedValue(expectedError)
+
+      const conditionDto = aValidConditionDto({
+        prisonId: 'BXI',
+        conditionTypeCode: ConditionType.DYSLEXIA,
+        source: ConditionSource.SELF_DECLARED,
+        conditionDetails: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+        conditionName: 'Phonological dyslexia',
+      })
+
+      const expectedUpdateConditionRequest = anUpdateConditionRequest({
+        prisonId: 'BXI',
+        source: ConditionSource.SELF_DECLARED,
+        conditionDetails: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
+        conditionName: 'Phonological dyslexia',
+      })
+
+      // When
+      const actual = await service.updateCondition(username, conditionReference, conditionDto).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.updateCondition).toHaveBeenCalledWith(
+        prisonNumber,
+        conditionReference,
+        username,
+        expectedUpdateConditionRequest,
+      )
+    })
   })
 })

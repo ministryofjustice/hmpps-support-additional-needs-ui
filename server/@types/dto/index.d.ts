@@ -129,6 +129,7 @@ declare module 'dto' {
 
   export interface ConditionDto extends ReferencedAndAuditable {
     prisonId?: string
+    prisonNumber?: string
     conditionTypeCode: ConditionType
     conditionName?: string
     conditionDetails: string

@@ -1,8 +1,9 @@
-import type { ConditionsList } from 'dto'
+import type { ConditionDto, ConditionsList } from 'dto'
 import { SupportAdditionalNeedsApiClient } from '../data'
 import { toCreateConditionsRequest } from '../data/mappers/createConditionsRequestMapper'
 import logger from '../../logger'
-import { toConditionsList } from '../data/mappers/conditionDtoMapper'
+import { toConditionDto, toConditionsList } from '../data/mappers/conditionDtoMapper'
+import toUpdateConditionRequest from '../data/mappers/updateConditionRequestMapper'
 
 export default class ConditionService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -24,6 +25,36 @@ export default class ConditionService {
       return toConditionsList(conditionListResponse, prisonNumber)
     } catch (e) {
       logger.error(`Error getting Conditions for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
+
+  async getCondition(username: string, prisonNumber: string, conditionReference: string): Promise<ConditionDto> {
+    try {
+      const conditionResponse = await this.supportAdditionalNeedsApiClient.getCondition(
+        prisonNumber,
+        conditionReference,
+        username,
+      )
+      return toConditionDto(prisonNumber, conditionResponse)
+    } catch (e) {
+      logger.error(`Error getting Condition for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
+
+  async updateCondition(username: string, conditionReference: string, condition: ConditionDto): Promise<void> {
+    const { prisonNumber } = condition
+    try {
+      const updateConditionRequest = toUpdateConditionRequest(condition)
+      await this.supportAdditionalNeedsApiClient.updateCondition(
+        prisonNumber,
+        conditionReference,
+        username,
+        updateConditionRequest,
+      )
+    } catch (e) {
+      logger.error(`Error updating Condition for [${prisonNumber}]`, e)
       throw e
     }
   }

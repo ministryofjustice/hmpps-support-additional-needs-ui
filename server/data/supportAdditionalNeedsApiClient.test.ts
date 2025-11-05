@@ -14,7 +14,7 @@ import aValidUpdatePlanCreationStatusRequest from '../testsupport/updatePlanCrea
 import { aValidCreateChallengesRequest } from '../testsupport/challengeRequestTestDataBuilder'
 import { aValidChallengeListResponse, aValidChallengeResponse } from '../testsupport/challengeResponseTestDataBuilder'
 import { aValidCreateConditionsRequest } from '../testsupport/conditionRequestTestDataBuilder'
-import { aValidConditionListResponse } from '../testsupport/conditionResponseTestDataBuilder'
+import { aValidConditionListResponse, aValidConditionResponse } from '../testsupport/conditionResponseTestDataBuilder'
 import { aValidReferenceDataListResponse } from '../testsupport/referenceDataResponseTestDataBuilder'
 import { aValidStrengthListResponse, aValidStrengthResponse } from '../testsupport/strengthResponseTestDataBuilder'
 import { aValidCreateStrengthsRequest } from '../testsupport/strengthRequestTestDataBuilder'
@@ -32,6 +32,7 @@ import { aPlanReviewsResponse } from '../testsupport/planReviewsResponseTestData
 import anUpdateChallengeRequest from '../testsupport/updateChallengeRequestTestDataBuilder'
 import anUpdateStrengthRequest from '../testsupport/updateStrengthRequestTestDataBuilder'
 import anUpdateSupportStrategyRequest from '../testsupport/updateSupportStrategyRequestTestDataBuilder'
+import anUpdateConditionRequest from '../testsupport/updateConditionRequestTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -41,6 +42,7 @@ describe('supportAdditionalNeedsApiClient', () => {
   const challengeReference = '748f6f21-d900-40ca-a5bd-f887503481de'
   const strengthReference = '219ad763-b349-4007-aaf4-cba7f5c0417c'
   const supportStrategyReference = 'ab1fc09c-fac6-47fd-97be-6ba2a94fbc9e'
+  const conditionReference = '558f2dfc-dd33-4171-bbf7-b04a8289c8fc'
 
   const mockAuthenticationClient = {
     getToken: jest.fn(),
@@ -627,6 +629,129 @@ describe('supportAdditionalNeedsApiClient', () => {
 
       // When
       const actual = await supportAdditionalNeedsApiClient.getConditions(prisonNumber, username).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('getCondition', () => {
+    it('should get condition for a prisoner', async () => {
+      // Given
+      const expectedResponse = aValidConditionResponse()
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/conditions/${conditionReference}`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, expectedResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getCondition(prisonNumber, conditionReference, username)
+
+      // Then
+      expect(actual).toEqual(expectedResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should return null given API returns a not found error', async () => {
+      // Given
+      const apiErrorResponse = {
+        status: 404,
+        userMessage: 'Not found',
+        developerMessage: 'Not found',
+      }
+
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/conditions/${conditionReference}`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(404, apiErrorResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getCondition(prisonNumber, conditionReference, username)
+
+      // Then
+      expect(actual).toBeNull()
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/conditions/${conditionReference}`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .thrice()
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .getCondition(prisonNumber, conditionReference, username)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('updateCondition', () => {
+    it('should update a prisoners condition', async () => {
+      // Given
+      const updateConditionRequest = anUpdateConditionRequest()
+
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/conditions/${conditionReference}`, requestBody =>
+          isEqual(requestBody, updateConditionRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(204)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.updateCondition(
+        prisonNumber,
+        conditionReference,
+        username,
+        updateConditionRequest,
+      )
+
+      // Then
+      expect(actual).toEqual({})
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const updateConditionRequest = anUpdateConditionRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/conditions/${conditionReference}`, requestBody =>
+          isEqual(requestBody, updateConditionRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .updateCondition(prisonNumber, conditionReference, username, updateConditionRequest)
+        .catch(e => e)
 
       // Then
       expect(actual).toEqual(expectedError)

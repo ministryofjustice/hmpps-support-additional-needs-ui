@@ -6,6 +6,7 @@ import type {
   ChallengeListResponse,
   ChallengeResponse,
   ConditionListResponse,
+  ConditionResponse,
   CreateChallengesRequest,
   CreateConditionsRequest,
   CreateEducationSupportPlanRequest,
@@ -23,6 +24,7 @@ import type {
   SupportStrategyResponse,
   SupportPlanReviewRequest,
   UpdateChallengeRequest,
+  UpdateConditionRequest,
   UpdatePlanCreationStatusRequest,
   UpdateStrengthRequest,
   UpdateSupportStrategyRequest,
@@ -202,6 +204,31 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/conditions`,
         errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async getCondition(prisonNumber: string, conditionReference: string, username: string): Promise<ConditionResponse> {
+    return this.get<ConditionResponse>(
+      {
+        path: `/profile/${prisonNumber}/conditions/${conditionReference}`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async updateCondition(
+    prisonNumber: string,
+    conditionReference: string,
+    username: string,
+    updateConditionRequest: UpdateConditionRequest,
+  ): Promise<void> {
+    return this.put<void>(
+      {
+        path: `/profile/${prisonNumber}/conditions/${conditionReference}`,
+        data: updateConditionRequest,
       },
       asSystem(username),
     )
