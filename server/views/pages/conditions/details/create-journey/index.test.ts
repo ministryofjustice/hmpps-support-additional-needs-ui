@@ -1,11 +1,11 @@
 import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
-import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
-import formatPrisonerNameFilter, { NameFormat } from '../../../../filters/formatPrisonerNameFilter'
-import formatConditionTypeScreenValueFilter from '../../../../filters/formatConditionTypeFilter'
-import findErrorFilter from '../../../../filters/findErrorFilter'
-import { aValidConditionDto, aValidConditionsList } from '../../../../testsupport/conditionDtoTestDataBuilder'
-import ConditionType from '../../../../enums/conditionType'
+import aValidPrisonerSummary from '../../../../../testsupport/prisonerSummaryTestDataBuilder'
+import formatPrisonerNameFilter, { NameFormat } from '../../../../../filters/formatPrisonerNameFilter'
+import formatConditionTypeScreenValueFilter from '../../../../../filters/formatConditionTypeFilter'
+import findErrorFilter from '../../../../../filters/findErrorFilter'
+import { aValidConditionDto, aValidConditionsList } from '../../../../../testsupport/conditionDtoTestDataBuilder'
+import ConditionType from '../../../../../enums/conditionType'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/dist/',

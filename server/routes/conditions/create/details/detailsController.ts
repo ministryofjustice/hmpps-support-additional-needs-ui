@@ -23,7 +23,7 @@ export default class DetailsController {
       dto: conditionsList,
       errorRecordingConditions: req.flash('pageHasApiErrors')[0] != null,
     }
-    return res.render('pages/conditions/details/index', viewRenderArgs)
+    return res.render('pages/conditions/details/create-journey/index', viewRenderArgs)
   }
 
   submitDetailsForm: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
