@@ -19,43 +19,53 @@
 
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
-      {% if groupedChallenges.isFulfilled() %}
-        {% set groupedChallenges = groupedChallenges.value %}
+      <section>
+        {% if groupedChallenges.isFulfilled() %}
+          {% set groupedChallenges = groupedChallenges.value %}
 
-        {% if groupedChallenges | length %}
-          {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
-          {% for challengeCategory, challengesData in groupedChallenges %}
-            {{ challengesSummaryCard({
-              challengesData: challengesData,
-              prisonNamesById: prisonNamesById,
-              showActions: true,
-              userHasPermissionTo: userHasPermissionTo,
-              title: challengeCategory | formatChallengeCategoryScreenValue,
-              attributes: {
-                'data-qa': 'challenges-summary-card-' + challengeCategory
-              }
-            }) }}
-          {% endfor %}
+          {% if groupedChallenges | length %}
+            {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+            {% for challengeCategory, challengesData in groupedChallenges %}
+              {{ challengesSummaryCard({
+                challengesData: challengesData,
+                prisonNamesById: prisonNamesById,
+                showActions: true,
+                userHasPermissionTo: userHasPermissionTo,
+                title: challengeCategory | formatChallengeCategoryScreenValue,
+                attributes: {
+                  'data-qa': 'challenges-summary-card-' + challengeCategory
+                }
+              }) }}
+            {% endfor %}
+
+          {% else %}
+
+            <div class="govuk-summary-card" data-qa="no-challenges-summary-card">
+              <div class="govuk-summary-card__content">
+                <p class="govuk-body">
+                  No challenges recorded
+                </p>
+                {% if userHasPermissionTo('RECORD_CHALLENGES') %}
+                  <a class="govuk-link govuk-body govuk-!-display-none-print" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category">Add challenge</a>
+                {% endif %}
+              </div>
+            </div>
+
+          {% endif %}
 
         {% else %}
-
-          <div class="govuk-summary-card" data-qa="no-challenges-summary-card">
-            <div class="govuk-summary-card__content">
-              <p class="govuk-body">
-                No challenges recorded
-              </p>
-              {% if userHasPermissionTo('RECORD_CHALLENGES') %}
-                <a class="govuk-link govuk-body govuk-!-display-none-print" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category">Add challenge</a>
-              {% endif %}
-            </div>
-          </div>
-
+          <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>
+          <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
         {% endif %}
+      </section>
 
-      {% else %}
-        <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>
-        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
-      {% endif %}
+      <p class="govuk-body">
+        {% if userHasPermissionTo('RECORD_CHALLENGES') %}
+          <a class="govuk-link govuk-!-display-none-print" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category">
+            Add a challenge
+          </a>
+        {% endif %}
+      </p>
     </div>
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">

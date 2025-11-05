@@ -19,43 +19,53 @@
 
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
-      {% if groupedStrengths.isFulfilled() %}
-        {% set groupedStrengths = groupedStrengths.value %}
+      <section>
+        {% if groupedStrengths.isFulfilled() %}
+          {% set groupedStrengths = groupedStrengths.value %}
 
-        {% if groupedStrengths | length %}
-          {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
-          {% for strengthCategory, strengthsData in groupedStrengths %}
-            {{ strengthsSummaryCard({
-              title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
-              strengthsData: strengthsData,
-              prisonNamesById: prisonNamesById,
-              showActions: true,
-              userHasPermissionTo: userHasPermissionTo,
-              attributes: {
-                'data-qa': 'strengths-summary-card_' + strengthCategory
-              }
-            }) }}
-          {% endfor %}
+          {% if groupedStrengths | length %}
+            {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+            {% for strengthCategory, strengthsData in groupedStrengths %}
+              {{ strengthsSummaryCard({
+                title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
+                strengthsData: strengthsData,
+                prisonNamesById: prisonNamesById,
+                showActions: true,
+                userHasPermissionTo: userHasPermissionTo,
+                attributes: {
+                  'data-qa': 'strengths-summary-card_' + strengthCategory
+                }
+              }) }}
+            {% endfor %}
+
+          {% else %}
+
+            <div class="govuk-summary-card" data-qa="no-strengths-summary-card">
+              <div class="govuk-summary-card__content">
+                <p class="govuk-body">
+                  No strengths recorded
+                </p>
+                {% if userHasPermissionTo('RECORD_STRENGTHS') %}
+                  <a class="govuk-link govuk-body govuk-!-display-none-print" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category">Add strength</a>
+                {% endif %}
+              </div>
+            </div>
+
+          {% endif %}
 
         {% else %}
-
-          <div class="govuk-summary-card" data-qa="no-strengths-summary-card">
-            <div class="govuk-summary-card__content">
-              <p class="govuk-body">
-                No strengths recorded
-              </p>
-              {% if userHasPermissionTo('RECORD_STRENGTHS') %}
-                <a class="govuk-link govuk-body govuk-!-display-none-print" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category">Add strength</a>
-              {% endif %}
-            </div>
-          </div>
-
+          <h3 class="govuk-heading-s" data-qa="strengths-unavailable-message">We cannot show these details right now</h3>
+          <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
         {% endif %}
+      </section>
 
-      {% else %}
-        <h3 class="govuk-heading-s" data-qa="strengths-unavailable-message">We cannot show these details right now</h3>
-        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
-      {% endif %}
+      <p class="govuk-body">
+        {% if userHasPermissionTo('RECORD_STRENGTHS') %}
+          <a class="govuk-link govuk-!-display-none-print" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category">
+            Add a strength
+          </a>
+        {% endif %}
+      </p>
     </div>
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">
