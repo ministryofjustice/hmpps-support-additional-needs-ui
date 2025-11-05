@@ -54,7 +54,7 @@ describe('detailsController', () => {
     flash.mockReturnValue([])
     res.locals.invalidForm = undefined
 
-    const expectedViewTemplate = 'pages/conditions/details/index'
+    const expectedViewTemplate = 'pages/conditions/details/create-journey/index'
     const expectedViewModel = {
       form: {
         conditionDetails: { ADHD: '' },
@@ -80,7 +80,7 @@ describe('detailsController', () => {
     }
     res.locals.invalidForm = invalidForm
 
-    const expectedViewTemplate = 'pages/conditions/details/index'
+    const expectedViewTemplate = 'pages/conditions/details/create-journey/index'
     const expectedViewModel = {
       form: invalidForm,
       prisonerSummary,
@@ -117,7 +117,7 @@ describe('detailsController', () => {
     })
     req.journeyData = { conditionsList: conditions }
 
-    const expectedViewTemplate = 'pages/conditions/details/index'
+    const expectedViewTemplate = 'pages/conditions/details/create-journey/index'
     const expectedViewModel = {
       form: {
         conditionDetails: {

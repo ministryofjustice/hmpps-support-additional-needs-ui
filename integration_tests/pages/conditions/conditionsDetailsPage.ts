@@ -4,7 +4,7 @@ import ConditionSource from '../../../server/enums/conditionSource'
 
 export default class ConditionsDetailsPage extends Page {
   constructor() {
-    super('record-conditions-details')
+    super('conditions-details')
   }
 
   enterConditionDetails(conditionType: ConditionType, value: string): ConditionsDetailsPage {
