@@ -34,7 +34,9 @@ describe('conditionDtoMapper', () => {
       prisonNumber,
       conditions: [
         {
+          prisonId: null,
           active: true,
+          prisonNumber,
           conditionDetails: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
           conditionName: 'Phonological dyslexia',
           conditionTypeCode: ConditionType.DYSLEXIA,

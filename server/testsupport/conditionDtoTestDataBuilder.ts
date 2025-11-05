@@ -14,6 +14,7 @@ const aValidConditionsList = (options?: {
 const aValidConditionDto = (
   options?: DtoAuditFields & {
     prisonId?: string
+    prisonNumber?: string
     conditionTypeCode?: ConditionType
     conditionName?: string
     conditionDetails?: string
@@ -21,7 +22,8 @@ const aValidConditionDto = (
     active?: boolean
   },
 ): ConditionDto => ({
-  prisonId: options?.prisonId || 'BXI',
+  prisonId: options?.prisonId == null ? null : options?.prisonId || 'BXI',
+  prisonNumber: options?.prisonNumber || 'A1234BC',
   conditionTypeCode: options?.conditionTypeCode || ConditionType.DYSLEXIA,
   source: options?.source || ConditionSource.SELF_DECLARED,
   conditionDetails:

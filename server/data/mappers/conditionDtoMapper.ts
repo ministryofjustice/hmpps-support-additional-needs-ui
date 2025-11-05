@@ -4,16 +4,24 @@ import toReferenceAndAuditable from './referencedAndAuditableMapper'
 
 const toConditionsList = (conditionListResponse: ConditionListResponse, prisonNumber: string): ConditionsList => ({
   prisonNumber,
-  conditions: conditionListResponse?.conditions.map(toConditionDto) || [],
+  conditions:
+    ((conditionListResponse?.conditions || []) as Array<ConditionResponse>).map(condition =>
+      toConditionDto(prisonNumber, condition),
+    ) || [],
 })
 
-const toConditionDto = (conditionResponse: ConditionResponse): ConditionDto => ({
-  ...toReferenceAndAuditable(conditionResponse),
-  conditionTypeCode: conditionResponse.conditionType.code,
-  conditionName: conditionResponse.conditionName,
-  conditionDetails: conditionResponse.conditionDetails,
-  source: conditionResponse.source,
-  active: conditionResponse.active,
-})
+const toConditionDto = (prisonNumber: string, conditionResponse: ConditionResponse): ConditionDto =>
+  conditionResponse
+    ? {
+        ...toReferenceAndAuditable(conditionResponse),
+        prisonId: null,
+        prisonNumber,
+        conditionTypeCode: conditionResponse.conditionType.code,
+        conditionName: conditionResponse.conditionName,
+        conditionDetails: conditionResponse.conditionDetails,
+        source: conditionResponse.source,
+        active: conditionResponse.active,
+      }
+    : null
 
 export { toConditionsList, toConditionDto }
