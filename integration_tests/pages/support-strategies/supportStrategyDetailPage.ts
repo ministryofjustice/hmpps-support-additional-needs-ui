@@ -10,5 +10,10 @@ export default class SupportStrategyDetailPage extends Page {
     return this
   }
 
+  clearDescription(): SupportStrategyDetailPage {
+    this.descriptionField().clear()
+    return this
+  }
+
   private descriptionField = (): PageElement => cy.get('textarea[name=description]')
 }
