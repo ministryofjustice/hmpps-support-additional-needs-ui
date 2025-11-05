@@ -1,0 +1,51 @@
+{% extends "../../layout.njk" %}
+
+{% set pageId = 'support-strategy-detail' %}
+{% set pageTitle = "Edit support strategy - Edit support strategy details" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">Edit description of {{ prisonerSummary | formatFirst_name_Last_name }}'s support strategy</h1>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m govuk-!-margin-bottom-1">Category of support strategy</h2>
+      <p class="govuk-body">{{ category | formatSupportStrategyTypeScreenValue }}</p>
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukTextarea({
+            id: "description",
+            name: "description",
+            rows: "4",
+            value: form.description,
+            type: "text",
+            label: {
+              text: "Description of support strategy",
+              classes: "govuk-label--m",
+              attributes: { "aria-live": "polite" }
+            },
+            hint: {
+              text: 'Specify what support is needed and where, for example in a workshop or on the wing'
+            },
+            attributes: { "aria-label" : "Enter the description of the support strategy" },
+            errorMessage: errors | findError('description')
+          }) }}
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Update support strategy",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

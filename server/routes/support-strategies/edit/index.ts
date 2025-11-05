@@ -1,14 +1,21 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
+import retrieveSupportStrategyResponseDtoIfNotInJourneyData from '../middleware/retrieveSupportStrategyResponseDtoIfNotInJourneyData'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import checkSupportStrategyDtoExistsInJourneyData from '../middleware/checkSupportStrategyDtoExistsInJourneyData'
+import { validate } from '../../../middleware/validationMiddleware'
+import DetailController from './detail/detailController'
+import detailSchema from '../validationSchemas/detailSchema'
 
 const editSupportStrategiesRoutes = (services: Services): Router => {
-  const { journeyDataService } = services
-
+  const { auditService, journeyDataService, supportStrategyService } = services
   const router = Router({ mergeParams: true })
+
+  const detailController = new DetailController(supportStrategyService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.EDIT_SUPPORT_STRATEGIES),
@@ -17,11 +24,13 @@ const editSupportStrategiesRoutes = (services: Services): Router => {
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
 
   router.get('/:journeyId/detail', [
-    // TODO - implement retrieveSupportStrategyResponseDtoIfNotInJourneyData,
-    // TODO - replace with a controller method
-    async (req: Request, res: Response) => {
-      res.send('Edit support strategy - detail page')
-    },
+    retrieveSupportStrategyResponseDtoIfNotInJourneyData(supportStrategyService),
+    asyncMiddleware(detailController.getDetailView),
+  ])
+  router.post('/:journeyId/detail', [
+    checkSupportStrategyDtoExistsInJourneyData,
+    validate(detailSchema),
+    asyncMiddleware(detailController.submitDetailForm),
   ])
 
   return router

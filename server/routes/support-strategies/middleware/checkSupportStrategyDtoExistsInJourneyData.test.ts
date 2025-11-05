@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import checkSupportStrategyDtoExistsInJourneyData from './checkSupportStrategyDtoExistsInJourneyData'
-import aValidSupportStrategyDto from '../../../../testsupport/supportStrategyDtoTestDataBuilder'
+import aValidSupportStrategyDto from '../../../testsupport/supportStrategyDtoTestDataBuilder'
 
 describe('checkSupportStrategyDtoExistsInJourneyData', () => {
   const prisonNumber = 'A1234BC'
