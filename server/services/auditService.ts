@@ -78,6 +78,7 @@ enum AuditableUserAction {
   EDIT_CHALLENGE = 'EDIT_CHALLENGE',
   CREATE_CONDITION = 'CREATE_CONDITION',
   CREATE_SUPPORT_STRATEGY = 'CREATE_SUPPORT_STRATEGY',
+  EDIT_SUPPORT_STRATEGY = 'EDIT_SUPPORT_STRATEGY',
 }
 
 export interface BaseAuditData {
@@ -164,6 +165,13 @@ export default class AuditService {
     return this.logAuditEvent({
       ...baseAuditData,
       what: AuditableUserAction.CREATE_SUPPORT_STRATEGY,
+    })
+  }
+
+  async logEditSupportStrategy(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.EDIT_SUPPORT_STRATEGY,
     })
   }
 

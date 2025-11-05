@@ -34,7 +34,7 @@ export declare global {
       challengeDto?: ChallengeDto | ChallengeResponseDto
       conditionsList?: ConditionsList
       strengthDto?: StrengthDto | StrengthResponseDto
-      supportStrategyDto?: SupportStrategyDto
+      supportStrategyDto?: SupportStrategyDto | SupportStrategyResponseDto
       alnScreenerDto?: AlnScreenerDto
     }
 

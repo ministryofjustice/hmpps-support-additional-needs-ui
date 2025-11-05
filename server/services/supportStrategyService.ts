@@ -43,12 +43,12 @@ export default class SupportStrategyService {
   async getSupportStrategy(
     username: string,
     prisonNumber: string,
-    strengthReference: string,
+    supportStrategyReference: string,
   ): Promise<SupportStrategyResponseDto> {
     try {
       const supportStrategyResponse = await this.supportAdditionalNeedsApiClient.getSupportStrategy(
         prisonNumber,
-        strengthReference,
+        supportStrategyReference,
         username,
       )
       return toSupportStrategyResponseDto(prisonNumber, supportStrategyResponse)
@@ -60,15 +60,15 @@ export default class SupportStrategyService {
 
   async updateSupportStrategy(
     username: string,
-    strengthReference: string,
-    strength: SupportStrategyDto,
+    supportStrategyReference: string,
+    supportStrategy: SupportStrategyDto,
   ): Promise<void> {
-    const { prisonNumber } = strength
+    const { prisonNumber } = supportStrategy
     try {
-      const updateSupportStrategyRequest = toUpdateSupportStrategyRequest(strength)
+      const updateSupportStrategyRequest = toUpdateSupportStrategyRequest(supportStrategy)
       await this.supportAdditionalNeedsApiClient.updateSupportStrategy(
         prisonNumber,
-        strengthReference,
+        supportStrategyReference,
         username,
         updateSupportStrategyRequest,
       )
