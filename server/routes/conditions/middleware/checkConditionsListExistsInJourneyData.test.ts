@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import checkConditionsListExistsInJourneyData from './checkConditionsListExistsInJourneyData'
-import { aValidConditionsList } from '../../../../testsupport/conditionDtoTestDataBuilder'
+import { aValidConditionsList } from '../../../testsupport/conditionDtoTestDataBuilder'
 
 describe('checkConditionsListExistsInJourneyData', () => {
   const prisonNumber = 'A1234BC'

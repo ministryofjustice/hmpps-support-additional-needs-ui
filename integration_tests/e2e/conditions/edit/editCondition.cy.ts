@@ -19,7 +19,7 @@ context('Edit a Condition', () => {
     cy.signIn()
 
     // When
-    cy.visit(`/conditions/${prisonNumber}/${conditionReference}/edit/details`, { failOnStatusCode: false })
+    cy.visit(`/conditions/${prisonNumber}/${conditionReference}/edit/detail`, { failOnStatusCode: false })
 
     // Then
     Page.verifyOnPage(AuthorisationErrorPage)
