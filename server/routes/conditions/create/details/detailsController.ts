@@ -15,11 +15,11 @@ export default class DetailsController {
     const { invalidForm, prisonerSummary } = res.locals
     const { conditionsList } = req.journeyData
 
-    const selectDetailsForm = invalidForm ?? this.populateFormFromDto(conditionsList)
+    const detailsForm = invalidForm ?? this.populateFormFromDto(conditionsList)
 
     const viewRenderArgs = {
       prisonerSummary,
-      form: selectDetailsForm,
+      form: detailsForm,
       dto: conditionsList,
       errorRecordingConditions: req.flash('pageHasApiErrors')[0] != null,
     }

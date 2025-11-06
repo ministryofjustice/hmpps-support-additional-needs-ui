@@ -20,17 +20,19 @@
         <div class="govuk-form-group">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-          {% macro conditionNameInput(conditionType, value) %}
-            {{ govukInput({
-              id: conditionType + "_conditionNames",
-              name: "conditionNames[" + conditionType + "]",
-              value: value,
-              maxlength: 200,
-              label: {
-                text: "Specify condition"
-              },
-              errorMessage: errors | findError(conditionType + "_conditionNames")
-            }) }}
+          {% macro conditionalNameInput(conditionType, values) %}
+            {% if conditionsThatRequireNaming.includes(conditionType) %}
+              {{ govukInput({
+                id: conditionType + "_conditionNames",
+                name: "conditionNames[" + conditionType + "]",
+                value: values[conditionType],
+                maxlength: 200,
+                label: {
+                  text: "Specify condition"
+                },
+                errorMessage: errors | findError(conditionType + "_conditionNames")
+              }) }}
+            {% endif %}
           {% endmacro %}
 
           <div class="govuk-grid-row">
@@ -46,112 +48,98 @@
                   {
                     value: "ABI",
                     text: "ABI" | formatConditionTypeScreenValue | default("ABI", true),
-                    checked: form.conditions.includes("ABI")
+                    checked: form.conditions.includes("ABI"),
+                    conditional: { html: conditionalNameInput("ABI", form.conditionNames) }
                   },
                   {
                     value: "ADHD",
                     text: "ADHD" | formatConditionTypeScreenValue | default("ADHD", true),
-                    checked: form.conditions.includes("ADHD")
+                    checked: form.conditions.includes("ADHD"),
+                    conditional: { html: conditionalNameInput("ADHD", form.conditionNames) }
                   },
                   {
                     value: "ASC",
                     text: "ASC" | formatConditionTypeScreenValue | default("ASC", true),
-                    checked: form.conditions.includes("ASC")
+                    checked: form.conditions.includes("ASC"),
+                    conditional: { html: conditionalNameInput("ASC", form.conditionNames) }
                   },
                   {
                     value: "DLD_LANG",
                     text: "DLD_LANG" | formatConditionTypeScreenValue | default("DLD_LANG", true),
-                    checked: form.conditions.includes("DLD_LANG")
+                    checked: form.conditions.includes("DLD_LANG"),
+                    conditional: { html: conditionalNameInput("DLD_LANG", form.conditionNames) }
                   },
                   {
                     value: "LD_DOWN",
                     text: "LD_DOWN" | formatConditionTypeScreenValue | default("LD_DOWN", true),
-                    checked: form.conditions.includes("LD_DOWN")
+                    checked: form.conditions.includes("LD_DOWN"),
+                    conditional: { html: conditionalNameInput("LD_DOWN", form.conditionNames) }
                   },
                   {
                     value: "DYSCALCULIA",
                     text: "DYSCALCULIA" | formatConditionTypeScreenValue | default("DYSCALCULIA", true),
-                    checked: form.conditions.includes("DYSCALCULIA")
+                    checked: form.conditions.includes("DYSCALCULIA"),
+                    conditional: { html: conditionalNameInput("DYSCALCULIA", form.conditionNames) }
                   },
                   {
                     value: "DYSLEXIA",
                     text: "DYSLEXIA" | formatConditionTypeScreenValue | default("DYSLEXIA", true),
-                    checked: form.conditions.includes("DYSLEXIA")
+                    checked: form.conditions.includes("DYSLEXIA"),
+                    conditional: { html: conditionalNameInput("DYSLEXIA", form.conditionNames) }
                   },
                   {
                     value: "DYSPRAXIA",
                     text: "DYSPRAXIA" | formatConditionTypeScreenValue | default("DYSPRAXIA", true),
-                    checked: form.conditions.includes("DYSPRAXIA")
+                    checked: form.conditions.includes("DYSPRAXIA"),
+                    conditional: { html: conditionalNameInput("DYSPRAXIA", form.conditionNames) }
                   },
                   {
                     value: "FASD",
                     text: "FASD" | formatConditionTypeScreenValue | default("FASD", true),
-                    checked: form.conditions.includes("FASD")
+                    checked: form.conditions.includes("FASD"),
+                    conditional: { html: conditionalNameInput("FASD", form.conditionNames) }
                   },
                   {
                     value: "DLD_HEAR",
                     text: "DLD_HEAR" | formatConditionTypeScreenValue | default("DLD_HEAR", true),
-                    checked: form.conditions.includes("DLD_HEAR")
+                    checked: form.conditions.includes("DLD_HEAR"),
+                    conditional: { html: conditionalNameInput("DLD_HEAR", form.conditionNames) }
                   },
                   {
                     value: "LD_OTHER",
                     text: "LD_OTHER" | formatConditionTypeScreenValue | default("LD_OTHER", true),
                     checked: form.conditions.includes("LD_OTHER"),
-                    conditional: {
-                      html: conditionNameInput(
-                        "LD_OTHER",
-                        form.conditionNames["LD_OTHER"]
-                      )
-                    }
+                    conditional: { html: conditionalNameInput("LD_OTHER", form.conditionNames) }
                   },
                   {
                     value: "MENTAL_HEALTH",
                     text: "MENTAL_HEALTH" | formatConditionTypeScreenValue | default("MENTAL_HEALTH", true),
                     checked: form.conditions.includes("MENTAL_HEALTH"),
-                    conditional: {
-                      html: conditionNameInput(
-                        "MENTAL_HEALTH",
-                        form.conditionNames["MENTAL_HEALTH"]
-                      )
-                    }
+                    conditional: { html: conditionalNameInput("MENTAL_HEALTH", form.conditionNames) }
                   },
                   {
                     value: "NEURODEGEN",
                     text: "NEURODEGEN" | formatConditionTypeScreenValue | default("NEURODEGEN", true),
                     checked: form.conditions.includes("NEURODEGEN"),
-                    conditional: {
-                      html: conditionNameInput(
-                        "NEURODEGEN",
-                        form.conditionNames["NEURODEGEN"]
-                      )
-                    }
+                    conditional: { html: conditionalNameInput("NEURODEGEN", form.conditionNames) }
                   },
                   {
                     value: "PHYSICAL_OTHER",
                     text: "PHYSICAL_OTHER" | formatConditionTypeScreenValue | default("PHYSICAL_OTHER", true),
                     checked: form.conditions.includes("PHYSICAL_OTHER"),
-                    conditional: {
-                      html: conditionNameInput(
-                        "PHYSICAL_OTHER",
-                        form.conditionNames["PHYSICAL_OTHER"]
-                      )
-                    }
+                    conditional: { html: conditionalNameInput("PHYSICAL_OTHER", form.conditionNames) }
                   },
                   {
                     value: "TOURETTES",
                     text: "TOURETTES" | formatConditionTypeScreenValue | default("TOURETTES", true),
-                    checked: form.conditions.includes("TOURETTES")
+                    checked: form.conditions.includes("TOURETTES"),
+                    conditional: { html: conditionalNameInput("TOURETTES", form.conditionNames) }
                   },
                   {
                     value: "VISUAL_IMPAIR",
                     text: "VISUAL_IMPAIR" | formatConditionTypeScreenValue | default("VISUAL_IMPAIR", true),
                     checked: form.conditions.includes("VISUAL_IMPAIR"),
-                    conditional: {
-                      html: conditionNameInput(
-                        "VISUAL_IMPAIR",
-                        form.conditionNames["VISUAL_IMPAIR"]
-                      )
-                    }
+                    conditional: { html: conditionalNameInput("VISUAL_IMPAIR", form.conditionNames) }
                   }
                 ],
                 errorMessage: errors | findError('conditions')
@@ -171,56 +159,31 @@
                     value: "OTHER",
                     text: "OTHER" | formatConditionTypeScreenValue | default("OTHER", true),
                     checked: form.conditions.includes("OTHER"),
-                    conditional: {
-                      html: conditionNameInput(
-                        "OTHER",
-                        form.conditionNames["OTHER"]
-                      )
-                    }
+                    conditional: { html: conditionalNameInput("OTHER", form.conditionNames) }
                   },
                   {
                     value: "DLD_OTHER",
                     text: "DLD_OTHER" | formatConditionTypeScreenValue | default("DLD_OTHER", true),
                     checked: form.conditions.includes("DLD_OTHER"),
-                    conditional: {
-                      html: conditionNameInput(
-                        "DLD_OTHER",
-                        form.conditionNames["DLD_OTHER"]
-                      )
-                    }
+                    conditional: { html: conditionalNameInput("DLD_OTHER", form.conditionNames) }
                   },
                   {
                     value: "LEARN_DIFF_OTHER",
                     text: "LEARN_DIFF_OTHER" | formatConditionTypeScreenValue | default("LEARN_DIFF_OTHER", true),
                     checked: form.conditions.includes("LEARN_DIFF_OTHER"),
-                    conditional: {
-                      html: conditionNameInput(
-                        "LEARN_DIFF_OTHER",
-                        form.conditionNames["LEARN_DIFF_OTHER"]
-                      )
-                    }
+                    conditional: { html: conditionalNameInput("LEARN_DIFF_OTHER", form.conditionNames) }
                   },
                   {
                     value: "LONG_TERM_OTHER",
                     text: "LONG_TERM_OTHER" | formatConditionTypeScreenValue | default("LONG_TERM_OTHER", true),
                     checked: form.conditions.includes("LONG_TERM_OTHER"),
-                    conditional: {
-                      html: conditionNameInput(
-                        "LONG_TERM_OTHER",
-                        form.conditionNames["LONG_TERM_OTHER"]
-                      )
-                    }
+                    conditional: { html: conditionalNameInput("LONG_TERM_OTHER", form.conditionNames) }
                   },
                   {
                     value: "NEURO_OTHER",
                     text: "NEURO_OTHER" | formatConditionTypeScreenValue | default("NEURO_OTHER", true),
                     checked: form.conditions.includes("NEURO_OTHER"),
-                    conditional: {
-                      html: conditionNameInput(
-                        "NEURO_OTHER",
-                        form.conditionNames["NEURO_OTHER"]
-                      )
-                    }
+                    conditional: { html: conditionalNameInput("NEURO_OTHER", form.conditionNames) }
                   }
                 ]
               }) }}

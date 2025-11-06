@@ -3,20 +3,9 @@ import { createSchema } from '../../../middleware/validationMiddleware'
 import { asArray } from '../../../utils/utils'
 import ConditionType from '../../../enums/conditionType'
 import { textValueExceedsLength } from '../../../utils/validation/textValueValidator'
+import conditionsThatRequireNaming from '../conditionsThatRequireNaming'
 
 const selectConditionsSchema = async () => {
-  const CONDITION_TYPES_REQUIRING_NAME = [
-    ConditionType.LD_OTHER,
-    ConditionType.MENTAL_HEALTH,
-    ConditionType.NEURODEGEN,
-    ConditionType.PHYSICAL_OTHER,
-    ConditionType.VISUAL_IMPAIR,
-    ConditionType.OTHER,
-    ConditionType.DLD_OTHER,
-    ConditionType.LEARN_DIFF_OTHER,
-    ConditionType.LONG_TERM_OTHER,
-    ConditionType.NEURO_OTHER,
-  ]
   const CONDITION_NAME_MAX_LENGTH = 200
 
   const conditionTypeCodeMandatoryMessage = 'Select all conditions that the person has'
@@ -37,7 +26,7 @@ const selectConditionsSchema = async () => {
     const { conditions, conditionNames } = ctx.value
 
     asArray(conditions).forEach(conditionType => {
-      if (CONDITION_TYPES_REQUIRING_NAME.includes(conditionType)) {
+      if (conditionsThatRequireNaming.includes(conditionType)) {
         // this condition is one that requires the additional detail field
         if (
           !conditionNames ||

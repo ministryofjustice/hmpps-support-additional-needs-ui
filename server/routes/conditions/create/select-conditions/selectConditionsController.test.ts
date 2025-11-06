@@ -5,6 +5,7 @@ import { aValidConditionDto } from '../../../../testsupport/conditionDtoTestData
 import ConditionType from '../../../../enums/conditionType'
 import ConditionSource from '../../../../enums/conditionSource'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
+import conditionsThatRequireNaming from '../../conditionsThatRequireNaming'
 
 describe('selectConditionsController', () => {
   const controller = new SelectConditionsController()
@@ -53,6 +54,7 @@ describe('selectConditionsController', () => {
         conditions: ['ADHD'],
       },
       prisonerSummary,
+      conditionsThatRequireNaming,
     }
 
     // When
@@ -73,6 +75,7 @@ describe('selectConditionsController', () => {
     const expectedViewModel = {
       form: invalidForm,
       prisonerSummary,
+      conditionsThatRequireNaming,
     }
 
     // When

@@ -52,3 +52,8 @@ dl.app-u-description-list {
   pointer-events: none;
   cursor: default;
 }
+
+// Ensure that govuk checkbox conditional elements are not displayed if they have no content / are empty
+.govuk-checkboxes__conditional:not(:has(*)) {
+  display: none;
+}
