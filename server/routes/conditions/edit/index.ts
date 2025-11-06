@@ -5,7 +5,7 @@ import ApplicationAction from '../../../enums/applicationAction'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
 
-const editConditionsRoutes = (services: Services): Router => {
+const editConditionRoutes = (services: Services): Router => {
   const { journeyDataService } = services
 
   const router = Router({ mergeParams: true })
@@ -27,4 +27,4 @@ const editConditionsRoutes = (services: Services): Router => {
   return router
 }
 
-export default editConditionsRoutes
+export default editConditionRoutes
