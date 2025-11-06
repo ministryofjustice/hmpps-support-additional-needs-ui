@@ -10,7 +10,7 @@ context('Archive a Strength', () => {
     cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] }) // user has the role that gives them permission to archive strengths
     cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetPlanActionStatus', { prisonNumber })
-    cy.task('stubGetCondition', { prisonNumber, strengthReference })
+    cy.task('stubGetStrength', { prisonNumber, strengthReference })
   })
 
   it('should not be able to navigate directly to the archive strength page given user does not have the required role', () => {

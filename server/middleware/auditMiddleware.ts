@@ -99,6 +99,9 @@ const pageViewEventMap: Record<string, Page> = {
   // Edit challenges routes
   '/challenges/:prisonNumber/:challengeReference/edit/:journeyId/detail': Page.EDIT_CHALLENGE_DETAILS,
 
+  // Archive challenges routes
+  '/challenges/:prisonNumber/:challengeReference/archive/:journeyId/reason': Page.ARCHIVE_CHALLENGE_REASON,
+
   // Record ALN Screener routes
   '/aln-screener/:prisonNumber/create/:journeyId/screener-date': Page.RECORD_ALN_SCREENER_DATE,
   '/aln-screener/:prisonNumber/create/:journeyId/add-challenges': Page.RECORD_ALN_SCREENER_CHALLENGES,
@@ -130,6 +133,7 @@ const pageViewEventMap: Record<string, Page> = {
   '/strengths/:prisonNumber/:strengthReference/archive/reason': null,
   '/challenges/:prisonNumber/create/select-category': null,
   '/challenges/:prisonNumber/:challengeReference/edit/detail': null,
+  '/challenges/:prisonNumber/:challengeReference/archive/reason': null,
   '/aln-screener/:prisonNumber/create/screener-date': null,
   '/conditions/:prisonNumber/create/select-conditions': null,
   '/conditions/:prisonNumber/:conditionReference/edit/detail': null,
