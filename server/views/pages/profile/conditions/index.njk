@@ -19,48 +19,62 @@
 
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
-      {% if conditions.isFulfilled() %}
-        {% set activeConditions = conditions.value.conditions | filterArrayOnProperty('active', true) | sort(attribute = 'updatedAt', reverse = true) %}
-        {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
-        {% if activeConditions | length %}
+      <section>
+        {% if conditions.isFulfilled() %}
+          {% set activeConditions = conditions.value.conditions | filterArrayOnProperty('active', true) | sort(attribute = 'updatedAt', reverse = true) %}
+          {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+          {% if activeConditions | length %}
 
-          {{ conditionsSummaryCard({
-            conditions: activeConditions | filterArrayOnProperty('source', 'CONFIRMED_DIAGNOSIS'),
-            prisonNamesById: prisonNamesById,
-            title: 'Confirmed diagnoses',
-            attributes: {
-              'data-qa': 'diagnosed-conditions-summary-card'
-            }
-          }) }}
+            {{ conditionsSummaryCard({
+              conditions: activeConditions | filterArrayOnProperty('source', 'CONFIRMED_DIAGNOSIS'),
+              prisonNamesById: prisonNamesById,
+              title: 'Confirmed diagnoses',
+              showActions: true,
+              userHasPermissionTo: userHasPermissionTo,
+              attributes: {
+                'data-qa': 'diagnosed-conditions-summary-card'
+              }
+            }) }}
 
-          {{ conditionsSummaryCard({
-            conditions: activeConditions | filterArrayOnProperty('source', 'SELF_DECLARED'),
-            prisonNamesById: prisonNamesById,
-            title: 'Self-declared conditions',
-            attributes: {
-              'data-qa': 'self-declared-conditions-summary-card'
-            }
-          }) }}
+            {{ conditionsSummaryCard({
+              conditions: activeConditions | filterArrayOnProperty('source', 'SELF_DECLARED'),
+              prisonNamesById: prisonNamesById,
+              title: 'Self-declared conditions',
+              showActions: true,
+              userHasPermissionTo: userHasPermissionTo,
+              attributes: {
+                'data-qa': 'self-declared-conditions-summary-card'
+              }
+            }) }}
+
+          {% else %}
+
+            <div class="govuk-summary-card" data-qa="no-conditions-summary-card">
+              <div class="govuk-summary-card__content">
+                <p class="govuk-body">
+                  No conditions recorded
+                </p>
+                {% if userHasPermissionTo('RECORD_SELF_DECLARED_CONDITIONS') %}
+                  <a class="govuk-link govuk-body govuk-!-display-none-print" href="/conditions/{{ prisonerSummary.prisonNumber }}/create/select-conditions">Record condition</a>
+                {% endif %}
+              </div>
+            </div>
+
+          {% endif %}
 
         {% else %}
-
-          <div class="govuk-summary-card" data-qa="no-conditions-summary-card">
-            <div class="govuk-summary-card__content">
-              <p class="govuk-body">
-                No conditions recorded
-              </p>
-              {% if userHasPermissionTo('RECORD_SELF_DECLARED_CONDITIONS') %}
-                <a class="govuk-link govuk-body govuk-!-display-none-print" href="/conditions/{{ prisonerSummary.prisonNumber }}/create/select-conditions">Record condition</a>
-              {% endif %}
-            </div>
-          </div>
-
+          <h3 class="govuk-heading-s" data-qa="conditions-unavailable-message">We cannot show these details right now</h3>
+          <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
         {% endif %}
+      </section>
 
-      {% else %}
-        <h3 class="govuk-heading-s" data-qa="conditions-unavailable-message">We cannot show these details right now</h3>
-        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
-      {% endif %}
+      <p class="govuk-body">
+        {% if userHasPermissionTo('RECORD_SELF_DECLARED_CONDITIONS') %}
+          <a class="govuk-link govuk-body govuk-!-display-none-print" href="/conditions/{{ prisonerSummary.prisonNumber }}/create/select-conditions">
+            Add a condition
+          </a>
+        {% endif %}
+      </p>
     </div>
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">

@@ -19,6 +19,7 @@
             conditions: activeConditions | filterArrayOnProperty('source', 'CONFIRMED_DIAGNOSIS'),
             prisonNamesById: prisonNamesById,
             title: 'Confirmed diagnoses',
+            showActions: false,
             attributes: {
               'data-qa': 'diagnosed-conditions-summary-card'
             }
@@ -28,6 +29,7 @@
             conditions: activeConditions | filterArrayOnProperty('source', 'SELF_DECLARED'),
             prisonNamesById: prisonNamesById,
             title: 'Self-declared conditions',
+            showActions: false,
             attributes: {
               'data-qa': 'self-declared-conditions-summary-card'
             }

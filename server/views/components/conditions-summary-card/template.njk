@@ -10,6 +10,9 @@
 {%- set componentAttributes %} class="{{ classNames }}" {{- govukAttributes(params.attributes) -}} {% if params.id %} id="{{ params.id }}"{% endif %}{% endset %}
 
 {% if params.conditions | length %}
+  {% set showActions = params.showActions %}
+  {% set userHasPermissionTo = params.userHasPermissionTo %}
+
   <div {{ componentAttributes | safe }}>
     <div class="govuk-summary-card__title-wrapper">
       <h2 class="govuk-summary-card__title">{{ params.title }}</h2>
@@ -19,17 +22,36 @@
       <div class="govuk-summary-list">
 
         {% for condition in params.conditions %}
-          <div class="govuk-summary-list__row" data-qa="{{ condition.conditionTypeCode }}">
+          <div class="govuk-summary-list__row condition" data-qa="{{ condition.conditionTypeCode }}">
             <h3 class="govuk-heading-s govuk-!-margin-top-3 govuk-!-margin-bottom-2">{{ condition.conditionTypeCode | formatConditionTypeScreenValue | default(condition.conditionTypeCode, true) }}</h3>
             {% if condition.conditionName %}
               <p class="govuk-body govuk-!-margin-bottom-2" data-qa="condition-name">{{ condition.conditionName }}</p>
             {% endif %}
             <p class="govuk-body app-u-multiline-text govuk-!-margin-bottom-2" data-qa="condition-details">{{ condition.conditionDetails }}</p>
 
-            <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="condition-audit">
-              {% set prisonName = params.prisonNamesById[condition.updatedAtPrison] | default(condition.updatedAtPrison) %}
-              Added on {{ condition.updatedAt | formatDate('d MMMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ condition.updatedByDisplayName }}, {{ prisonName }}</span>
-            </p>
+            <div class="actions-wrapper">
+              <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="condition-audit">
+                {% set prisonName = params.prisonNamesById[condition.updatedAtPrison] | default(condition.updatedAtPrison) %}
+                Last updated {{ condition.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ condition.updatedByDisplayName }}, {{ prisonName }}</span>
+              </p>
+
+              {% if featureToggles.editAndArchiveEnabled %}
+                {% if showActions %}
+                  <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                    {% if userHasPermissionTo('EDIT_CONDITIONS') %}
+                      <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-!-font-weight-regular" href="/conditions/{{ condition.prisonNumber }}/{{ condition.reference }}/edit/details" data-qa="edit-condition-button">Edit</a>
+                      </li>
+                    {% endif %}
+                    {% if userHasPermissionTo('ARCHIVE_CONDITIONS') %}
+                      <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-!-font-weight-regular" href="/conditions/{{ condition.prisonNumber }}/{{ condition.reference }}/archive" data-qa="archive-condition-button">Move to history</a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                {% endif %}
+              {% endif %}
+            </div>
           </div>
         {% endfor %}
 
