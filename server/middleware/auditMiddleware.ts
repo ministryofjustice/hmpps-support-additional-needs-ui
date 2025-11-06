@@ -123,6 +123,10 @@ const pageViewEventMap: Record<string, Page> = {
   '/support-strategies/:prisonNumber/:supportStrategyReference/edit/:journeyId/detail':
     Page.EDIT_SUPPORT_STRATEGY_DETAILS,
 
+  // Archive Support Strategies routes
+  '/support-strategies/:prisonNumber/:supportStrategyReference/archive/:journeyId/reason':
+    Page.ARCHIVE_SUPPORT_STRATEGY_REASON,
+
   // Non audit routes. These routes do not raise an audit event
   '/': null,
   '/education-support-plan/:prisonNumber/create/who-created-the-plan': null,
@@ -139,6 +143,7 @@ const pageViewEventMap: Record<string, Page> = {
   '/conditions/:prisonNumber/:conditionReference/edit/detail': null,
   '/support-strategies/:prisonNumber/create/select-category': null,
   '/support-strategies/:prisonNumber/:supportStrategyReference/edit/detail': null,
+  '/support-strategies/:prisonNumber/:supportStrategyReference/archive/reason': null,
 }
 
 export default function auditMiddleware({ auditService }: Services) {
