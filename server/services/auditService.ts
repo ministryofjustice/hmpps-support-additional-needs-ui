@@ -62,7 +62,7 @@ export enum Page {
   RECORD_ALN_SCREENER_CHECK_YOUR_ANSWERS = 'RECORD_ALN_SCREENER_CHECK_YOUR_ANSWERS',
   CREATE_CONDITIONS_SELECT_CONDITIONS = 'CREATE_CONDITIONS_SELECT_CONDITIONS',
   CREATE_CONDITIONS_DETAILS = 'CREATE_CONDITIONS_DETAILS',
-  EDIT_CONDITIONS_DETAILS = 'EDIT_CONDITIONS_DETAILS',
+  EDIT_CONDITION_DETAILS = 'EDIT_CONDITION_DETAILS',
 }
 
 enum AuditableUserAction {
@@ -77,6 +77,7 @@ enum AuditableUserAction {
   CREATE_CHALLENGE = 'CREATE_CHALLENGE',
   EDIT_CHALLENGE = 'EDIT_CHALLENGE',
   CREATE_CONDITION = 'CREATE_CONDITION',
+  EDIT_CONDITION = 'EDIT_CONDITION',
   CREATE_SUPPORT_STRATEGY = 'CREATE_SUPPORT_STRATEGY',
   EDIT_SUPPORT_STRATEGY = 'EDIT_SUPPORT_STRATEGY',
 }
@@ -158,6 +159,13 @@ export default class AuditService {
     return this.logAuditEvent({
       ...baseAuditData,
       what: AuditableUserAction.CREATE_CONDITION,
+    })
+  }
+
+  async logEditCondition(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.EDIT_CONDITION,
     })
   }
 

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import type { ConditionsList } from 'dto'
 import createEmptyConditionsListIfNotInJourneyData from './createEmptyConditionsListIfNotInJourneyData'
-import { aValidConditionDto } from '../../../../testsupport/conditionDtoTestDataBuilder'
+import { aValidConditionDto } from '../../../testsupport/conditionDtoTestDataBuilder'
 
 describe('createEmptyConditionsListIfNotInJourneyData', () => {
   const prisonNumber = 'A1234BC'
