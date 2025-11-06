@@ -11,7 +11,7 @@ import detailSchema from '../validationSchemas/detailSchema'
 import retrieveStrengthResponseDtoIfNotInJourneyData from '../middleware/retrieveStrengthResponseDtoIfNotInJourneyData'
 import checkStrengthDtoExistsInJourneyData from '../middleware/checkStrengthDtoExistsInJourneyData'
 
-const editStrengthsRoutes = (services: Services): Router => {
+const editStrengthRoutes = (services: Services): Router => {
   const { auditService, journeyDataService, strengthService } = services
   const router = Router({ mergeParams: true })
 
@@ -36,4 +36,4 @@ const editStrengthsRoutes = (services: Services): Router => {
   return router
 }
 
-export default editStrengthsRoutes
+export default editStrengthRoutes
