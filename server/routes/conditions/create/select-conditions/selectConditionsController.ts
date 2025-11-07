@@ -4,6 +4,7 @@ import { asArray } from '../../../../utils/utils'
 import ConditionType from '../../../../enums/conditionType'
 import ConditionSource from '../../../../enums/conditionSource'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import conditionsThatRequireNaming from '../../conditionsThatRequireNaming'
 
 export default class SelectConditionsController {
   getSelectConditionsView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -17,7 +18,7 @@ export default class SelectConditionsController {
         }
       : this.populateFormFromDto(conditionsList)
 
-    const viewRenderArgs = { prisonerSummary, form: selectConditionsForm }
+    const viewRenderArgs = { prisonerSummary, form: selectConditionsForm, conditionsThatRequireNaming }
     return res.render('pages/conditions/select-conditions/index', viewRenderArgs)
   }
 

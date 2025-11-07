@@ -4,6 +4,7 @@ import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDa
 import formatPrisonerNameFilter, { NameFormat } from '../../../../filters/formatPrisonerNameFilter'
 import formatConditionTypeScreenValueFilter from '../../../../filters/formatConditionTypeFilter'
 import findErrorFilter from '../../../../filters/findErrorFilter'
+import conditionsThatRequireNaming from '../../../../routes/conditions/conditionsThatRequireNaming'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/dist/',
@@ -25,6 +26,7 @@ const templateParams = {
   form: {
     conditions: [] as Array<string>,
   },
+  conditionsThatRequireNaming,
 }
 
 describe('Select Conditions', () => {
