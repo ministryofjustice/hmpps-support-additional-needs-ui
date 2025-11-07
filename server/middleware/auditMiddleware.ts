@@ -115,6 +115,9 @@ const pageViewEventMap: Record<string, Page> = {
   // Edit conditions routes
   '/conditions/:prisonNumber/:conditionReference/edit/:journeyId/detail': Page.EDIT_CONDITION_DETAILS,
 
+  // Archive conditions routes
+  '/conditions/:prisonNumber/:conditionReference/archive/:journeyId/reason': Page.ARCHIVE_CONDITION_REASON,
+
   // Create Support Strategies routes
   '/support-strategies/:prisonNumber/create/:journeyId/select-category': Page.CREATE_SUPPORT_STRATEGY_CATEGORY,
   '/support-strategies/:prisonNumber/create/:journeyId/detail': Page.CREATE_SUPPORT_STRATEGY_DETAILS,
@@ -141,6 +144,7 @@ const pageViewEventMap: Record<string, Page> = {
   '/aln-screener/:prisonNumber/create/screener-date': null,
   '/conditions/:prisonNumber/create/select-conditions': null,
   '/conditions/:prisonNumber/:conditionReference/edit/detail': null,
+  '/conditions/:prisonNumber/:conditionReference/archive/reason': null,
   '/support-strategies/:prisonNumber/create/select-category': null,
   '/support-strategies/:prisonNumber/:supportStrategyReference/edit/detail': null,
   '/support-strategies/:prisonNumber/:supportStrategyReference/archive/reason': null,

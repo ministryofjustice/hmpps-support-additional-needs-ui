@@ -66,6 +66,7 @@ export enum Page {
   CREATE_CONDITIONS_SELECT_CONDITIONS = 'CREATE_CONDITIONS_SELECT_CONDITIONS',
   CREATE_CONDITIONS_DETAILS = 'CREATE_CONDITIONS_DETAILS',
   EDIT_CONDITION_DETAILS = 'EDIT_CONDITION_DETAILS',
+  ARCHIVE_CONDITION_REASON = 'ARCHIVE_CONDITION_REASON',
 }
 
 enum AuditableUserAction {
@@ -82,6 +83,7 @@ enum AuditableUserAction {
   EDIT_CHALLENGE = 'EDIT_CHALLENGE',
   ARCHIVE_CHALLENGE = 'ARCHIVE_CHALLENGE',
   CREATE_CONDITION = 'CREATE_CONDITION',
+  ARCHIVE_CONDITION = 'ARCHIVE_CONDITION',
   EDIT_CONDITION = 'EDIT_CONDITION',
   CREATE_SUPPORT_STRATEGY = 'CREATE_SUPPORT_STRATEGY',
   EDIT_SUPPORT_STRATEGY = 'EDIT_SUPPORT_STRATEGY',
@@ -186,6 +188,13 @@ export default class AuditService {
     return this.logAuditEvent({
       ...baseAuditData,
       what: AuditableUserAction.EDIT_CONDITION,
+    })
+  }
+
+  async logArchiveCondition(baseAuditData: BaseAuditData) {
+    return this.logAuditEvent({
+      ...baseAuditData,
+      what: AuditableUserAction.ARCHIVE_CONDITION,
     })
   }
 
