@@ -1,0 +1,90 @@
+{% extends "../../layout.njk" %}
+
+{% set pageId = 'conditions-details' %}
+{% set pageTitle = "Edit condition - Edit condition details" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">
+        Edit {{ prisonerSummary | formatFirst_name_Last_name }}'s condition details
+      </h1>
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group" id="conditionsDetails">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          <h2 class="govuk-heading-m">{{ dto.conditionTypeCode | formatConditionTypeScreenValue | default(dto.conditionTypeCode, true) }}</h2>
+          {% if conditionsThatRequireNaming.includes(dto.conditionTypeCode) %}
+            {{ govukInput({
+              id: "conditionName",
+              name: "conditionName",
+              value: form.conditionName,
+              maxlength: 200,
+              label: {
+                text: "Edit specified condition"
+              },
+              errorMessage: errors | findError("conditionName")
+            }) }}
+          {% endif %}
+
+          {% if userHasPermissionTo('RECORD_DIAGNOSED_CONDITIONS') %}
+            {{ govukRadios({
+              name: "conditionSource",
+              fieldset: {
+                legend: {
+                  text: "Select if the condition is self-declared or a confirmed diagnosis",
+                  isPageHeading: false,
+                  classes: "govuk-fieldset__legend--s"
+                }
+              },
+              items: [
+                {
+                  value: "SELF_DECLARED",
+                  text: "Self-declared",
+                  checked: form.conditionSource === "SELF_DECLARED"
+                },
+                {
+                  value: "CONFIRMED_DIAGNOSIS",
+                  text: "Confirmed diagnosis",
+                  checked: form.conditionSource === "CONFIRMED_DIAGNOSIS"
+                }
+              ],
+              errorMessage: errors | findError("conditionSource")
+            }) }}
+          {% else %}
+            <input type="hidden" name="conditionSource" value="{{ form.conditionSource }}" />
+          {% endif %}
+
+          {{ govukTextarea({
+            id: "conditionDetails",
+            name: "conditionDetails",
+            rows: "4",
+            value: form.conditionDetails,
+            type: "text",
+            label: {
+              text: "Provide more detail",
+              classes: "govuk-label--s",
+              attributes: { "aria-live": "polite" }
+            },
+            hint: {
+              text: 'Such as date, circumstances and evidence'
+            },
+            attributes: { "aria-label" : "Give details of the condition" },
+            errorMessage: errors | findError("conditionDetails")
+          }) }}
+
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Update condition",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

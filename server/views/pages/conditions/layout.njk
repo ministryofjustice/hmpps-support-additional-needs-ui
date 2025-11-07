@@ -14,5 +14,5 @@
     </div>
   {% endif %}
 
-  <p class="govuk-body">Record conditions</p>
+  <p class="govuk-body">{{ 'Edit condition' if mode == 'edit' else 'Record conditions' }}</p>
 {% endblock %}
