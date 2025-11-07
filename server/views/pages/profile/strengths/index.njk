@@ -45,9 +45,6 @@
                 <p class="govuk-body">
                   No strengths recorded
                 </p>
-                {% if userHasPermissionTo('RECORD_STRENGTHS') %}
-                  <a class="govuk-link govuk-body govuk-!-display-none-print" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category">Add strength</a>
-                {% endif %}
               </div>
             </div>
 
