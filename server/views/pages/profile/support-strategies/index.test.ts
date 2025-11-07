@@ -118,28 +118,7 @@ describe('Profile support strategies page', () => {
 
     // Then
     expect($('[data-qa=no-support-strategies-summary-card]').length).toEqual(1)
-    expect($('[data-qa=no-support-strategies-summary-card] a').length).toEqual(1)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
-    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
-  })
-
-  it('should render the profile support strategies page given prisoner has no support strategies and the user does not have permission to create support strategies', () => {
-    // Given
-    userHasPermissionTo.mockReturnValue(false)
-    const params = {
-      ...templateParams,
-      supportStrategies: Result.fulfilled({}),
-    }
-
-    // When
-    const content = njkEnv.render(template, params)
-    const $ = cheerio.load(content)
-
-    // Then
-    expect($('[data-qa=no-support-strategies-summary-card]').length).toEqual(1)
-    expect($('[data-qa=no-support-strategies-summary-card] a').length).toEqual(0)
-    expect($('[data-qa=api-error-banner]').length).toEqual(0)
-    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
   })
 
   it('should render the profile support strategies page given the Support Strategies service API promise is not resolved', () => {

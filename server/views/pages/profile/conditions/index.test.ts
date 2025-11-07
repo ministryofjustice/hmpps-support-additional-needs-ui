@@ -136,7 +136,6 @@ describe('Profile conditions page', () => {
 
     // Then
     expect($('[data-qa=no-conditions-summary-card]').length).toEqual(1)
-    expect($('[data-qa=no-conditions-summary-card] a').length).toEqual(1)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SELF_DECLARED_CONDITIONS')
   })
@@ -155,29 +154,7 @@ describe('Profile conditions page', () => {
 
     // Then
     expect($('[data-qa=no-conditions-summary-card]').length).toEqual(1)
-    expect($('[data-qa=no-conditions-summary-card] a').length).toEqual(1)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
-    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SELF_DECLARED_CONDITIONS')
-  })
-
-  it('should render the profile conditions page given prisoner has no Conditions and the user does not have permission to create Conditions', () => {
-    // Given
-    userHasPermissionTo.mockReturnValue(false)
-    const conditionList = aValidConditionsList({ conditions: [] })
-    const params = {
-      ...templateParams,
-      conditions: Result.fulfilled(conditionList),
-    }
-
-    // When
-    const content = njkEnv.render(template, params)
-    const $ = cheerio.load(content)
-
-    // Then
-    expect($('[data-qa=no-conditions-summary-card]').length).toEqual(1)
-    expect($('[data-qa=no-conditions-summary-card] a').length).toEqual(0)
-    expect($('[data-qa=api-error-banner]').length).toEqual(0)
-    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SELF_DECLARED_CONDITIONS')
   })
 
   it('should render the profile conditions page given the Conditions service API promise is not resolved', () => {

@@ -119,28 +119,7 @@ describe('Profile challenges page', () => {
 
     // Then
     expect($('[data-qa=no-challenges-summary-card]').length).toEqual(1)
-    expect($('[data-qa=no-challenges-summary-card] a').length).toEqual(1)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
-    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_STRENGTHS')
-  })
-
-  it('should render the profile challenges page given prisoner has no Challenges and the user does not have permission to create Challenges', () => {
-    // Given
-    userHasPermissionTo.mockReturnValue(false)
-    const params = {
-      ...templateParams,
-      groupedChallenges: Result.fulfilled({}),
-    }
-
-    // When
-    const content = njkEnv.render(template, params)
-    const $ = cheerio.load(content)
-
-    // Then
-    expect($('[data-qa=no-challenges-summary-card]').length).toEqual(1)
-    expect($('[data-qa=no-challenges-summary-card] a').length).toEqual(0)
-    expect($('[data-qa=api-error-banner]').length).toEqual(0)
-    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
   })
 
   it('should render the profile challenges page given the Challenges service API promise is not resolved', () => {

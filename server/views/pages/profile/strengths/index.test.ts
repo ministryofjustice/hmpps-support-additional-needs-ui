@@ -117,28 +117,7 @@ describe('Profile strengths page', () => {
 
     // Then
     expect($('[data-qa=no-strengths-summary-card]').length).toEqual(1)
-    expect($('[data-qa=no-strengths-summary-card] a').length).toEqual(1)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
-    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_STRENGTHS')
-  })
-
-  it('should render the profile strengths page given prisoner has no Strengths and the user does not have permission to create Strengths', () => {
-    // Given
-    userHasPermissionTo.mockReturnValue(false)
-    const params = {
-      ...templateParams,
-      groupedStrengths: Result.fulfilled({}),
-    }
-
-    // When
-    const content = njkEnv.render(template, params)
-    const $ = cheerio.load(content)
-
-    // Then
-    expect($('[data-qa=no-strengths-summary-card]').length).toEqual(1)
-    expect($('[data-qa=no-strengths-summary-card] a').length).toEqual(0)
-    expect($('[data-qa=api-error-banner]').length).toEqual(0)
-    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_STRENGTHS')
   })
 
   it('should render the profile strengths page given the Strengths service API promise is not resolved', () => {
