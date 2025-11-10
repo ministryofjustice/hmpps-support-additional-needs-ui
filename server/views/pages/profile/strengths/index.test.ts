@@ -47,7 +47,8 @@ const templateParams = {
   prisonerSummary,
   userHasPermissionTo,
   tab: 'strengths',
-  groupedStrengths: Result.fulfilled({}),
+  activeStrengths: Result.fulfilled({}),
+  archivedStrengths: Result.fulfilled({}),
   prisonNamesById: Result.fulfilled(prisonNamesById),
   educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
   pageHasApiErrors: false,
@@ -63,7 +64,7 @@ describe('Profile strengths page', () => {
     // Given
     const params = {
       ...templateParams,
-      groupedStrengths: Result.fulfilled({
+      activeStrengths: Result.fulfilled({
         LITERACY_SKILLS: {
           nonAlnStrengths: [
             aValidStrengthResponseDto({
@@ -104,11 +105,11 @@ describe('Profile strengths page', () => {
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
-  it('should render the profile strengths page given prisoner has no Strengths', () => {
+  it('should render the profile strengths page given prisoner has no active Strengths', () => {
     // Given
     const params = {
       ...templateParams,
-      groupedStrengths: Result.fulfilled({}),
+      activeStrengths: Result.fulfilled({}),
     }
 
     // When
@@ -124,7 +125,8 @@ describe('Profile strengths page', () => {
     // Given
     const params = {
       ...templateParams,
-      groupedStrengths: Result.rejected(new Error('Failed to get strengths')),
+      activeStrengths: Result.rejected(new Error('Failed to get strengths')),
+      archivedStrengths: Result.rejected(new Error('Failed to get strengths')),
       pageHasApiErrors: true,
     }
 

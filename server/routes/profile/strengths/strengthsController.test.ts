@@ -33,15 +33,18 @@ describe('strengthsController', () => {
     // Given
     const expectedViewTemplate = 'pages/profile/strengths/index'
 
-    const expectedViewModel = expect.objectContaining({
+    const expectedViewModel = {
       prisonerSummary,
       prisonNamesById,
       educationSupportPlanLifecycleStatus,
       tab: 'strengths',
-      groupedStrengths: expect.objectContaining({
+      activeStrengths: expect.objectContaining({
         status: 'fulfilled',
       }),
-    })
+      archivedStrengths: expect.objectContaining({
+        status: 'fulfilled',
+      }),
+    }
 
     // When
     await controller.getStrengthsView(req, res, next)

@@ -31,7 +31,7 @@ describe('groupedStrengthsMapper', () => {
   const alnScreeners = setupAlnScreenersPromise({ latestScreener })
 
   describe('toGroupedStrengthsPromise', () => {
-    it('should map to GroupedStrengths given the strengths and alnScreeners promises are fulfilled', () => {
+    it('should map active strengths to GroupedStrengths given the strengths and alnScreeners promises are fulfilled', () => {
       // Given
       const expectedGroupedStrengths = {
         ATTENTION_ORGANISING_TIME: {
@@ -80,7 +80,44 @@ describe('groupedStrengthsMapper', () => {
       })
 
       // When
-      const actual = toGroupedStrengthsPromise(strengths, alnScreeners)
+      const actual = toGroupedStrengthsPromise({ strengths, alnScreeners, active: true })
+
+      // Then
+      expect(actual).toEqual(expected)
+      const actualGroupedStrengths = actual.getOrThrow()
+      const actualCategoryOrder = Object.keys(actualGroupedStrengths)
+      expect(actualCategoryOrder).toEqual(expectedCategoryOrder)
+    })
+
+    it('should map to inactive strengths to GroupedStrengths given the strengths and alnScreeners promises are fulfilled', () => {
+      // Given
+      const expectedGroupedStrengths = {
+        EMOTIONS_FEELINGS: {
+          nonAlnStrengths: [emotionsNonActive],
+          latestAlnScreener: {
+            screenerDate,
+            createdAtPrison: prisonId,
+            strengths: [] as Array<StrengthResponseDto>,
+          },
+        },
+        LITERACY_SKILLS: {
+          nonAlnStrengths: [] as Array<StrengthResponseDto>,
+          latestAlnScreener: {
+            screenerDate,
+            createdAtPrison: prisonId,
+            strengths: [wordFindingNonActive],
+          },
+        },
+      }
+      const expectedCategoryOrder = ['EMOTIONS_FEELINGS', 'LITERACY_SKILLS']
+
+      const expected = expect.objectContaining({
+        status: 'fulfilled',
+        value: expectedGroupedStrengths,
+      })
+
+      // When
+      const actual = toGroupedStrengthsPromise({ strengths, alnScreeners, active: false })
 
       // Then
       expect(actual).toEqual(expected)
@@ -101,7 +138,7 @@ describe('groupedStrengthsMapper', () => {
       })
 
       // When
-      const actual = toGroupedStrengthsPromise(rejectedStrengthsPromise, alnScreeners)
+      const actual = toGroupedStrengthsPromise({ strengths: rejectedStrengthsPromise, alnScreeners, active: true })
 
       // Then
       expect(actual).toEqual(expected)
@@ -119,7 +156,7 @@ describe('groupedStrengthsMapper', () => {
       })
 
       // When
-      const actual = toGroupedStrengthsPromise(strengths, rejectedAlnScreenersPromise)
+      const actual = toGroupedStrengthsPromise({ strengths, alnScreeners: rejectedAlnScreenersPromise, active: true })
 
       // Then
       expect(actual).toEqual(expected)
@@ -140,7 +177,11 @@ describe('groupedStrengthsMapper', () => {
       })
 
       // When
-      const actual = toGroupedStrengthsPromise(rejectedStrengthsPromise, rejectedAlnScreenersPromise)
+      const actual = toGroupedStrengthsPromise({
+        strengths: rejectedStrengthsPromise,
+        alnScreeners: rejectedAlnScreenersPromise,
+        active: true,
+      })
 
       // Then
       expect(actual).toEqual(expected)

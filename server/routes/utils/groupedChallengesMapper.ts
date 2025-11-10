@@ -16,18 +16,20 @@ type GroupedChallenges = Record<
   }
 >
 
-const toGroupedChallengesPromise = (
-  challenges: Result<Array<ChallengeResponseDto>>,
-  alnScreeners: Result<AlnScreenerList>,
-): Result<GroupedChallenges, Error> => {
+const toGroupedChallengesPromise = (config: {
+  challenges: Result<Array<ChallengeResponseDto>>
+  alnScreeners: Result<AlnScreenerList>
+  active: boolean
+}): Result<GroupedChallenges, Error> => {
+  const { challenges, alnScreeners, active } = config
   if (alnScreeners.isFulfilled() && challenges.isFulfilled()) {
     // Group and sort the data from the prisoner's non-ALN Challenges, and the Challenges from their latest ALN Screener
-    const nonAlnChallenges = getNonAlnChallenges(challenges, true).sort((left, right) =>
+    const nonAlnChallenges = getNonAlnChallenges(challenges, active).sort((left, right) =>
       dateComparator(left.updatedAt, right.updatedAt, 'DESC'),
     )
     const latestAlnScreener = getLatestAlnScreener(alnScreeners)
-    const challengesFromLatestAlnScreener = getChallengesFromAlnScreener(latestAlnScreener, true).sort((left, right) =>
-      enumComparator(left.challengeTypeCode, right.challengeTypeCode),
+    const challengesFromLatestAlnScreener = getChallengesFromAlnScreener(latestAlnScreener, active).sort(
+      (left, right) => enumComparator(left.challengeTypeCode, right.challengeTypeCode),
     )
     const screenerDate = latestAlnScreener?.screenerDate
     const prisonScreenerConductedAt = latestAlnScreener?.createdAtPrison

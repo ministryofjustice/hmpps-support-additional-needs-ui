@@ -20,12 +20,12 @@
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
       <section>
-        {% if groupedChallenges.isFulfilled() %}
-          {% set groupedChallenges = groupedChallenges.value %}
+        {% if activeChallenges.isFulfilled() %}
+          {% set activeChallenges = activeChallenges.value %}
 
-          {% if groupedChallenges | length %}
+          {% if activeChallenges | length %}
             {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
-            {% for challengeCategory, challengesData in groupedChallenges %}
+            {% for challengeCategory, challengesData in activeChallenges %}
               {{ challengesSummaryCard({
                 challengesData: challengesData,
                 prisonNamesById: prisonNamesById,

@@ -6,13 +6,12 @@ export default class StrengthsController {
     const { alnScreeners, educationSupportPlanLifecycleStatus, prisonerSummary, prisonNamesById, strengths } =
       res.locals
 
-    const groupedStrengthsPromise = toGroupedStrengthsPromise(strengths, alnScreeners)
-
     const viewRenderArgs = {
       prisonerSummary,
       prisonNamesById,
       educationSupportPlanLifecycleStatus,
-      groupedStrengths: groupedStrengthsPromise,
+      activeStrengths: toGroupedStrengthsPromise({ strengths, alnScreeners, active: true }),
+      archivedStrengths: toGroupedStrengthsPromise({ strengths, alnScreeners, active: false }),
       tab: 'strengths',
     }
     return res.render('pages/profile/strengths/index', viewRenderArgs)

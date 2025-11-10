@@ -16,17 +16,19 @@ type GroupedStrengths = Record<
   }
 >
 
-const toGroupedStrengthsPromise = (
-  strengths: Result<StrengthsList>,
-  alnScreeners: Result<AlnScreenerList>,
-): Result<GroupedStrengths, Error> => {
+const toGroupedStrengthsPromise = (config: {
+  strengths: Result<StrengthsList>
+  alnScreeners: Result<AlnScreenerList>
+  active: boolean
+}): Result<GroupedStrengths, Error> => {
+  const { strengths, alnScreeners, active } = config
   if (alnScreeners.isFulfilled() && strengths.isFulfilled()) {
     // Group and sort the data from the prisoner's non-ALN Strengths, and the Strengths from their latest ALN Screener
-    const nonAlnStrengths = getNonAlnStrengths(strengths, true).sort((left, right) =>
+    const nonAlnStrengths = getNonAlnStrengths(strengths, active).sort((left, right) =>
       dateComparator(left.updatedAt, right.updatedAt, 'DESC'),
     )
     const latestAlnScreener = getLatestAlnScreener(alnScreeners)
-    const strengthsFromLatestAlnScreener = getStrengthsFromAlnScreener(latestAlnScreener, true).sort((left, right) =>
+    const strengthsFromLatestAlnScreener = getStrengthsFromAlnScreener(latestAlnScreener, active).sort((left, right) =>
       enumComparator(left.strengthTypeCode, right.strengthTypeCode),
     )
     const screenerDate = latestAlnScreener?.screenerDate
