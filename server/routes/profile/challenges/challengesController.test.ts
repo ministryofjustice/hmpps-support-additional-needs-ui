@@ -30,15 +30,18 @@ describe('challengesController', () => {
     // Given
     const expectedViewTemplate = 'pages/profile/challenges/index'
 
-    const expectedViewModel = expect.objectContaining({
+    const expectedViewModel = {
       prisonNamesById,
       prisonerSummary,
       educationSupportPlanLifecycleStatus,
       tab: 'challenges',
-      groupedChallenges: expect.objectContaining({
+      activeChallenges: expect.objectContaining({
         status: 'fulfilled',
       }),
-    })
+      archivedChallenges: expect.objectContaining({
+        status: 'fulfilled',
+      }),
+    }
 
     // When
     await controller.getChallengesView(req, res, next)

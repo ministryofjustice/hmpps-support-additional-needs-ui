@@ -17,8 +17,12 @@ export default class OverviewController {
       supportStrategies,
     } = res.locals
 
-    const groupedStrengthsPromise = toGroupedStrengthsPromise(strengths, alnScreeners)
-    const groupedChallengesPromise = toGroupedChallengesPromise(challenges, alnScreeners)
+    const groupedStrengthsPromise = toGroupedStrengthsPromise({
+      strengths,
+      alnScreeners,
+      active: true,
+    })
+    const groupedChallengesPromise = toGroupedChallengesPromise({ challenges, alnScreeners, active: true })
     const supportStrategiesPromise = toGroupedSupportStrategiesPromise(supportStrategies)
 
     const viewRenderArgs = {

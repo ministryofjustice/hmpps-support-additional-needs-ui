@@ -58,7 +58,7 @@ describe('groupedChallengesMapper', () => {
   const alnScreeners = setupAlnScreenersPromise({ latestScreener })
 
   describe('toGroupedChallengesPromise', () => {
-    it('should map to GroupedChallenges given the challenges and alnScreeners promises are fulfilled', () => {
+    it('should map active challenges to GroupedChallenges given the challenges and alnScreeners promises are fulfilled', () => {
       // Given
       const expectedGroupedChallenges = {
         ATTENTION_ORGANISING_TIME: {
@@ -107,7 +107,44 @@ describe('groupedChallengesMapper', () => {
       })
 
       // When
-      const actual = toGroupedChallengesPromise(challenges, alnScreeners)
+      const actual = toGroupedChallengesPromise({ challenges, alnScreeners, active: true })
+
+      // Then
+      expect(actual).toEqual(expected)
+      const actualGroupedChallenges = actual.getOrThrow()
+      const actualCategoryOrder = Object.keys(actualGroupedChallenges)
+      expect(actualCategoryOrder).toEqual(expectedCategoryOrder)
+    })
+
+    it('should map inactive challenges to GroupedChallenges given the challenges and alnScreeners promises are fulfilled', () => {
+      // Given
+      const expectedGroupedChallenges = {
+        EMOTIONS_FEELINGS: {
+          nonAlnChallenges: [emotionsNonActiveChallenge],
+          latestAlnScreener: {
+            screenerDate,
+            createdAtPrison: prisonId,
+            challenges: [] as Array<ChallengeResponseDto>,
+          },
+        },
+        LITERACY_SKILLS: {
+          nonAlnChallenges: [] as Array<ChallengeResponseDto>,
+          latestAlnScreener: {
+            screenerDate,
+            createdAtPrison: prisonId,
+            challenges: [wordFindingNonActiveChallenge],
+          },
+        },
+      }
+      const expectedCategoryOrder = ['EMOTIONS_FEELINGS', 'LITERACY_SKILLS']
+
+      const expected = expect.objectContaining({
+        status: 'fulfilled',
+        value: expectedGroupedChallenges,
+      })
+
+      // When
+      const actual = toGroupedChallengesPromise({ challenges, alnScreeners, active: false })
 
       // Then
       expect(actual).toEqual(expected)
@@ -128,7 +165,7 @@ describe('groupedChallengesMapper', () => {
       })
 
       // When
-      const actual = toGroupedChallengesPromise(rejectedChallengesPromise, alnScreeners)
+      const actual = toGroupedChallengesPromise({ challenges: rejectedChallengesPromise, alnScreeners, active: true })
 
       // Then
       expect(actual).toEqual(expected)
@@ -146,7 +183,7 @@ describe('groupedChallengesMapper', () => {
       })
 
       // When
-      const actual = toGroupedChallengesPromise(challenges, rejectedAlnScreenersPromise)
+      const actual = toGroupedChallengesPromise({ challenges, alnScreeners: rejectedAlnScreenersPromise, active: true })
 
       // Then
       expect(actual).toEqual(expected)
@@ -167,7 +204,11 @@ describe('groupedChallengesMapper', () => {
       })
 
       // When
-      const actual = toGroupedChallengesPromise(rejectedChallengesPromise, rejectedAlnScreenersPromise)
+      const actual = toGroupedChallengesPromise({
+        challenges: rejectedChallengesPromise,
+        alnScreeners: rejectedAlnScreenersPromise,
+        active: true,
+      })
 
       // Then
       expect(actual).toEqual(expected)

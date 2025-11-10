@@ -6,14 +6,13 @@ export default class ChallengesController {
     const { prisonerSummary, challenges, alnScreeners, prisonNamesById, educationSupportPlanLifecycleStatus } =
       res.locals
 
-    const groupedChallengesPromise = toGroupedChallengesPromise(challenges, alnScreeners)
-
     const viewRenderArgs = {
       prisonNamesById,
       prisonerSummary,
       educationSupportPlanLifecycleStatus,
       tab: 'challenges',
-      groupedChallenges: groupedChallengesPromise,
+      activeChallenges: toGroupedChallengesPromise({ challenges, alnScreeners, active: true }),
+      archivedChallenges: toGroupedChallengesPromise({ challenges, alnScreeners, active: false }),
     }
     return res.render('pages/profile/challenges/index', viewRenderArgs)
   }

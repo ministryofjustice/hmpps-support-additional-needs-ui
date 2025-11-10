@@ -5,7 +5,7 @@ export default class ReviewExistingChallengesController {
   getReviewExistingChallengesView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { alnScreeners, prisonerSummary, prisonNamesById, challenges } = res.locals
 
-    const groupedChallengesPromise = toGroupedChallengesPromise(challenges, alnScreeners)
+    const groupedChallengesPromise = toGroupedChallengesPromise({ challenges, alnScreeners, active: true })
 
     const viewRenderArgs = {
       prisonerSummary,

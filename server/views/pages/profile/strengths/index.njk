@@ -20,12 +20,12 @@
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
       <section>
-        {% if groupedStrengths.isFulfilled() %}
-          {% set groupedStrengths = groupedStrengths.value %}
+        {% if activeStrengths.isFulfilled() %}
+          {% set activeStrengths = activeStrengths.value %}
 
-          {% if groupedStrengths | length %}
+          {% if activeStrengths | length %}
             {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
-            {% for strengthCategory, strengthsData in groupedStrengths %}
+            {% for strengthCategory, strengthsData in activeStrengths %}
               {{ strengthsSummaryCard({
                 title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
                 strengthsData: strengthsData,

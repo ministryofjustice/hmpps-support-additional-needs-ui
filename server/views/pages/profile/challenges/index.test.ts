@@ -49,7 +49,8 @@ const templateParams = {
   prisonerSummary,
   userHasPermissionTo,
   tab: 'challenges',
-  groupedChallenges: Result.fulfilled({}),
+  activeChallenges: Result.fulfilled({}),
+  archivedChallenges: Result.fulfilled({}),
   prisonNamesById: Result.fulfilled(prisonNamesById),
   educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
   pageHasApiErrors: false,
@@ -65,7 +66,7 @@ describe('Profile challenges page', () => {
     // Given
     const params = {
       ...templateParams,
-      groupedChallenges: Result.fulfilled({
+      activeChallenges: Result.fulfilled({
         LITERACY_SKILLS: {
           nonAlnChallenges: [
             aValidChallengeResponseDto({
@@ -106,11 +107,11 @@ describe('Profile challenges page', () => {
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
-  it('should render the profile challenges page given prisoner has no Challenges', () => {
+  it('should render the profile challenges page given prisoner has no active Challenges', () => {
     // Given
     const params = {
       ...templateParams,
-      groupedChallenges: Result.fulfilled({}),
+      activeChallenges: Result.fulfilled({}),
     }
 
     // When
@@ -126,7 +127,8 @@ describe('Profile challenges page', () => {
     // Given
     const params = {
       ...templateParams,
-      groupedChallenges: Result.rejected(new Error('Failed to get challenges')),
+      activeChallenges: Result.rejected(new Error('Failed to get challenges')),
+      archivedChallenges: Result.rejected(new Error('Failed to get challenges')),
       pageHasApiErrors: true,
     }
 
