@@ -1,12 +1,15 @@
-{% if challengeCategories.isFulfilled() %}
-  {% set categories = challengeCategories.value %}
+{% set categories = [] %}
+{% if groupedChallenges.isFulfilled() %}
+  {% for category, challenges in groupedChallenges.value %}
+    {% set categories = (categories.push(category), categories) %}
+  {% endfor %}
 {% endif %}
 
 <div class="govuk-summary-card" data-qa="challenges-summary-card">
   <div class="govuk-summary-card__title-wrapper">
     <h2 class="govuk-summary-card__title">Challenges</h2>
     <ul class="govuk-summary-card__actions govuk-!-display-none-print">
-      {% if categories %}
+      {% if groupedChallenges.isFulfilled() %}
         {% if categories.length === 0 %}
           {% if userHasPermissionTo('RECORD_CHALLENGES') %}
             <li class="govuk-summary-card__action">
@@ -22,7 +25,7 @@
     </ul>
   </div>
   <div class="govuk-summary-card__content">
-    {% if challengeCategories.isFulfilled() %}
+    {% if groupedChallenges.isFulfilled() %}
 
       {% if categories | length %}
         <ul class="govuk-list">

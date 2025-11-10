@@ -1,12 +1,15 @@
-{% if strengthCategories.isFulfilled() %}
-  {% set categories = strengthCategories.value %}
+{% set categories = [] %}
+{% if groupedStrengths.isFulfilled() %}
+  {% for category, strengths in groupedStrengths.value %}
+    {% set categories = (categories.push(category), categories) %}
+  {% endfor %}
 {% endif %}
 
 <div class="govuk-summary-card" data-qa="strengths-summary-card">
   <div class="govuk-summary-card__title-wrapper">
     <h2 class="govuk-summary-card__title">Strengths</h2>
     <ul class="govuk-summary-card__actions govuk-!-display-none-print">
-      {% if strengthCategories.isFulfilled() %}
+      {% if groupedStrengths.isFulfilled() %}
         {% if categories.length === 0 %}
           {% if userHasPermissionTo('RECORD_STRENGTHS') %}
             <li class="govuk-summary-card__action">
@@ -23,7 +26,7 @@
   </div>
 
   <div class="govuk-summary-card__content">
-    {% if strengthCategories.isFulfilled() %}
+    {% if groupedStrengths.isFulfilled() %}
 
       {% if categories | length %}
         <ul class="govuk-list">

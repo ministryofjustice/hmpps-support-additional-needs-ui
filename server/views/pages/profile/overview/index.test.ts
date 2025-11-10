@@ -1,6 +1,6 @@
 import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
-import { parseISO } from 'date-fns'
+import { parseISO, startOfToday } from 'date-fns'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import formatDate from '../../../../filters/formatDateFilter'
 import formatPrisonerNameFilter, { NameFormat } from '../../../../filters/formatPrisonerNameFilter'
@@ -8,9 +8,7 @@ import { Result } from '../../../../utils/result/result'
 import { aValidConditionsList } from '../../../../testsupport/conditionDtoTestDataBuilder'
 import filterArrayOnPropertyFilter from '../../../../filters/filterArrayOnPropertyFilter'
 import formatConditionTypeScreenValueFilter from '../../../../filters/formatConditionTypeFilter'
-import StrengthCategory from '../../../../enums/strengthCategory'
 import formatStrengthCategoryScreenValueFilter from '../../../../filters/formatStrengthCategoryFilter'
-import ChallengeCategory from '../../../../enums/challengeCategory'
 import formatChallengeCategoryScreenValueFilter from '../../../../filters/formatChallengeCategoryFilter'
 import { aCuriousAlnAndLddAssessmentsDto } from '../../../../testsupport/curiousAlnAndLddAssessmentsDtoTestDataBuilder'
 import formatAlnAssessmentReferralScreenValueFilter from '../../../../filters/formatAlnAssessmentReferralFilter'
@@ -18,6 +16,8 @@ import aPlanLifecycleStatusDto from '../../../../testsupport/planLifecycleStatus
 import { formatSupportStrategyTypeScreenValueFilter } from '../../../../filters/formatSupportStrategyTypeFilter'
 import aValidSupportStrategyResponseDto from '../../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
 import SupportStrategyType from '../../../../enums/supportStrategyType'
+import { aValidStrengthResponseDto } from '../../../../testsupport/strengthResponseDtoTestDataBuilder'
+import StrengthType from '../../../../enums/strengthType'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -60,6 +60,36 @@ const groupedSupportStrategies = Result.fulfilled([
   }),
 ])
 
+const groupedStrengths = Result.fulfilled({
+  ATTENTION_ORGANISING_TIME: {
+    nonAlnStrengths: [
+      aValidStrengthResponseDto({
+        strengthTypeCode: StrengthType.ATTENTION_ORGANISING_TIME_DEFAULT,
+      }),
+    ],
+    latestAlnScreener: {
+      screenerDate: startOfToday(),
+      createdAtPrison: 'BXI',
+      strengths: [],
+    },
+  },
+})
+
+const groupedChallenges = Result.fulfilled({
+  LITERACY_SKILLS: {
+    nonAlnChallenges: [
+      aValidStrengthResponseDto({
+        strengthTypeCode: StrengthType.LITERACY_SKILLS_DEFAULT,
+      }),
+    ],
+    latestAlnScreener: {
+      screenerDate: startOfToday(),
+      createdAtPrison: 'BXI',
+      challenges: [],
+    },
+  },
+})
+
 const userHasPermissionTo = jest.fn()
 const templateParams = {
   prisonerSummary,
@@ -67,8 +97,8 @@ const templateParams = {
   educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
   conditions: Result.fulfilled(aValidConditionsList()),
   groupedSupportStrategies,
-  strengthCategories: Result.fulfilled([StrengthCategory.LITERACY_SKILLS, StrengthCategory.NUMERACY_SKILLS]),
-  challengeCategories: Result.fulfilled([ChallengeCategory.LITERACY_SKILLS, ChallengeCategory.NUMERACY_SKILLS]),
+  groupedStrengths,
+  groupedChallenges,
   curiousAlnAndLddAssessments: Result.fulfilled(aCuriousAlnAndLddAssessmentsDto()),
   prisonNamesById: Result.fulfilled(prisonNamesById),
   pageHasApiErrors: false,
