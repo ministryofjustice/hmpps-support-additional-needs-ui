@@ -33,6 +33,7 @@ njkEnv //
   .addFilter('formatChallengeIdentificationSourceScreenValue', formatChallengeIdentificationSourceScreenValueFilter)
   .addFilter('formatChallengeTypeScreenValue', formatChallengeTypeScreenValueFilter)
   .addFilter('challengeSupportTextLookup', challengeStaffSupportTextLookupFilter)
+  .addGlobal('featureToggles', { editAndArchiveEnabled: true })
 
 const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',
@@ -101,9 +102,9 @@ describe('Profile challenges page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('[data-qa=challenges-summary-card-LITERACY_SKILLS]').length).toEqual(1)
-    expect($('[data-qa=challenges-summary-card-NUMERACY_SKILLS]').length).toEqual(1)
-    expect($('[data-qa=no-challenges-summary-card]').length).toEqual(0)
+    expect($('[data-qa=active-challenges-summary-card-LITERACY_SKILLS]').length).toEqual(1)
+    expect($('[data-qa=active-challenges-summary-card-NUMERACY_SKILLS]').length).toEqual(1)
+    expect($('[data-qa=no-active-challenges-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
@@ -119,7 +120,7 @@ describe('Profile challenges page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('[data-qa=no-challenges-summary-card]').length).toEqual(1)
+    expect($('[data-qa=no-active-challenges-message]').length).toEqual(1)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 

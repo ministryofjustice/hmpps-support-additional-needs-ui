@@ -93,14 +93,14 @@ context('Profile Challenges Page', () => {
 
     // Then
     Page.verifyOnPage(ChallengesPage) //
-      .hasChallengesSummaryCard(ChallengeCategory.NUMERACY_SKILLS)
-      .hasNonAlnChallenges(ChallengeCategory.NUMERACY_SKILLS, ChallengeType.MATHS_LITERACY)
-      .hasAlnChallenges(ChallengeCategory.NUMERACY_SKILLS, 'Maths literacy')
-      .hasChallengesSummaryCard(ChallengeCategory.LITERACY_SKILLS)
-      .hasNonAlnChallenges(ChallengeCategory.LITERACY_SKILLS, ChallengeType.READING_COMPREHENSION)
-      .hasAlnChallenges(ChallengeCategory.LITERACY_SKILLS, 'Reading comprehension')
+      .hasActiveChallengesSummaryCard(ChallengeCategory.NUMERACY_SKILLS)
+      .hasActiveNonAlnChallenges(ChallengeCategory.NUMERACY_SKILLS, ChallengeType.MATHS_LITERACY)
+      .hasActiveAlnChallenges(ChallengeCategory.NUMERACY_SKILLS, 'Maths literacy')
+      .hasActiveChallengesSummaryCard(ChallengeCategory.LITERACY_SKILLS)
+      .hasActiveNonAlnChallenges(ChallengeCategory.LITERACY_SKILLS, ChallengeType.READING_COMPREHENSION)
+      .hasActiveAlnChallenges(ChallengeCategory.LITERACY_SKILLS, 'Reading comprehension')
       // Verify that there is not a Physical skills card as it was from an older screener result.
-      .hasNoChallengesSummaryCard(ChallengeCategory.PHYSICAL_SKILLS)
+      .hasNoActiveChallengesSummaryCard(ChallengeCategory.PHYSICAL_SKILLS)
       .apiErrorBannerIsNotDisplayed()
   })
 
