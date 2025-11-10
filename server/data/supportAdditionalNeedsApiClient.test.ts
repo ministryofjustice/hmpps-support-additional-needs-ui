@@ -33,6 +33,10 @@ import anUpdateChallengeRequest from '../testsupport/updateChallengeRequestTestD
 import anUpdateStrengthRequest from '../testsupport/updateStrengthRequestTestDataBuilder'
 import anUpdateSupportStrategyRequest from '../testsupport/updateSupportStrategyRequestTestDataBuilder'
 import anUpdateConditionRequest from '../testsupport/updateConditionRequestTestDataBuilder'
+import anArchiveConditionRequest from '../testsupport/archiveConditionRequestTestDataBuilder'
+import anArchiveStrengthRequest from '../testsupport/archiveStrengthRequestTestDataBuilder'
+import anArchiveSupportStrategyRequest from '../testsupport/archiveSupportStrategyRequestTestDataBuilder'
+import anArchiveChallengeRequest from '../testsupport/archiveChallengeRequestTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -760,6 +764,62 @@ describe('supportAdditionalNeedsApiClient', () => {
     })
   })
 
+  describe('archiveCondition', () => {
+    it('should archive a prisoners condition', async () => {
+      // Given
+      const archiveConditionRequest = anArchiveConditionRequest()
+
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/conditions/${conditionReference}/archive`, requestBody =>
+          isEqual(requestBody, archiveConditionRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(204)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.archiveCondition(
+        prisonNumber,
+        conditionReference,
+        username,
+        archiveConditionRequest,
+      )
+
+      // Then
+      expect(actual).toEqual({})
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const archiveConditionRequest = anArchiveConditionRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/conditions/${conditionReference}/archive`, requestBody =>
+          isEqual(requestBody, archiveConditionRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .archiveCondition(prisonNumber, conditionReference, username, archiveConditionRequest)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
   describe('getReferenceData', () => {
     it('should get reference data given categories and inactive flags are not set', async () => {
       // Given
@@ -1098,6 +1158,62 @@ describe('supportAdditionalNeedsApiClient', () => {
     })
   })
 
+  describe('archiveStrength', () => {
+    it('should archive a prisoners strength', async () => {
+      // Given
+      const archiveStrengthRequest = anArchiveStrengthRequest()
+
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/strengths/${strengthReference}/archive`, requestBody =>
+          isEqual(requestBody, archiveStrengthRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(204)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.archiveStrength(
+        prisonNumber,
+        strengthReference,
+        username,
+        archiveStrengthRequest,
+      )
+
+      // Then
+      expect(actual).toEqual({})
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const archiveStrengthRequest = anArchiveStrengthRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/strengths/${strengthReference}/archive`, requestBody =>
+          isEqual(requestBody, archiveStrengthRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .archiveStrength(prisonNumber, strengthReference, username, archiveStrengthRequest)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
   describe('createSupportStrategies', () => {
     it('should create support strategies for a prisoner', async () => {
       // Given
@@ -1350,6 +1466,62 @@ describe('supportAdditionalNeedsApiClient', () => {
     })
   })
 
+  describe('archiveSupportStrategy', () => {
+    it('should archive a prisoners strength', async () => {
+      // Given
+      const archiveSupportStrategyRequest = anArchiveSupportStrategyRequest()
+
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/support-strategies/${supportStrategyReference}/archive`, requestBody =>
+          isEqual(requestBody, archiveSupportStrategyRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(204)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.archiveSupportStrategy(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+        archiveSupportStrategyRequest,
+      )
+
+      // Then
+      expect(actual).toEqual({})
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const archiveSupportStrategyRequest = anArchiveSupportStrategyRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/support-strategies/${supportStrategyReference}/archive`, requestBody =>
+          isEqual(requestBody, archiveSupportStrategyRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .archiveSupportStrategy(prisonNumber, supportStrategyReference, username, archiveSupportStrategyRequest)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
   describe('getChallenges', () => {
     it('should get challenges for a prisoner', async () => {
       // Given
@@ -1529,6 +1701,62 @@ describe('supportAdditionalNeedsApiClient', () => {
       // When
       const actual = await supportAdditionalNeedsApiClient
         .updateChallenge(prisonNumber, challengeReference, username, updateChallengeRequest)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('archiveChallenge', () => {
+    it('should archive a prisoners challenge', async () => {
+      // Given
+      const archiveChallengeRequest = anArchiveChallengeRequest()
+
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/challenges/${challengeReference}/archive`, requestBody =>
+          isEqual(requestBody, archiveChallengeRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(204)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.archiveChallenge(
+        prisonNumber,
+        challengeReference,
+        username,
+        archiveChallengeRequest,
+      )
+
+      // Then
+      expect(actual).toEqual({})
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const archiveChallengeRequest = anArchiveChallengeRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/challenges/${challengeReference}/archive`, requestBody =>
+          isEqual(requestBody, archiveChallengeRequest),
+        )
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .archiveChallenge(prisonNumber, challengeReference, username, archiveChallengeRequest)
         .catch(e => e)
 
       // Then
