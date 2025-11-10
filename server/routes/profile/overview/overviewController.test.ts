@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import type { ChallengeResponseDto, StrengthResponseDto } from 'dto'
 import OverviewController from './overviewController'
 import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
 import { Result } from '../../../utils/result/result'
@@ -13,8 +14,6 @@ import {
   setupNonAlnStrengthsPromise,
 } from '../profileTestSupportFunctions'
 import { aValidAlnScreenerResponseDto } from '../../../testsupport/alnScreenerDtoTestDataBuilder'
-import StrengthCategory from '../../../enums/strengthCategory'
-import ChallengeCategory from '../../../enums/challengeCategory'
 import { aCuriousAlnAndLddAssessmentsDto } from '../../../testsupport/curiousAlnAndLddAssessmentsDtoTestDataBuilder'
 import aPlanLifecycleStatusDto from '../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 import aValidSupportStrategyResponseDto from '../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
@@ -86,6 +85,76 @@ describe('overviewController', () => {
   const curiousAlnAndLddAssessments = Result.fulfilled(aCuriousAlnAndLddAssessmentsDto())
   const prisonNamesById = Result.fulfilled({ BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' })
 
+  const expectedGroupedStrengths = {
+    ATTENTION_ORGANISING_TIME: {
+      nonAlnStrengths: [attention],
+      latestAlnScreener: {
+        screenerDate: latestScreener.screenerDate,
+        createdAtPrison: latestScreener.createdAtPrison,
+        strengths: [focussing, tidiness],
+      },
+    },
+    LANGUAGE_COMM_SKILLS: {
+      nonAlnStrengths: [speaking],
+      latestAlnScreener: {
+        screenerDate: latestScreener.screenerDate,
+        createdAtPrison: latestScreener.createdAtPrison,
+        strengths: [] as Array<StrengthResponseDto>,
+      },
+    },
+    LITERACY_SKILLS: {
+      nonAlnStrengths: [literacy],
+      latestAlnScreener: {
+        screenerDate: latestScreener.screenerDate,
+        createdAtPrison: latestScreener.createdAtPrison,
+        strengths: [alphabetOrdering, reading, writing],
+      },
+    },
+    NUMERACY_SKILLS: {
+      nonAlnStrengths: [numeracy2, numeracy],
+      latestAlnScreener: {
+        screenerDate: latestScreener.screenerDate,
+        createdAtPrison: latestScreener.createdAtPrison,
+        strengths: [arithmetic],
+      },
+    },
+  }
+
+  const expectedGroupedChallenges = {
+    ATTENTION_ORGANISING_TIME: {
+      nonAlnChallenges: [attentionChallenge],
+      latestAlnScreener: {
+        screenerDate: latestScreener.screenerDate,
+        createdAtPrison: latestScreener.createdAtPrison,
+        challenges: [focussingChallenge, tidinessChallenge],
+      },
+    },
+    LANGUAGE_COMM_SKILLS: {
+      nonAlnChallenges: [speakingChallenge],
+      latestAlnScreener: {
+        screenerDate: latestScreener.screenerDate,
+        createdAtPrison: latestScreener.createdAtPrison,
+        challenges: [] as Array<ChallengeResponseDto>,
+      },
+    },
+    LITERACY_SKILLS: {
+      nonAlnChallenges: [literacyChallenge],
+      latestAlnScreener: {
+        screenerDate: latestScreener.screenerDate,
+        createdAtPrison: latestScreener.createdAtPrison,
+        challenges: [alphabetOrderingChallenge, readingChallenge, writingChallenge],
+      },
+    },
+    NUMERACY_SKILLS: {
+      nonAlnChallenges: [numeracy2Challenge, numeracyChallenge],
+      latestAlnScreener: {
+        screenerDate: latestScreener.screenerDate,
+        createdAtPrison: latestScreener.createdAtPrison,
+        challenges: [arithmeticChallenge],
+      },
+    },
+  }
+
   const req = {} as unknown as Request
   const res = {
     render: jest.fn(),
@@ -122,23 +191,13 @@ describe('overviewController', () => {
       conditions,
       curiousAlnAndLddAssessments,
       tab: 'overview',
-      strengthCategories: expect.objectContaining({
+      groupedStrengths: expect.objectContaining({
         status: 'fulfilled',
-        value: [
-          StrengthCategory.ATTENTION_ORGANISING_TIME,
-          StrengthCategory.LANGUAGE_COMM_SKILLS,
-          StrengthCategory.LITERACY_SKILLS,
-          StrengthCategory.NUMERACY_SKILLS,
-        ],
+        value: expectedGroupedStrengths,
       }),
-      challengeCategories: expect.objectContaining({
+      groupedChallenges: expect.objectContaining({
         status: 'fulfilled',
-        value: [
-          ChallengeCategory.ATTENTION_ORGANISING_TIME,
-          ChallengeCategory.LANGUAGE_COMM_SKILLS,
-          ChallengeCategory.LITERACY_SKILLS,
-          ChallengeCategory.NUMERACY_SKILLS,
-        ],
+        value: expectedGroupedChallenges,
       }),
       groupedSupportStrategies: expect.objectContaining({
         status: 'fulfilled',
@@ -167,7 +226,7 @@ describe('overviewController', () => {
       conditions,
       curiousAlnAndLddAssessments,
       tab: 'overview',
-      strengthCategories: expect.objectContaining({
+      groupedStrengths: expect.objectContaining({
         status: 'rejected',
         reason: expectedError,
       }),
@@ -197,7 +256,7 @@ describe('overviewController', () => {
       educationSupportPlanLifecycleStatus,
       conditions,
       tab: 'overview',
-      challengeCategories: expect.objectContaining({
+      groupedChallenges: expect.objectContaining({
         status: 'rejected',
         reason: expectedError,
       }),
@@ -228,7 +287,7 @@ describe('overviewController', () => {
       conditions,
       curiousAlnAndLddAssessments,
       tab: 'overview',
-      strengthCategories: expect.objectContaining({
+      groupedStrengths: expect.objectContaining({
         status: 'rejected',
         reason: expectedError,
       }),
@@ -261,7 +320,7 @@ describe('overviewController', () => {
       conditions,
       curiousAlnAndLddAssessments,
       tab: 'overview',
-      strengthCategories: expect.objectContaining({
+      groupedStrengths: expect.objectContaining({
         status: 'rejected',
         reason: expectedError,
       }),
@@ -294,18 +353,13 @@ describe('overviewController', () => {
       conditions,
       curiousAlnAndLddAssessments,
       tab: 'overview',
-      strengthCategories: expect.objectContaining({
+      groupedStrengths: expect.objectContaining({
         status: 'rejected',
         reason: expectedError,
       }),
-      challengeCategories: expect.objectContaining({
+      groupedChallenges: expect.objectContaining({
         status: 'fulfilled',
-        value: [
-          ChallengeCategory.ATTENTION_ORGANISING_TIME,
-          ChallengeCategory.LANGUAGE_COMM_SKILLS,
-          ChallengeCategory.LITERACY_SKILLS,
-          ChallengeCategory.NUMERACY_SKILLS,
-        ],
+        value: expectedGroupedChallenges,
       }),
       groupedSupportStrategies: expect.objectContaining({
         status: 'fulfilled',
@@ -336,18 +390,13 @@ describe('overviewController', () => {
       conditions,
       curiousAlnAndLddAssessments,
       tab: 'overview',
-      challengeCategories: expect.objectContaining({
+      groupedChallenges: expect.objectContaining({
         status: 'rejected',
         reason: expectedError,
       }),
-      strengthCategories: expect.objectContaining({
+      groupedStrengths: expect.objectContaining({
         status: 'fulfilled',
-        value: [
-          ChallengeCategory.ATTENTION_ORGANISING_TIME,
-          ChallengeCategory.LANGUAGE_COMM_SKILLS,
-          ChallengeCategory.LITERACY_SKILLS,
-          ChallengeCategory.NUMERACY_SKILLS,
-        ],
+        value: expectedGroupedStrengths,
       }),
       groupedSupportStrategies: expect.objectContaining({
         status: 'fulfilled',

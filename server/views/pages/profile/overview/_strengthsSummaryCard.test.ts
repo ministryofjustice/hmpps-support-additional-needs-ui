@@ -1,9 +1,12 @@
 import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
+import { startOfToday } from 'date-fns'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import { Result } from '../../../../utils/result/result'
 import formatStrengthCategoryScreenValueFilter from '../../../../filters/formatStrengthCategoryFilter'
 import StrengthCategory from '../../../../enums/strengthCategory'
+import { aValidStrengthResponseDto } from '../../../../testsupport/strengthResponseDtoTestDataBuilder'
+import StrengthType from '../../../../enums/strengthType'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -26,7 +29,7 @@ const template = '_strengthsSummaryCard.njk'
 const userHasPermissionTo = jest.fn()
 const templateParams = {
   prisonerSummary,
-  strengthCategories: Result.fulfilled([StrengthCategory.LITERACY_SKILLS, StrengthCategory.NUMERACY_SKILLS]),
+  groupedStrengths: Result.fulfilled({}),
   userHasPermissionTo,
 }
 
@@ -40,13 +43,69 @@ describe('_strengthsSummaryCard', () => {
     // Given
     const params = {
       ...templateParams,
-      strengthCategories: Result.fulfilled([
-        StrengthCategory.ATTENTION_ORGANISING_TIME,
-        StrengthCategory.LITERACY_SKILLS,
-        StrengthCategory.MEMORY,
-        StrengthCategory.NUMERACY_SKILLS,
-        StrengthCategory.SENSORY,
-      ]),
+      groupedStrengths: Result.fulfilled({
+        ATTENTION_ORGANISING_TIME: {
+          nonAlnStrengths: [
+            aValidStrengthResponseDto({
+              strengthTypeCode: StrengthType.ATTENTION_ORGANISING_TIME_DEFAULT,
+            }),
+          ],
+          latestAlnScreener: {
+            screenerDate: startOfToday(),
+            createdAtPrison: 'BXI',
+            strengths: [],
+          },
+        },
+        LITERACY_SKILLS: {
+          nonAlnStrengths: [
+            aValidStrengthResponseDto({
+              strengthTypeCode: StrengthType.LITERACY_SKILLS_DEFAULT,
+            }),
+          ],
+          latestAlnScreener: {
+            screenerDate: startOfToday(),
+            createdAtPrison: 'BXI',
+            strengths: [],
+          },
+        },
+        MEMORY: {
+          nonAlnStrengths: [
+            aValidStrengthResponseDto({
+              strengthTypeCode: StrengthType.MEMORY,
+            }),
+          ],
+          latestAlnScreener: {
+            screenerDate: startOfToday(),
+            createdAtPrison: 'BXI',
+            strengths: [],
+          },
+        },
+        NUMERACY_SKILLS: {
+          nonAlnStrengths: [],
+          latestAlnScreener: {
+            screenerDate: startOfToday(),
+            createdAtPrison: 'BXI',
+            strengths: [
+              aValidStrengthResponseDto({
+                strengthTypeCode: StrengthType.ARITHMETIC,
+                strengthCategory: StrengthCategory.NUMERACY_SKILLS,
+              }),
+            ],
+          },
+        },
+        SENSORY: {
+          nonAlnStrengths: [],
+          latestAlnScreener: {
+            screenerDate: startOfToday(),
+            createdAtPrison: 'BXI',
+            strengths: [
+              aValidStrengthResponseDto({
+                strengthTypeCode: StrengthType.CREATIVITY,
+              }),
+            ],
+          },
+        },
+      }),
     }
 
     // When
@@ -75,7 +134,7 @@ describe('_strengthsSummaryCard', () => {
 
     const params = {
       ...templateParams,
-      strengthCategories: Result.fulfilled([]),
+      groupedStrengths: Result.fulfilled({}),
     }
 
     // When
@@ -96,7 +155,7 @@ describe('_strengthsSummaryCard', () => {
 
     const params = {
       ...templateParams,
-      strengthCategories: Result.fulfilled([]),
+      groupedStrengths: Result.fulfilled({}),
     }
 
     // When
@@ -114,7 +173,7 @@ describe('_strengthsSummaryCard', () => {
     // Given
     const params = {
       ...templateParams,
-      strengthCategories: Result.rejected(new Error('Failed to get strengths')),
+      groupedStrengths: Result.rejected(new Error('Failed to get strengths')),
     }
 
     // When

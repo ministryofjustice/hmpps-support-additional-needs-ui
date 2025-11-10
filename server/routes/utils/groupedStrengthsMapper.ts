@@ -1,7 +1,7 @@
 import type { AlnScreenerList, StrengthResponseDto, StrengthsList } from 'dto'
 import enumComparator from '../enumComparator'
 import { Result } from '../../utils/result/result'
-import { getActiveStrengthsFromAlnScreener, getLatestAlnScreener, getNonAlnActiveStrengths } from './index'
+import { getStrengthsFromAlnScreener, getLatestAlnScreener, getNonAlnStrengths } from './index'
 import dateComparator from '../dateComparator'
 
 type GroupedStrengths = Record<
@@ -22,11 +22,11 @@ const toGroupedStrengthsPromise = (
 ): Result<GroupedStrengths, Error> => {
   if (alnScreeners.isFulfilled() && strengths.isFulfilled()) {
     // Group and sort the data from the prisoner's non-ALN Strengths, and the Strengths from their latest ALN Screener
-    const nonAlnStrengths = getNonAlnActiveStrengths(strengths).sort((left, right) =>
+    const nonAlnStrengths = getNonAlnStrengths(strengths, true).sort((left, right) =>
       dateComparator(left.updatedAt, right.updatedAt, 'DESC'),
     )
     const latestAlnScreener = getLatestAlnScreener(alnScreeners)
-    const strengthsFromLatestAlnScreener = getActiveStrengthsFromAlnScreener(latestAlnScreener).sort((left, right) =>
+    const strengthsFromLatestAlnScreener = getStrengthsFromAlnScreener(latestAlnScreener, true).sort((left, right) =>
       enumComparator(left.strengthTypeCode, right.strengthTypeCode),
     )
     const screenerDate = latestAlnScreener?.screenerDate

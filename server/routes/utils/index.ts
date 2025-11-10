@@ -15,22 +15,47 @@ const getLatestAlnScreener = (screeners: Result<AlnScreenerList>): AlnScreenerRe
       dateComparator(left.screenerDate, right.screenerDate, 'DESC'),
     )[0]
 
-const getNonAlnActiveStrengths = (strengths: Result<StrengthsList>): Array<StrengthResponseDto> =>
-  strengths.getOrNull()?.strengths.filter(strength => strength.active && !strength.fromALNScreener) ?? []
+/**
+ * Returns an array of non-ALN Strength Response DTO from the specified list of Strengths, where the strength's active
+ * flag is set according to the method argument.
+ */
+const getNonAlnStrengths = (strengths: Result<StrengthsList>, active: boolean): Array<StrengthResponseDto> =>
+  strengths.getOrNull()?.strengths.filter(strength => strength.active === active && !strength.fromALNScreener) ?? []
 
-const getActiveStrengthsFromAlnScreener = (alnScreener: AlnScreenerResponseDto): Array<StrengthResponseDto> =>
-  alnScreener?.strengths.filter(strength => strength.active && strength.fromALNScreener) ?? []
+/**
+ * Returns an array of ALN Strength Response DTO from the specified ALN Screener Response DTO, where the strength's active
+ * flag is set according to the method argument.
+ */
+const getStrengthsFromAlnScreener = (
+  alnScreener: AlnScreenerResponseDto,
+  active: boolean,
+): Array<StrengthResponseDto> =>
+  alnScreener?.strengths.filter(strength => strength.active === active && strength.fromALNScreener) ?? []
 
-const getNonAlnActiveChallenges = (challenges: Result<Array<ChallengeResponseDto>>): Array<ChallengeResponseDto> =>
-  challenges.getOrNull()?.filter(challenge => challenge.active && !challenge.fromALNScreener) ?? []
+/**
+ * Returns an array of non-ALN Challenge Response DTO from the specified list of Challenges, where the challenge's active
+ * flag is set according to the method argument.
+ */
+const getNonAlnChallenges = (
+  challenges: Result<Array<ChallengeResponseDto>>,
+  active: boolean,
+): Array<ChallengeResponseDto> =>
+  challenges.getOrNull()?.filter(challenge => challenge.active === active && !challenge.fromALNScreener) ?? []
 
-const getActiveChallengesFromAlnScreener = (alnScreener: AlnScreenerResponseDto): Array<ChallengeResponseDto> =>
-  alnScreener?.challenges.filter(challenge => challenge.active && challenge.fromALNScreener) ?? []
+/**
+ * Returns an array of ALN Challenge Response DTO from the specified ALN Screener Response DTO, where the challenge's active
+ * flag is set according to the method argument.
+ */
+const getChallengesFromAlnScreener = (
+  alnScreener: AlnScreenerResponseDto,
+  active: boolean,
+): Array<ChallengeResponseDto> =>
+  alnScreener?.challenges.filter(challenge => challenge.active === active && challenge.fromALNScreener) ?? []
 
 export {
   getLatestAlnScreener,
-  getNonAlnActiveStrengths,
-  getActiveStrengthsFromAlnScreener,
-  getNonAlnActiveChallenges,
-  getActiveChallengesFromAlnScreener,
+  getNonAlnStrengths,
+  getStrengthsFromAlnScreener,
+  getNonAlnChallenges,
+  getChallengesFromAlnScreener,
 }

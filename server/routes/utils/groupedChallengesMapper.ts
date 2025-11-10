@@ -1,6 +1,6 @@
 import type { AlnScreenerList, ChallengeResponseDto } from 'dto'
 import { Result } from '../../utils/result/result'
-import { getActiveChallengesFromAlnScreener, getLatestAlnScreener, getNonAlnActiveChallenges } from './index'
+import { getChallengesFromAlnScreener, getLatestAlnScreener, getNonAlnChallenges } from './index'
 import dateComparator from '../dateComparator'
 import enumComparator from '../enumComparator'
 
@@ -22,11 +22,11 @@ const toGroupedChallengesPromise = (
 ): Result<GroupedChallenges, Error> => {
   if (alnScreeners.isFulfilled() && challenges.isFulfilled()) {
     // Group and sort the data from the prisoner's non-ALN Challenges, and the Challenges from their latest ALN Screener
-    const nonAlnChallenges = getNonAlnActiveChallenges(challenges).sort((left, right) =>
+    const nonAlnChallenges = getNonAlnChallenges(challenges, true).sort((left, right) =>
       dateComparator(left.updatedAt, right.updatedAt, 'DESC'),
     )
     const latestAlnScreener = getLatestAlnScreener(alnScreeners)
-    const challengesFromLatestAlnScreener = getActiveChallengesFromAlnScreener(latestAlnScreener).sort((left, right) =>
+    const challengesFromLatestAlnScreener = getChallengesFromAlnScreener(latestAlnScreener, true).sort((left, right) =>
       enumComparator(left.challengeTypeCode, right.challengeTypeCode),
     )
     const screenerDate = latestAlnScreener?.screenerDate

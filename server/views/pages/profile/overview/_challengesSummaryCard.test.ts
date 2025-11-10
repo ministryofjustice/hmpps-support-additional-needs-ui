@@ -1,9 +1,12 @@
 import nunjucks from 'nunjucks'
 import * as cheerio from 'cheerio'
+import { startOfToday } from 'date-fns'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import { Result } from '../../../../utils/result/result'
 import formatChallengeCategoryScreenValueFilter from '../../../../filters/formatChallengeCategoryFilter'
 import ChallengeCategory from '../../../../enums/challengeCategory'
+import aValidChallengeResponseDto from '../../../../testsupport/challengeResponseDtoTestDataBuilder'
+import ChallengeType from '../../../../enums/challengeType'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -26,6 +29,7 @@ const template = '_challengesSummaryCard.njk'
 const userHasPermissionTo = jest.fn()
 const templateParams = {
   prisonerSummary,
+  groupedChallenges: Result.fulfilled({}),
   challengeCategories: Result.fulfilled([ChallengeCategory.LITERACY_SKILLS, ChallengeCategory.NUMERACY_SKILLS]),
   userHasPermissionTo,
 }
@@ -40,13 +44,69 @@ describe('_challengesSummaryCard', () => {
     // Given
     const params = {
       ...templateParams,
-      challengeCategories: Result.fulfilled([
-        ChallengeCategory.ATTENTION_ORGANISING_TIME,
-        ChallengeCategory.LITERACY_SKILLS,
-        ChallengeCategory.MEMORY,
-        ChallengeCategory.NUMERACY_SKILLS,
-        ChallengeCategory.SENSORY,
-      ]),
+      groupedChallenges: Result.fulfilled({
+        ATTENTION_ORGANISING_TIME: {
+          nonAlnChallenges: [
+            aValidChallengeResponseDto({
+              challengeTypeCode: ChallengeType.ATTENTION_ORGANISING_TIME_DEFAULT,
+            }),
+          ],
+          latestAlnScreener: {
+            screenerDate: startOfToday(),
+            createdAtPrison: 'BXI',
+            challenges: [],
+          },
+        },
+        LITERACY_SKILLS: {
+          nonAlnChallenges: [
+            aValidChallengeResponseDto({
+              challengeTypeCode: ChallengeType.LITERACY_SKILLS_DEFAULT,
+            }),
+          ],
+          latestAlnScreener: {
+            screenerDate: startOfToday(),
+            createdAtPrison: 'BXI',
+            challenges: [],
+          },
+        },
+        MEMORY: {
+          nonAlnChallenges: [
+            aValidChallengeResponseDto({
+              challengeTypeCode: ChallengeType.MEMORY,
+            }),
+          ],
+          latestAlnScreener: {
+            screenerDate: startOfToday(),
+            createdAtPrison: 'BXI',
+            challenges: [],
+          },
+        },
+        NUMERACY_SKILLS: {
+          nonAlnChallenges: [],
+          latestAlnScreener: {
+            screenerDate: startOfToday(),
+            createdAtPrison: 'BXI',
+            challenges: [
+              aValidChallengeResponseDto({
+                challengeTypeCode: ChallengeType.ARITHMETIC,
+                challengeCategory: ChallengeCategory.NUMERACY_SKILLS,
+              }),
+            ],
+          },
+        },
+        SENSORY: {
+          nonAlnChallenges: [],
+          latestAlnScreener: {
+            screenerDate: startOfToday(),
+            createdAtPrison: 'BXI',
+            challenges: [
+              aValidChallengeResponseDto({
+                challengeTypeCode: ChallengeType.CREATIVITY,
+              }),
+            ],
+          },
+        },
+      }),
     }
 
     // When
@@ -75,7 +135,7 @@ describe('_challengesSummaryCard', () => {
 
     const params = {
       ...templateParams,
-      challengeCategories: Result.fulfilled([]),
+      groupedChallenges: Result.fulfilled({}),
     }
 
     // When
@@ -96,7 +156,7 @@ describe('_challengesSummaryCard', () => {
 
     const params = {
       ...templateParams,
-      challengeCategories: Result.fulfilled([]),
+      groupedChallenges: Result.fulfilled({}),
     }
 
     // When
@@ -114,7 +174,7 @@ describe('_challengesSummaryCard', () => {
     // Given
     const params = {
       ...templateParams,
-      challengeCategories: Result.rejected(new Error('Failed to get challenges')),
+      groupedChallenges: Result.rejected(new Error('Failed to get challenges')),
     }
 
     // When
