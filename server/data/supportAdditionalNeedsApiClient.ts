@@ -3,6 +3,10 @@ import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients
 import type {
   AlnScreenerRequest,
   ALNScreeners,
+  ArchiveChallengeRequest,
+  ArchiveConditionRequest,
+  ArchiveStrengthRequest,
+  ArchiveSupportStrategyRequest,
   ChallengeListResponse,
   ChallengeResponse,
   ConditionListResponse,
@@ -185,6 +189,21 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     )
   }
 
+  async archiveChallenge(
+    prisonNumber: string,
+    challengeReference: string,
+    username: string,
+    archiveChallengeRequest: ArchiveChallengeRequest,
+  ): Promise<void> {
+    return this.put<void>(
+      {
+        path: `/profile/${prisonNumber}/challenges/${challengeReference}/archive`,
+        data: archiveChallengeRequest,
+      },
+      asSystem(username),
+    )
+  }
+
   async createConditions(
     prisonNumber: string,
     username: string,
@@ -229,6 +248,21 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/conditions/${conditionReference}`,
         data: updateConditionRequest,
+      },
+      asSystem(username),
+    )
+  }
+
+  async archiveCondition(
+    prisonNumber: string,
+    conditionReference: string,
+    username: string,
+    archiveConditionRequest: ArchiveConditionRequest,
+  ): Promise<void> {
+    return this.put<void>(
+      {
+        path: `/profile/${prisonNumber}/conditions/${conditionReference}/archive`,
+        data: archiveConditionRequest,
       },
       asSystem(username),
     )
@@ -283,6 +317,21 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     )
   }
 
+  async archiveStrength(
+    prisonNumber: string,
+    strengthReference: string,
+    username: string,
+    archiveStrengthRequest: ArchiveStrengthRequest,
+  ): Promise<void> {
+    return this.put<void>(
+      {
+        path: `/profile/${prisonNumber}/strengths/${strengthReference}/archive`,
+        data: archiveStrengthRequest,
+      },
+      asSystem(username),
+    )
+  }
+
   async createSupportStrategies(
     prisonNumber: string,
     username: string,
@@ -331,6 +380,21 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/support-strategies/${supportStrategyReference}`,
         data: updateSupportStrategyRequest,
+      },
+      asSystem(username),
+    )
+  }
+
+  async archiveSupportStrategy(
+    prisonNumber: string,
+    supportStrategyReference: string,
+    username: string,
+    archiveSupportStrategyRequest: ArchiveSupportStrategyRequest,
+  ): Promise<void> {
+    return this.put<void>(
+      {
+        path: `/profile/${prisonNumber}/support-strategies/${supportStrategyReference}/archive`,
+        data: archiveSupportStrategyRequest,
       },
       asSystem(username),
     )

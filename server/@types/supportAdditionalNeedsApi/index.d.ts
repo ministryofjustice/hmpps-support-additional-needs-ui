@@ -100,6 +100,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/profile/{prisonNumber}/strengths/{strengthReference}/archive': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['archiveStrength']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/profile/{prisonNumber}/conditions/{conditionReference}': {
     parameters: {
       query?: never
@@ -116,6 +132,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/profile/{prisonNumber}/conditions/{conditionReference}/archive': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['archiveCondition']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/profile/{prisonNumber}/challenges/{challengeReference}': {
     parameters: {
       query?: never
@@ -125,6 +157,22 @@ export interface paths {
     }
     get: operations['getChallenge']
     put: operations['updateChallenge']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/challenges/{challengeReference}/archive': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['archiveChallenge']
     post?: never
     delete?: never
     options?: never
@@ -513,10 +561,24 @@ export interface components {
       active: boolean
       /** @example null */
       detail?: string
+      /** @example null */
+      archiveReason?: string
+    }
+    ArchiveSupportStrategyRequest: {
+      /**
+       * @description Explanation as to why this record is archived.
+       * @example null
+       */
+      archiveReason: string
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
     }
     UpdateStrengthRequest: {
       /**
-       * @description Optional details about the symptoms of this strength
+       * @description Details about the symptoms of this strength
        * @example John is great at reading.
        */
       symptoms: string
@@ -636,6 +698,20 @@ export interface components {
        * @example The trainer noticed that John was great at reading.
        */
       howIdentifiedOther?: string
+      /** @example null */
+      archiveReason?: string
+    }
+    ArchiveStrengthRequest: {
+      /**
+       * @description Explanation as to why this record is archived.
+       * @example null
+       */
+      archiveReason: string
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
     }
     UpdateConditionRequest: {
       /**
@@ -730,6 +806,23 @@ export interface components {
        * @example null
        */
       conditionDetails?: string
+      /**
+       * @description the reason why this record was archived
+       * @example null
+       */
+      archiveReason?: string
+    }
+    ArchiveConditionRequest: {
+      /**
+       * @description Explanation as to why this record is archived.
+       * @example null
+       */
+      archiveReason: string
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
     }
     UpdateChallengeRequest: {
       /**
@@ -853,6 +946,23 @@ export interface components {
        * @example The trainer noticed that John could read better on a cream background.
        */
       howIdentifiedOther?: string
+      /**
+       * @description Details about why this challenge was archived
+       * @example His hearing improved dramatiacally with an implant.
+       */
+      archiveReason?: string
+    }
+    ArchiveChallengeRequest: {
+      /**
+       * @description Explanation as to why this record is archived.
+       * @example null
+       */
+      archiveReason: string
+      /**
+       * @description The Prison identifier.
+       * @example BXI
+       */
+      prisonId: string
     }
     CreateSupportStrategiesRequest: {
       /** @example null */
@@ -2083,7 +2193,11 @@ export interface operations {
       }
       cookie?: never
     }
-    requestBody?: never
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ArchiveSupportStrategyRequest']
+      }
+    }
     responses: {
       /** @description No Content */
       204: {
@@ -2144,6 +2258,31 @@ export interface operations {
       }
     }
   }
+  archiveStrength: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+        strengthReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ArchiveStrengthRequest']
+      }
+    }
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   getCondition: {
     parameters: {
       query?: never
@@ -2194,6 +2333,31 @@ export interface operations {
       }
     }
   }
+  archiveCondition: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+        conditionReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ArchiveConditionRequest']
+      }
+    }
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   getChallenge: {
     parameters: {
       query?: never
@@ -2241,6 +2405,31 @@ export interface operations {
         content: {
           '*/*': components['schemas']['ChallengeResponse']
         }
+      }
+    }
+  }
+  archiveChallenge: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+        challengeReference: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ArchiveChallengeRequest']
+      }
+    }
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
     }
   }

@@ -17,24 +17,28 @@ declare module 'supportAdditionalNeedsApiClient' {
   export type ChallengeListResponse = components['schemas']['ChallengeListResponse']
   export type ChallengeResponse = components['schemas']['ChallengeResponse']
   export type UpdateChallengeRequest = components['schemas']['UpdateChallengeRequest']
+  export type ArchiveChallengeRequest = components['schemas']['ArchiveChallengeRequest']
 
   export type CreateConditionsRequest = components['schemas']['CreateConditionsRequest']
   export type ConditionRequest = components['schemas']['ConditionRequest']
   export type ConditionListResponse = components['schemas']['ConditionListResponse']
   export type ConditionResponse = components['schemas']['ConditionResponse']
   export type UpdateConditionRequest = components['schemas']['UpdateConditionRequest']
+  export type ArchiveConditionRequest = components['schemas']['ArchiveConditionRequest']
 
   export type CreateStrengthsRequest = components['schemas']['CreateStrengthsRequest']
   export type StrengthRequest = components['schemas']['StrengthRequest']
   export type StrengthListResponse = components['schemas']['StrengthListResponse']
   export type StrengthResponse = components['schemas']['StrengthResponse']
   export type UpdateStrengthRequest = components['schemas']['UpdateStrengthRequest']
+  export type ArchiveStrengthRequest = components['schemas']['ArchiveStrengthRequest']
 
   export type CreateSupportStrategiesRequest = components['schemas']['CreateSupportStrategiesRequest']
   export type SupportStrategyRequest = components['schemas']['SupportStrategyRequest']
   export type SupportStrategyListResponse = components['schemas']['SupportStrategyListResponse']
   export type SupportStrategyResponse = components['schemas']['SupportStrategyResponse']
   export type UpdateSupportStrategyRequest = components['schemas']['UpdateSupportStrategyRequest']
+  export type ArchiveSupportStrategyRequest = components['schemas']['ArchiveSupportStrategyRequest']
 
   export type ReferenceDataListResponse = components['schemas']['ReferenceDataListResponse']
   export type ReferenceData = components['schemas']['ReferenceData']
