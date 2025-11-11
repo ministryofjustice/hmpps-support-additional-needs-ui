@@ -19,10 +19,11 @@
 
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
-      <section>
-        {% if activeChallenges.isFulfilled() %}
-          {% set activeChallenges = activeChallenges.value %}
+      {% if activeChallenges.isFulfilled() and archivedChallenges.isFulfilled() %}
+        {% set activeChallenges = activeChallenges.value %}
+        {% set archivedChallenges = archivedChallenges.value %}
 
+        {% set activeChallengesContent %}
           {% if activeChallenges | length %}
             {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
             {% for challengeCategory, challengesData in activeChallenges %}
@@ -33,36 +34,65 @@
                 userHasPermissionTo: userHasPermissionTo,
                 title: challengeCategory | formatChallengeCategoryScreenValue,
                 attributes: {
-                  'data-qa': 'challenges-summary-card-' + challengeCategory
+                  'data-qa': 'active-challenges-summary-card-' + challengeCategory
                 }
               }) }}
             {% endfor %}
 
           {% else %}
-
-            <div class="govuk-summary-card" data-qa="no-challenges-summary-card">
-              <div class="govuk-summary-card__content">
-                <p class="govuk-body">
-                  No challenges recorded
-                </p>
+            {% if featureToggles.editAndArchiveEnabled %}
+              <p class="govuk-body" data-qa="no-active-challenges-message">
+                {{ prisonerSummary | formatFirst_name_Last_name }} has no current challenges.
+              </p>
+            {% else %}
+              <div class="govuk-summary-card">
+                <div class="govuk-summary-card__content">
+                  <p class="govuk-body" data-qa="no-active-challenges-message">
+                    No challenges recorded
+                  </p>
+                </div>
               </div>
-            </div>
+            {% endif %}
 
           {% endif %}
 
-        {% else %}
-          <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>
-          <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
-        {% endif %}
-      </section>
+          <p class="govuk-body">
+            {% if userHasPermissionTo('RECORD_CHALLENGES') %}
+              <a class="govuk-link govuk-!-display-none-print" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category">
+                Add a challenge
+              </a>
+            {% endif %}
+          </p>
 
-      <p class="govuk-body">
-        {% if userHasPermissionTo('RECORD_CHALLENGES') %}
-          <a class="govuk-link govuk-!-display-none-print" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category">
-            Add a challenge
-          </a>
+        {% endset %}
+
+        {% if featureToggles.editAndArchiveEnabled %}
+          {{ govukTabs({
+            items: [
+              {
+                label: 'Current (' + activeChallenges | length + ')',
+                id: 'current-challenges',
+                panel: {
+                  html: activeChallengesContent
+                }
+              },
+              {
+                label: 'History (' + archivedChallenges | length + ')',
+                id: 'archived-challenges',
+                panel: {
+                  html: ''
+                }
+              }
+            ]
+          }) }}
+        {% else %}
+          {{ activeChallengesContent | safe }}
         {% endif %}
-      </p>
+
+      {% else %}
+        <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>
+        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+      {% endif %}
     </div>
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">

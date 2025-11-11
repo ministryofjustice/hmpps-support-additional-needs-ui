@@ -85,22 +85,25 @@ context('Profile Strengths Page', () => {
 
     // Then
     Page.verifyOnPage(StrengthsPage) //
-      .hasStrengthsSummaryCard(StrengthCategory.ATTENTION_ORGANISING_TIME)
-      .hasNonAlnStrengths(StrengthCategory.ATTENTION_ORGANISING_TIME, StrengthType.ATTENTION_ORGANISING_TIME_DEFAULT)
-      .hasAlnStrengths(
+      .hasActiveStrengthsSummaryCard(StrengthCategory.ATTENTION_ORGANISING_TIME)
+      .hasActiveNonAlnStrengths(
+        StrengthCategory.ATTENTION_ORGANISING_TIME,
+        StrengthType.ATTENTION_ORGANISING_TIME_DEFAULT,
+      )
+      .hasActiveAlnStrengths(
         StrengthCategory.ATTENTION_ORGANISING_TIME,
         'Focusing',
         'Self organised (routine)',
         'Task switching',
       )
 
-      .hasStrengthsSummaryCard(StrengthCategory.EMOTIONS_FEELINGS)
-      .hasNoNonAlnStrengths(StrengthCategory.EMOTIONS_FEELINGS)
-      .hasAlnStrengths(StrengthCategory.EMOTIONS_FEELINGS, 'Empathy')
+      .hasActiveStrengthsSummaryCard(StrengthCategory.EMOTIONS_FEELINGS)
+      .hasNoActiveNonAlnStrengths(StrengthCategory.EMOTIONS_FEELINGS)
+      .hasActiveAlnStrengths(StrengthCategory.EMOTIONS_FEELINGS, 'Empathy')
 
-      .hasStrengthsSummaryCard(StrengthCategory.LITERACY_SKILLS)
-      .hasNonAlnStrengths(StrengthCategory.LITERACY_SKILLS, StrengthType.LITERACY_SKILLS_DEFAULT)
-      .hasNoAlnStrengths(StrengthCategory.LITERACY_SKILLS)
+      .hasActiveStrengthsSummaryCard(StrengthCategory.LITERACY_SKILLS)
+      .hasActiveNonAlnStrengths(StrengthCategory.LITERACY_SKILLS, StrengthType.LITERACY_SKILLS_DEFAULT)
+      .hasNoActiveAlnStrengths(StrengthCategory.LITERACY_SKILLS)
 
       .apiErrorBannerIsNotDisplayed()
   })

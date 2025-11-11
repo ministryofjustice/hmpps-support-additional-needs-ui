@@ -19,10 +19,11 @@
 
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
-      <section>
-        {% if activeStrengths.isFulfilled() %}
-          {% set activeStrengths = activeStrengths.value %}
+      {% if activeStrengths.isFulfilled() and archivedStrengths.isFulfilled() %}
+        {% set activeStrengths = activeStrengths.value %}
+        {% set archivedStrengths = archivedStrengths.value %}
 
+        {% set activeStrengthsContent %}
           {% if activeStrengths | length %}
             {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
             {% for strengthCategory, strengthsData in activeStrengths %}
@@ -33,36 +34,65 @@
                 showActions: true,
                 userHasPermissionTo: userHasPermissionTo,
                 attributes: {
-                  'data-qa': 'strengths-summary-card_' + strengthCategory
+                  'data-qa': 'active-strengths-summary-card_' + strengthCategory
                 }
               }) }}
             {% endfor %}
 
           {% else %}
-
-            <div class="govuk-summary-card" data-qa="no-strengths-summary-card">
-              <div class="govuk-summary-card__content">
-                <p class="govuk-body">
-                  No strengths recorded
-                </p>
+            {% if featureToggles.editAndArchiveEnabled %}
+              <p class="govuk-body" data-qa="no-active-strengths-message">
+                {{ prisonerSummary | formatFirst_name_Last_name }} has no current strengths.
+              </p>
+            {% else %}
+              <div class="govuk-summary-card">
+                <div class="govuk-summary-card__content">
+                  <p class="govuk-body" data-qa="no-active-strengths-message">
+                    No strengths recorded
+                  </p>
+                </div>
               </div>
-            </div>
+            {% endif %}
 
           {% endif %}
 
-        {% else %}
-          <h3 class="govuk-heading-s" data-qa="strengths-unavailable-message">We cannot show these details right now</h3>
-          <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
-        {% endif %}
-      </section>
+          <p class="govuk-body">
+            {% if userHasPermissionTo('RECORD_STRENGTHS') %}
+              <a class="govuk-link govuk-!-display-none-print" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category">
+                Add a strength
+              </a>
+            {% endif %}
+          </p>
 
-      <p class="govuk-body">
-        {% if userHasPermissionTo('RECORD_STRENGTHS') %}
-          <a class="govuk-link govuk-!-display-none-print" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category">
-            Add a strength
-          </a>
+        {% endset %}
+
+        {% if featureToggles.editAndArchiveEnabled %}
+          {{ govukTabs({
+            items: [
+              {
+                label: 'Current (' + activeStrengths | length + ')',
+                id: 'current-strengths',
+                panel: {
+                  html: activeStrengthsContent
+                }
+              },
+              {
+                label: 'History (' + archivedStrengths | length + ')',
+                id: 'archived-strengths',
+                panel: {
+                  html: ''
+                }
+              }
+            ]
+          }) }}
+        {% else %}
+          {{ activeStrengthsContent | safe }}
         {% endif %}
-      </p>
+
+      {% else %}
+        <h3 class="govuk-heading-s" data-qa="strengths-unavailable-message">We cannot show these details right now</h3>
+        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+      {% endif %}
     </div>
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">

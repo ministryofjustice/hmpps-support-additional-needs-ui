@@ -16,30 +16,56 @@ export default class ChallengesPage extends ProfilePage {
     return Page.verifyOnPage(ChallengeDetailPage)
   }
 
-  hasChallengesSummaryCard(category: ChallengeCategory): ChallengesPage {
-    this.challengeCategorySummaryCard(category).should('be.visible')
+  hasActiveChallengesSummaryCard(category: ChallengeCategory): ChallengesPage {
+    this.challengeCategorySummaryCard({ category, active: true }).should('be.visible')
     return this
   }
 
-  hasNoChallengesSummaryCard(category: ChallengeCategory): ChallengesPage {
-    this.challengeCategorySummaryCard(category).should('not.exist')
+  hasArchivedChallengesSummaryCard(category: ChallengeCategory): ChallengesPage {
+    this.challengeCategorySummaryCard({ category, active: false }).should('be.visible')
     return this
   }
 
-  hasNonAlnChallenges(category: ChallengeCategory, ...challengeType: Array<ChallengeType>): ChallengesPage {
+  hasNoActiveChallengesSummaryCard(category: ChallengeCategory): ChallengesPage {
+    this.challengeCategorySummaryCard({ category, active: true }).should('not.exist')
+    return this
+  }
+
+  hasNoArchivedChallengesSummaryCard(category: ChallengeCategory): ChallengesPage {
+    this.challengeCategorySummaryCard({ category, active: false }).should('not.exist')
+    return this
+  }
+
+  hasActiveNonAlnChallenges(category: ChallengeCategory, ...challengeType: Array<ChallengeType>): ChallengesPage {
     challengeType.forEach(challenge =>
-      this.challengeCategorySummaryCard(category).find(`.non-aln-challenge[data-qa=${challenge}]`).should('be.visible'),
+      this.challengeCategorySummaryCard({ category, active: true })
+        .find(`.non-aln-challenge[data-qa=${challenge}]`)
+        .should('be.visible'),
     )
     return this
   }
 
-  hasNoNonAlnChallenges(category: ChallengeCategory): ChallengesPage {
-    this.challengeCategorySummaryCard(category).find('.non-aln-challenge').should('not.exist')
+  hasArchivedNonAlnChallenges(category: ChallengeCategory, ...challengeType: Array<ChallengeType>): ChallengesPage {
+    challengeType.forEach(challenge =>
+      this.challengeCategorySummaryCard({ category, active: false })
+        .find(`.non-aln-challenge[data-qa=${challenge}]`)
+        .should('be.visible'),
+    )
     return this
   }
 
-  hasAlnChallenges(category: ChallengeCategory, ...challenges: Array<string>): ChallengesPage {
-    this.challengeCategorySummaryCard(category)
+  hasNoActiveNonAlnChallenges(category: ChallengeCategory): ChallengesPage {
+    this.challengeCategorySummaryCard({ category, active: true }).find('.non-aln-challenge').should('not.exist')
+    return this
+  }
+
+  hasNoArchivedNonAlnChallenges(category: ChallengeCategory): ChallengesPage {
+    this.challengeCategorySummaryCard({ category, active: false }).find('.non-aln-challenge').should('not.exist')
+    return this
+  }
+
+  hasActiveAlnChallenges(category: ChallengeCategory, ...challenges: Array<string>): ChallengesPage {
+    this.challengeCategorySummaryCard({ category, active: true })
       .find('.aln-challenges li')
       .then(listItems => {
         cy.wrap(listItems).should('have.length', challenges.length)
@@ -50,20 +76,43 @@ export default class ChallengesPage extends ProfilePage {
     return this
   }
 
-  hasNoAlnChallenges(category: ChallengeCategory): ChallengesPage {
-    this.challengeCategorySummaryCard(category).find('.aln-challenges').should('not.exist')
+  hasArchivedAlnChallenges(category: ChallengeCategory, ...challenges: Array<string>): ChallengesPage {
+    this.challengeCategorySummaryCard({ category, active: false })
+      .find('.aln-challenges li')
+      .then(listItems => {
+        cy.wrap(listItems).should('have.length', challenges.length)
+        listItems.each((index, element) => {
+          cy.wrap(element).should('contain.text', challenges[index])
+        })
+      })
+    return this
+  }
+
+  hasNoActiveAlnChallenges(category: ChallengeCategory): ChallengesPage {
+    this.challengeCategorySummaryCard({ category, active: true }).find('.aln-challenges').should('not.exist')
+    return this
+  }
+
+  hasNoArchivedAlnChallenges(category: ChallengeCategory): ChallengesPage {
+    this.challengeCategorySummaryCard({ category, active: false }).find('.aln-challenges').should('not.exist')
     return this
   }
 
   hasNoActiveChallenges(): ChallengesPage {
-    this.noChallengesSummaryCard().should('be.visible')
+    this.noChallengesMessage({ active: true }).should('be.visible')
     return this
   }
 
-  private noChallengesSummaryCard = (): PageElement => cy.get('[data-qa=no-challenges-summary-card]')
+  hasNoArchivedChallenges(): ChallengesPage {
+    this.noChallengesMessage({ active: false }).should('be.visible')
+    return this
+  }
 
-  private challengeCategorySummaryCard = (category: ChallengeCategory): PageElement =>
-    cy.get(`[data-qa=challenges-summary-card-${category}]`)
+  private noChallengesMessage = (options: { active: boolean }): PageElement =>
+    cy.get(`[data-qa=no-${options.active ? 'active' : 'archived'}-challenges-message]`)
+
+  private challengeCategorySummaryCard = (options: { category: ChallengeCategory; active: boolean }): PageElement =>
+    cy.get(`[data-qa=${options.active ? 'active' : 'archived'}-challenges-summary-card-${options.category}]`)
 
   private nonAlnChallenges = (): PageElement => cy.get('.govuk-summary-list__row.non-aln-challenge')
 }

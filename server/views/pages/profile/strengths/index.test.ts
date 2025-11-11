@@ -31,6 +31,7 @@ njkEnv //
   .addFilter('formatStrengthCategoryScreenValue', formatStrengthCategoryScreenValueFilter)
   .addFilter('formatStrengthIdentificationSourceScreenValue', formatStrengthIdentificationSourceScreenValueFilter)
   .addFilter('formatStrengthTypeScreenValue', formatStrengthTypeScreenValueFilter)
+  .addGlobal('featureToggles', { editAndArchiveEnabled: true })
 
 const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',
@@ -99,9 +100,9 @@ describe('Profile strengths page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('[data-qa=strengths-summary-card_LITERACY_SKILLS]').length).toEqual(1)
-    expect($('[data-qa=strengths-summary-card_NUMERACY_SKILLS]').length).toEqual(1)
-    expect($('[data-qa=no-strengths-summary-card]').length).toEqual(0)
+    expect($('[data-qa=active-strengths-summary-card_LITERACY_SKILLS]').length).toEqual(1)
+    expect($('[data-qa=active-strengths-summary-card_NUMERACY_SKILLS]').length).toEqual(1)
+    expect($('[data-qa=no-active-strengths-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
@@ -117,7 +118,7 @@ describe('Profile strengths page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('[data-qa=no-strengths-summary-card]').length).toEqual(1)
+    expect($('[data-qa=no-active-strengths-message]').length).toEqual(1)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
