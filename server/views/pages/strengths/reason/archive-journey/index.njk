@@ -1,0 +1,64 @@
+{% extends "../../layout.njk" %}
+
+{% set pageId = 'archive-strength-reason' %}
+{% set pageTitle = "Move strength to history - Move strength to history reason" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">Move {{ prisonerSummary | formatFirst_name_Last_name }}'s strength to the History</h1>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <p class="govuk-hint">Strengths in the History tab are view only and cannot be reactivated.</p>
+
+      {% set insetContent %}
+        <h3 class="govuk-heading-m govuk-!-margin-bottom-2">{{ dto.strengthCategory | formatStrengthCategoryScreenValue | default(dto.strengthCategory, true) }}</h3>
+        <p class="govuk-body app-u-multiline-text">{{ dto.symptoms }}</p>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-1">How was this strength identified?</h2>
+        <ul class="govuk-list">
+          {% for strengthIdentificationSource in dto.howIdentified %}
+            <li>{{ strengthIdentificationSource | formatStrengthIdentificationSourceScreenValue if strengthIdentificationSource != 'OTHER' else dto.howIdentifiedOther }}</li>
+          {% endfor %}
+        </ul>
+      {% endset %}
+      {{ govukInsetText({
+        html: insetContent
+      }) }}
+
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukTextarea({
+            id: "archiveReason",
+            name: "archiveReason",
+            rows: "4",
+            value: form.archiveReason,
+            type: "text",
+            label: {
+              text: "Add a reason for moving this strength to the History",
+              classes: "govuk-label--s",
+              attributes: { "aria-live": "polite" }
+            },
+            attributes: { "aria-label" : "Give details of the archive reason" },
+            errorMessage: errors | findError("archiveReason")
+          }) }}
+
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Move strength",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
