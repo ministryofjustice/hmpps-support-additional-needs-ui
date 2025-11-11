@@ -4,6 +4,7 @@ import StrengthCategory from '../../../server/enums/strengthCategory'
 import StrengthType from '../../../server/enums/strengthType'
 import zeroIndexed from '../../utils/zeroIndexed'
 import StrengthDetailPage from '../strengths/strengthDetailPage'
+import ArchiveStrengthReasonPage from '../strengths/archiveStrengthReasonPage'
 
 export default class StrengthsPage extends ProfilePage {
   constructor() {
@@ -14,6 +15,11 @@ export default class StrengthsPage extends ProfilePage {
   clickToEditNthNonAlnStrength(index: number): StrengthDetailPage {
     this.nonAlnStrengths().eq(zeroIndexed(index)).find('[data-qa=edit-strength-button]').click()
     return Page.verifyOnPage(StrengthDetailPage)
+  }
+
+  clickToArchiveNthNonAlnStrength(index: number): ArchiveStrengthReasonPage {
+    this.nonAlnStrengths().eq(zeroIndexed(index)).find('[data-qa=archive-strength-button]').click()
+    return Page.verifyOnPage(ArchiveStrengthReasonPage)
   }
 
   hasActiveStrengthsSummaryCard(category: StrengthCategory): StrengthsPage {
