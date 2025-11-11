@@ -9,6 +9,7 @@ const aValidStrengthDto = (options?: {
   symptoms?: string
   howIdentified?: Array<StrengthIdentificationSource>
   howIdentifiedOther?: string
+  archiveReason?: string
 }): StrengthDto => ({
   prisonNumber: options?.prisonNumber || 'A1234BC',
   prisonId: options?.prisonId || 'BXI',
@@ -20,6 +21,7 @@ const aValidStrengthDto = (options?: {
     options?.howIdentifiedOther === null
       ? null
       : options?.howIdentifiedOther || `John's reading strength was discovered during a poetry recital evening`,
+  archiveReason: options?.archiveReason,
 })
 
 export default aValidStrengthDto

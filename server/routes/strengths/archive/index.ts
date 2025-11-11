@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
@@ -6,10 +6,16 @@ import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import retrieveStrengthResponseDtoIfNotInJourneyData from '../middleware/retrieveStrengthResponseDtoIfNotInJourneyData'
 import checkStrengthDtoExistsInJourneyData from '../middleware/checkStrengthDtoExistsInJourneyData'
+import ReasonController from './reason/reasonController'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import archiveReasonSchema from '../validationSchemas/archiveReasonSchema'
+import { validate } from '../../../middleware/validationMiddleware'
 
 const archiveStrengthRoutes = (services: Services): Router => {
-  const { journeyDataService, strengthService } = services
+  const { auditService, journeyDataService, strengthService } = services
   const router = Router({ mergeParams: true })
+
+  const reasonController = new ReasonController(strengthService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.ARCHIVE_STRENGTHS),
@@ -22,10 +28,14 @@ const archiveStrengthRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/reason', [
     checkStrengthDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Archive strength reason')
-    },
+    asyncMiddleware(reasonController.getReasonView),
   ])
+  router.post('/:journeyId/reason', [
+    checkStrengthDtoExistsInJourneyData,
+    validate(archiveReasonSchema),
+    asyncMiddleware(reasonController.submitReasonForm),
+  ])
+
   return router
 }
 

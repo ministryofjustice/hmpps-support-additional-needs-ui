@@ -5,6 +5,7 @@ import logger from '../../logger'
 import { toStrengthsList } from '../data/mappers/strengthResponseDtoMapper'
 import { toStrengthResponseDto } from '../data/mappers/strengthDtoMapper'
 import toUpdateStrengthRequest from '../data/mappers/updateStrengthRequestMapper'
+import toArchiveStrengthRequest from '../data/mappers/archiveStrengthRequestMapper'
 
 export default class StrengthService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -57,6 +58,22 @@ export default class StrengthService {
       )
     } catch (e) {
       logger.error(`Error updating Strength for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
+
+  async archiveStrength(username: string, strengthReference: string, strength: StrengthDto): Promise<void> {
+    const { prisonNumber } = strength
+    try {
+      const archiveStrengthRequest = toArchiveStrengthRequest(strength)
+      await this.supportAdditionalNeedsApiClient.archiveStrength(
+        prisonNumber,
+        strengthReference,
+        username,
+        archiveStrengthRequest,
+      )
+    } catch (e) {
+      logger.error(`Error archiving Strength for [${prisonNumber}]`, e)
       throw e
     }
   }

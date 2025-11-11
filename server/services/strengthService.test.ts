@@ -10,6 +10,7 @@ import aValidStrengthDto from '../testsupport/strengthDtoTestDataBuilder'
 import StrengthType from '../enums/strengthType'
 import StrengthIdentificationSource from '../enums/strengthIdentificationSource'
 import anUpdateStrengthRequest from '../testsupport/updateStrengthRequestTestDataBuilder'
+import anArchiveStrengthRequest from '../testsupport/archiveStrengthRequestTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -269,6 +270,64 @@ describe('strengthService', () => {
         strengthReference,
         username,
         expectedUpdateStrengthRequest,
+      )
+    })
+  })
+
+  describe('archiveStrength', () => {
+    it('should archive strength', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.archiveStrength.mockResolvedValue(null)
+
+      const strengthDto = aValidStrengthDto({
+        prisonNumber,
+        prisonId: 'BXI',
+        archiveReason: 'Strength created in error',
+      })
+
+      const expectedArchiveStrengthRequest = anArchiveStrengthRequest({
+        prisonId: 'BXI',
+        reason: 'Strength created in error',
+      })
+
+      // When
+      await service.archiveStrength(username, strengthReference, strengthDto)
+
+      // Then
+      expect(supportAdditionalNeedsApiClient.archiveStrength).toHaveBeenCalledWith(
+        prisonNumber,
+        strengthReference,
+        username,
+        expectedArchiveStrengthRequest,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.archiveStrength.mockRejectedValue(expectedError)
+
+      const strengthDto = aValidStrengthDto({
+        prisonNumber,
+        prisonId: 'BXI',
+        archiveReason: 'Strength created in error',
+      })
+
+      const expectedArchiveStrengthRequest = anArchiveStrengthRequest({
+        prisonId: 'BXI',
+        reason: 'Strength created in error',
+      })
+
+      // When
+      const actual = await service.archiveStrength(username, strengthReference, strengthDto).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.archiveStrength).toHaveBeenCalledWith(
+        prisonNumber,
+        strengthReference,
+        username,
+        expectedArchiveStrengthRequest,
       )
     })
   })

@@ -22,6 +22,7 @@ const toStrengthResponseDto = (prisonNumber: string, strength: StrengthResponse)
         active: strength.active,
         howIdentifiedOther: strength.howIdentifiedOther,
         alnScreenerDate: strength.alnScreenerDate ? parseISO(strength.alnScreenerDate) : null,
+        archiveReason: strength.archiveReason,
       }
     : null
 }

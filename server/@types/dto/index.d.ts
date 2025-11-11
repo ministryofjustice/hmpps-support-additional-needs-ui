@@ -147,6 +147,7 @@ declare module 'dto' {
     symptoms?: string
     howIdentified?: Array<StrengthIdentificationSource>
     howIdentifiedOther?: string
+    archiveReason?: string
   }
 
   export interface StrengthsList {
@@ -167,6 +168,7 @@ declare module 'dto' {
     active: boolean
     fromALNScreener: boolean
     alnScreenerDate?: Date
+    archiveReason?: string
   }
 
   /**
