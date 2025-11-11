@@ -32,7 +32,7 @@ describe('strengthDtoMapper', () => {
         },
         {
           prisonNumber,
-          active: true,
+          active: false,
           fromALNScreener: true,
           alnScreenerDate: '2023-06-19',
           symptoms: null,
@@ -48,6 +48,7 @@ describe('strengthDtoMapper', () => {
           updatedByDisplayName: 'Alex Smith',
           updatedAt: '2023-06-19T09:39:44Z',
           updatedAtPrison: 'MDI',
+          archiveReason: 'Strength added in error',
         },
       ],
     })
@@ -77,7 +78,7 @@ describe('strengthDtoMapper', () => {
         },
         {
           prisonNumber,
-          active: true,
+          active: false,
           fromALNScreener: true,
           alnScreenerDate: parseISO('2023-06-19'),
           symptoms: null,
@@ -94,6 +95,7 @@ describe('strengthDtoMapper', () => {
           updatedAtPrison: 'MDI',
           updatedBy: 'asmith_gen',
           updatedByDisplayName: 'Alex Smith',
+          archiveReason: 'Strength added in error',
         },
       ],
     })

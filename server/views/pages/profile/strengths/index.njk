@@ -1,5 +1,6 @@
 {% extends "../layout.njk" %}
 {% from "../components/actions-card/macro.njk" import actionsCard %}
+{% from "../../../components/archived-strengths-summary-card/macro.njk" import archivedStrengthsSummaryCard %}
 {% from "../../../components/strengths-summary-card/macro.njk" import strengthsSummaryCard %}
 
 {% set pageId = 'profile-strengths' %}
@@ -22,10 +23,10 @@
       {% if activeStrengths.isFulfilled() and archivedStrengths.isFulfilled() %}
         {% set activeStrengths = activeStrengths.value %}
         {% set archivedStrengths = archivedStrengths.value %}
+        {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
 
         {% set activeStrengthsContent %}
           {% if activeStrengths | length %}
-            {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
             {% for strengthCategory, strengthsData in activeStrengths %}
               {{ strengthsSummaryCard({
                 title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
@@ -63,7 +64,27 @@
               </a>
             {% endif %}
           </p>
+        {% endset %}
 
+        {% set archivedStrengthsContent %}
+          {% if archivedStrengths | length %}
+          {% for strengthCategory, strengthsData in archivedStrengths %}
+            {% set archivedStrengths = strengthsData.nonAlnStrengths %}
+            {{ archivedStrengthsSummaryCard({
+              title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
+              archivedStrengths: archivedStrengths,
+              prisonNamesById: prisonNamesById,
+              attributes: {
+                'data-qa': 'archived-strengths-summary-card_' + strengthCategory
+              }
+            }) }}
+          {% endfor %}
+
+          {% else %}
+            <p class="govuk-body" data-qa="no-archived-strengths-message">
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no previous strengths.
+            </p>
+          {% endif %}
         {% endset %}
 
         {% if featureToggles.editAndArchiveEnabled %}
@@ -80,7 +101,7 @@
                 label: 'History (' + archivedStrengths | length + ')',
                 id: 'archived-strengths',
                 panel: {
-                  html: ''
+                  html: archivedStrengthsContent
                 }
               }
             ]

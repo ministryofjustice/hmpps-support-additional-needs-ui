@@ -24,6 +24,12 @@
             <li>{{ strengthIdentificationSource | formatStrengthIdentificationSourceScreenValue if strengthIdentificationSource != 'OTHER' else dto.howIdentifiedOther }}</li>
           {% endfor %}
         </ul>
+
+        <p class="govuk-hint govuk-body govuk-!-font-size-16">
+          {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+          {% set prisonName = prisonNamesById[dto.updatedAtPrison] | default(dto.updatedAtPrison) %}
+          Last updated {{ dto.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ dto.updatedByDisplayName }}, {{ prisonName }}</span>
+        </p>
       {% endset %}
       {{ govukInsetText({
         html: insetContent

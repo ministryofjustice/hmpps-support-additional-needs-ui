@@ -93,6 +93,23 @@ describe('Profile strengths page', () => {
           },
         },
       }),
+      archivedStrengths: Result.fulfilled({
+        MEMORY: {
+          nonAlnStrengths: [
+            aValidStrengthResponseDto({
+              strengthTypeCode: StrengthType.MEMORY,
+              strengthCategory: StrengthCategory.MEMORY,
+              active: false,
+              archiveReason: 'Strength added in error',
+            }),
+          ],
+          latestAlnScreener: {
+            screenerDate: startOfToday(),
+            createdAtPrison: 'BXI',
+            strengths: [],
+          },
+        },
+      }),
     }
 
     // When
@@ -102,7 +119,9 @@ describe('Profile strengths page', () => {
     // Then
     expect($('[data-qa=active-strengths-summary-card_LITERACY_SKILLS]').length).toEqual(1)
     expect($('[data-qa=active-strengths-summary-card_NUMERACY_SKILLS]').length).toEqual(1)
+    expect($('[data-qa=archived-strengths-summary-card_MEMORY]').length).toEqual(1)
     expect($('[data-qa=no-active-strengths-message]').length).toEqual(0)
+    expect($('[data-qa=no-archived-strengths-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
@@ -119,6 +138,22 @@ describe('Profile strengths page', () => {
 
     // Then
     expect($('[data-qa=no-active-strengths-message]').length).toEqual(1)
+    expect($('[data-qa=api-error-banner]').length).toEqual(0)
+  })
+
+  it('should render the profile strengths page given prisoner has no archived Strengths', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      archivedStrengths: Result.fulfilled({}),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=no-archived-strengths-message]').length).toEqual(1)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 

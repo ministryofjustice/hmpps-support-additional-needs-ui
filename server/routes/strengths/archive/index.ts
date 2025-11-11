@@ -10,9 +10,10 @@ import ReasonController from './reason/reasonController'
 import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import archiveReasonSchema from '../validationSchemas/archiveReasonSchema'
 import { validate } from '../../../middleware/validationMiddleware'
+import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
 
 const archiveStrengthRoutes = (services: Services): Router => {
-  const { auditService, journeyDataService, strengthService } = services
+  const { auditService, journeyDataService, prisonService, strengthService } = services
   const router = Router({ mergeParams: true })
 
   const reasonController = new ReasonController(strengthService, auditService)
@@ -28,6 +29,7 @@ const archiveStrengthRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/reason', [
     checkStrengthDtoExistsInJourneyData,
+    retrievePrisonsLookup(prisonService),
     asyncMiddleware(reasonController.getReasonView),
   ])
   router.post('/:journeyId/reason', [

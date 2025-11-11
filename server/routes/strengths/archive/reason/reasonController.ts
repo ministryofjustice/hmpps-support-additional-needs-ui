@@ -12,12 +12,14 @@ export default class ReasonController {
   ) {}
 
   getReasonView = async (req: Request, res: Response, next: NextFunction) => {
-    const { invalidForm } = res.locals
+    const { invalidForm, prisonerSummary, prisonNamesById } = res.locals
     const strengthResponseDto = req.journeyData.strengthDto as StrengthResponseDto
 
     const reasonForm = invalidForm ?? { archiveReason: '' }
 
     const viewRenderArgs = {
+      prisonerSummary,
+      prisonNamesById,
       mode: 'archive',
       dto: strengthResponseDto,
       form: reasonForm,

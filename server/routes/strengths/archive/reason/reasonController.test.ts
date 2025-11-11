@@ -3,6 +3,8 @@ import ReasonController from './reasonController'
 import StrengthService from '../../../../services/strengthService'
 import AuditService from '../../../../services/auditService'
 import { aValidStrengthResponseDto } from '../../../../testsupport/strengthResponseDtoTestDataBuilder'
+import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
+import { Result } from '../../../../utils/result/result'
 
 jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/strengthService')
@@ -14,6 +16,9 @@ describe('reasonController', () => {
 
   const username = 'A_DPS_USER'
   const prisonNumber = 'A1234BC'
+  const prisonerSummary = aValidPrisonerSummary({ prisonNumber })
+  const prisonNamesById = Result.fulfilled({ BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' })
+
   const strengthReference = '518d65dc-2866-46a7-94c0-ffb331e66061'
   const strengthDto = aValidStrengthResponseDto({
     reference: strengthReference,
@@ -33,7 +38,11 @@ describe('reasonController', () => {
     redirect: jest.fn(),
     redirectWithSuccess: jest.fn(),
     render: jest.fn(),
-    locals: { user: { username, activeCaseLoadId: 'BXI' } },
+    locals: {
+      prisonerSummary,
+      prisonNamesById,
+      user: { username, activeCaseLoadId: 'BXI' },
+    },
   } as unknown as Response
   const next = jest.fn()
 
@@ -50,6 +59,8 @@ describe('reasonController', () => {
 
     const expectedViewTemplate = 'pages/strengths/reason/archive-journey/index'
     const expectedViewModel = {
+      prisonerSummary,
+      prisonNamesById,
       dto: strengthDto,
       errorRecordingStrength: false,
       form: { archiveReason: '' },
@@ -74,6 +85,8 @@ describe('reasonController', () => {
 
     const expectedViewTemplate = 'pages/strengths/reason/archive-journey/index'
     const expectedViewModel = {
+      prisonerSummary,
+      prisonNamesById,
       dto: strengthDto,
       errorRecordingStrength: false,
       form: invalidForm,
