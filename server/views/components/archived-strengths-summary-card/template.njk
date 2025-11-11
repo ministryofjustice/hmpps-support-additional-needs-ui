@@ -1,0 +1,56 @@
+{% from "govuk/macros/attributes.njk" import govukAttributes %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{#- Set classes for this component #}
+{%- set classNames = "govuk-summary-card" -%}
+{%- if params.classes %}
+  {% set classNames = classNames + " " + params.classes %}
+{% endif %}
+
+{#- Define component attributes #}
+{%- set componentAttributes %} class="{{ classNames }}" {{- govukAttributes(params.attributes) -}} {% if params.id %} id="{{ params.id }}"{% endif %}{% endset %}
+
+{% set archivedStrengths = params.archivedStrengths %}
+
+{% if archivedStrengths | length %}
+  <div {{ componentAttributes | safe }}>
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">{{ params.title }}</h2>
+    </div>
+
+    <div class="govuk-summary-card__content govuk-!-padding-top-0">
+      <div class="govuk-summary-list">
+
+        {% for strength in archivedStrengths %}
+          <div class="govuk-summary-list__row archived-strength" data-qa="{{ strength.strengthTypeCode }}">
+            <p class="govuk-body govuk-!-margin-top-3 app-u-multiline-text" data-qa="archived-symptoms">{{ strength.symptoms }}</p>
+
+            {% set expanderContent %}
+              <ul class="govuk-list govuk-!-font-size-16">
+                {% for strengthIdentificationSource in strength.howIdentified %}
+                  <li>{{ strengthIdentificationSource | formatStrengthIdentificationSourceScreenValue if strengthIdentificationSource != 'OTHER' else strength.howIdentifiedOther }}</li>
+                {% endfor %}
+              </ul>
+            {% endset %}
+            {{ govukDetails({
+              summaryText: "How was this identified?",
+              html: expanderContent,
+              classes: "govuk-!-font-size-16",
+              attributes: {
+                "data-qa": "archived-strength-how-identified"
+              }
+            }) }}
+
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Reason for moving to History</h3>
+            <p class="govuk-body app-u-multiline-text" data-qa="archived-strength-reason">{{ strength.archiveReason }}</p>
+
+            <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="archived-strength-audit">
+              {% set prisonName = params.prisonNamesById[strength.updatedAtPrison] | default(strength.updatedAtPrison) %}
+              Moved to history on {{ strength.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ strength.updatedByDisplayName }}, {{ prisonName }}</span>
+            </p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
