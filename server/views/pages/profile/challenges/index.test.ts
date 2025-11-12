@@ -95,6 +95,23 @@ describe('Profile challenges page', () => {
           },
         },
       }),
+      archivedChallenges: Result.fulfilled({
+        MEMORY: {
+          nonAlnChallenges: [
+            aValidChallengeResponseDto({
+              challengeTypeCode: ChallengeType.MEMORY,
+              challengeCategory: ChallengeCategory.MEMORY,
+              active: false,
+              archiveReason: 'Challenge added in error',
+            }),
+          ],
+          latestAlnScreener: {
+            screenerDate: startOfToday(),
+            createdAtPrison: 'BXI',
+            challenges: [],
+          },
+        },
+      }),
     }
 
     // When
@@ -104,7 +121,9 @@ describe('Profile challenges page', () => {
     // Then
     expect($('[data-qa=active-challenges-summary-card-LITERACY_SKILLS]').length).toEqual(1)
     expect($('[data-qa=active-challenges-summary-card-NUMERACY_SKILLS]').length).toEqual(1)
+    expect($('[data-qa=archived-challenges-summary-card_MEMORY]').length).toEqual(1)
     expect($('[data-qa=no-active-challenges-message]').length).toEqual(0)
+    expect($('[data-qa=no-archived-challenges-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
@@ -121,6 +140,22 @@ describe('Profile challenges page', () => {
 
     // Then
     expect($('[data-qa=no-active-challenges-message]').length).toEqual(1)
+    expect($('[data-qa=api-error-banner]').length).toEqual(0)
+  })
+
+  it('should render the profile challenges page given prisoner has no archived Challenges', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      archivedChallenges: Result.fulfilled({}),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=no-archived-challenges-message]').length).toEqual(1)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 

@@ -1,0 +1,10 @@
+{% from "./macro.njk" import archivedChallengesSummaryCard %}
+
+{{ archivedChallengesSummaryCard({
+  archivedChallenges: archivedChallenges,
+  prisonNamesById: prisonNamesById,
+  title: title,
+  id: id,
+  classes: classes,
+  attributes: attributes
+}) }}
