@@ -4,6 +4,7 @@ import ChallengeCategory from '../../../server/enums/challengeCategory'
 import ChallengeType from '../../../server/enums/challengeType'
 import ChallengeDetailPage from '../challenges/challengeDetailPage'
 import zeroIndexed from '../../utils/zeroIndexed'
+import ArchiveChallengeReasonPage from '../challenges/archiveChallengeReasonPage'
 
 export default class ChallengesPage extends ProfilePage {
   constructor() {
@@ -14,6 +15,11 @@ export default class ChallengesPage extends ProfilePage {
   clickToEditNthNonAlnChallenge(index: number): ChallengeDetailPage {
     this.nonAlnChallenges().eq(zeroIndexed(index)).find('[data-qa=edit-challenge-button]').click()
     return Page.verifyOnPage(ChallengeDetailPage)
+  }
+
+  clickToArchiveNthNonAlnChallenge(index: number): ArchiveChallengeReasonPage {
+    this.nonAlnChallenges().eq(zeroIndexed(index)).find('[data-qa=archive-challenge-button]').click()
+    return Page.verifyOnPage(ArchiveChallengeReasonPage)
   }
 
   hasActiveChallengesSummaryCard(category: ChallengeCategory): ChallengesPage {
