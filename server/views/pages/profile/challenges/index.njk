@@ -1,5 +1,6 @@
 {% extends "../layout.njk" %}
 {% from "../components/actions-card/macro.njk" import actionsCard %}
+{% from "../../../components/archived-challenges-summary-card/macro.njk" import archivedChallengesSummaryCard %}
 {% from "../../../components/challenges-summary-card/macro.njk" import challengesSummaryCard %}
 
 {% set pageId = 'profile-challenges' %}
@@ -21,11 +22,13 @@
 
       {% if activeChallenges.isFulfilled() and archivedChallenges.isFulfilled() %}
         {% set activeChallenges = activeChallenges.value %}
+        {% set activeChallengesCount = activeChallenges | length %}
         {% set archivedChallenges = archivedChallenges.value %}
+        {% set archivedChallengesCount = archivedChallenges | length %}
+        {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
 
         {% set activeChallengesContent %}
-          {% if activeChallenges | length %}
-            {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+          {% if activeChallengesCount > 0 %}
             {% for challengeCategory, challengesData in activeChallenges %}
               {{ challengesSummaryCard({
                 challengesData: challengesData,
@@ -63,24 +66,44 @@
               </a>
             {% endif %}
           </p>
+        {% endset %}
 
+        {% set archivedChallengesContent %}
+          {% if archivedChallengesCount > 0 %}
+            {% for challengeCategory, challengesData in archivedChallenges %}
+              {% set archivedChallenges = challengesData.nonAlnChallenges %}
+              {{ archivedChallengesSummaryCard({
+                title: challengeCategory | formatChallengeCategoryScreenValue | default(challengeCategory, true),
+                archivedChallenges: archivedChallenges,
+                prisonNamesById: prisonNamesById,
+                attributes: {
+                  'data-qa': 'archived-challenges-summary-card_' + challengeCategory
+                }
+              }) }}
+            {% endfor %}
+
+          {% else %}
+            <p class="govuk-body" data-qa="no-archived-challenges-message">
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no previous challenges.
+            </p>
+          {% endif %}
         {% endset %}
 
         {% if featureToggles.editAndArchiveEnabled %}
           {{ govukTabs({
             items: [
               {
-                label: 'Current (' + activeChallenges | length + ')',
+                label: 'Current (' + activeChallengesCount + ')',
                 id: 'current-challenges',
                 panel: {
                   html: activeChallengesContent
                 }
               },
               {
-                label: 'History (' + archivedChallenges | length + ')',
+                label: 'History (' + archivedChallengesCount + ')',
                 id: 'archived-challenges',
                 panel: {
-                  html: ''
+                  html: archivedChallengesContent
                 }
               }
             ]

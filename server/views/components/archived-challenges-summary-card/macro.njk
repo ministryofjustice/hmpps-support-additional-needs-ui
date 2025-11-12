@@ -1,0 +1,15 @@
+{# Archived Challenges Summary Card macro
+
+Data supplied to this macro:
+  params: {
+    archivedChallenges: Array<ChallengeResponseDto> - Array of archived challenges
+    prisonNamesById: Object of key value pairs, where the key is the prison ID, and the value is the prison name
+    title: string - Summary Card title
+    id: string
+    classes: string
+    attributes: Object of key value pairs of additonal attributes to add the to the component
+  }
+#}
+{% macro archivedChallengesSummaryCard(params) %}
+  {%- include "./template.njk" -%}
+{% endmacro %}

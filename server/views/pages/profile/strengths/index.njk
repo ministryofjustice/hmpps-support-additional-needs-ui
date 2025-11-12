@@ -22,11 +22,13 @@
 
       {% if activeStrengths.isFulfilled() and archivedStrengths.isFulfilled() %}
         {% set activeStrengths = activeStrengths.value %}
+        {% set activeStrengthsCount = activeStrengths | length %}
         {% set archivedStrengths = archivedStrengths.value %}
+        {% set archivedStrengthsCount = archivedStrengths | length %}
         {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
 
         {% set activeStrengthsContent %}
-          {% if activeStrengths | length %}
+          {% if activeStrengthsCount > 0 %}
             {% for strengthCategory, strengthsData in activeStrengths %}
               {{ strengthsSummaryCard({
                 title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
@@ -67,7 +69,7 @@
         {% endset %}
 
         {% set archivedStrengthsContent %}
-          {% if archivedStrengths | length %}
+          {% if archivedStrengthsCount > 0 %}
           {% for strengthCategory, strengthsData in archivedStrengths %}
             {% set archivedStrengths = strengthsData.nonAlnStrengths %}
             {{ archivedStrengthsSummaryCard({
@@ -91,14 +93,14 @@
           {{ govukTabs({
             items: [
               {
-                label: 'Current (' + activeStrengths | length + ')',
+                label: 'Current (' + activeStrengthsCount + ')',
                 id: 'current-strengths',
                 panel: {
                   html: activeStrengthsContent
                 }
               },
               {
-                label: 'History (' + archivedStrengths | length + ')',
+                label: 'History (' + archivedStrengthsCount + ')',
                 id: 'archived-strengths',
                 panel: {
                   html: archivedStrengthsContent

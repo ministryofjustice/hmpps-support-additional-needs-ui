@@ -1,0 +1,56 @@
+{% from "govuk/macros/attributes.njk" import govukAttributes %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{#- Set classes for this component #}
+{%- set classNames = "govuk-summary-card" -%}
+{%- if params.classes %}
+  {% set classNames = classNames + " " + params.classes %}
+{% endif %}
+
+{#- Define component attributes #}
+{%- set componentAttributes %} class="{{ classNames }}" {{- govukAttributes(params.attributes) -}} {% if params.id %} id="{{ params.id }}"{% endif %}{% endset %}
+
+{% set archivedChallenges = params.archivedChallenges %}
+
+{% if archivedChallenges | length %}
+  <div {{ componentAttributes | safe }}>
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">{{ params.title }}</h2>
+    </div>
+
+    <div class="govuk-summary-card__content govuk-!-padding-top-0">
+      <div class="govuk-summary-list">
+
+        {% for challenge in archivedChallenges %}
+          <div class="govuk-summary-list__row archived-challenge" data-qa="{{ challenge.challengeTypeCode }}">
+            <p class="govuk-body govuk-!-margin-top-3 app-u-multiline-text" data-qa="archived-symptoms">{{ challenge.symptoms }}</p>
+
+            {% set expanderContent %}
+              <ul class="govuk-list govuk-!-font-size-16">
+                {% for challengeIdentificationSource in challenge.howIdentified %}
+                  <li>{{ challengeIdentificationSource | formatChallengeIdentificationSourceScreenValue if challengeIdentificationSource != 'OTHER' else challenge.howIdentifiedOther }}</li>
+                {% endfor %}
+              </ul>
+            {% endset %}
+            {{ govukDetails({
+              summaryText: "How was this identified?",
+              html: expanderContent,
+              classes: "govuk-!-font-size-16",
+              attributes: {
+                "data-qa": "archived-challenge-how-identified"
+              }
+            }) }}
+
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Reason for moving to History</h3>
+            <p class="govuk-body app-u-multiline-text" data-qa="archived-challenge-reason">{{ challenge.archiveReason }}</p>
+
+            <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="archived-challenge-audit">
+              {% set prisonName = params.prisonNamesById[challenge.updatedAtPrison] | default(challenge.updatedAtPrison) %}
+              Moved to history on {{ challenge.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ challenge.updatedByDisplayName }}, {{ prisonName }}</span>
+            </p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
