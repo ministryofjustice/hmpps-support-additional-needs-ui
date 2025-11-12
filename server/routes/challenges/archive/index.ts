@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
@@ -6,10 +6,17 @@ import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import retrieveChallengeResponseDtoIfNotInJourneyData from '../middleware/retrieveChallengeResponseDtoIfNotInJourneyData'
 import checkChallengeDtoExistsInJourneyData from '../middleware/checkChallengeDtoExistsInJourneyData'
+import ReasonController from './reason/reasonController'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import archiveReasonSchema from '../validationSchemas/archiveReasonSchema'
+import { validate } from '../../../middleware/validationMiddleware'
+import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
 
 const archiveChallengeRoutes = (services: Services): Router => {
-  const { journeyDataService, challengeService } = services
+  const { auditService, challengeService, journeyDataService, prisonService } = services
   const router = Router({ mergeParams: true })
+
+  const reasonController = new ReasonController(challengeService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.ARCHIVE_CHALLENGES),
@@ -22,10 +29,15 @@ const archiveChallengeRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/reason', [
     checkChallengeDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Archive challenge reason')
-    },
+    retrievePrisonsLookup(prisonService),
+    asyncMiddleware(reasonController.getReasonView),
   ])
+  router.post('/:journeyId/reason', [
+    checkChallengeDtoExistsInJourneyData,
+    validate(archiveReasonSchema),
+    asyncMiddleware(reasonController.submitReasonForm),
+  ])
+
   return router
 }
 

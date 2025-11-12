@@ -22,6 +22,7 @@ const toChallengeResponseDto = (prisonNumber: string, challenge: ChallengeRespon
         active: challenge.active,
         howIdentifiedOther: challenge.howIdentifiedOther,
         alnScreenerDate: challenge.alnScreenerDate ? parseISO(challenge.alnScreenerDate) : null,
+        archiveReason: challenge.archiveReason,
       }
     : null
 }

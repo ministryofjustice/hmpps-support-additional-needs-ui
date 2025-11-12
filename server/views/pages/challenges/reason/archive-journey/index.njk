@@ -1,0 +1,70 @@
+{% extends "../../layout.njk" %}
+
+{% set pageId = 'archive-challenge-reason' %}
+{% set pageTitle = "Move challenge to history - Move challenge to history reason" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">Move {{ prisonerSummary | formatFirst_name_Last_name }}'s challenge to the History</h1>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <p class="govuk-hint">Challenges in the History tab are view only and cannot be reactivated.</p>
+
+      {% set insetContent %}
+        <h3 class="govuk-heading-m govuk-!-margin-bottom-2">{{ dto.challengeCategory | formatChallengeCategoryScreenValue | default(dto.challengeCategory, true) }}</h3>
+        <p class="govuk-body app-u-multiline-text">{{ dto.symptoms }}</p>
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-1">How was this challenge identified?</h2>
+        <ul class="govuk-list">
+          {% for challengeIdentificationSource in dto.howIdentified %}
+            <li>{{ challengeIdentificationSource | formatChallengeIdentificationSourceScreenValue if challengeIdentificationSource != 'OTHER' else dto.howIdentifiedOther }}</li>
+          {% endfor %}
+        </ul>
+
+        <p class="govuk-hint govuk-body govuk-!-font-size-16">
+          {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+          {% set prisonName = prisonNamesById[dto.updatedAtPrison] | default(dto.updatedAtPrison) %}
+          Last updated {{ dto.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ dto.updatedByDisplayName }}, {{ prisonName }}</span>
+        </p>
+      {% endset %}
+      {{ govukInsetText({
+        html: insetContent
+      }) }}
+
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukTextarea({
+            id: "archiveReason",
+            name: "archiveReason",
+            rows: "4",
+            value: form.archiveReason,
+            type: "text",
+            label: {
+              text: "Add a reason for moving this challenge to the History",
+              classes: "govuk-label--s",
+              attributes: { "aria-live": "polite" }
+            },
+            attributes: { "aria-label" : "Give details of the archive reason" },
+            errorMessage: errors | findError("archiveReason")
+          }) }}
+
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Move challenge",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

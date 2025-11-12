@@ -9,6 +9,7 @@ const aValidChallengeDto = (options?: {
   symptoms?: string
   howIdentified?: Array<ChallengeIdentificationSource>
   howIdentifiedOther?: string
+  archiveReason?: string
 }): ChallengeDto => ({
   prisonNumber: options?.prisonNumber || 'A1234BC',
   prisonId: options?.prisonId || 'BXI',
@@ -19,6 +20,7 @@ const aValidChallengeDto = (options?: {
     options?.howIdentifiedOther === null
       ? null
       : options?.howIdentifiedOther || 'The trainer noticed that John could read better on a cream background',
+  archiveReason: options?.archiveReason,
 })
 
 export default aValidChallengeDto

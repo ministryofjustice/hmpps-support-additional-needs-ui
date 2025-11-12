@@ -15,6 +15,7 @@ const aValidStrengthResponse = (
     howIdentified?: Array<string>
     howIdentifiedOther?: string
     alnScreenerDate?: string
+    archiveReason?: string
   },
 ): StrengthResponse => ({
   active: options?.active == null ? true : options?.active,
@@ -31,6 +32,7 @@ const aValidStrengthResponse = (
     categoryCode: options?.strengthCategory || 'LITERACY_SKILLS',
   },
   alnScreenerDate: options?.alnScreenerDate === null ? null : options?.alnScreenerDate || '2025-06-18',
+  archiveReason: options?.archiveReason,
   ...validAuditFields(options),
 })
 

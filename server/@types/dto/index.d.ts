@@ -105,6 +105,7 @@ declare module 'dto' {
     symptoms?: string
     howIdentified?: Array<ChallengeIdentificationSource>
     howIdentifiedOther?: string
+    archiveReason?: string
   }
 
   /**
@@ -120,6 +121,7 @@ declare module 'dto' {
     howIdentified?: Array<ChallengeIdentificationSource>
     howIdentifiedOther?: string
     alnScreenerDate?: Date
+    archiveReason?: string
   }
 
   export interface ConditionsList {

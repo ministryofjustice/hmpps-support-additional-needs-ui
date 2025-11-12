@@ -14,5 +14,7 @@
     </div>
   {% endif %}
 
-  <p class="govuk-body">{{ 'Edit' if mode == 'edit' else 'Add' }} challenge</p>
+  {% if not mode == 'archive' %}
+    <p class="govuk-body">{{ 'Edit' if mode == 'edit' else 'Add' }} challenge</p>
+  {% endif %}
 {% endblock %}

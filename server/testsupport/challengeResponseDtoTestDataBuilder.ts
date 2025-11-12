@@ -15,6 +15,7 @@ const aValidChallengeResponseDto = (
     active?: boolean
     fromALNScreener?: boolean
     alnScreenerDate?: Date
+    archiveReason?: string
   },
 ): ChallengeResponseDto => ({
   prisonNumber: options?.prisonNumber || 'A1234BC',
@@ -30,6 +31,7 @@ const aValidChallengeResponseDto = (
   active: options?.active == null ? true : options?.active,
   fromALNScreener: options?.fromALNScreener == null ? true : options?.fromALNScreener,
   alnScreenerDate: options?.alnScreenerDate === null ? null : options?.alnScreenerDate,
+  archiveReason: options?.archiveReason,
   ...validDtoAuditFields(options),
 })
 
