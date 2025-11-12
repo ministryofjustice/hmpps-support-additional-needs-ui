@@ -70,17 +70,17 @@
 
         {% set archivedStrengthsContent %}
           {% if archivedStrengthsCount > 0 %}
-          {% for strengthCategory, strengthsData in archivedStrengths %}
-            {% set archivedStrengths = strengthsData.nonAlnStrengths %}
-            {{ archivedStrengthsSummaryCard({
-              title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
-              archivedStrengths: archivedStrengths,
-              prisonNamesById: prisonNamesById,
-              attributes: {
-                'data-qa': 'archived-strengths-summary-card_' + strengthCategory
-              }
-            }) }}
-          {% endfor %}
+            {% for strengthCategory, strengthsData in archivedStrengths %}
+              {% set archivedStrengths = strengthsData.nonAlnStrengths %}
+              {{ archivedStrengthsSummaryCard({
+                title: strengthCategory | formatStrengthCategoryScreenValue | default(strengthCategory, true),
+                archivedStrengths: archivedStrengths,
+                prisonNamesById: prisonNamesById,
+                attributes: {
+                  'data-qa': 'archived-strengths-summary-card_' + strengthCategory
+                }
+              }) }}
+            {% endfor %}
 
           {% else %}
             <p class="govuk-body" data-qa="no-archived-strengths-message">

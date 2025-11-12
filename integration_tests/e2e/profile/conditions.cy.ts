@@ -49,8 +49,8 @@ context('Profile Conditions Page', () => {
 
     // Then
     Page.verifyOnPage(ConditionsPage) //
-      .hasDiagnosedConditions(ConditionType.ADHD, ConditionType.VISUAL_IMPAIR)
-      .hasSelfDeclaredConditions(ConditionType.DYSLEXIA)
+      .hasActiveDiagnosedConditions(ConditionType.ADHD, ConditionType.VISUAL_IMPAIR)
+      .hasActiveSelfDeclaredConditions(ConditionType.DYSLEXIA)
       .apiErrorBannerIsNotDisplayed()
   })
 
