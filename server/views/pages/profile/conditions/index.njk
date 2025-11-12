@@ -19,11 +19,16 @@
 
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
-      <section>
-        {% if conditions.isFulfilled() %}
-          {% set activeConditions = conditions.value.conditions | filterArrayOnProperty('active', true) | sort(attribute = 'updatedAt', reverse = true) %}
-          {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
-          {% if activeConditions | length %}
+      {% if conditions.isFulfilled() %}
+        {% set activeConditions = conditions.value.conditions | filterArrayOnProperty('active', true) | sort(attribute = 'updatedAt', reverse = true) %}
+        {% set activeConditionsCount = activeConditions | length %}
+        {% set archivedConditions = conditions.value.conditions | filterArrayOnProperty('active', false) | sort(attribute = 'updatedAt', reverse = true) %}
+        {% set archivedConditionsCount = archivedConditions | length %}
+
+        {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+
+        {% set activeConditionsContent %}
+          {% if activeConditionsCount > 0%}
 
             {{ conditionsSummaryCard({
               conditions: activeConditions | filterArrayOnProperty('source', 'CONFIRMED_DIAGNOSIS'),
@@ -32,7 +37,7 @@
               showActions: true,
               userHasPermissionTo: userHasPermissionTo,
               attributes: {
-                'data-qa': 'diagnosed-conditions-summary-card'
+                'data-qa': 'active-diagnosed-conditions-summary-card'
               }
             }) }}
 
@@ -43,35 +48,65 @@
               showActions: true,
               userHasPermissionTo: userHasPermissionTo,
               attributes: {
-                'data-qa': 'self-declared-conditions-summary-card'
+                'data-qa': 'active-self-declared-conditions-summary-card'
               }
             }) }}
 
           {% else %}
-
-            <div class="govuk-summary-card" data-qa="no-conditions-summary-card">
-              <div class="govuk-summary-card__content">
-                <p class="govuk-body">
-                  No conditions recorded
-                </p>
+            {% if featureToggles.editAndArchiveEnabled %}
+              <p class="govuk-body" data-qa="no-active-conditions-message">
+                {{ prisonerSummary | formatFirst_name_Last_name }} has no current conditions.
+              </p>
+            {% else %}
+              <div class="govuk-summary-card">
+                <div class="govuk-summary-card__content">
+                  <p class="govuk-body" data-qa="no-active-conditions-message">
+                    No conditions recorded
+                  </p>
+                </div>
               </div>
-            </div>
+
+            {% endif %}
 
           {% endif %}
 
-        {% else %}
-          <h3 class="govuk-heading-s" data-qa="conditions-unavailable-message">We cannot show these details right now</h3>
-          <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
-        {% endif %}
-      </section>
+          <p class="govuk-body">
+            {% if userHasPermissionTo('RECORD_SELF_DECLARED_CONDITIONS') %}
+              <a class="govuk-link govuk-body govuk-!-display-none-print" href="/conditions/{{ prisonerSummary.prisonNumber }}/create/select-conditions">
+                Add a condition
+              </a>
+            {% endif %}
+          </p>
+        {% endset %}
 
-      <p class="govuk-body">
-        {% if userHasPermissionTo('RECORD_SELF_DECLARED_CONDITIONS') %}
-          <a class="govuk-link govuk-body govuk-!-display-none-print" href="/conditions/{{ prisonerSummary.prisonNumber }}/create/select-conditions">
-            Add a condition
-          </a>
+        {% if featureToggles.editAndArchiveEnabled %}
+          {{ govukTabs({
+            items: [
+              {
+                label: 'Current (' + activeConditionsCount + ')',
+                id: 'current-conditions',
+                panel: {
+                html: activeConditionsContent
+              }
+              },
+              {
+                label: 'History (' + archivedConditionsCount + ')',
+                id: 'archived-conditions',
+                panel: {
+                html: ''
+              }
+              }
+            ]
+          }) }}
+        {% else %}
+          {{ activeConditionsContent | safe }}
         {% endif %}
-      </p>
+
+      {% else %}
+        <h3 class="govuk-heading-s" data-qa="conditions-unavailable-message">We cannot show these details right now</h3>
+        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+      {% endif %}
+
     </div>
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">

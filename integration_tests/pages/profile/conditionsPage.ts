@@ -11,48 +11,91 @@ export default class ConditionsPage extends ProfilePage {
   }
 
   clickToEditNthCondition(index: number): EditConditionDetailPage {
-    this.conditions().eq(zeroIndexed(index)).find('[data-qa=edit-condition-button]').click()
+    this.activeConditions().eq(zeroIndexed(index)).find('[data-qa=edit-condition-button]').click()
     return Page.verifyOnPage(EditConditionDetailPage)
   }
 
-  hasDiagnosedConditions(...conditions: Array<ConditionType>): ConditionsPage {
-    this.diagnosedConditionsSummaryCard().should('be.visible')
-    this.diagnosedConditionsSummaryCard().find('.govuk-summary-list__row').should('have.length', conditions.length)
+  hasActiveDiagnosedConditions(...conditions: Array<ConditionType>): ConditionsPage {
+    this.diagnosedConditionsSummaryCard({ active: true }).should('be.visible')
+    this.diagnosedConditionsSummaryCard({ active: true })
+      .find('.govuk-summary-list__row')
+      .should('have.length', conditions.length)
     conditions.forEach(condition => {
-      this.diagnosedConditionsSummaryCard().find(`.govuk-summary-list__row[data-qa=${condition}]`).should('be.visible')
-    })
-    this.noConditionsSummaryCard().should('not.exist')
-    return this
-  }
-
-  hasSelfDeclaredConditions(...conditions: Array<ConditionType>): ConditionsPage {
-    this.selfDeclaredConditionsSummaryCard().should('be.visible')
-    this.selfDeclaredConditionsSummaryCard().find('.govuk-summary-list__row').should('have.length', conditions.length)
-    conditions.forEach(condition => {
-      this.selfDeclaredConditionsSummaryCard()
+      this.diagnosedConditionsSummaryCard({ active: true })
         .find(`.govuk-summary-list__row[data-qa=${condition}]`)
         .should('be.visible')
     })
-    this.noConditionsSummaryCard().should('not.exist')
+    this.noConditionsMessage({ active: true }).should('not.exist')
+    return this
+  }
+
+  hasArchivedDiagnosedConditions(...conditions: Array<ConditionType>): ConditionsPage {
+    this.diagnosedConditionsSummaryCard({ active: false }).should('be.visible')
+    this.diagnosedConditionsSummaryCard({ active: false })
+      .find('.govuk-summary-list__row')
+      .should('have.length', conditions.length)
+    conditions.forEach(condition => {
+      this.diagnosedConditionsSummaryCard({ active: false })
+        .find(`.govuk-summary-list__row[data-qa=${condition}]`)
+        .should('be.visible')
+    })
+    this.noConditionsMessage({ active: false }).should('not.exist')
+    return this
+  }
+
+  hasActiveSelfDeclaredConditions(...conditions: Array<ConditionType>): ConditionsPage {
+    this.selfDeclaredConditionsSummaryCard({ active: true }).should('be.visible')
+    this.selfDeclaredConditionsSummaryCard({ active: true })
+      .find('.govuk-summary-list__row')
+      .should('have.length', conditions.length)
+    conditions.forEach(condition => {
+      this.selfDeclaredConditionsSummaryCard({ active: true })
+        .find(`.govuk-summary-list__row[data-qa=${condition}]`)
+        .should('be.visible')
+    })
+    this.noConditionsMessage({ active: true }).should('not.exist')
+    return this
+  }
+
+  hasArchivedSelfDeclaredConditions(...conditions: Array<ConditionType>): ConditionsPage {
+    this.selfDeclaredConditionsSummaryCard({ active: false }).should('be.visible')
+    this.selfDeclaredConditionsSummaryCard({ active: false })
+      .find('.govuk-summary-list__row')
+      .should('have.length', conditions.length)
+    conditions.forEach(condition => {
+      this.selfDeclaredConditionsSummaryCard({ active: false })
+        .find(`.govuk-summary-list__row[data-qa=${condition}]`)
+        .should('be.visible')
+    })
+    this.noConditionsMessage({ active: false }).should('not.exist')
     return this
   }
 
   hasNoActiveConditions(): ConditionsPage {
-    this.noConditionsSummaryCard().should('be.visible')
-    this.selfDeclaredConditionsSummaryCard().should('not.exist')
-    this.diagnosedConditionsSummaryCard().should('not.exist')
+    this.noConditionsMessage({ active: true }).should('be.visible')
+    this.selfDeclaredConditionsSummaryCard({ active: true }).should('not.exist')
+    this.diagnosedConditionsSummaryCard({ active: true }).should('not.exist')
     return this
   }
 
-  private diagnosedConditionsSummaryCard = (): PageElement => cy.get('[data-qa=diagnosed-conditions-summary-card]')
+  hasNoArchivedConditions(): ConditionsPage {
+    this.noConditionsMessage({ active: false }).should('be.visible')
+    this.selfDeclaredConditionsSummaryCard({ active: false }).should('not.exist')
+    this.diagnosedConditionsSummaryCard({ active: false }).should('not.exist')
+    return this
+  }
 
-  private selfDeclaredConditionsSummaryCard = (): PageElement =>
-    cy.get('[data-qa=self-declared-conditions-summary-card]')
+  private diagnosedConditionsSummaryCard = (options: { active: boolean }): PageElement =>
+    cy.get(`[data-qa=${options.active ? 'active' : 'archived'}-diagnosed-conditions-summary-card]`)
 
-  private noConditionsSummaryCard = (): PageElement => cy.get('[data-qa=no-conditions-summary-card]')
+  private selfDeclaredConditionsSummaryCard = (options: { active: boolean }): PageElement =>
+    cy.get(`[data-qa=${options.active ? 'active' : 'archived'}-self-declared-conditions-summary-card]`)
 
-  private conditions = (): PageElement =>
+  private noConditionsMessage = (options: { active: boolean }): PageElement =>
+    cy.get(`[data-qa=no-${options.active ? 'active' : 'archived'}-conditions-message]`)
+
+  private activeConditions = (): PageElement =>
     cy.get(
-      '[data-qa=diagnosed-conditions-summary-card] .govuk-summary-list__row, [data-qa=self-declared-conditions-summary-card] .govuk-summary-list__row',
+      `[data-qa=active-diagnosed-conditions-summary-card] .govuk-summary-list__row, [data-qa=active-self-declared-conditions-summary-card] .govuk-summary-list__row`,
     )
 }
