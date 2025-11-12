@@ -99,13 +99,14 @@ describe('toChallengeDto', () => {
           updatedAt: '2025-07-26T12:00:00.000Z',
           updatedBy: 'user2',
           updatedByDisplayName: 'Dave Davidson 2',
-          active: true,
+          active: false,
           fromALNScreener: true,
           howIdentified: ['WIDER_PRISON'],
           howIdentifiedOther: '',
           symptoms: 'Some varying symptoms',
           updatedAtPrison: 'BXI',
           alnScreenerDate: '2025-07-23T12:00:00.000Z',
+          archiveReason: 'Created in error',
         },
       ],
     }
@@ -144,7 +145,7 @@ describe('toChallengeDto', () => {
       updatedAtPrison: 'BXI',
       reference: testRef2,
       fromALNScreener: true,
-      active: true,
+      active: false,
       createdByDisplayName: 'Bob Martin 2',
       updatedByDisplayName: 'Dave Davidson 2',
       howIdentified: ['WIDER_PRISON'],
@@ -152,6 +153,7 @@ describe('toChallengeDto', () => {
       symptoms: 'Some varying symptoms',
       alnScreenerDate: parseISO('2025-07-23T12:00:00.000Z'),
       challengeTypeCode: 'TYPE001',
+      archiveReason: 'Created in error',
     })
   })
 

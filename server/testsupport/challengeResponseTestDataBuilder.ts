@@ -20,6 +20,7 @@ const aValidChallengeResponse = (
     howIdentifiedOther?: string
     alnScreenerDate?: string
     challengeCategory?: string
+    archiveReason?: string
   },
 ): ChallengeResponse => ({
   active: options?.active == null ? true : options?.active,
@@ -40,6 +41,7 @@ const aValidChallengeResponse = (
     categoryCode: options?.challengeCategory || 'LITERACY_SKILLS',
   },
   alnScreenerDate: options?.alnScreenerDate === null ? null : options?.alnScreenerDate || '2025-06-18',
+  archiveReason: options?.archiveReason,
   ...validAuditFields(options),
 })
 

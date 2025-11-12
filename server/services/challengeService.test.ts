@@ -8,6 +8,7 @@ import aValidChallengeResponseDto from '../testsupport/challengeResponseDtoTestD
 import ChallengeType from '../enums/challengeType'
 import ChallengeIdentificationSource from '../enums/challengeIdentificationSource'
 import anUpdateChallengeRequest from '../testsupport/updateChallengeRequestTestDataBuilder'
+import anArchiveChallengeRequest from '../testsupport/archiveChallengeRequestTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -255,6 +256,64 @@ describe('challengeService', () => {
         challengeReference,
         username,
         expectedUpdateChallengeRequest,
+      )
+    })
+  })
+
+  describe('archiveChallenge', () => {
+    it('should archive challenge', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.archiveChallenge.mockResolvedValue(null)
+
+      const challengeDto = aValidChallengeDto({
+        prisonNumber,
+        prisonId: 'BXI',
+        archiveReason: 'Challenge created in error',
+      })
+
+      const expectedArchiveChallengeRequest = anArchiveChallengeRequest({
+        prisonId: 'BXI',
+        reason: 'Challenge created in error',
+      })
+
+      // When
+      await service.archiveChallenge(username, challengeReference, challengeDto)
+
+      // Then
+      expect(supportAdditionalNeedsApiClient.archiveChallenge).toHaveBeenCalledWith(
+        prisonNumber,
+        challengeReference,
+        username,
+        expectedArchiveChallengeRequest,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.archiveChallenge.mockRejectedValue(expectedError)
+
+      const challengeDto = aValidChallengeDto({
+        prisonNumber,
+        prisonId: 'BXI',
+        archiveReason: 'Challenge created in error',
+      })
+
+      const expectedArchiveChallengeRequest = anArchiveChallengeRequest({
+        prisonId: 'BXI',
+        reason: 'Challenge created in error',
+      })
+
+      // When
+      const actual = await service.archiveChallenge(username, challengeReference, challengeDto).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.archiveChallenge).toHaveBeenCalledWith(
+        prisonNumber,
+        challengeReference,
+        username,
+        expectedArchiveChallengeRequest,
       )
     })
   })

@@ -4,6 +4,7 @@ import { toCreateChallengesRequest } from '../data/mappers/createChallengesReque
 import logger from '../../logger'
 import { toChallengeDto, toChallengeResponseDto } from '../data/mappers/challengeDtoMapper'
 import toUpdateChallengeRequest from '../data/mappers/updateChallengeRequestMapper'
+import toArchiveChallengeRequest from '../data/mappers/archiveChallengeRequestMapper'
 
 export default class ChallengeService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -60,6 +61,22 @@ export default class ChallengeService {
       )
     } catch (e) {
       logger.error(`Error updating Challenge for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
+
+  async archiveChallenge(username: string, challengeReference: string, challenge: ChallengeDto): Promise<void> {
+    const { prisonNumber } = challenge
+    try {
+      const archiveChallengeRequest = toArchiveChallengeRequest(challenge)
+      await this.supportAdditionalNeedsApiClient.archiveChallenge(
+        prisonNumber,
+        challengeReference,
+        username,
+        archiveChallengeRequest,
+      )
+    } catch (e) {
+      logger.error(`Error archiving Challenge for [${prisonNumber}]`, e)
       throw e
     }
   }
