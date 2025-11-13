@@ -20,6 +20,7 @@ const aValidConditionDto = (
     conditionDetails?: string
     source?: ConditionSource
     active?: boolean
+    archiveReason?: string
   },
 ): ConditionDto => ({
   prisonId: options?.prisonId == null ? null : options?.prisonId || 'BXI',
@@ -33,6 +34,7 @@ const aValidConditionDto = (
         'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
   conditionName: options?.conditionName === null ? null : options?.conditionName || 'Phonological dyslexia',
   active: options?.active == null ? true : options?.active,
+  archiveReason: options?.archiveReason,
   ...validDtoAuditFields(options),
 })
 

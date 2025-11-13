@@ -1,0 +1,65 @@
+{% extends "../../layout.njk" %}
+
+{% set pageId = 'archive-condition-reason' %}
+{% set pageTitle = "Move condition to history - Move condition to history reason" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">Move {{ prisonerSummary | formatFirst_name_Last_name }}'s condition to the History</h1>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <p class="govuk-hint">Conditions in the History tab are view only and cannot be reactivated.</p>
+
+      {% set insetContent %}
+        <h3 class="govuk-heading-m govuk-!-margin-bottom-2">{{ dto.conditionTypeCode | formatConditionTypeScreenValue | default(dto.conditionTypeCode, true) }}</h3>
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-2">{{ 'Self-declared condition' if dto.source == 'SELF_DECLARED' else 'Confirmed diagnosis' }}</h3>
+        <p class="govuk-body app-u-multiline-text">{{ dto.conditionDetails }}</p>
+
+        <p class="govuk-hint govuk-body govuk-!-font-size-16">
+          {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+          {% set prisonName = prisonNamesById[dto.updatedAtPrison] | default(dto.updatedAtPrison) %}
+          Last updated {{ dto.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ dto.updatedByDisplayName }}, {{ prisonName }}</span>
+        </p>
+      {% endset %}
+      {{ govukInsetText({
+        html: insetContent
+      }) }}
+
+
+      <form class="form" method="post" novalidate="">
+        <div class="govuk-form-group">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukTextarea({
+            id: "archiveReason",
+            name: "archiveReason",
+            rows: "4",
+            value: form.archiveReason,
+            type: "text",
+            label: {
+              text: "Add a reason for moving this condition to the History",
+              classes: "govuk-label--s",
+              attributes: { "aria-live": "polite" }
+            },
+            attributes: { "aria-label" : "Give details of the archive reason" },
+            errorMessage: errors | findError("archiveReason")
+          }) }}
+
+        </div>
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Move condition",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

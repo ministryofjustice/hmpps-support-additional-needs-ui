@@ -4,6 +4,7 @@ import { toCreateConditionsRequest } from '../data/mappers/createConditionsReque
 import logger from '../../logger'
 import { toConditionDto, toConditionsList } from '../data/mappers/conditionDtoMapper'
 import toUpdateConditionRequest from '../data/mappers/updateConditionRequestMapper'
+import toArchiveConditionRequest from '../data/mappers/archiveConditionRequestMapper'
 
 export default class ConditionService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -55,6 +56,22 @@ export default class ConditionService {
       )
     } catch (e) {
       logger.error(`Error updating Condition for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
+
+  async archiveCondition(username: string, conditionReference: string, condition: ConditionDto): Promise<void> {
+    const { prisonNumber } = condition
+    try {
+      const archiveConditionRequest = toArchiveConditionRequest(condition)
+      await this.supportAdditionalNeedsApiClient.archiveCondition(
+        prisonNumber,
+        conditionReference,
+        username,
+        archiveConditionRequest,
+      )
+    } catch (e) {
+      logger.error(`Error archiving Condition for [${prisonNumber}]`, e)
       throw e
     }
   }
