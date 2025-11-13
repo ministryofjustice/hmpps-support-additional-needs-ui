@@ -3,6 +3,7 @@ import Page, { PageElement } from '../page'
 import ConditionType from '../../../server/enums/conditionType'
 import zeroIndexed from '../../utils/zeroIndexed'
 import EditConditionDetailPage from '../conditions/editConditionDetailPage'
+import ArchiveConditionReasonPage from '../conditions/archiveConditionReasonPage'
 
 export default class ConditionsPage extends ProfilePage {
   constructor() {
@@ -13,6 +14,11 @@ export default class ConditionsPage extends ProfilePage {
   clickToEditNthCondition(index: number): EditConditionDetailPage {
     this.activeConditions().eq(zeroIndexed(index)).find('[data-qa=edit-condition-button]').click()
     return Page.verifyOnPage(EditConditionDetailPage)
+  }
+
+  clickToArchiveNthCondition(index: number): ArchiveConditionReasonPage {
+    this.activeConditions().eq(zeroIndexed(index)).find('[data-qa=archive-condition-button]').click()
+    return Page.verifyOnPage(ArchiveConditionReasonPage)
   }
 
   hasActiveDiagnosedConditions(...conditions: Array<ConditionType>): ConditionsPage {
