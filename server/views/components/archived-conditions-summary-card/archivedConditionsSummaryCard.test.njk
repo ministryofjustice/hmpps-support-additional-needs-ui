@@ -1,0 +1,9 @@
+{% from "./macro.njk" import archivedConditionsSummaryCard %}
+
+{{ archivedConditionsSummaryCard({
+  archivedConditions: archivedConditions,
+  prisonNamesById: prisonNamesById,
+  title: title,
+  classes: classes,
+  attributes: attributes
+}) }}
