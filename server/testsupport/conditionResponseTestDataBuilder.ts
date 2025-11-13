@@ -15,6 +15,7 @@ const aValidConditionResponse = (
     source?: ConditionSource
     conditionDetails?: string
     conditionName?: string
+    archiveReason?: string
   },
 ): ConditionResponse => ({
   active: options?.active == null ? true : options?.active,
@@ -28,6 +29,7 @@ const aValidConditionResponse = (
     code: options?.conditionTypeCode || 'DYSLEXIA',
   },
   conditionName: options?.conditionName === null ? null : options?.conditionName || 'Phonological dyslexia',
+  archiveReason: options?.archiveReason,
   ...validAuditFields(options),
 })
 

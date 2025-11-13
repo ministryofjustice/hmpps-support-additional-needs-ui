@@ -137,6 +137,7 @@ declare module 'dto' {
     conditionDetails: string
     source: ConditionSource
     active?: boolean
+    archiveReason?: string
   }
 
   /**

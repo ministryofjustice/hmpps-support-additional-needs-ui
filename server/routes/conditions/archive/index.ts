@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
@@ -6,10 +6,17 @@ import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import retrieveConditionDtoIfNotInJourneyData from '../middleware/retrieveConditionDtoIfNotInJourneyData'
 import checkConditionDtoExistsInJourneyData from '../middleware/checkConditionDtoExistsInJourneyData'
+import ReasonController from './reason/reasonController'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
+import { validate } from '../../../middleware/validationMiddleware'
+import archiveReasonSchema from '../validationSchemas/archiveReasonSchema'
 
 const archiveConditionRoutes = (services: Services): Router => {
-  const { journeyDataService, conditionService } = services
+  const { auditService, conditionService, journeyDataService, prisonService } = services
   const router = Router({ mergeParams: true })
+
+  const reasonController = new ReasonController(conditionService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.ARCHIVE_CONDITIONS),
@@ -22,10 +29,15 @@ const archiveConditionRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/reason', [
     checkConditionDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Archive condition reason')
-    },
+    retrievePrisonsLookup(prisonService),
+    asyncMiddleware(reasonController.getReasonView),
   ])
+  router.post('/:journeyId/reason', [
+    checkConditionDtoExistsInJourneyData,
+    validate(archiveReasonSchema),
+    asyncMiddleware(reasonController.submitReasonForm),
+  ])
+
   return router
 }
 

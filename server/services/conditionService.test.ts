@@ -8,6 +8,7 @@ import { aValidConditionListResponse, aValidConditionResponse } from '../testsup
 import ConditionType from '../enums/conditionType'
 import ConditionSource from '../enums/conditionSource'
 import anUpdateConditionRequest from '../testsupport/updateConditionRequestTestDataBuilder'
+import anArchiveConditionRequest from '../testsupport/archiveConditionRequestTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -268,6 +269,64 @@ describe('conditionService', () => {
         conditionReference,
         username,
         expectedUpdateConditionRequest,
+      )
+    })
+  })
+
+  describe('archiveCondition', () => {
+    it('should archive condition', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.archiveCondition.mockResolvedValue(null)
+
+      const conditionDto = aValidConditionDto({
+        prisonNumber,
+        prisonId: 'BXI',
+        archiveReason: 'Condition created in error',
+      })
+
+      const expectedArchiveConditionRequest = anArchiveConditionRequest({
+        prisonId: 'BXI',
+        reason: 'Condition created in error',
+      })
+
+      // When
+      await service.archiveCondition(username, conditionReference, conditionDto)
+
+      // Then
+      expect(supportAdditionalNeedsApiClient.archiveCondition).toHaveBeenCalledWith(
+        prisonNumber,
+        conditionReference,
+        username,
+        expectedArchiveConditionRequest,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.archiveCondition.mockRejectedValue(expectedError)
+
+      const conditionDto = aValidConditionDto({
+        prisonNumber,
+        prisonId: 'BXI',
+        archiveReason: 'Condition created in error',
+      })
+
+      const expectedArchiveConditionRequest = anArchiveConditionRequest({
+        prisonId: 'BXI',
+        reason: 'Condition created in error',
+      })
+
+      // When
+      const actual = await service.archiveCondition(username, conditionReference, conditionDto).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.archiveCondition).toHaveBeenCalledWith(
+        prisonNumber,
+        conditionReference,
+        username,
+        expectedArchiveConditionRequest,
       )
     })
   })

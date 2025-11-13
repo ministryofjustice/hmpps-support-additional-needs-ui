@@ -21,6 +21,7 @@ const toConditionDto = (prisonNumber: string, conditionResponse: ConditionRespon
         conditionDetails: conditionResponse.conditionDetails,
         source: conditionResponse.source,
         active: conditionResponse.active,
+        archiveReason: conditionResponse.archiveReason,
       }
     : null
 

@@ -12,7 +12,7 @@ describe('conditionDtoMapper', () => {
     const apiResponse = aValidConditionListResponse({
       conditionResponses: [
         {
-          active: true,
+          active: false,
           source: 'SELF_DECLARED',
           conditionDetails: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
           conditionType: { code: 'DYSLEXIA' },
@@ -26,6 +26,7 @@ describe('conditionDtoMapper', () => {
           updatedByDisplayName: 'Alex Smith',
           updatedAt: '2023-06-19T09:39:44Z',
           updatedAtPrison: 'MDI',
+          archiveReason: 'Created in error',
         },
       ],
     })
@@ -35,7 +36,7 @@ describe('conditionDtoMapper', () => {
       conditions: [
         {
           prisonId: null,
-          active: true,
+          active: false,
           prisonNumber,
           conditionDetails: 'John says he was diagnosed with dyslexia as a child, but this has not yet been evidenced.',
           conditionName: 'Phonological dyslexia',
@@ -50,6 +51,7 @@ describe('conditionDtoMapper', () => {
           updatedAtPrison: 'MDI',
           updatedBy: 'asmith_gen',
           updatedByDisplayName: 'Alex Smith',
+          archiveReason: 'Created in error',
         },
       ],
     })
