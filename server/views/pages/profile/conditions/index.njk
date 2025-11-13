@@ -1,5 +1,6 @@
 {% extends "../layout.njk" %}
 {% from "../components/actions-card/macro.njk" import actionsCard %}
+{% from "../../../components/archived-conditions-summary-card/macro.njk" import archivedConditionsSummaryCard %}
 {% from "../../../components/conditions-summary-card/macro.njk" import conditionsSummaryCard %}
 
 {% set pageId = 'profile-conditions' %}
@@ -79,6 +80,34 @@
           </p>
         {% endset %}
 
+        {% set archivedConditionsContent %}
+          {% if archivedConditionsCount > 0 %}
+
+            {{ archivedConditionsSummaryCard({
+              archivedConditions: archivedConditions | filterArrayOnProperty('source', 'CONFIRMED_DIAGNOSIS'),
+              prisonNamesById: prisonNamesById,
+              title: 'Confirmed diagnoses',
+              attributes: {
+                'data-qa': 'archived-diagnosed-conditions-summary-card'
+              }
+            }) }}
+
+            {{ archivedConditionsSummaryCard({
+              archivedConditions: archivedConditions | filterArrayOnProperty('source', 'SELF_DECLARED'),
+              prisonNamesById: prisonNamesById,
+              title: 'Self-declared conditions',
+              attributes: {
+                'data-qa': 'archived-self-declared-conditions-summary-card'
+              }
+            }) }}
+
+          {% else %}
+            <p class="govuk-body" data-qa="no-archived-conditions-message">
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no previous conditions.
+            </p>
+          {% endif %}
+        {% endset %}
+
         {% if featureToggles.editAndArchiveEnabled %}
           {{ govukTabs({
             items: [
@@ -93,7 +122,7 @@
                 label: 'History (' + archivedConditionsCount + ')',
                 id: 'archived-conditions',
                 panel: {
-                html: ''
+                html: archivedConditionsContent
               }
               }
             ]

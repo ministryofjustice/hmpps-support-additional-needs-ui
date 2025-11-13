@@ -1,0 +1,43 @@
+{% from "govuk/macros/attributes.njk" import govukAttributes %}
+
+{#- Set classes for this component #}
+{%- set classNames = "govuk-summary-card" -%}
+{%- if params.classes %}
+  {% set classNames = classNames + " " + params.classes %}
+{% endif %}
+
+{#- Define component attributes #}
+{%- set componentAttributes %} class="{{ classNames }}" {{- govukAttributes(params.attributes) -}} {% if params.id %} id="{{ params.id }}"{% endif %}{% endset %}
+
+{% if params.archivedConditions | length %}
+
+  <div {{ componentAttributes | safe }}>
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">{{ params.title }}</h2>
+    </div>
+
+    <div class="govuk-summary-card__content govuk-!-padding-top-0">
+      <div class="govuk-summary-list">
+
+        {% for condition in params.archivedConditions %}
+          <div class="govuk-summary-list__row condition" data-qa="{{ condition.conditionTypeCode }}">
+            <h3 class="govuk-heading-s govuk-!-margin-top-3 govuk-!-margin-bottom-2">{{ condition.conditionTypeCode | formatConditionTypeScreenValue | default(condition.conditionTypeCode, true) }}</h3>
+            {% if condition.conditionName %}
+              <p class="govuk-body govuk-!-margin-bottom-2" data-qa="condition-name">{{ condition.conditionName }}</p>
+            {% endif %}
+            <p class="govuk-body app-u-multiline-text govuk-!-margin-bottom-2" data-qa="condition-details">{{ condition.conditionDetails }}</p>
+
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Reason for moving to the History</h3>
+            <p class="govuk-body app-u-multiline-text" data-qa="archived-condition-reason">{{ condition.archiveReason }}</p>
+
+            <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="condition-audit">
+              {% set prisonName = params.prisonNamesById[condition.updatedAtPrison] | default(condition.updatedAtPrison) %}
+              Moved to History on {{ condition.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ condition.updatedByDisplayName }}, {{ prisonName }}</span>
+            </p>
+          </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+{% endif %}
