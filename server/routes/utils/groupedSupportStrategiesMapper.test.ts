@@ -67,7 +67,7 @@ describe('groupedSupportStrategyMapper', () => {
       })
 
       // When
-      const actual = toGroupedSupportStrategiesPromise(supportCategoriesPromise)
+      const actual = toGroupedSupportStrategiesPromise({ supportStrategies: supportCategoriesPromise, active: true })
 
       // Then
       expect(actual).toEqual(expected)
@@ -92,7 +92,10 @@ describe('groupedSupportStrategyMapper', () => {
       })
 
       // When
-      const actual = toGroupedSupportStrategiesPromise(rejectedSupportStrategiesPromise)
+      const actual = toGroupedSupportStrategiesPromise({
+        supportStrategies: rejectedSupportStrategiesPromise,
+        active: true,
+      })
 
       // Then
       expect(actual).toEqual(expected)

@@ -1,11 +1,10 @@
 import { Request, Response } from 'express'
-import { parseISO } from 'date-fns'
 import SupportStrategiesController from './supportStrategiesController'
 import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
 import { Result } from '../../../utils/result/result'
 import aValidSupportStrategyResponseDto from '../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
-import SupportStrategyType from '../../../enums/supportStrategyType'
 import aPlanLifecycleStatusDto from '../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
+import SupportStrategyType from '../../../enums/supportStrategyType'
 
 describe('supportStrategiesController', () => {
   const controller = new SupportStrategiesController()
@@ -13,12 +12,20 @@ describe('supportStrategiesController', () => {
   const prisonerSummary = aValidPrisonerSummary()
   const prisonNamesById = Result.fulfilled({ BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' })
   const educationSupportPlanLifecycleStatus = Result.fulfilled(aPlanLifecycleStatusDto())
-  const supportStrategies = Result.fulfilled([aValidSupportStrategyResponseDto()])
-  const render = jest.fn()
+
+  const memorySupportStrategy = aValidSupportStrategyResponseDto({
+    supportStrategyCategoryTypeCode: SupportStrategyType.MEMORY,
+    active: true,
+  })
+  const sensorySupportStrategy = aValidSupportStrategyResponseDto({
+    supportStrategyCategoryTypeCode: SupportStrategyType.SENSORY,
+    active: false,
+  })
+  const supportStrategies = Result.fulfilled([memorySupportStrategy, sensorySupportStrategy])
 
   const req = {} as unknown as Request
   const res = {
-    render,
+    render: jest.fn(),
     locals: { prisonerSummary, supportStrategies, prisonNamesById, educationSupportPlanLifecycleStatus },
   } as unknown as Response
   const next = jest.fn()
@@ -30,16 +37,23 @@ describe('supportStrategiesController', () => {
   it('should render the view', async () => {
     // Given
     const expectedViewTemplate = 'pages/profile/support-strategies/index'
-    const expectedGroupedSupportStrategies = {
-      MEMORY: [aValidSupportStrategyResponseDto()],
+    const expectedActiveGroupedSupportStrategies = {
+      MEMORY: [memorySupportStrategy],
+    }
+    const expectedArchivedGroupedSupportStrategies = {
+      SENSORY: [sensorySupportStrategy],
     }
     const expectedViewModel = {
       prisonNamesById,
       prisonerSummary,
       educationSupportPlanLifecycleStatus,
-      supportStrategies: expect.objectContaining({
+      activeSupportStrategies: expect.objectContaining({
         status: 'fulfilled',
-        value: expectedGroupedSupportStrategies,
+        value: expectedActiveGroupedSupportStrategies,
+      }),
+      archivedSupportStrategies: expect.objectContaining({
+        status: 'fulfilled',
+        value: expectedArchivedGroupedSupportStrategies,
       }),
       tab: 'support-strategies',
     }
@@ -49,74 +63,6 @@ describe('supportStrategiesController', () => {
 
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
-  })
-
-  it('should render the view given the support strategies promises are fulfilled', async () => {
-    // Given
-    const expectedViewTemplate = 'pages/profile/support-strategies/index'
-    res.locals.supportStrategies = Result.fulfilled([
-      aValidSupportStrategyResponseDto({
-        supportStrategyCategoryTypeCode: SupportStrategyType.LITERACY_SKILLS_DEFAULT,
-        updatedAt: parseISO('2024-01-01T00:00:00'),
-        updatedByDisplayName: 'John Smith',
-        updatedAtPrison: 'BXI',
-        active: true,
-        details: 'Uses audio books and text-to-speech software',
-      }),
-      aValidSupportStrategyResponseDto({
-        supportStrategyCategoryTypeCode: SupportStrategyType.NUMERACY_SKILLS_DEFAULT,
-        details: 'Requires additional time for mathematical tasks',
-        updatedAt: parseISO('2024-01-02T00:00:00'),
-        updatedByDisplayName: 'Jane Doe',
-        updatedAtPrison: 'LEI',
-        active: true,
-      }),
-    ])
-
-    const expectedGroupedSupportStrategies = {
-      LITERACY_SKILLS_DEFAULT: [
-        aValidSupportStrategyResponseDto({
-          supportStrategyCategoryTypeCode: SupportStrategyType.LITERACY_SKILLS_DEFAULT,
-          updatedAt: parseISO('2024-01-01T00:00:00'),
-          updatedByDisplayName: 'John Smith',
-          updatedAtPrison: 'BXI',
-          active: true,
-          details: 'Uses audio books and text-to-speech software',
-        }),
-      ],
-      NUMERACY_SKILLS_DEFAULT: [
-        aValidSupportStrategyResponseDto({
-          supportStrategyCategoryTypeCode: SupportStrategyType.NUMERACY_SKILLS_DEFAULT,
-          details: 'Requires additional time for mathematical tasks',
-          updatedAt: parseISO('2024-01-02T00:00:00'),
-          updatedByDisplayName: 'Jane Doe',
-          updatedAtPrison: 'LEI',
-          active: true,
-        }),
-      ],
-    }
-
-    const expectedCategoryOrder = ['LITERACY_SKILLS_DEFAULT', 'NUMERACY_SKILLS_DEFAULT']
-
-    const expectedViewModel = expect.objectContaining({
-      prisonerSummary,
-      prisonNamesById,
-      educationSupportPlanLifecycleStatus,
-      tab: 'support-strategies',
-      supportStrategies: expect.objectContaining({
-        status: 'fulfilled',
-        value: expectedGroupedSupportStrategies,
-      }),
-    })
-
-    // When
-    await controller.getSupportStrategiesView(req, res, next)
-
-    // Then
-    expect(render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
-    const actualGroupedSupportStrategies = render.mock.calls[0][1].supportStrategies.value
-    const actualCategoryOrder = Object.keys(actualGroupedSupportStrategies)
-    expect(actualCategoryOrder).toEqual(expectedCategoryOrder)
   })
 
   it('should render the view given the support strategies promise is not resolved', async () => {
@@ -130,7 +76,11 @@ describe('supportStrategiesController', () => {
       prisonNamesById,
       prisonerSummary,
       educationSupportPlanLifecycleStatus,
-      supportStrategies: expect.objectContaining({
+      activeSupportStrategies: expect.objectContaining({
+        status: 'rejected',
+        reason: expectedError,
+      }),
+      archivedSupportStrategies: expect.objectContaining({
         status: 'rejected',
         reason: expectedError,
       }),
@@ -141,6 +91,6 @@ describe('supportStrategiesController', () => {
     await controller.getSupportStrategiesView(req, res, next)
 
     // Then
-    expect(render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 })

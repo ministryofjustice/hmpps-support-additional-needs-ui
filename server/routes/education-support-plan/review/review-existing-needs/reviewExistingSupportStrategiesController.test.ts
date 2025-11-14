@@ -1,8 +1,9 @@
 import { Request, Response } from 'express'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import { Result } from '../../../../utils/result/result'
-import aValidSupportStrategyDto from '../../../../testsupport/supportStrategyDtoTestDataBuilder'
 import ReviewExistingSupportStrategiesController from './reviewExistingSupportStrategiesController'
+import aValidSupportStrategyResponseDto from '../../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
+import SupportStrategyType from '../../../../enums/supportStrategyType'
 
 describe('reviewExistingSupportStrategiesController', () => {
   const controller = new ReviewExistingSupportStrategiesController()
@@ -11,7 +12,10 @@ describe('reviewExistingSupportStrategiesController', () => {
 
   const prisonNamesById = { BXI: 'Brixton (HMP)', MDI: 'Moorland (HMP & YOI)' }
 
-  const supportStrategies = Result.fulfilled([aValidSupportStrategyDto()])
+  const memorySupportStrategy = aValidSupportStrategyResponseDto({
+    supportStrategyCategoryTypeCode: SupportStrategyType.MEMORY,
+  })
+  const supportStrategies = Result.fulfilled([memorySupportStrategy])
 
   const req = {} as unknown as Request
   const res = {
@@ -29,14 +33,7 @@ describe('reviewExistingSupportStrategiesController', () => {
     // Given
     const expectedViewTemplate = 'pages/education-support-plan/review-existing-needs/support-strategies/index'
     const expectedGroupedSupportStrategies = {
-      MEMORY: [
-        {
-          prisonId: 'BXI',
-          prisonNumber: 'A1234BC',
-          supportStrategyDetails: 'Using flash cards with John can help him retain facts',
-          supportStrategyTypeCode: 'MEMORY',
-        },
-      ],
+      MEMORY: [memorySupportStrategy],
     }
     const expectedViewModel = expect.objectContaining({
       prisonerSummary,

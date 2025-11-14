@@ -41,7 +41,8 @@ const templateParams = {
   prisonerSummary,
   userHasPermissionTo,
   tab: 'support-strategies',
-  supportStrategies: Result.fulfilled({}),
+  activeSupportStrategies: Result.fulfilled({}),
+  archivedSupportStrategies: Result.fulfilled({}),
   prisonNamesById: Result.fulfilled(prisonNamesById),
   educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
   pageHasApiErrors: false,
@@ -57,7 +58,7 @@ describe('Profile support strategies page', () => {
     // Given
     const params = {
       ...templateParams,
-      supportStrategies: Result.fulfilled({
+      activeSupportStrategies: Result.fulfilled({
         LITERACY_SKILLS: [
           {
             supportStrategyDetails: 'Uses audio books and text-to-speech software',
@@ -109,7 +110,7 @@ describe('Profile support strategies page', () => {
     // Given
     const params = {
       ...templateParams,
-      supportStrategies: Result.fulfilled({}),
+      activeSupportStrategies: Result.fulfilled({}),
     }
 
     // When
@@ -125,7 +126,7 @@ describe('Profile support strategies page', () => {
     // Given
     const params = {
       ...templateParams,
-      supportStrategies: Result.rejected(new Error('Failed to get support strategies')),
+      activeSupportStrategies: Result.rejected(new Error('Failed to get support strategies')),
       pageHasApiErrors: true,
     }
 
@@ -143,7 +144,7 @@ describe('Profile support strategies page', () => {
 
     const params = {
       ...templateParams,
-      supportStrategies: Result.fulfilled({
+      activeSupportStrategies: Result.fulfilled({
         LITERACY_SKILLS: [aValidSupportStrategyResponseDto()],
       }),
     }
@@ -168,7 +169,7 @@ describe('Profile support strategies page', () => {
 
     const params = {
       ...templateParams,
-      supportStrategies: Result.fulfilled({
+      activeSupportStrategies: Result.fulfilled({
         LITERACY_SKILLS: [aValidSupportStrategyResponseDto()],
       }),
     }
@@ -193,7 +194,7 @@ describe('Profile support strategies page', () => {
 
     const params = {
       ...templateParams,
-      supportStrategies: Result.fulfilled({
+      activeSupportStrategies: Result.fulfilled({
         LITERACY_SKILLS: [aValidSupportStrategyResponseDto()],
       }),
     }
@@ -217,7 +218,7 @@ describe('Profile support strategies page', () => {
 
     const params = {
       ...templateParams,
-      supportStrategies: Result.fulfilled({
+      activeSupportStrategies: Result.fulfilled({
         LITERACY_SKILLS: [aValidSupportStrategyResponseDto()],
       }),
     }

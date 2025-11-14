@@ -5,13 +5,12 @@ export default class SupportStrategiesController {
   getSupportStrategiesView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { prisonerSummary, supportStrategies, educationSupportPlanLifecycleStatus, prisonNamesById } = res.locals
 
-    const groupedSupportStrategiesPromise = toGroupedSupportStrategiesPromise(supportStrategies)
-
     const viewRenderArgs = {
       prisonerSummary,
       tab: 'support-strategies',
       educationSupportPlanLifecycleStatus,
-      supportStrategies: groupedSupportStrategiesPromise,
+      activeSupportStrategies: toGroupedSupportStrategiesPromise({ supportStrategies, active: true }),
+      archivedSupportStrategies: toGroupedSupportStrategiesPromise({ supportStrategies, active: false }),
       prisonNamesById,
     }
     return res.render('pages/profile/support-strategies/index', viewRenderArgs)

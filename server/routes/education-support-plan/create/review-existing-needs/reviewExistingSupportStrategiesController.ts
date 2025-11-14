@@ -5,7 +5,7 @@ export default class ReviewExistingSupportStrategiesController {
   getReviewExistingSupportStrategiesView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { prisonerSummary, prisonNamesById, supportStrategies } = res.locals
 
-    const groupedSupportStrategiesPromise = toGroupedSupportStrategiesPromise(supportStrategies)
+    const groupedSupportStrategiesPromise = toGroupedSupportStrategiesPromise({ supportStrategies, active: true })
 
     const viewRenderArgs = { prisonerSummary, prisonNamesById, supportStrategies: groupedSupportStrategiesPromise }
     return res.render('pages/education-support-plan/review-existing-needs/support-strategies/index', viewRenderArgs)

@@ -23,7 +23,7 @@ export default class OverviewController {
       active: true,
     })
     const groupedChallengesPromise = toGroupedChallengesPromise({ challenges, alnScreeners, active: true })
-    const supportStrategiesPromise = toGroupedSupportStrategiesPromise(supportStrategies)
+    const supportStrategiesPromise = toGroupedSupportStrategiesPromise({ supportStrategies, active: true })
 
     const viewRenderArgs = {
       prisonerSummary,
