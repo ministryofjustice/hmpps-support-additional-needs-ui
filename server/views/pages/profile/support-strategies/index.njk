@@ -19,12 +19,12 @@
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
       <section>
-        {% if supportStrategies.isFulfilled() %}
-          {% set supportStrategies = supportStrategies.value %}
+        {% if activeSupportStrategies.isFulfilled() %}
+          {% set activeSupportStrategies = activeSupportStrategies.value %}
 
-          {% if supportStrategies | length %}
+          {% if activeSupportStrategies | length %}
             {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
-            {% for groupName, supportStrategyData in supportStrategies %}
+            {% for groupName, supportStrategyData in activeSupportStrategies %}
               <div class="govuk-summary-card" data-qa="support-strategy-summary-card-{{ groupName }}">
                 <div class="govuk-summary-card__title-wrapper">
                   <h2 class="govuk-summary-card__title">{{ groupName | formatSupportStrategyTypeScreenValue }}</h2>
