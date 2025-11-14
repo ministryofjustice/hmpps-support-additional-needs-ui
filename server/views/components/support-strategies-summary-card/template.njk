@@ -1,0 +1,59 @@
+{% from "govuk/macros/attributes.njk" import govukAttributes %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{#- Set classes for this component #}
+{%- set classNames = "govuk-summary-card" -%}
+{%- if params.classes %}
+  {% set classNames = classNames + " " + params.classes %}
+{% endif %}
+
+{#- Define component attributes #}
+{%- set componentAttributes %} class="{{ classNames }}" {{- govukAttributes(params.attributes) -}} {% if params.id %} id="{{ params.id }}"{% endif %}{% endset %}
+
+{% set supportStrategies = params.supportStrategies %}
+{% set showActions = params.showActions %}
+{% set userHasPermissionTo = params.userHasPermissionTo %}
+
+{% if supportStrategies | length %}
+  <div {{ componentAttributes | safe }}>
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">{{ params.title }}</h2>
+    </div>
+
+    <div class="govuk-summary-card__content govuk-!-padding-top-0">
+      <div class="govuk-summary-list">
+
+        {% for supportStrategy in supportStrategies %}
+          <div class="govuk-summary-list__row support-strategy">
+            <p class="govuk-body govuk-!-margin-top-3 app-u-multiline-text" data-qa="support-strategy-details">{{ supportStrategy.supportStrategyDetails }}</p>
+
+            <div class="actions-wrapper">
+              <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="support-strategy-audit">
+                {% set prisonName = params.prisonNamesById[supportStrategy.updatedAtPrison] | default(supportStrategy.updatedAtPrison) %}
+                Last updated {{ supportStrategy.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ supportStrategy.updatedByDisplayName }}, {{ prisonName }}</span>
+              </p>
+
+              {% if featureToggles.editAndArchiveEnabled %}
+                {% if showActions %}
+                  <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                    {% if userHasPermissionTo('EDIT_SUPPORT_STRATEGIES') %}
+                      <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-!-font-weight-regular" href="/support-strategies/{{ supportStrategy.prisonNumber }}/{{ supportStrategy.reference }}/edit/detail" data-qa="edit-support-strategy-button">Edit</a>
+                      </li>
+                    {% endif %}
+                    {% if userHasPermissionTo('ARCHIVE_SUPPORT_STRATEGIES') %}
+                      <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-!-font-weight-regular" href="/support-strategies/{{ supportStrategy.prisonNumber }}/{{ supportStrategy.reference }}/archive/reason" data-qa="archive-support-strategy-button">Move to history</a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+{% endif %}

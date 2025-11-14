@@ -1,5 +1,5 @@
 {% extends "../../layout.njk" %}
-{% from "../../../../components/strengths-summary-card/macro.njk" import strengthsSummaryCard %}
+{% from "../../../../components/support-strategies-summary-card/macro.njk" import supportStrategiesSummaryCard %}
 
 {% set pageId = 'education-support-plan-review-existing-support-strategies' %}
 {% set pageTitle = ('Review' if mode == 'review' else 'Create') + ' an education support plan - Review support strategies' %}
@@ -16,27 +16,17 @@
       {% if supportStrategies | length %}
 
         {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
-        {% for groupName, supportStrategyData in supportStrategies %}
-          <div class="govuk-summary-card" data-qa="support-strategy-summary-card-{{ groupName }}">
-            <div class="govuk-summary-card__title-wrapper">
-              <h2 class="govuk-summary-card__title">{{ groupName | formatSupportStrategyTypeScreenValue }}</h2>
-            </div>
-            <div class="govuk-summary-card__content govuk-!-padding-top-0">
-              <div class="govuk-summary-list">
-                {% for supportStrategy in supportStrategyData %}
-                  <div class="govuk-summary-list__row" data-qa="support-strategy-summary-list-row">
-                    <p class="govuk-body govuk-!-margin-top-3"
-                       data-qa="support-strategy-details">{{ supportStrategy.supportStrategyDetails }}
-                    </p>
-                    {% set prisonName = prisonNamesById[supportStrategy.updatedAtPrison] | default(supportStrategy.updatedAtPrison) %}
-                    <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="support-strategy-audit">
-                      Added on {{ supportStrategy.updatedAt | formatDate('d MMMM yyyy') }} by {{ supportStrategy.updatedByDisplayName }}, {{ prisonName }}
-                    </p>
-                  </div>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
+        {% for supportStragegyCategory, supportStrategies in supportStrategies %}
+
+          {{ supportStrategiesSummaryCard({
+            title: supportStragegyCategory | formatSupportStrategyTypeScreenValue | default(supportStragegyCategory, true),
+            supportStrategies: supportStrategies,
+            prisonNamesById: prisonNamesById,
+            showActions: false,
+            attributes: {
+              'data-qa': 'support-strategy-summary-card_' + supportStragegyCategory
+            }
+          }) }}
         {% endfor %}
 
 

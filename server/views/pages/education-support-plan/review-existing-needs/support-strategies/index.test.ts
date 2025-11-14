@@ -104,7 +104,7 @@ describe('Create ELSP - review existing support strategies page', () => {
     // Then
     expect($('.govuk-summary-card').length).toEqual(3) // expect summary cards for Sensory, Memory and Numeracy Skills
 
-    const sensoryCard = $('[data-qa=support-strategy-summary-card-SENSORY]')
+    const sensoryCard = $('[data-qa=support-strategy-summary-card_SENSORY]')
     expect(sensoryCard.length).toEqual(1)
     expect(sensoryCard.find('h2').text().trim()).toEqual('Sensory')
     expect(
@@ -112,15 +112,15 @@ describe('Create ELSP - review existing support strategies page', () => {
     ).toEqual('Have patience with him and speak softly and clearly.')
     expect(
       sensoryCard.find('.govuk-summary-list__row').eq(0).find('[data-qa=support-strategy-audit]').text().trim(),
-    ).toEqual('Added on 2 May 2024 by Alex Smith, Brixton (HMP)')
+    ).toEqual('Last updated 2 May 2024 by Alex Smith, Brixton (HMP)')
     expect(
       sensoryCard.find('.govuk-summary-list__row').eq(1).find('[data-qa=support-strategy-details]').text().trim(),
     ).toEqual('Use of noise cancelling headphones will help Chris concentrate better.')
     expect(
       sensoryCard.find('.govuk-summary-list__row').eq(1).find('[data-qa=support-strategy-audit]').text().trim(),
-    ).toEqual('Added on 1 January 2024 by A.Smith, Brixton (HMP)')
+    ).toEqual('Last updated 1 Jan 2024 by A.Smith, Brixton (HMP)')
 
-    const memoryCard = $('[data-qa=support-strategy-summary-card-MEMORY]')
+    const memoryCard = $('[data-qa=support-strategy-summary-card_MEMORY]')
     expect(memoryCard.length).toEqual(1)
     expect(memoryCard.find('h2').text().trim()).toEqual('Memory')
     expect(
@@ -128,9 +128,9 @@ describe('Create ELSP - review existing support strategies page', () => {
     ).toEqual('Use of flash cards will help Chris remember more easily.')
     expect(
       memoryCard.find('.govuk-summary-list__row').eq(0).find('[data-qa=support-strategy-audit]').text().trim(),
-    ).toEqual('Added on 20 August 2023 by Brian Jones, Leeds (HMP)')
+    ).toEqual('Last updated 20 Aug 2023 by Brian Jones, Leeds (HMP)')
 
-    const numeracySkillsCard = $('[data-qa=support-strategy-summary-card-NUMERACY_SKILLS_DEFAULT]')
+    const numeracySkillsCard = $('[data-qa=support-strategy-summary-card_NUMERACY_SKILLS_DEFAULT]')
     expect(numeracySkillsCard.length).toEqual(1)
     expect(numeracySkillsCard.find('h2').text().trim()).toEqual('Numeracy skills')
     expect(
@@ -143,7 +143,7 @@ describe('Create ELSP - review existing support strategies page', () => {
     ).toEqual('Chris uses his fingers to count and it works well for him.')
     expect(
       numeracySkillsCard.find('.govuk-summary-list__row').eq(0).find('[data-qa=support-strategy-audit]').text().trim(),
-    ).toEqual('Added on 20 August 2023 by Brian Jones, Leeds (HMP)')
+    ).toEqual('Last updated 20 Aug 2023 by Brian Jones, Leeds (HMP)')
 
     expect($('[data-qa=no-support-strategies-summary-card]').length).toEqual(0)
     expect($('[data-qa=support-strategies-unavailable-message]').length).toEqual(0)
