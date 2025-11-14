@@ -1,0 +1,17 @@
+{# Support Strategies Summary Card macro
+
+Data supplied to this macro:
+  params: {
+    supportStrategies: Array<SupportStrategyResponseDto> - Array of Support Strategies
+    prisonNamesById: Object of key value pairs, where the key is the prison ID, and the value is the prison name
+    showActions: boolean to determine whether Actions links are rendered
+    userHasPermissionTo: function that determines user permissions
+    title: string - Summary Card title
+    id: string
+    classes: string
+    attributes: Object of key value pairs of additonal attributes to add the to the component
+  }
+#}
+{% macro supportStrategiesSummaryCard(params) %}
+  {%- include "./template.njk" -%}
+{% endmacro %}

@@ -40,8 +40,8 @@ context('Profile Support Strategies Page', () => {
 
     // Then
     Page.verifyOnPage(SupportStrategiesPage) //
-      .hasSupportStrategySummaryCard(SupportStrategyType.MEMORY)
-      .hasSupportStrategySummaryCard(SupportStrategyType.SENSORY)
+      .hasActiveSupportStrategySummaryCard(SupportStrategyType.MEMORY)
+      .hasActiveSupportStrategySummaryCard(SupportStrategyType.SENSORY)
       .apiErrorBannerIsNotDisplayed()
   })
 

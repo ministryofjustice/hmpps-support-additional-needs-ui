@@ -83,8 +83,8 @@ describe('Profile support strategies page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('[data-qa=support-strategy-summary-card-LITERACY_SKILLS]').length).toEqual(1)
-    const literacySkillsEntry = $('[data-qa=support-strategy-summary-card-LITERACY_SKILLS]').eq(0)
+    expect($('[data-qa=active-support-strategy-summary-card_LITERACY_SKILLS]').length).toEqual(1)
+    const literacySkillsEntry = $('[data-qa=active-support-strategy-summary-card_LITERACY_SKILLS]').eq(0)
 
     expect(literacySkillsEntry.find('[data-qa=support-strategy-details]').text().trim()).toEqual(
       'Uses audio books and text-to-speech software',
@@ -92,9 +92,9 @@ describe('Profile support strategies page', () => {
     expect(literacySkillsEntry.find('[data-qa=support-strategy-audit]').text().trim()).toEqual(
       'Last updated 1 Jan 2024 by John Smith, Brixton (HMP)',
     )
-    expect($('[data-qa=support-strategy-summary-card-NUMERACY_SKILLS]').length).toEqual(1)
+    expect($('[data-qa=active-support-strategy-summary-card_NUMERACY_SKILLS]').length).toEqual(1)
 
-    const numeracySkillsEntry = $('[data-qa=support-strategy-summary-card-NUMERACY_SKILLS]').eq(0)
+    const numeracySkillsEntry = $('[data-qa=active-support-strategy-summary-card_NUMERACY_SKILLS]').eq(0)
 
     expect(numeracySkillsEntry.find('[data-qa=support-strategy-details]').text().trim()).toEqual(
       'Requires additional time for mathematical tasks',
@@ -102,7 +102,7 @@ describe('Profile support strategies page', () => {
     expect(numeracySkillsEntry.find('[data-qa=support-strategy-audit]').text().trim()).toEqual(
       'Last updated 2 Jan 2024 by Jane Doe, Leeds (HMP)',
     )
-    expect($('[data-qa=no-support-strategies-summary-card]').length).toEqual(0)
+    expect($('[data-qa=no-active-support-strategies-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
@@ -118,7 +118,7 @@ describe('Profile support strategies page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('[data-qa=no-support-strategies-summary-card]').length).toEqual(1)
+    expect($('[data-qa=no-active-support-strategies-message]').length).toEqual(1)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
@@ -135,7 +135,7 @@ describe('Profile support strategies page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('[data-qa=no-support-strategies-summary-card]').length).toEqual(0)
+    expect($('[data-qa=no-active-support-strategies-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(1)
   })
 
@@ -154,7 +154,7 @@ describe('Profile support strategies page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    const supportStrategies = $('[data-qa=support-strategy-summary-list-row]')
+    const supportStrategies = $('.govuk-summary-list__row.support-strategy')
     expect(supportStrategies.length).toEqual(1)
     expect(supportStrategies.eq(0).find('.govuk-summary-card__actions').length).toEqual(1)
     expect(supportStrategies.eq(0).find('[data-qa=edit-support-strategy-button]').length).toEqual(0)
@@ -179,7 +179,7 @@ describe('Profile support strategies page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    const supportStrategies = $('[data-qa=support-strategy-summary-list-row]')
+    const supportStrategies = $('.govuk-summary-list__row.support-strategy')
     expect(supportStrategies.length).toEqual(1)
     expect(supportStrategies.eq(0).find('.govuk-summary-card__actions').length).toEqual(1)
     expect(supportStrategies.eq(0).find('[data-qa=edit-support-strategy-button]').length).toEqual(1)
@@ -204,7 +204,7 @@ describe('Profile support strategies page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    const supportStrategies = $('[data-qa=support-strategy-summary-list-row]')
+    const supportStrategies = $('.govuk-summary-list__row.support-strategy')
     expect(supportStrategies.length).toEqual(1)
     expect(supportStrategies.eq(0).find('.govuk-summary-card__actions').length).toEqual(1)
     expect(supportStrategies.eq(0).find('[data-qa=edit-support-strategy-button]').length).toEqual(0)
@@ -228,7 +228,7 @@ describe('Profile support strategies page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    const supportStrategies = $('[data-qa=support-strategy-summary-list-row]')
+    const supportStrategies = $('.govuk-summary-list__row.support-strategy')
     expect(supportStrategies.length).toEqual(1)
     expect(supportStrategies.eq(0).find('.govuk-summary-card__actions').length).toEqual(1)
     expect(supportStrategies.eq(0).find('[data-qa=edit-support-strategy-button]').length).toEqual(1)

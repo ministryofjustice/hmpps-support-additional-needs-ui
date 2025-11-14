@@ -15,20 +15,24 @@ export default class SupportStrategiesPage extends ProfilePage {
     return Page.verifyOnPage(SupportStrategyDetailPage)
   }
 
-  hasSupportStrategySummaryCard(category: SupportStrategyType): SupportStrategiesPage {
-    this.supportStrategyCategorySummaryCard(category).should('be.visible')
+  hasActiveSupportStrategySummaryCard(category: SupportStrategyType): SupportStrategiesPage {
+    this.supportStrategyCategorySummaryCard({ category, active: true }).should('be.visible')
     return this
   }
 
   hasNoActiveSupportStrategies(): SupportStrategiesPage {
-    this.noSupportStrategiesSummaryCard().should('be.visible')
+    this.noSupportStrategiesMessage({ active: true }).should('be.visible')
     return this
   }
 
-  private noSupportStrategiesSummaryCard = (): PageElement => cy.get('[data-qa=no-support-strategies-summary-card]')
+  private noSupportStrategiesMessage = (options: { active: boolean }): PageElement =>
+    cy.get(`[data-qa=no-${options.active ? 'active' : 'archived'}-support-strategies-message]`)
 
-  private supportStrategyCategorySummaryCard = (category: SupportStrategyType): PageElement =>
-    cy.get(`[data-qa=support-strategy-summary-card-${category}]`)
+  private supportStrategyCategorySummaryCard = (options: {
+    category: SupportStrategyType
+    active: boolean
+  }): PageElement =>
+    cy.get(`[data-qa=${options.active ? 'active' : 'archived'}-support-strategy-summary-card_${options.category}]`)
 
-  private supportStrategies = (): PageElement => cy.get('[data-qa=support-strategy-summary-list-row]')
+  private supportStrategies = (): PageElement => cy.get('.govuk-summary-list__row.support-strategy')
 }
