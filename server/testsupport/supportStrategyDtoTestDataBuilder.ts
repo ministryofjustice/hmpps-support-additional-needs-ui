@@ -6,6 +6,7 @@ const aValidSupportStrategyDto = (options?: {
   prisonId?: string
   supportStrategyTypeCode?: SupportStrategyType
   supportStrategyDetails?: string
+  archiveReason?: string
 }): SupportStrategyDto => ({
   prisonNumber: options?.prisonNumber || 'A1234BC',
   prisonId: options?.prisonId || 'BXI',
@@ -14,6 +15,7 @@ const aValidSupportStrategyDto = (options?: {
     options?.supportStrategyDetails === null
       ? null
       : options?.supportStrategyDetails || 'Using flash cards with John can help him retain facts',
+  archiveReason: options?.archiveReason,
 })
 
 export default aValidSupportStrategyDto

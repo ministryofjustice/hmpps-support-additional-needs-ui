@@ -23,6 +23,7 @@ const toSupportStrategyResponseDto = (
         supportStrategyDetails: supportStrategyResponse.detail,
         supportStrategyCategory: supportStrategyResponse.supportStrategyType.categoryCode,
         active: supportStrategyResponse.active,
+        archiveReason: supportStrategyResponse.archiveReason,
       }
     : null
 

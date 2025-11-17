@@ -10,6 +10,7 @@ const aValidSupportStrategyResponseDto = (
     supportStrategyCategory?: SupportStrategyCategory
     details?: string
     active?: boolean
+    archiveReason?: string
   },
 ): SupportStrategyResponseDto => ({
   prisonNumber: options?.prisonNumber || 'A1234BC',
@@ -18,6 +19,7 @@ const aValidSupportStrategyResponseDto = (
   supportStrategyDetails:
     options?.details === null ? null : options?.details || 'John can read and understand written language very well',
   active: options?.active == null ? true : options?.active,
+  archiveReason: options?.archiveReason,
   ...validDtoAuditFields(options),
 })
 

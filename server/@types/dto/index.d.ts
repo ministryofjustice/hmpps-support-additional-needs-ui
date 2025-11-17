@@ -182,6 +182,7 @@ declare module 'dto' {
     prisonId: string
     supportStrategyTypeCode?: SupportStrategyType
     supportStrategyDetails?: string
+    archiveReason?: string
   }
 
   /**
@@ -193,6 +194,7 @@ declare module 'dto' {
     supportStrategyDetails?: string
     supportStrategyCategory?: string
     active: boolean
+    archiveReason?: string
   }
 
   export interface ReferenceDataItemDto {

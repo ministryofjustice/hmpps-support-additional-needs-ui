@@ -12,6 +12,7 @@ import aValidSupportStrategyResponseDto from '../testsupport/supportStrategyResp
 import SupportStrategyType from '../enums/supportStrategyType'
 import SupportStrategyCategory from '../enums/supportStrategyCategory'
 import anUpdateSupportStrategyRequest from '../testsupport/updateSupportStrategyRequestTestDataBuilder'
+import anArchiveSupportStrategyRequest from '../testsupport/archiveSupportStrategyRequestTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -271,6 +272,70 @@ describe('supportStrategyService', () => {
         supportStrategyReference,
         username,
         expectedUpdateSupportStrategyRequest,
+      )
+    })
+  })
+
+  describe('archiveSupportStrategy', () => {
+    it('should archive supportStrategy', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.archiveSupportStrategy.mockResolvedValue(null)
+
+      const supportStrategyDto = aValidSupportStrategyDto({
+        prisonNumber: 'A1234BC',
+        prisonId: 'BXI',
+        supportStrategyTypeCode: SupportStrategyType.MEMORY,
+        supportStrategyDetails: 'Using flash cards with John can help him retain facts',
+        archiveReason: 'Created in error',
+      })
+
+      const expectedArchiveSupportStrategyRequest = anArchiveSupportStrategyRequest({
+        prisonId: 'BXI',
+        reason: 'Created in error',
+      })
+
+      // When
+      await service.archiveSupportStrategy(username, supportStrategyReference, supportStrategyDto)
+
+      // Then
+      expect(supportAdditionalNeedsApiClient.archiveSupportStrategy).toHaveBeenCalledWith(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+        expectedArchiveSupportStrategyRequest,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.archiveSupportStrategy.mockRejectedValue(expectedError)
+
+      const supportStrategyDto = aValidSupportStrategyDto({
+        prisonNumber: 'A1234BC',
+        prisonId: 'BXI',
+        supportStrategyTypeCode: SupportStrategyType.MEMORY,
+        supportStrategyDetails: 'Using flash cards with John can help him retain facts',
+        archiveReason: 'Created in error',
+      })
+
+      const expectedArchiveSupportStrategyRequest = anArchiveSupportStrategyRequest({
+        prisonId: 'BXI',
+        reason: 'Created in error',
+      })
+
+      // When
+      const actual = await service
+        .archiveSupportStrategy(username, supportStrategyReference, supportStrategyDto)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.archiveSupportStrategy).toHaveBeenCalledWith(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+        expectedArchiveSupportStrategyRequest,
       )
     })
   })
