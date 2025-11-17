@@ -1,5 +1,6 @@
 {% extends "../layout.njk" %}
 {% from "../components/actions-card/macro.njk" import actionsCard %}
+{% from "../../../components/archived-support-strategies-summary-card/macro.njk" import archivedSupportStrategiesSummaryCard %}
 {% from "../../../components/support-strategies-summary-card/macro.njk" import supportStrategiesSummaryCard %}
 
 {% set pageId = 'profile-support-strategies' %}
@@ -27,7 +28,7 @@
         {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
 
         {% set activeSupportStrategiesContent %}
-          {% if activeSupportStrategies | length %}
+          {% if activeSupportStrategiesCount > 0 %}
             {% for supportStragegyCategory, supportStrategies in activeSupportStrategies %}
 
               {{ supportStrategiesSummaryCard({
@@ -69,6 +70,28 @@
           </p>
         {% endset %}
 
+        {% set archivedSupportStrategiesContent %}
+          {% if archivedSupportStrategiesCount > 0 %}
+
+            {% for supportStragegyCategory, archivedSupportStrategies in archivedSupportStrategies %}
+
+              {{ archivedSupportStrategiesSummaryCard({
+                title: supportStragegyCategory | formatSupportStrategyTypeScreenValue | default(supportStragegyCategory, true),
+                archivedSupportStrategies: archivedSupportStrategies,
+                prisonNamesById: prisonNamesById,
+                attributes: {
+                  'data-qa': 'archived-support-strategy-summary-card_' + supportStragegyCategory
+                }
+              }) }}
+            {% endfor %}
+
+          {% else %}
+            <p class="govuk-body" data-qa="no-archived-support-strategies-message">
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no previous support strategies.
+            </p>
+          {% endif %}
+        {% endset %}
+
         {% if featureToggles.editAndArchiveEnabled %}
           {{ govukTabs({
             items: [
@@ -83,7 +106,7 @@
                 label: 'History (' + archivedSupportStrategiesCount + ')',
                 id: 'archived-support-strategies',
                 panel: {
-                  html: ''
+                  html: archivedSupportStrategiesContent
                 }
               }
             ]
@@ -93,10 +116,10 @@
         {% endif %}
 
       {% else %}
-          <h3 class="govuk-heading-s" data-qa="support-strategies-unavailable-message">We cannot show these details
-            right now</h3>
-          <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be
-            available.</p>
+        <h3 class="govuk-heading-s" data-qa="support-strategies-unavailable-message">We cannot show these details
+          right now</h3>
+        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be
+          available.</p>
       {% endif %}
 
     </div>
