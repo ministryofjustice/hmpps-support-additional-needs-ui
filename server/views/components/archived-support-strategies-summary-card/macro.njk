@@ -1,0 +1,15 @@
+{# Archived Support Strategies Summary Card macro
+
+Data supplied to this macro:
+  params: {
+    archivedSupportStrategies: Array<SupportStrategyResponseDto> - Array of archived Support Strategies
+    prisonNamesById: Object of key value pairs, where the key is the prison ID, and the value is the prison name
+    title: string - Summary Card title
+    id: string
+    classes: string
+    attributes: Object of key value pairs of additonal attributes to add the to the component
+  }
+#}
+{% macro archivedSupportStrategiesSummaryCard(params) %}
+  {%- include "./template.njk" -%}
+{% endmacro %}

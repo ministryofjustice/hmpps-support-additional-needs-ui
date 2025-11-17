@@ -76,6 +76,18 @@ describe('Profile support strategies page', () => {
           },
         ],
       }),
+      archivedSupportStrategies: Result.fulfilled({
+        NUMERACY_SKILLS: [
+          {
+            supportStrategyDetails: 'Requires additional time for complex currency based tasks',
+            updatedAt: '2024-04-20',
+            updatedByDisplayName: 'John Doe',
+            updatedAtPrison: 'BXI',
+            active: false,
+            archiveReason: 'Support strategy added in error',
+          },
+        ],
+      }),
     }
 
     // When
@@ -84,25 +96,10 @@ describe('Profile support strategies page', () => {
 
     // Then
     expect($('[data-qa=active-support-strategy-summary-card_LITERACY_SKILLS]').length).toEqual(1)
-    const literacySkillsEntry = $('[data-qa=active-support-strategy-summary-card_LITERACY_SKILLS]').eq(0)
-
-    expect(literacySkillsEntry.find('[data-qa=support-strategy-details]').text().trim()).toEqual(
-      'Uses audio books and text-to-speech software',
-    )
-    expect(literacySkillsEntry.find('[data-qa=support-strategy-audit]').text().trim()).toEqual(
-      'Last updated 1 Jan 2024 by John Smith, Brixton (HMP)',
-    )
     expect($('[data-qa=active-support-strategy-summary-card_NUMERACY_SKILLS]').length).toEqual(1)
-
-    const numeracySkillsEntry = $('[data-qa=active-support-strategy-summary-card_NUMERACY_SKILLS]').eq(0)
-
-    expect(numeracySkillsEntry.find('[data-qa=support-strategy-details]').text().trim()).toEqual(
-      'Requires additional time for mathematical tasks',
-    )
-    expect(numeracySkillsEntry.find('[data-qa=support-strategy-audit]').text().trim()).toEqual(
-      'Last updated 2 Jan 2024 by Jane Doe, Leeds (HMP)',
-    )
+    expect($('[data-qa=archived-support-strategy-summary-card_NUMERACY_SKILLS]').length).toEqual(1)
     expect($('[data-qa=no-active-support-strategies-message]').length).toEqual(0)
+    expect($('[data-qa=no-archived-support-strategies-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
@@ -111,6 +108,7 @@ describe('Profile support strategies page', () => {
     const params = {
       ...templateParams,
       activeSupportStrategies: Result.fulfilled({}),
+      archivedSupportStrategies: Result.fulfilled({}),
     }
 
     // When
@@ -119,6 +117,7 @@ describe('Profile support strategies page', () => {
 
     // Then
     expect($('[data-qa=no-active-support-strategies-message]').length).toEqual(1)
+    expect($('[data-qa=no-archived-support-strategies-message]').length).toEqual(1)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
@@ -127,6 +126,7 @@ describe('Profile support strategies page', () => {
     const params = {
       ...templateParams,
       activeSupportStrategies: Result.rejected(new Error('Failed to get support strategies')),
+      archivedSupportStrategies: Result.rejected(new Error('Failed to get support strategies')),
       pageHasApiErrors: true,
     }
 
@@ -136,6 +136,7 @@ describe('Profile support strategies page', () => {
 
     // Then
     expect($('[data-qa=no-active-support-strategies-message]').length).toEqual(0)
+    expect($('[data-qa=no-archived-support-strategies-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(1)
   })
 

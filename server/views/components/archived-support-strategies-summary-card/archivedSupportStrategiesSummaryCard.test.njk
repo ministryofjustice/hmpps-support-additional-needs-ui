@@ -1,0 +1,10 @@
+{% from "./macro.njk" import archivedSupportStrategiesSummaryCard %}
+
+{{ archivedSupportStrategiesSummaryCard({
+  archivedSupportStrategies: archivedSupportStrategies,
+  prisonNamesById: prisonNamesById,
+  title: title,
+  id: id,
+  classes: classes,
+  attributes: attributes
+}) }}
