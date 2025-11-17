@@ -7,6 +7,7 @@ import {
   toSupportStrategyResponseDtos,
 } from '../data/mappers/supportStrategyResponseDtoMapper'
 import toUpdateSupportStrategyRequest from '../data/mappers/updateSupportStrategyRequestMapper'
+import toArchiveSupportStrategyRequest from '../data/mappers/archiveSupportStrategyRequestMapper'
 
 export default class SupportStrategyService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -74,6 +75,26 @@ export default class SupportStrategyService {
       )
     } catch (e) {
       logger.error(`Error updating Support Strategy for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
+
+  async archiveSupportStrategy(
+    username: string,
+    supportStrategyReference: string,
+    supportStrategy: SupportStrategyDto,
+  ): Promise<void> {
+    const { prisonNumber } = supportStrategy
+    try {
+      const archiveSupportStrategyRequest = toArchiveSupportStrategyRequest(supportStrategy)
+      await this.supportAdditionalNeedsApiClient.archiveSupportStrategy(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+        archiveSupportStrategyRequest,
+      )
+    } catch (e) {
+      logger.error(`Error archiving Support Strategy for [${prisonNumber}]`, e)
       throw e
     }
   }

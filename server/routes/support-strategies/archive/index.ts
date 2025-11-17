@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { Services } from '../../../services'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
@@ -6,10 +6,17 @@ import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier
 import setupJourneyData from '../../../middleware/setupJourneyData'
 import retrieveSupportStrategyResponseDtoIfNotInJourneyData from '../middleware/retrieveSupportStrategyResponseDtoIfNotInJourneyData'
 import checkSupportStrategyDtoExistsInJourneyData from '../middleware/checkSupportStrategyDtoExistsInJourneyData'
+import ReasonController from './reason/reasonController'
+import asyncMiddleware from '../../../middleware/asyncMiddleware'
+import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
+import { validate } from '../../../middleware/validationMiddleware'
+import archiveReasonSchema from '../validationSchemas/archiveReasonSchema'
 
 const archiveSupportStrategyRoutes = (services: Services): Router => {
-  const { journeyDataService, supportStrategyService } = services
+  const { auditService, journeyDataService, prisonService, supportStrategyService } = services
   const router = Router({ mergeParams: true })
+
+  const reasonController = new ReasonController(supportStrategyService, auditService)
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.ARCHIVE_SUPPORT_STRATEGIES),
@@ -22,10 +29,15 @@ const archiveSupportStrategyRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/reason', [
     checkSupportStrategyDtoExistsInJourneyData,
-    async (req: Request, res: Response) => {
-      res.send('Archive support strategy reason')
-    },
+    retrievePrisonsLookup(prisonService),
+    asyncMiddleware(reasonController.getReasonView),
   ])
+  router.post('/:journeyId/reason', [
+    checkSupportStrategyDtoExistsInJourneyData,
+    validate(archiveReasonSchema),
+    asyncMiddleware(reasonController.submitReasonForm),
+  ])
+
   return router
 }
 

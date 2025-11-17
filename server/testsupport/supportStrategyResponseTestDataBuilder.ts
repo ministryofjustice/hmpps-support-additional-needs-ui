@@ -13,6 +13,7 @@ const aValidSupportStrategyResponse = (
     supportStrategyType?: string
     supportStrategyCategory?: string
     detail?: string
+    archiveReason?: string
   },
 ): SupportStrategyResponse => ({
   active: options?.active == null ? true : options?.active,
@@ -21,6 +22,7 @@ const aValidSupportStrategyResponse = (
     code: options?.supportStrategyType || 'MEMORY',
     categoryCode: options?.supportStrategyCategory || 'MEMORY',
   },
+  archiveReason: options?.archiveReason,
   ...validAuditFields(options),
 })
 
