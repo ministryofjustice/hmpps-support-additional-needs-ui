@@ -69,6 +69,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.RECORD_DIAGNOSED_CONDITIONS,
         ApplicationAction.RECORD_ALN_SCREENER,
         ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE,
+        ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES_ON_SEARCH,
         ApplicationAction.EDIT_CONDITIONS,
         ApplicationAction.ARCHIVE_CONDITIONS,
         ApplicationAction.EDIT_STRENGTHS,
