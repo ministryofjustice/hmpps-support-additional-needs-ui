@@ -83,7 +83,7 @@ describe('curiousService', () => {
           aCuriousAlnAssessmentDto({
             prisonId: 'MDI',
             assessmentDate: startOfDay('2025-10-01'),
-            referral: AlnAssessmentReferral.EDUCATION_SPECIALIST,
+            referral: [AlnAssessmentReferral.EDUCATION_SPECIALIST],
             supportPlanRequired: true,
           }),
         ],

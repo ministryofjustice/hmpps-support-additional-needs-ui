@@ -33,12 +33,12 @@ const aCuriousLddAssessmentDto = (options?: {
 const aCuriousAlnAssessmentDto = (options?: {
   prisonId?: string
   assessmentDate?: Date
-  referral?: AlnAssessmentReferral
+  referral?: Array<AlnAssessmentReferral>
   supportPlanRequired?: boolean
 }): CuriousAlnAssessmentDto => ({
   prisonId: options?.prisonId || 'BXI',
   assessmentDate: options?.assessmentDate || startOfDay('2025-10-02'),
-  referral: options?.referral || AlnAssessmentReferral.PSYCHOLOGY,
+  referral: options?.referral === null ? null : options?.referral || [AlnAssessmentReferral.PSYCHOLOGY],
   supportPlanRequired: options?.supportPlanRequired === false ? false : options?.supportPlanRequired || true,
 })
 

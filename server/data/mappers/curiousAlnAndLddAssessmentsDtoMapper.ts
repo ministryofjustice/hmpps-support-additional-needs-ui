@@ -36,7 +36,9 @@ const toCuriousLddAssessmentDtos = (apiResponse: LearnerLatestAssessmentV1DTO): 
 const toCuriousAlnAssessmentDto = (curiousV2AlnAssessment: LearnerAssessmentsAlnDTO): CuriousAlnAssessmentDto => ({
   prisonId: curiousV2AlnAssessment.establishmentId,
   assessmentDate: parseISO(curiousV2AlnAssessment.assessmentDate),
-  referral: toAlnAssessmentReferral(curiousV2AlnAssessment.stakeholderReferral),
+  referral: curiousV2AlnAssessment.stakeholderReferral
+    ? curiousV2AlnAssessment.stakeholderReferral.split(',').map(toAlnAssessmentReferral)
+    : [],
   supportPlanRequired: curiousV2AlnAssessment.assessmentOutcome?.toLowerCase().trim() === 'yes',
 })
 

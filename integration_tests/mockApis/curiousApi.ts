@@ -83,7 +83,7 @@ const stubGetCuriousV2Assessments = (
                 assessmentDate: '2025-10-01',
                 assessmentOutcome: 'Yes',
                 hasPrisonerConsent: 'Yes',
-                stakeholderReferral: 'Education Specialist',
+                stakeholderReferral: 'Education Specialist, Other',
               },
             ],
             esol: null,

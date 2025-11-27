@@ -43,13 +43,13 @@ describe('Tests for the ALN Assessments Details component', () => {
         aCuriousAlnAssessmentDto({
           prisonId: 'LEI',
           assessmentDate: startOfDay('2024-10-13'),
-          referral: AlnAssessmentReferral.SAFER_CUSTODY,
+          referral: null,
           supportPlanRequired: true,
         }),
         aCuriousAlnAssessmentDto({
           prisonId: 'BXI',
           assessmentDate: startOfDay('2023-01-06'),
-          referral: AlnAssessmentReferral.EDUCATION_SPECIALIST,
+          referral: [AlnAssessmentReferral.SAFER_CUSTODY, AlnAssessmentReferral.EDUCATION_SPECIALIST],
           supportPlanRequired: false,
         }),
       ],
@@ -67,7 +67,7 @@ describe('Tests for the ALN Assessments Details component', () => {
     )
     expect(assessmentAtLeeds.find('[data-qa=assessment-date]').text().trim()).toEqual('13 October 2024')
     expect(assessmentAtLeeds.find('[data-qa=assessment-outcome]').text().trim()).toEqual('Additional needs identified')
-    expect(assessmentAtLeeds.find('[data-qa=assessment-referral]').text().trim()).toEqual('Safer Custody')
+    expect(assessmentAtLeeds.find('[data-qa=assessment-referral]').text().trim()).toEqual('Not recorded in Curious')
 
     const assessmentAtBrixton = $('[data-qa=aln-assessment-from-BXI]')
     expect(assessmentAtBrixton.length).toEqual(1)
@@ -78,7 +78,11 @@ describe('Tests for the ALN Assessments Details component', () => {
     expect(assessmentAtBrixton.find('[data-qa=assessment-outcome]').text().trim()).toEqual(
       'No Additional needs identified',
     )
-    expect(assessmentAtBrixton.find('[data-qa=assessment-referral]').text().trim()).toEqual('Education Specialist')
+    expect(assessmentAtBrixton.find('[data-qa=assessment-referral] li').length).toEqual(2)
+    expect(assessmentAtBrixton.find('[data-qa=assessment-referral] li').eq(0).text().trim()).toEqual('Safer Custody')
+    expect(assessmentAtBrixton.find('[data-qa=assessment-referral] li').eq(1).text().trim()).toEqual(
+      'Education Specialist',
+    )
   })
 
   it('should render the component given prison name lookup does not resolve prisons', () => {
@@ -90,13 +94,13 @@ describe('Tests for the ALN Assessments Details component', () => {
         aCuriousAlnAssessmentDto({
           prisonId: 'LEI',
           assessmentDate: startOfDay('2024-10-13'),
-          referral: AlnAssessmentReferral.SAFER_CUSTODY,
+          referral: [AlnAssessmentReferral.SAFER_CUSTODY],
           supportPlanRequired: true,
         }),
         aCuriousAlnAssessmentDto({
           prisonId: 'BXI',
           assessmentDate: startOfDay('2023-01-06'),
-          referral: AlnAssessmentReferral.EDUCATION_SPECIALIST,
+          referral: [AlnAssessmentReferral.EDUCATION_SPECIALIST],
           supportPlanRequired: false,
         }),
       ],
