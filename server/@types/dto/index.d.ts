@@ -252,7 +252,7 @@ declare module 'dto' {
   export interface CuriousAlnAssessmentDto {
     prisonId: string
     assessmentDate: Date
-    referral: AlnAssessmentReferral
+    referral: Array<AlnAssessmentReferral>
     supportPlanRequired: boolean // TODO - come up with a better name. This is Curious' view on whether a support plan is required, not ours. It does not account for whether the prisoner is in education and/or has other needs
   }
 

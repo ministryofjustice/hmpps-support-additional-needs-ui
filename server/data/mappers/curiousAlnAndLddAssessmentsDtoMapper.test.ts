@@ -70,7 +70,7 @@ describe('curiousAlnAndLddAssessmentsDtoMapper', () => {
           aCuriousAlnAssessmentDto({
             prisonId: 'MDI',
             assessmentDate: startOfDay('2025-10-01'),
-            referral: AlnAssessmentReferral.EDUCATION_SPECIALIST,
+            referral: [AlnAssessmentReferral.EDUCATION_SPECIALIST],
             supportPlanRequired: true,
           }),
         ],
@@ -265,14 +265,18 @@ describe('curiousAlnAndLddAssessmentsDtoMapper', () => {
 
   describe('Curious V2 ALN assessment mappings', () => {
     it.each([
-      { curiousValue: 'Healthcare', expected: AlnAssessmentReferral.HEALTHCARE },
-      { curiousValue: 'Psychology', expected: AlnAssessmentReferral.PSYCHOLOGY },
-      { curiousValue: 'Education Specialist', expected: AlnAssessmentReferral.EDUCATION_SPECIALIST },
-      { curiousValue: 'NSM', expected: AlnAssessmentReferral.NSM },
-      { curiousValue: 'Substance Misuse Team', expected: AlnAssessmentReferral.SUBSTANCE_MISUSE_TEAM },
-      { curiousValue: 'Safer Custody', expected: AlnAssessmentReferral.SAFER_CUSTODY },
-      { curiousValue: 'Other', expected: AlnAssessmentReferral.OTHER },
-      { curiousValue: null, expected: undefined },
+      { curiousValue: 'Healthcare', expected: [AlnAssessmentReferral.HEALTHCARE] },
+      { curiousValue: 'Psychology', expected: [AlnAssessmentReferral.PSYCHOLOGY] },
+      { curiousValue: 'Education Specialist', expected: [AlnAssessmentReferral.EDUCATION_SPECIALIST] },
+      { curiousValue: 'NSM', expected: [AlnAssessmentReferral.NSM] },
+      { curiousValue: 'Substance Misuse Team', expected: [AlnAssessmentReferral.SUBSTANCE_MISUSE_TEAM] },
+      { curiousValue: 'Safer Custody', expected: [AlnAssessmentReferral.SAFER_CUSTODY] },
+      { curiousValue: 'Other', expected: [AlnAssessmentReferral.OTHER] },
+      {
+        curiousValue: 'NSM, Other, Healthcare',
+        expected: [AlnAssessmentReferral.NSM, AlnAssessmentReferral.OTHER, AlnAssessmentReferral.HEALTHCARE],
+      },
+      { curiousValue: null, expected: [] },
     ] as Array<{
       curiousValue:
         | 'Healthcare'
@@ -282,7 +286,7 @@ describe('curiousAlnAndLddAssessmentsDtoMapper', () => {
         | 'Substance Misuse Team'
         | 'Safer Custody'
         | 'Other'
-      expected: AlnAssessmentReferral
+      expected: Array<AlnAssessmentReferral>
     }>)(
       'should correctly map Curious stakeholder referral value "$curiousValue" to "$expected"',
       ({ curiousValue, expected }) => {
