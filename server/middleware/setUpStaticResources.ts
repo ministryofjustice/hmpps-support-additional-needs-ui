@@ -23,6 +23,11 @@ export default function setUpStaticResources(): Router {
     router.use('/assets', express.static(path.join(process.cwd(), dir), staticResourcesConfig))
   })
 
+  router.use(
+    '/favicon.ico',
+    express.static(path.join(process.cwd(), '/assets/images/favicon.ico'), staticResourcesConfig),
+  )
+
   // Don't cache dynamic resources
   router.use(noCache())
 

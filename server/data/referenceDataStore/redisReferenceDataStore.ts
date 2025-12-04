@@ -4,6 +4,8 @@ import ReferenceDataDomain from '../../enums/referenceDataDomain'
 import { RedisClient } from '../redisClient'
 import logger from '../../../logger'
 
+const prefix = 'referenceData:'
+
 export default class RedisReferenceDataStore implements ReferenceDataStore {
   constructor(private readonly client: RedisClient) {
     client.on('error', error => {
@@ -24,7 +26,7 @@ export default class RedisReferenceDataStore implements ReferenceDataStore {
   ): Promise<ReferenceDataListResponse> {
     await this.ensureConnected()
     const serializedReferenceData = await this.client.get(
-      `${domain}${categoriesOnly ? '.categories' : ''}.${includeInactive ? 'includesInactive' : 'excludesInactive'}`,
+      `${prefix}${domain}${categoriesOnly ? ':categories' : ''}:${includeInactive ? 'includesInactive' : 'excludesInactive'}`,
     )
     return serializedReferenceData
       ? (JSON.parse(serializedReferenceData.toString()) as ReferenceDataListResponse)
@@ -40,7 +42,7 @@ export default class RedisReferenceDataStore implements ReferenceDataStore {
   ): Promise<void> {
     await this.ensureConnected()
     this.client.set(
-      `${domain}${categoriesOnly ? '.categories' : ''}.${includeInactive ? 'includesInactive' : 'excludesInactive'}`,
+      `${prefix}${domain}${categoriesOnly ? ':categories' : ''}:${includeInactive ? 'includesInactive' : 'excludesInactive'}`,
       JSON.stringify(referenceData),
       { EX: durationHours * 60 * 60 },
     )

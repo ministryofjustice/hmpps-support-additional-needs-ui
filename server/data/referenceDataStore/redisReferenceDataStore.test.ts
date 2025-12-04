@@ -36,7 +36,7 @@ describe('redisReferenceDataStore', () => {
 
       // Then
       expect(redisClient.set).toHaveBeenCalledWith(
-        'CHALLENGE.excludesInactive',
+        'referenceData:CHALLENGE:excludesInactive',
         JSON.stringify(referenceData),
         { EX: 7200 }, // 2 hours in seconds
       )
@@ -56,7 +56,7 @@ describe('redisReferenceDataStore', () => {
 
       // Then
       expect(returnedReferenceData).toEqual(referenceData)
-      expect(redisClient.get).toHaveBeenCalledWith('CHALLENGE.includesInactive')
+      expect(redisClient.get).toHaveBeenCalledWith('referenceData:CHALLENGE:includesInactive')
     })
 
     it('should get undefined given reference data not in redis', async () => {
@@ -73,7 +73,7 @@ describe('redisReferenceDataStore', () => {
 
       // Then
       expect(returnedReferenceData).toBeUndefined()
-      expect(redisClient.get).toHaveBeenCalledWith('STRENGTH.excludesInactive')
+      expect(redisClient.get).toHaveBeenCalledWith('referenceData:STRENGTH:excludesInactive')
     })
 
     it('should not get reference data given redis client throws an error', async () => {
@@ -86,7 +86,7 @@ describe('redisReferenceDataStore', () => {
       } catch (error) {
         // Then
         expect(error).toBe('some error')
-        expect(redisClient.get).toHaveBeenCalledWith('CONDITION.categories.excludesInactive')
+        expect(redisClient.get).toHaveBeenCalledWith('referenceData:CONDITION:categories:excludesInactive')
       }
     })
   })

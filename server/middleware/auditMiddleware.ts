@@ -132,6 +132,7 @@ const pageViewEventMap: Record<string, Page> = {
 
   // Non audit routes. These routes do not raise an audit event
   '/': null,
+  '/favicon.ico': null,
   '/education-support-plan/:prisonNumber/create/who-created-the-plan': null,
   '/education-support-plan/:prisonNumber/refuse-plan/reason': null,
   '/education-support-plan/:prisonNumber/review/who-reviewed-the-plan': null,
