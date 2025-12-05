@@ -1,6 +1,7 @@
 {% set educationSupportPlan = params.educationSupportPlan %}
 {% set planHasNotBeenReviewed = params.planHasNotBeenReviewed %}
 {% set prisonerSummary = params.prisonerSummary %}
+{% set userHasPermissionTo = params.userHasPermissionTo %}
 
 <div class="govuk-summary-card" data-qa="education-support-plan-summary-card">
   <div class="govuk-summary-card__title-wrapper">
@@ -84,12 +85,13 @@
           {{ educationSupportPlan.hasCurrentEhcp | formatYesNo }}
         </dd>
 
-        <dd class="govuk-summary-list__actions govuk-!-display-none-print">
-          <a class="govuk-link" href="" data-qa="ehcp-change-link">
-            Edit<span class="govuk-visually-hidden"> whdther the prisoner has an EHCP or not</span>
-          </a>
-        </dd>
-
+        {% if userHasPermissionTo('UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN') %}
+          <dd class="govuk-summary-list__actions govuk-!-display-none-print">
+            <a class="govuk-link" href="/education-support-plan/{{ prisonerSummary.prisonNumber }}/update/education-health-care-plan" data-qa="ehcp-change-link">
+              Edit<span class="govuk-visually-hidden"> whether the prisoner has an EHCP or not</span>
+            </a>
+          </dd>
+        {% endif %}
       </div>
     </dl>
   </div>

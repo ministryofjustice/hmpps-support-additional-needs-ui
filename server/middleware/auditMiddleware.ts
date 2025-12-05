@@ -47,6 +47,10 @@ const pageViewEventMap: Record<string, Page> = {
   '/education-support-plan/:prisonNumber/create/:journeyId/next-review-date': Page.CREATE_ELSP_SET_REVIEW_DATE,
   '/education-support-plan/:prisonNumber/create/:journeyId/check-your-answers': Page.CREATE_ELSP_CHECK_YOUR_ANSWERS,
 
+  // Update ELSP routes
+  '/education-support-plan/:prisonNumber/update/:journeyId/education-health-care-plan':
+    Page.UPDATE_ELSP_EDUCATION_HEALTH_CARE_PLAN,
+
   // Prisoner refuses creation of ELSP routes
   '/education-support-plan/:prisonNumber/refuse-plan/:journeyId/reason': Page.REFUSE_ELSP_REASON,
 
@@ -134,6 +138,7 @@ const pageViewEventMap: Record<string, Page> = {
   '/': null,
   '/favicon.ico': null,
   '/education-support-plan/:prisonNumber/create/who-created-the-plan': null,
+  '/education-support-plan/:prisonNumber/update/education-health-care-plan': null,
   '/education-support-plan/:prisonNumber/refuse-plan/reason': null,
   '/education-support-plan/:prisonNumber/review/who-reviewed-the-plan': null,
   '/strengths/:prisonNumber/create/select-category': null,

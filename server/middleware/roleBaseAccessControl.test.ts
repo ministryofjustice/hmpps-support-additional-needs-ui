@@ -32,6 +32,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN,
         ApplicationAction.RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN,
         ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN,
+        ApplicationAction.UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN,
         ApplicationAction.RECORD_CHALLENGES,
         ApplicationAction.RECORD_STRENGTHS,
         ApplicationAction.RECORD_SUPPORT_STRATEGIES,

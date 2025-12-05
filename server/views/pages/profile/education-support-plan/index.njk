@@ -46,7 +46,8 @@
             {{ renderEducationSupportPlan({
               prisonerSummary: prisonerSummary,
               educationSupportPlan: educationSupportPlan,
-              planHasNotBeenReviewed: educationSupportPlanReviews.length === 0
+              planHasNotBeenReviewed: educationSupportPlanReviews.length === 0,
+              userHasPermissionTo: userHasPermissionTo
             }) }}
 
             {{ renderEducationSupportPlanReviews({
