@@ -33,8 +33,14 @@ import InMemoryReferenceDataStore from './referenceDataStore/inMemoryReferenceDa
 import RedisReferenceDataStore from './referenceDataStore/redisReferenceDataStore'
 
 export const dataAccess = () => {
-  const tokenStore = config.redis.enabled ? new RedisTokenStore(createRedisClient()) : new InMemoryTokenStore()
-  const hmppsAuthClient = new AuthenticationClient(config.apis.hmppsAuth, logger, tokenStore)
+  const systemTokenStore = config.redis.enabled
+    ? new RedisTokenStore(createRedisClient(), 'systemToken:')
+    : new InMemoryTokenStore()
+  const hmppsAuthClient = new AuthenticationClient(config.apis.hmppsAuth, logger, systemTokenStore)
+
+  const curiousTokenStore = config.redis.enabled
+    ? new RedisTokenStore(createRedisClient(), 'curiousToken:')
+    : new InMemoryTokenStore()
   const curiousApiAuthClient = new AuthenticationClient(
     {
       ...config.apis.hmppsAuth,
@@ -42,28 +48,28 @@ export const dataAccess = () => {
       systemClientSecret: config.apis.hmppsAuth.curiousClientSecret,
     },
     logger,
-    tokenStore,
+    curiousTokenStore,
   )
 
   return {
     applicationInfo,
     hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
     journeyDataStore: config.redis.enabled
-      ? new RedisJourneyDataStore(createRedisClient('journeyData:'))
+      ? new RedisJourneyDataStore(createRedisClient())
       : new InMemoryJourneyDataStore(),
     prisonRegisterClient: new PrisonRegisterClient(hmppsAuthClient),
     prisonRegisterStore: config.redis.enabled
-      ? new RedisPrisonRegisterStore(createRedisClient('prisonRegister:'))
+      ? new RedisPrisonRegisterStore(createRedisClient())
       : new InMemoryPrisonRegisterStore(),
     prisonerSearchClient: new PrisonerSearchClient(hmppsAuthClient),
     prisonerSearchStore: config.redis.enabled
-      ? new RedisPrisonerSearchStore(createRedisClient('prisonerSearch:'))
+      ? new RedisPrisonerSearchStore(createRedisClient())
       : new InMemoryPrisonerSearchStore(),
     managedUsersApiClient: new ManageUsersApiClient(hmppsAuthClient),
     supportAdditionalNeedsApiClient: new SupportAdditionalNeedsApiClient(hmppsAuthClient),
     curiousApiClient: new CuriousApiClient(curiousApiAuthClient),
     referenceDataStore: config.redis.enabled
-      ? new RedisReferenceDataStore(createRedisClient('referenceData:'))
+      ? new RedisReferenceDataStore(createRedisClient())
       : new InMemoryReferenceDataStore(),
   }
 }
