@@ -138,3 +138,4 @@ Features can be toggled by setting the relevant environment variable.
 |--------------------------|---------------|----------|-----------------------------------------------------------------------------------------------------------------|
 | SOME_TOGGLE_ENABLED      | false         | Boolean  | Example feature toggle, for demonstration purposes.                                                             |
 | EDIT_AND_ARCHIVE_ENABLED | false         | Boolean  | Set to true to enable the edit & archive journeys for conditions, strengths, challenges and support strategies. |
+| EDIT_EHCP_ENABLED        | false         | Boolean  | Set to true to enable the edit EHCP functionality.                                                              |

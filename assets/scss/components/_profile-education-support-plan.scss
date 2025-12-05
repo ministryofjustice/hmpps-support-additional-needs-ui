@@ -2,6 +2,7 @@
 
   [data-qa="education-support-plan-summary-card"],
   [data-qa="education-support-plan-persons-view-summary-card"],
+  [data-qa="education-support-plan-ehcp-summary-card"],
   [data-qa="declined-education-support-plan-summary-card"] {
     dt, dd {
       display: block;
@@ -11,6 +12,12 @@
       margin: 0;
       padding: 0;
       @include govuk-responsive-padding(2, 'top');
+    }
+  }
+
+  [data-qa="education-support-plan-ehcp-summary-card"] {
+    dd:last-of-type {
+      display: table-cell;
     }
   }
 

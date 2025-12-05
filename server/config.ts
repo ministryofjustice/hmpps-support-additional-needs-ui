@@ -149,5 +149,6 @@ export default {
   featureToggles: {
     // someToggleEnabled: toBoolean(get('SOME_TOGGLE_ENABLED', false)),
     editAndArchiveEnabled: toBoolean(get('EDIT_AND_ARCHIVE_ENABLED', false, requiredInProduction)),
+    editEhcpEnabled: toBoolean(get('EDIT_EHCP_ENABLED', false, requiredInProduction)),
   },
 }
