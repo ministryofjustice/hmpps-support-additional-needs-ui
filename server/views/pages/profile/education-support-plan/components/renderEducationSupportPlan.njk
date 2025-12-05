@@ -58,6 +58,24 @@
         </dd>
       </div>
 
+      {% if not featureToggles.editEhcpEnabled %}
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Current EHCP
+          </dt>
+          <dd class="govuk-summary-list__value" data-qa="education-health-care-plan">
+            {{ educationSupportPlan.hasCurrentEhcp | formatYesNo }}
+          </dd>
+        </div>
+      {% endif %}
+    </dl>
+  </div>
+</div>
+
+{% if featureToggles.editEhcpEnabled %}
+<div class="govuk-summary-card" data-qa="education-support-plan-ehcp-summary-card">
+  <div class="govuk-summary-card__content">
+    <dl class="govuk-summary-list">
       <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">
           Current EHCP
@@ -65,10 +83,18 @@
         <dd class="govuk-summary-list__value" data-qa="education-health-care-plan">
           {{ educationSupportPlan.hasCurrentEhcp | formatYesNo }}
         </dd>
+
+        <dd class="govuk-summary-list__actions govuk-!-display-none-print">
+          <a class="govuk-link" href="" data-qa="ehcp-change-link">
+            Edit<span class="govuk-visually-hidden"> whdther the prisoner has an EHCP or not</span>
+          </a>
+        </dd>
+
       </div>
     </dl>
   </div>
 </div>
+{% endif %}
 
 {% if planHasNotBeenReviewed %}
   {# Only display the Prisoner's view on support needed, and ELSP Creation Audit fields if the ELSP has not been reviewed #}
