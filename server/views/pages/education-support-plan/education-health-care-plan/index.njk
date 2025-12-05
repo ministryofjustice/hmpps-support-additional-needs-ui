@@ -1,7 +1,7 @@
 {% extends "../layout.njk" %}
 
 {% set pageId = 'education-support-plan-ehcp' %}
-{% set pageTitle = "Create an education support plan - Has a current education, health and care plan" %}
+{% set pageTitle = "Edit an education support plan - Edit education, health and care plan" if mode == "edit" else "Create an education support plan - Has a current education, health and care plan" %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -41,7 +41,7 @@
 
         {{ govukButton({
           id: "submit-button",
-          text: "Continue",
+          text: "Update education support plan" if mode == "edit" else "Continue",
           type: "submit",
           attributes: {"data-qa": "submit-button"},
           preventDoubleClick: true

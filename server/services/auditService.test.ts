@@ -104,6 +104,37 @@ describe('Audit service', () => {
     })
   })
 
+  describe('logUpdateEducationLearnerSupportPlan', () => {
+    it('should send ELSP Update event audit message', async () => {
+      // Given
+
+      const baseArchiveAuditData: BaseAuditData = {
+        correlationId: '49380145-d73d-4ad2-8460-f26b039249cc',
+        details: {},
+        subjectId: 'A1234BC',
+        subjectType: 'PRISONER_ID',
+        who: 'a-dps-user',
+      }
+
+      // When
+      const actual = await auditService.logUpdateEducationLearnerSupportPlan(baseArchiveAuditData)
+
+      // Then
+      expect(actual).toEqual(expectedSqsMessageResponse)
+      expect(hmppsAuditClient.sendMessage).toHaveBeenCalledWith(
+        {
+          what: 'UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN',
+          correlationId: '49380145-d73d-4ad2-8460-f26b039249cc',
+          details: {},
+          subjectId: 'A1234BC',
+          subjectType: 'PRISONER_ID',
+          who: 'a-dps-user',
+        },
+        expectedHmppsAuditClientToThrowOnError,
+      )
+    })
+  })
+
   describe('logReviewEducationLearnerSupportPlan', () => {
     it('should send ELSP Review event audit message', async () => {
       // Given
