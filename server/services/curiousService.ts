@@ -10,9 +10,9 @@ export default class CuriousService {
    * Returns the Additional Learning Needs (ALN) and Learning Difficulties and Disabilities (LDD) assessments for a
    * given prisoner.
    */
-  async getAlnAndLddAssessments(prisonNumber: string): Promise<CuriousAlnAndLddAssessmentsDto> {
+  async getAlnAndLddAssessments(prisonNumber: string, username: string): Promise<CuriousAlnAndLddAssessmentsDto> {
     try {
-      const curiousAssessments = await this.curiousApiClient.getAssessmentsByPrisonNumber(prisonNumber)
+      const curiousAssessments = await this.curiousApiClient.getAssessmentsByPrisonNumber(prisonNumber, username)
       return toCuriousAlnAndLddAssessmentsDto(curiousAssessments)
     } catch (e) {
       logger.error(`Error getting Curious LDD and ALN assessments for [${prisonNumber}]`, e)

@@ -10,13 +10,13 @@ export default class CuriousApiClient extends RestClient {
     super('Curious API Client', config.apis.curious, logger, authenticationClient)
   }
 
-  async getAssessmentsByPrisonNumber(prisonNumber: string): Promise<AllAssessmentDTO> {
+  async getAssessmentsByPrisonNumber(prisonNumber: string, username: string): Promise<AllAssessmentDTO> {
     return this.get<AllAssessmentDTO>(
       {
         path: `/learnerAssessments/v2/${prisonNumber}`,
         errorHandler: restClientErrorHandler({ ignore404: true }),
       },
-      asSystem('CURIOUS_API'),
+      asSystem(username),
     )
   }
 }
