@@ -5,6 +5,7 @@ import CuriousApiClient from './curiousApiClient'
 import { anAllAssessmentDTO } from '../testsupport/curiousAssessmentsTestDataBuilder'
 
 describe('curiousApiClient', () => {
+  const username = 'A-DPS-USER'
   const systemToken = 'test-system-token'
   const prisonNumber = 'A1234BC'
 
@@ -35,11 +36,11 @@ describe('curiousApiClient', () => {
         .reply(200, expectedResponse)
 
       // When
-      const actual = await curiousApiClient.getAssessmentsByPrisonNumber(prisonNumber)
+      const actual = await curiousApiClient.getAssessmentsByPrisonNumber(prisonNumber, username)
 
       // Then
       expect(actual).toEqual(expectedResponse)
-      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith('CURIOUS_API')
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
       expect(nock.isDone()).toBe(true)
     })
 
@@ -57,11 +58,11 @@ describe('curiousApiClient', () => {
         .reply(404, apiErrorResponse)
 
       // When
-      const actual = await curiousApiClient.getAssessmentsByPrisonNumber(prisonNumber)
+      const actual = await curiousApiClient.getAssessmentsByPrisonNumber(prisonNumber, username)
 
       // Then
       expect(actual).toBeNull()
-      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith('CURIOUS_API')
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
       expect(nock.isDone()).toBe(true)
     })
 
@@ -81,11 +82,11 @@ describe('curiousApiClient', () => {
       const expectedError = new Error('Internal Server Error')
 
       // When
-      const actual = await curiousApiClient.getAssessmentsByPrisonNumber(prisonNumber).catch(e => e)
+      const actual = await curiousApiClient.getAssessmentsByPrisonNumber(prisonNumber, username).catch(e => e)
 
       // Then
       expect(actual).toEqual(expectedError)
-      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith('CURIOUS_API')
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
       expect(nock.isDone()).toBe(true)
     })
   })

@@ -22,6 +22,7 @@ describe('curiousService', () => {
   const curiousApiClient = new CuriousApiClient(null) as jest.Mocked<CuriousApiClient>
   const service = new CuriousService(curiousApiClient)
 
+  const username = 'some-username'
   const prisonNumber = 'A1234BC'
 
   beforeEach(() => {
@@ -90,11 +91,11 @@ describe('curiousService', () => {
       })
 
       // When
-      const actual = await service.getAlnAndLddAssessments(prisonNumber)
+      const actual = await service.getAlnAndLddAssessments(prisonNumber, username)
 
       // Then
       expect(actual).toEqual(expectedAssessments)
-      expect(curiousApiClient.getAssessmentsByPrisonNumber).toHaveBeenCalledWith(prisonNumber)
+      expect(curiousApiClient.getAssessmentsByPrisonNumber).toHaveBeenCalledWith(prisonNumber, username)
     })
   })
 
@@ -108,11 +109,11 @@ describe('curiousService', () => {
     })
 
     // When
-    const actual = await service.getAlnAndLddAssessments(prisonNumber)
+    const actual = await service.getAlnAndLddAssessments(prisonNumber, username)
 
     // Then
     expect(actual).toEqual(expectedAssessments)
-    expect(curiousApiClient.getAssessmentsByPrisonNumber).toHaveBeenCalledWith(prisonNumber)
+    expect(curiousApiClient.getAssessmentsByPrisonNumber).toHaveBeenCalledWith(prisonNumber, username)
   })
 
   it('should rethrow error given API client throws error', async () => {
@@ -121,10 +122,10 @@ describe('curiousService', () => {
     curiousApiClient.getAssessmentsByPrisonNumber.mockRejectedValue(expectedError)
 
     // When
-    const actual = await service.getAlnAndLddAssessments(prisonNumber).catch(e => e)
+    const actual = await service.getAlnAndLddAssessments(prisonNumber, username).catch(e => e)
 
     // Then
     expect(actual).toEqual(expectedError)
-    expect(curiousApiClient.getAssessmentsByPrisonNumber).toHaveBeenCalledWith(prisonNumber)
+    expect(curiousApiClient.getAssessmentsByPrisonNumber).toHaveBeenCalledWith(prisonNumber, username)
   })
 })
