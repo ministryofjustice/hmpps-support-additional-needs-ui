@@ -58,4 +58,7 @@ declare module 'supportAdditionalNeedsApiClient' {
   export type PlanReviewsResponse = components['schemas']['PlanReviewsResponse']
   export type EducationSupportPlanReviewResponse = components['schemas']['EducationSupportPlanReviewResponse']
   export type ReviewContributor = components['schemas']['ReviewContributor']
+
+  export type UpdateEhcpRequest = components['schemas']['UpdateEhcpRequest']
+  export type EhcpStatusResponse = components['schemas']['EhcpStatusResponse']
 }

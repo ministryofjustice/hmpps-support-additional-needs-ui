@@ -37,6 +37,8 @@ import anArchiveConditionRequest from '../testsupport/archiveConditionRequestTes
 import anArchiveStrengthRequest from '../testsupport/archiveStrengthRequestTestDataBuilder'
 import anArchiveSupportStrategyRequest from '../testsupport/archiveSupportStrategyRequestTestDataBuilder'
 import anArchiveChallengeRequest from '../testsupport/archiveChallengeRequestTestDataBuilder'
+import anUpdateEhcpRequest from '../testsupport/updateEhcpRequestTestDataBuilder'
+import anEhcpStatusResponse from '../testsupport/ehcpStatusResponseTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -2061,6 +2063,54 @@ describe('supportAdditionalNeedsApiClient', () => {
       // When
       const actual = await supportAdditionalNeedsApiClient
         .getEducationSupportPlanReviews(prisonNumber, username)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('updateEhcpStatus', () => {
+    it('should update a prisoners ehcp status', async () => {
+      // Given
+      const updateEhcpRequest = anUpdateEhcpRequest()
+
+      const expectedResponse = anEhcpStatusResponse()
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/ehcp-status`, requestBody => isMatch(requestBody, updateEhcpRequest))
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, expectedResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.updateEhcpStatus(prisonNumber, username, updateEhcpRequest)
+
+      // Then
+      expect(actual).toEqual(expectedResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const updateEhcpRequest = anUpdateEhcpRequest()
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .put(`/profile/${prisonNumber}/ehcp-status`, requestBody => isMatch(requestBody, updateEhcpRequest))
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .updateEhcpStatus(prisonNumber, username, updateEhcpRequest)
         .catch(e => e)
 
       // Then
