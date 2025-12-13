@@ -32,6 +32,8 @@ import type {
   UpdatePlanCreationStatusRequest,
   UpdateStrengthRequest,
   UpdateSupportStrategyRequest,
+  UpdateEhcpRequest,
+  EhcpStatusResponse,
 } from 'supportAdditionalNeedsApiClient'
 import config from '../config'
 import logger from '../../logger'
@@ -453,6 +455,20 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/education-support-plan/review`,
         errorHandler: restClientErrorHandler({ ignore404: true }),
+      },
+      asSystem(username),
+    )
+  }
+
+  async updateEhcpStatus(
+    prisonNumber: string,
+    username: string,
+    updateEhcpStatusRequest: UpdateEhcpRequest,
+  ): Promise<EhcpStatusResponse> {
+    return this.put<EhcpStatusResponse>(
+      {
+        path: `/profile/${prisonNumber}/ehcp-status`,
+        data: updateEhcpStatusRequest,
       },
       asSystem(username),
     )
