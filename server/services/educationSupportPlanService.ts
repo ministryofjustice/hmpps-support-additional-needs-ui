@@ -1,9 +1,11 @@
-import type { EducationSupportPlanDto, PlanLifecycleStatusDto } from 'dto'
+import type { EducationSupportPlanDto, EhcpStatusDto, PlanLifecycleStatusDto } from 'dto'
 import { SupportAdditionalNeedsApiClient } from '../data'
 import toCreateEducationSupportPlanRequest from '../data/mappers/createEducationSupportPlanRequestMapper'
 import toEducationSupportPlanDto from '../data/mappers/educationSupportPlanDtoMapper'
 import logger from '../../logger'
 import toPlanLifecycleStatusDto from '../data/mappers/planLifecycleStatusDtoMapper'
+import toUpdateEhcpRequest from '../data/mappers/updateEhcpRequestMapper'
+import toEhcpStatusDto from '../data/mappers/ehcpStatusDtoMapper'
 
 export default class EducationSupportPlanService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -43,6 +45,21 @@ export default class EducationSupportPlanService {
       return toPlanLifecycleStatusDto(apiResponse)
     } catch (e) {
       logger.error(`Error getting education support plan action status for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
+
+  async updateEhcpStatus(username: string, prisonNumber: string, ehcpStatusDto: EhcpStatusDto): Promise<EhcpStatusDto> {
+    try {
+      const updateEhcpRequest = toUpdateEhcpRequest(ehcpStatusDto)
+      const apiResponse = await this.supportAdditionalNeedsApiClient.updateEhcpStatus(
+        prisonNumber,
+        username,
+        updateEhcpRequest,
+      )
+      return toEhcpStatusDto(apiResponse)
+    } catch (e) {
+      logger.error(`Error updating EHCP status for [${prisonNumber}]`, e)
       throw e
     }
   }
