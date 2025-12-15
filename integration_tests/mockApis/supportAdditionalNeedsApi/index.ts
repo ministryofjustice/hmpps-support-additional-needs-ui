@@ -10,6 +10,7 @@ import educationSupportPlanCreationScheduleEndpoints from './educationSupportPla
 import additionalLearningNeedsScreenerEndpoints from './additionalLearningNeedsScreenerEndpoints'
 import planActionStatusEndpoints from './planActionStatusEndpoints'
 import educationSupportPlanReviewEndpoints from './educationSupportPlanReviewEndpoints'
+import ehcpStatusEndpoints from './ehcpStatusEndpoints'
 
 export default {
   stubSupportAdditionalNeedsApiPing: stubPing('support-additional-needs-api'),
@@ -24,4 +25,5 @@ export default {
   ...educationSupportPlanReviewEndpoints,
   ...additionalLearningNeedsScreenerEndpoints,
   ...planActionStatusEndpoints,
+  ...ehcpStatusEndpoints,
 }

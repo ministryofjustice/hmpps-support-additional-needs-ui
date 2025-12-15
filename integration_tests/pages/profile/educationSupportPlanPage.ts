@@ -1,5 +1,6 @@
 import ProfilePage from './profilePage'
-import { PageElement } from '../page'
+import Page, { PageElement } from '../page'
+import EducationHealthCarePlanPage from '../education-support-plan/educationHealthCarePlanPage'
 
 export default class EducationSupportPlanPage extends ProfilePage {
   constructor() {
@@ -54,6 +55,11 @@ export default class EducationSupportPlanPage extends ProfilePage {
     return this
   }
 
+  clickToUpdateEhcp(): EducationHealthCarePlanPage {
+    this.ehcpChangeLink().click()
+    return Page.verifyOnPage(EducationHealthCarePlanPage)
+  }
+
   showsPlanDeclinedRecordedBy(expectedRecordedBy: string, expectedRecordedAt: string): EducationSupportPlanPage {
     this.educationSupportPlanSummaryCard().should('not.exist')
     this.declinedEducationSupportPlanSummaryCard().should('be.visible')
@@ -81,6 +87,8 @@ export default class EducationSupportPlanPage extends ProfilePage {
   private additionalInformation = (): PageElement => cy.get('[data-qa=additional-information]')
 
   private ehcp = (): PageElement => cy.get('[data-qa=education-health-care-plan]')
+
+  private ehcpChangeLink = (): PageElement => cy.get('[data-qa=ehcp-change-link')
 
   private declinedEducationSupportPlanSummaryCard = (): PageElement =>
     cy.get('[data-qa=declined-education-support-plan-summary-card]')
