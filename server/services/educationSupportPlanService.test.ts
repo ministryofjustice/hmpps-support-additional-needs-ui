@@ -5,6 +5,9 @@ import aValidCreateEducationSupportPlanRequest from '../testsupport/createEducat
 import aValidEducationSupportPlanResponse from '../testsupport/educationSupportPlanResponseTestDataBuilder'
 import aPlanActionStatus from '../testsupport/planActionStatusTestDataBuilder'
 import aPlanLifecycleStatusDto from '../testsupport/planLifecycleStatusDtoTestDataBuilder'
+import anUpdateEhcpRequest from '../testsupport/updateEhcpRequestTestDataBuilder'
+import anEhcpStatusResponse from '../testsupport/ehcpStatusResponseTestDataBuilder'
+import anEhcpStatusDto from '../testsupport/ehcpStatusDtoTestDataBuilder'
 
 jest.mock('../data/supportAdditionalNeedsApiClient')
 
@@ -171,6 +174,67 @@ describe('educationSupportPlanService', () => {
       // Then
       expect(actual).toEqual(expectedError)
       expect(supportAdditionalNeedsApiClient.getPlanActionStatus).toHaveBeenCalledWith(prisonNumber, username)
+    })
+  })
+
+  describe('updateEhcpStatus', () => {
+    it('should update ehcp status', async () => {
+      // Given
+      const updateEhcpStatusDto = anEhcpStatusDto({
+        prisonId,
+        hasCurrentEhcp: true,
+      })
+      const expectedUpdateEhcpRequest = anUpdateEhcpRequest({
+        prisonId,
+        hasCurrentEhcp: true,
+      })
+
+      const ehcpStatusResponse = anEhcpStatusResponse({
+        hasCurrentEhcp: true,
+      })
+      supportAdditionalNeedsApiClient.updateEhcpStatus.mockResolvedValue(ehcpStatusResponse)
+
+      const expectedEhcpStatusDto = anEhcpStatusDto({
+        hasCurrentEhcp: true,
+        prisonId: null,
+      })
+
+      // When
+      const actual = await service.updateEhcpStatus(username, prisonNumber, updateEhcpStatusDto)
+
+      // Then
+      expect(actual).toEqual(expectedEhcpStatusDto)
+      expect(supportAdditionalNeedsApiClient.updateEhcpStatus).toHaveBeenCalledWith(
+        prisonNumber,
+        username,
+        expectedUpdateEhcpRequest,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.updateEhcpStatus.mockRejectedValue(expectedError)
+
+      const updateEhcpStatusDto = anEhcpStatusDto({
+        prisonId,
+        hasCurrentEhcp: true,
+      })
+      const expectedUpdateEhcpRequest = anUpdateEhcpRequest({
+        prisonId,
+        hasCurrentEhcp: true,
+      })
+
+      // When
+      const actual = await service.updateEhcpStatus(username, prisonNumber, updateEhcpStatusDto).catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.updateEhcpStatus).toHaveBeenCalledWith(
+        prisonNumber,
+        username,
+        expectedUpdateEhcpRequest,
+      )
     })
   })
 })

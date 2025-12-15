@@ -278,4 +278,9 @@ declare module 'dto' {
       recordedAt: Date
     }
   }
+
+  export interface EhcpStatusDto extends ReferencedAndAuditable {
+    hasCurrentEhcp: boolean
+    prisonId: string
+  }
 }
