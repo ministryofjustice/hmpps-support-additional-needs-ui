@@ -4,29 +4,34 @@ import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDa
 import aValidEducationSupportPlanDto from '../../../../testsupport/educationSupportPlanDtoTestDataBuilder'
 import YesNoValue from '../../../../enums/yesNoValue'
 import AuditService from '../../../../services/auditService'
+import EducationSupportPlanService from '../../../../services/educationSupportPlanService'
 
 jest.mock('../../../../services/auditService')
+jest.mock('../../../../services/educationSupportPlanService')
 
 describe('educationHealthCarePlanController', () => {
+  const educationSupportPlanService = new EducationSupportPlanService(null) as jest.Mocked<EducationSupportPlanService>
   const auditService = new AuditService(null) as jest.Mocked<AuditService>
-  const controller = new EducationHealthCarePlanController(auditService)
+  const controller = new EducationHealthCarePlanController(educationSupportPlanService, auditService)
 
   const username = 'A_USER'
   const prisonNumber = 'A1234BC'
   const prisonerSummary = aValidPrisonerSummary()
 
+  const flash = jest.fn()
   const req = {
     session: {},
     user: { username },
     params: { prisonNumber },
     journeyData: {},
     body: {},
+    flash,
   } as unknown as Request
   const res = {
     redirect: jest.fn(),
     redirectWithSuccess: jest.fn(),
     render: jest.fn(),
-    locals: { prisonerSummary },
+    locals: { prisonerSummary, user: { username, activeCaseLoadId: 'BXI' } },
   } as unknown as Response
   const next = jest.fn()
 
@@ -78,28 +83,30 @@ describe('educationHealthCarePlanController', () => {
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
-  it('should submit form and redirect Education Support Plan page', async () => {
+  it('should submit form and redirect to next route given calling API is successful', async () => {
     // Given
-    req.query = {}
-    req.journeyData = { educationSupportPlanDto: aValidEducationSupportPlanDto() }
+    const educationSupportPlanDto = aValidEducationSupportPlanDto({ hasCurrentEhcp: false })
+    req.journeyData = { educationSupportPlanDto }
     req.body = {
       hasCurrentEhcp: YesNoValue.YES,
     }
 
-    /*
     const expectedEducationSupportPlanDto = {
-      ...aValidEducationSupportPlanDto(),
+      ...educationSupportPlanDto,
       hasCurrentEhcp: true,
     }
-    */
+
+    const expectedNextRoute = `/profile/${prisonNumber}/education-support-plan`
 
     // When
     await controller.submitEhcpForm(req, res, next)
 
     // Then
-    expect(res.redirectWithSuccess).toHaveBeenCalledWith(
-      `/profile/${prisonNumber}/education-support-plan`,
-      'Education support plan updated',
+    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Education support plan updated')
+    expect(educationSupportPlanService.updateEhcpStatus).toHaveBeenCalledWith(
+      username,
+      prisonNumber,
+      expectedEducationSupportPlanDto,
     )
     expect(req.journeyData.educationSupportPlanDto).toBeUndefined()
     expect(auditService.logUpdateEducationLearnerSupportPlan).toHaveBeenCalledWith(
@@ -109,5 +116,37 @@ describe('educationHealthCarePlanController', () => {
         who: username,
       }),
     )
+  })
+
+  it('should submit form and redirect to next route given calling API is not successful', async () => {
+    // Given
+    const educationSupportPlanDto = aValidEducationSupportPlanDto({ hasCurrentEhcp: false })
+    req.journeyData = { educationSupportPlanDto }
+    req.body = {
+      hasCurrentEhcp: YesNoValue.YES,
+    }
+
+    educationSupportPlanService.updateEhcpStatus.mockRejectedValue(new Error('Internal Server Error'))
+
+    const expectedEducationSupportPlanDto = {
+      ...educationSupportPlanDto,
+      hasCurrentEhcp: true,
+    }
+
+    const expectedNextRoute = 'education-health-care-plan'
+
+    // When
+    await controller.submitEhcpForm(req, res, next)
+
+    // Then
+    expect(res.redirect).toHaveBeenCalledWith(expectedNextRoute)
+    expect(req.journeyData.educationSupportPlanDto).toEqual(expectedEducationSupportPlanDto)
+    expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
+    expect(educationSupportPlanService.updateEhcpStatus).toHaveBeenCalledWith(
+      username,
+      prisonNumber,
+      expectedEducationSupportPlanDto,
+    )
+    expect(auditService.logUpdateEducationLearnerSupportPlan).not.toHaveBeenCalled()
   })
 })

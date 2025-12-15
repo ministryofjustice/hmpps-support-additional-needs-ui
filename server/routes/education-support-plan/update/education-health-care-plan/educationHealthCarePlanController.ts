@@ -1,11 +1,16 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import type { EducationSupportPlanDto } from 'dto'
 import YesNoValue from '../../../../enums/yesNoValue'
-import { AuditService } from '../../../../services'
+import { AuditService, EducationSupportPlanService } from '../../../../services'
 import { BaseAuditData } from '../../../../services/auditService'
+import { Result } from '../../../../utils/result/result'
+import { PrisonUser } from '../../../../interfaces/hmppsUser'
 
 export default class EducationHealthCarePlanController {
-  constructor(private readonly auditService: AuditService) {}
+  constructor(
+    private readonly educationSupportPlanService: EducationSupportPlanService,
+    private readonly auditService: AuditService,
+  ) {}
 
   getEhcpView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { prisonerSummary, invalidForm } = res.locals
@@ -23,7 +28,18 @@ export default class EducationHealthCarePlanController {
     const ehcpForm = { ...req.body }
     this.updateDtoFromForm(req, ehcpForm)
 
-    // TODO - implement code here to update the EHCP answer in the ELSP
+    const { activeCaseLoadId, username } = res.locals.user as PrisonUser
+    const updateEducationSupportPlanDto = { ...educationSupportPlanDto, prisonId: activeCaseLoadId }
+
+    const { apiErrorCallback } = res.locals
+    const apiResult = await Result.wrap(
+      this.educationSupportPlanService.updateEhcpStatus(username, prisonNumber, updateEducationSupportPlanDto),
+      apiErrorCallback,
+    )
+    if (!apiResult.isFulfilled()) {
+      req.flash('pageHasApiErrors', 'true')
+      return res.redirect('education-health-care-plan')
+    }
 
     this.auditService.logUpdateEducationLearnerSupportPlan(this.updateEducationLearnerSupportPlanAuditData(req)) // no need to wait for response
     req.journeyData.educationSupportPlanDto = undefined

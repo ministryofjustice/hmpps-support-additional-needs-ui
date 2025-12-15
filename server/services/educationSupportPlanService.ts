@@ -49,9 +49,13 @@ export default class EducationSupportPlanService {
     }
   }
 
-  async updateEhcpStatus(username: string, prisonNumber: string, ehcpStatusDto: EhcpStatusDto): Promise<EhcpStatusDto> {
+  async updateEhcpStatus(
+    username: string,
+    prisonNumber: string,
+    educationSupportPlanDto: EducationSupportPlanDto,
+  ): Promise<EhcpStatusDto> {
     try {
-      const updateEhcpRequest = toUpdateEhcpRequest(ehcpStatusDto)
+      const updateEhcpRequest = toUpdateEhcpRequest(educationSupportPlanDto)
       const apiResponse = await this.supportAdditionalNeedsApiClient.updateEhcpStatus(
         prisonNumber,
         username,

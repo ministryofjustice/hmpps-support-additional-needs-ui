@@ -14,7 +14,10 @@ import EducationHealthCarePlanController from './education-health-care-plan/educ
 const updateEducationSupportPlanRoutes = (services: Services): Router => {
   const { auditService, educationSupportPlanService, journeyDataService } = services
 
-  const educationHealthCarePlanController = new EducationHealthCarePlanController(auditService)
+  const educationHealthCarePlanController = new EducationHealthCarePlanController(
+    educationSupportPlanService,
+    auditService,
+  )
 
   const router = Router({ mergeParams: true })
 
