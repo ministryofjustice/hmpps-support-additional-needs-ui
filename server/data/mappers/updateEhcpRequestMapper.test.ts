@@ -1,12 +1,12 @@
-import anEhcpStatusDto from '../../testsupport/ehcpStatusDtoTestDataBuilder'
 import anUpdateEhcpRequest from '../../testsupport/updateEhcpRequestTestDataBuilder'
 import toUpdateEhcpRequest from './updateEhcpRequestMapper'
+import aValidEducationSupportPlanDto from '../../testsupport/educationSupportPlanDtoTestDataBuilder'
 
 describe('updateEhcpRequestMapper', () => {
   describe('toUpdateEhcpRequest', () => {
     it('should map an EhcpStatusDto to an UpdateEhcpRequest', () => {
       // Given
-      const dto = anEhcpStatusDto({
+      const dto = aValidEducationSupportPlanDto({
         hasCurrentEhcp: false,
         prisonId: 'MDI',
       })

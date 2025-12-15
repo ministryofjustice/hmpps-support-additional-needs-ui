@@ -180,7 +180,7 @@ describe('educationSupportPlanService', () => {
   describe('updateEhcpStatus', () => {
     it('should update ehcp status', async () => {
       // Given
-      const updateEhcpStatusDto = anEhcpStatusDto({
+      const educationSupportPlanDto = aValidEducationSupportPlanDto({
         prisonId,
         hasCurrentEhcp: true,
       })
@@ -200,7 +200,7 @@ describe('educationSupportPlanService', () => {
       })
 
       // When
-      const actual = await service.updateEhcpStatus(username, prisonNumber, updateEhcpStatusDto)
+      const actual = await service.updateEhcpStatus(username, prisonNumber, educationSupportPlanDto)
 
       // Then
       expect(actual).toEqual(expectedEhcpStatusDto)
@@ -216,7 +216,7 @@ describe('educationSupportPlanService', () => {
       const expectedError = new Error('Internal Server Error')
       supportAdditionalNeedsApiClient.updateEhcpStatus.mockRejectedValue(expectedError)
 
-      const updateEhcpStatusDto = anEhcpStatusDto({
+      const educationSupportPlanDto = aValidEducationSupportPlanDto({
         prisonId,
         hasCurrentEhcp: true,
       })
@@ -226,7 +226,7 @@ describe('educationSupportPlanService', () => {
       })
 
       // When
-      const actual = await service.updateEhcpStatus(username, prisonNumber, updateEhcpStatusDto).catch(e => e)
+      const actual = await service.updateEhcpStatus(username, prisonNumber, educationSupportPlanDto).catch(e => e)
 
       // Then
       expect(actual).toEqual(expectedError)
