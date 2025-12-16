@@ -26,6 +26,7 @@ import logger from '../logger'
 import auditMiddleware from './middleware/auditMiddleware'
 import apiErrorMiddleware from './middleware/apiErrorMiddleware'
 import requestHelpersMiddleware from './middleware/requestHelpersMiddleware'
+import setupContentFragmentRoutes from './routes/content-fragments'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -41,6 +42,10 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
   nunjucksSetup(app)
+
+  // This express setup MUST happen before the setUpAuthentication middleware as it uses the X-USER-TOKEN header to carry the user token
+  app.use('/content-fragment', setupContentFragmentRoutes(services))
+
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
