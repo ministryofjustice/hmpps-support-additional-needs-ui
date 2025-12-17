@@ -283,4 +283,11 @@ declare module 'dto' {
     hasCurrentEhcp: boolean
     prisonId: string
   }
+
+  export interface AdditionalNeedsFactorsDto {
+    conditions: Array<ConditionDto>
+    challenges: Array<ChallengeResponseDto>
+    strengths: Array<StrengthResponseDto>
+    supportStrategies: Array<SupportStrategyResponseDto>
+  }
 }

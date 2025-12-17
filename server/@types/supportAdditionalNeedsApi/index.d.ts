@@ -456,6 +456,38 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/profile/{prisonNumber}/has-need': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['hasNeed']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/profile/{prisonNumber}/additional-needs-factors': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getAdditionalNeedsFactors']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -1988,6 +2020,34 @@ export interface components {
        */
       exemptionRecordedAt?: string
     }
+    HasNeedResponse: {
+      /**
+       * @description Whether or not the person has a need.
+       * @example true
+       */
+      hasNeed: boolean
+      /**
+       * @description A link to the person in SAN
+       * @example https://support-for-additional-needs-dev.hmpps.service.justice.gov.uk/profile/A5052DY/overview
+       */
+      url: string
+      /**
+       * @description A link to the modal view of the persons needs in SAN
+       * @example https://support-for-additional-needs-dev.hmpps.service.justice.gov.uk/profile/A5052DY/overview/modal
+       */
+      modalUrl: string
+      /**
+       * @description The reasons this person is deemed to have a need. Multiple reasons may apply.
+       * @example null
+       */
+      needSources: (
+        | 'LDD_SCREENER'
+        | 'ALN_SCREENER'
+        | 'CONDITION_SELF_DECLARED'
+        | 'CONDITION_CONFIRMED_DIAGNOSIS'
+        | 'CHALLENGE_NOT_ALN_SCREENER'
+      )[]
+    }
     EducationSupportPlanReviewResponse: {
       /**
        * @description The DPS username of the person who created this resource.
@@ -2136,6 +2196,28 @@ export interface components {
        * @example null
        */
       screeners: components['schemas']['ALNScreenerResponse'][]
+    }
+    AdditionalNeedsFactorsResponse: {
+      /**
+       * @description A List containing zero or more Conditions.
+       * @example null
+       */
+      conditions: components['schemas']['ConditionResponse'][]
+      /**
+       * @description A List containing zero or more Challenges.
+       * @example null
+       */
+      challenges: components['schemas']['ChallengeResponse'][]
+      /**
+       * @description A List containing zero or more Strengths.
+       * @example null
+       */
+      strengths: components['schemas']['StrengthResponse'][]
+      /**
+       * @description A List containing zero or more SupportStrategies.
+       * @example null
+       */
+      supportStrategies: components['schemas']['SupportStrategyResponse'][]
     }
   }
   responses: never
@@ -3158,6 +3240,50 @@ export interface operations {
         }
         content: {
           '*/*': components['schemas']['PlanActionStatus']
+        }
+      }
+    }
+  }
+  hasNeed: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['HasNeedResponse']
+        }
+      }
+    }
+  }
+  getAdditionalNeedsFactors: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        prisonNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['AdditionalNeedsFactorsResponse']
         }
       }
     }

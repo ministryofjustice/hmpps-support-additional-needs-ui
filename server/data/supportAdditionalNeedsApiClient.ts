@@ -34,6 +34,7 @@ import type {
   UpdateSupportStrategyRequest,
   UpdateEhcpRequest,
   EhcpStatusResponse,
+  AdditionalNeedsFactorsResponse,
 } from 'supportAdditionalNeedsApiClient'
 import config from '../config'
 import logger from '../../logger'
@@ -469,6 +470,16 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
       {
         path: `/profile/${prisonNumber}/ehcp-status`,
         data: updateEhcpStatusRequest,
+      },
+      asSystem(username),
+    )
+  }
+
+  async getAdditionalNeedsFactors(prisonNumber: string, username: string): Promise<AdditionalNeedsFactorsResponse> {
+    return this.get<AdditionalNeedsFactorsResponse>(
+      {
+        path: `/profile/${prisonNumber}/additional-needs-factors`,
+        errorHandler: restClientErrorHandler({ ignore404: true }),
       },
       asSystem(username),
     )
