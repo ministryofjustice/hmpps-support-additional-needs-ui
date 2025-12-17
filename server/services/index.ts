@@ -15,6 +15,7 @@ import StrengthService from './strengthService'
 import SupportStrategyService from './supportStrategyService'
 import AdditionalLearningNeedsScreenerService from './additionalLearningNeedsScreenerService'
 import EducationSupportPlanReviewService from './educationSupportPlanReviewService'
+import AdditionalNeedsService from './additionalNeedsService'
 
 export const services = () => {
   const {
@@ -49,6 +50,7 @@ export const services = () => {
     supportStrategyService: new SupportStrategyService(supportAdditionalNeedsApiClient),
     additionalLearningNeedsService: new AdditionalLearningNeedsScreenerService(supportAdditionalNeedsApiClient),
     educationSupportPlanReviewService: new EducationSupportPlanReviewService(supportAdditionalNeedsApiClient),
+    additionalNeedsService: new AdditionalNeedsService(supportAdditionalNeedsApiClient),
   }
 }
 
@@ -56,6 +58,7 @@ export type Services = ReturnType<typeof services>
 
 export {
   AdditionalLearningNeedsScreenerService,
+  AdditionalNeedsService,
   AuditService,
   ChallengeService,
   ConditionService,

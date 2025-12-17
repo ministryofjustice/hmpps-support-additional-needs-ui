@@ -61,4 +61,6 @@ declare module 'supportAdditionalNeedsApiClient' {
 
   export type UpdateEhcpRequest = components['schemas']['UpdateEhcpRequest']
   export type EhcpStatusResponse = components['schemas']['EhcpStatusResponse']
+
+  export type AdditionalNeedsFactorsResponse = components['schemas']['AdditionalNeedsFactorsResponse']
 }

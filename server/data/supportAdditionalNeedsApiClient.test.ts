@@ -39,6 +39,7 @@ import anArchiveSupportStrategyRequest from '../testsupport/archiveSupportStrate
 import anArchiveChallengeRequest from '../testsupport/archiveChallengeRequestTestDataBuilder'
 import anUpdateEhcpRequest from '../testsupport/updateEhcpRequestTestDataBuilder'
 import anEhcpStatusResponse from '../testsupport/ehcpStatusResponseTestDataBuilder'
+import anAdditionalNeedsFactorsResponse from '../testsupport/additionalNeedsFactorsResponseTestDataBuilder'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -2111,6 +2112,73 @@ describe('supportAdditionalNeedsApiClient', () => {
       // When
       const actual = await supportAdditionalNeedsApiClient
         .updateEhcpStatus(prisonNumber, username, updateEhcpRequest)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
+  describe('getAdditionalNeedsFactors', () => {
+    it('should get a prisoners Additional Needs Factors', async () => {
+      // Given
+      const expectedResponse = anAdditionalNeedsFactorsResponse()
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/additional-needs-factors`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(200, expectedResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getAdditionalNeedsFactors(prisonNumber, username)
+
+      // Then
+      expect(actual).toEqual(expectedResponse)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should return null given API returns a not found error', async () => {
+      // Given
+      const apiErrorResponse = {
+        status: 404,
+        userMessage: 'Not found',
+        developerMessage: 'Not found',
+      }
+
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/additional-needs-factors`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(404, apiErrorResponse)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.getAdditionalNeedsFactors(prisonNumber, username)
+
+      // Then
+      expect(actual).toBeNull()
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .get(`/profile/${prisonNumber}/additional-needs-factors`)
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .thrice()
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .getAdditionalNeedsFactors(prisonNumber, username)
         .catch(e => e)
 
       // Then
