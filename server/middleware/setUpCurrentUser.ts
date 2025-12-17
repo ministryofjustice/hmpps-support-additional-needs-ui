@@ -15,10 +15,14 @@ export default function setUpCurrentUser(services: Services): Router {
       const {
         name,
         user_id: userId,
+        user_name: username,
+        auth_source: authSource,
         authorities: roles = [],
       } = jwtDecode(res.locals.user.token) as {
         name?: string
         user_id?: string
+        user_name?: string
+        auth_source?: 'nomis' | 'delius' | 'external' | 'azuread'
         authorities?: string[]
       }
 
@@ -26,6 +30,8 @@ export default function setUpCurrentUser(services: Services): Router {
         ...res.locals.user,
         userId,
         name,
+        authSource: authSource as never,
+        username,
         displayName: convertToTitleCase(name),
         userRoles: roles.map(role => role.substring(role.indexOf('_') + 1)),
       }
