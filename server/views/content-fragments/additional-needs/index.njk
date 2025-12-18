@@ -1,3 +1,62 @@
 <section id="san-additional-needs-content-fragment">
-  <p class="govuk-body>">Additional needs overview</p>
+
+  {% if additionalNeedsFactors.isFulfilled() %}
+
+    {% set conditions = additionalNeedsFactors.value.conditions | filterArrayOnProperty('active', true) %}
+    {% set challenges = additionalNeedsFactors.value.challenges | filterArrayOnProperty('active', true) | filterArrayOnProperty('fromALNScreener', false) %}
+    {% set supportStrategies = additionalNeedsFactors.value.supportStrategies | filterArrayOnProperty('active', true) %}
+
+    {% if conditions.length or challenges.length or supportStrategies.length %}
+      <section data-qa="additional-needs-factors">
+        {# List all Condition types, deduped and sorted alphabetically #}
+        <h2 class="govuk-heading-s>">Conditions</h2>
+        {% if conditions.length %}
+          {% set conditionTypes = conditions | mapPropertyFromArray('conditionTypeCode') | dedupeArray | sort %}
+          <ul class="govuk-list govuk-list--bullet" data-qa="conditions-list">
+            {% for conditionType in conditionTypes %}
+              <li>{{ conditionType | formatConditionTypeScreenValue }}</li>
+            {% endfor %}
+          </ul>
+
+        {% else %}
+          <p class="govuk-body" data-qa="no-conditions-message">No conditions recorded yet.</p>
+        {% endif %}
+
+
+        {# List support needs (challenge and support strategy categories combined) #}
+        <h2 class="govuk-heading-s>">Needs support with</h2>
+        {% if challenges.length or supportStrategies.length %}
+          {% set challegeCategories = challenges | mapPropertyFromArray('challengeCategory') %}
+          {% set supportStrategyCategories = supportStrategies | mapPropertyFromArray('supportStrategyCategory') %}
+          {% set supportNeedCategories = challegeCategories.concat(supportStrategyCategories) | dedupeArray | sort %}
+          <ul class="govuk-list" data-qa="support-needs-list">
+            {% for supportNeedCategory in supportNeedCategories %}
+              <li>{{ supportNeedCategory | formatChallengeCategoryScreenValue }}</li>
+            {% endfor %}
+          </ul>
+
+        {% else %}
+          <p class="govuk-body" data-qa="no-support-needs-message">No support strategies or challenges recorded yet.</p>
+        {% endif %}
+
+        <a href="{{ serviceUrl }}/profile/{{ prisonerSummary.prisonNumber }}/overview" class="govuk-link" target="_blank">
+          View details in the Support for additional needs service.
+        </a>
+      </section>
+
+    {% else %}
+      <p class="govuk-body" data-qa="no-additional-needs-factors-message">
+        No support strategies, challenges or conditions recorded yet.<br/>
+        You can add them and
+        <a href="{{ serviceUrl }}/profile/{{ prisonerSummary.prisonNumber }}/overview" class="govuk-link" target="_blank">
+          view additional learning needs screener results in the Support for additional needs service.
+        </a>
+      </p>
+    {% endif %}
+
+  {% else %}
+    <h2 class="govuk-heading-s" data-qa="additional-needs-factors-unavailable-message">We cannot show these details right now</h2>
+    <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+  {% endif %}
+
 </section>
