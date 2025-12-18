@@ -32,6 +32,8 @@ import {
 import challengeStaffSupportTextLookupFilter from '../filters/challengeStaffSupportTextLookupFilter'
 import formatAlnAssessmentReferralScreenValueFilter from '../filters/formatAlnAssessmentReferralFilter'
 import formatChallengeIdentificationSourceScreenValueFilter from '../filters/formatChallengeIdentificationSourceFilter'
+import dedupeArrayFilter from '../filters/dedupeArrayFilter'
+import mapPropertyFromArrayFilter from '../filters/mapPropertyFromArrayFilter'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -87,6 +89,8 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatSupportStrategyTypeScreenValue', formatSupportStrategyTypeScreenValueFilter)
   njkEnv.addFilter('formatSupportStrategyTypeHintText', formatSupportStrategyTypeHintTextFilter)
   njkEnv.addFilter('filterArrayOnProperty', filterArrayOnPropertyFilter)
+  njkEnv.addFilter('dedupeArray', dedupeArrayFilter)
+  njkEnv.addFilter('mapPropertyFromArray', mapPropertyFromArrayFilter)
   njkEnv.addFilter('challengeSupportTextLookup', challengeStaffSupportTextLookupFilter)
   njkEnv.addFilter('formatAlnAssessmentReferralScreenValue', formatAlnAssessmentReferralScreenValueFilter)
 
