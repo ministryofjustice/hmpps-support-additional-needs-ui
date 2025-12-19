@@ -1,48 +1,117 @@
-<section id="san-additional-needs-content-fragment">
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+<div id="san-additional-needs-content-fragment">
 
   {% if additionalNeedsFactors.isFulfilled() %}
 
-    {% set conditions = additionalNeedsFactors.value.conditions | filterArrayOnProperty('active', true) %}
-    {% set challenges = additionalNeedsFactors.value.challenges | filterArrayOnProperty('active', true) | filterArrayOnProperty('fromALNScreener', false) %}
-    {% set supportStrategies = additionalNeedsFactors.value.supportStrategies | filterArrayOnProperty('active', true) %}
+    {% set conditions = additionalNeedsFactors.value.conditions | filterArrayOnProperty('active', true) | sort(attribute = 'updatedAt', reverse = true) %}
+    {% set challenges = additionalNeedsFactors.value.challenges | filterArrayOnProperty('active', true) | filterArrayOnProperty('fromALNScreener', false) | sort(attribute = 'challengeCategory') %}
+    {% set strengths = additionalNeedsFactors.value.strengths | filterArrayOnProperty('active', true) | filterArrayOnProperty('fromALNScreener', false) | sort(attribute = 'strengthCategory') %}
+    {% set supportStrategies = additionalNeedsFactors.value.supportStrategies | filterArrayOnProperty('active', true) | sort(attribute = 'supportStrategyTypeCode') %}
 
-    {% if conditions.length or challenges.length or supportStrategies.length %}
-      <section data-qa="additional-needs-factors">
-        {# List all Condition types, deduped and sorted alphabetically #}
-        <h2 class="govuk-heading-s>">Conditions</h2>
+    {% if conditions.length or challenges.length or strengths.length or supportStrategies.length %}
+      <div data-qa="additional-needs-factors">
+        <h2 class="govuk-heading-m">Additional needs overview</h2>
+
+        {# Render Support Strategies in a Details component #}
+        {% set supportStrategiesContent %}
+          {% if supportStrategies.length %}
+            {% set groupedSupportStrategies = supportStrategies | groupArrayByProperty('supportStrategyTypeCode') %}
+            <div class="govuk-summary-list">
+              {% for groupName, supportStrategiesInGroup in groupedSupportStrategies %}
+                <div class="govuk-summary-list__row" data-qa="support-strategy-summary-list-row">
+                  <h3 class="govuk-heading-s govuk-!-margin-top-3"> {{ groupName | formatSupportStrategyTypeScreenValue | default(groupName, true) }} </h3>
+                  {% for supportStrategy in supportStrategiesInGroup | sort(attribute = 'updatedAt', reverse = true) %}
+                    <p class="govuk-body govuk-!-margin-top-3 app-u-multiline-text" data-qa="support-strategy-details">{{ supportStrategy.supportStrategyDetails }}</p>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+
+          {% else %}
+            <p class="govuk-body" data-qa="no-support-strategies-message">No support strategies recorded</p>
+          {% endif %}
+        {% endset %}
+        {{ govukDetails({
+          summaryText: "Support strategies",
+          html: supportStrategiesContent,
+          attributes: {
+            "data-qa": "support-stragegies"
+          }
+        }) }}
+
+        {# Render Challenges in a Details component #}
+        {% set challengesContent %}
+          {% if challenges.length %}
+            {% set groupedChallenges = challenges | groupArrayByProperty('challengeCategory') %}
+            <div class="govuk-summary-list">
+              {% for groupName, challengesInGroup in groupedChallenges %}
+                <div class="govuk-summary-list__row" data-qa="challenge-summary-list-row">
+                  <h3 class="govuk-heading-s govuk-!-margin-top-3"> {{ groupName | formatChallengeCategoryScreenValue | default(groupName, true) }} </h3>
+                  {% for challenge in challengesInGroup | sort(attribute = 'updatedAt', reverse = true) %}
+                    <p class="govuk-body govuk-!-margin-top-3 app-u-multiline-text" data-qa="challenge-details">{{ challenge.symptoms }}</p>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+
+          {% else %}
+            <p class="govuk-body" data-qa="no-challenges-message">No challenges recorded</p>
+          {% endif %}
+        {% endset %}
+        {{ govukDetails({
+          summaryText: "Challenges",
+          html: challengesContent,
+          attributes: {
+            "data-qa": "challenges"
+          }
+        }) }}
+
+        {# Render Strengths in a Details component #}
+        {% set strengthsContent %}
+          {% if strengths.length %}
+            {% set groupedStrengths = strengths | groupArrayByProperty('strengthCategory') %}
+            <div class="govuk-summary-list">
+              {% for groupName, strengthsInGroup in groupedStrengths %}
+                <div class="govuk-summary-list__row" data-qa="strength-summary-list-row">
+                  <h3 class="govuk-heading-s govuk-!-margin-top-3"> {{ groupName | formatStrengthCategoryScreenValue | default(groupName, true) }} </h3>
+                  {% for strength in strengthsInGroup | sort(attribute = 'updatedAt', reverse = true) %}
+                    <p class="govuk-body govuk-!-margin-top-3 app-u-multiline-text" data-qa="strength-details">{{ strength.symptoms }}</p>
+                  {% endfor %}
+                </div>
+              {% endfor %}
+            </div>
+
+          {% else %}
+            <p class="govuk-body" data-qa="no-strengths-message">No strengths recorded</p>
+          {% endif %}
+        {% endset %}
+        {{ govukDetails({
+          summaryText: "Strengths",
+          html: strengthsContent,
+          attributes: {
+            "data-qa": "strengths"
+          }
+        }) }}
+
+        {# Render Conditions #}
+        <h2 class="govuk-heading-m">Conditions</h2>
         {% if conditions.length %}
-          {% set conditionTypes = conditions | mapPropertyFromArray('conditionTypeCode') | dedupeArray | sort %}
-          <ul class="govuk-list govuk-list--bullet" data-qa="conditions-list">
-            {% for conditionType in conditionTypes %}
-              <li>{{ conditionType | formatConditionTypeScreenValue }}</li>
-            {% endfor %}
-          </ul>
+          {% for condition in conditions %}
+            <div class="govuk-summary-list__row condition" data-qa="{{ condition.conditionTypeCode }}">
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-2">{{ condition.conditionTypeCode | formatConditionTypeScreenValue | default(condition.conditionTypeCode, true) }}</h3>
+              {% if condition.conditionName %}
+                <p class="govuk-body govuk-!-margin-bottom-2" data-qa="condition-name">{{ condition.conditionName }}</p>
+              {% endif %}
+              <p class="govuk-body app-u-multiline-text govuk-!-margin-bottom-2" data-qa="condition-details">{{ condition.conditionDetails }}</p>
+            </div>
+          {% endfor %}
 
         {% else %}
-          <p class="govuk-body" data-qa="no-conditions-message">No conditions recorded yet.</p>
+          <p class="govuk-body" data-qa="no-conditions-message">No conditions recorded.</p>
         {% endif %}
 
-
-        {# List support needs (challenge and support strategy categories combined) #}
-        <h2 class="govuk-heading-s>">Needs support with</h2>
-        {% if challenges.length or supportStrategies.length %}
-          {% set challegeCategories = challenges | mapPropertyFromArray('challengeCategory') %}
-          {% set supportStrategyCategories = supportStrategies | mapPropertyFromArray('supportStrategyCategory') %}
-          {% set supportNeedCategories = challegeCategories.concat(supportStrategyCategories) | dedupeArray | sort %}
-          <ul class="govuk-list" data-qa="support-needs-list">
-            {% for supportNeedCategory in supportNeedCategories %}
-              <li>{{ supportNeedCategory | formatChallengeCategoryScreenValue }}</li>
-            {% endfor %}
-          </ul>
-
-        {% else %}
-          <p class="govuk-body" data-qa="no-support-needs-message">No support strategies or challenges recorded yet.</p>
-        {% endif %}
-
-        <a href="{{ serviceUrl }}/profile/{{ prisonerSummary.prisonNumber }}/overview" class="govuk-link" target="_blank">
-          View details in the Support for additional needs service.
-        </a>
-      </section>
+      </div>
 
     {% else %}
       <p class="govuk-body" data-qa="no-additional-needs-factors-message">
@@ -59,4 +128,4 @@
     <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
   {% endif %}
 
-</section>
+</div>
