@@ -46,6 +46,7 @@ import LearningNeedsSupportPractitionerSupportController from './learning-needs-
 import AdditionalInformationController from './additional-information/additionalInformationController'
 import ReviewSupportPlanController from './review-support-plan/reviewSupportPlanController'
 import CheckYourAnswersController from './check-your-answers/checkYourAnswersController'
+import config from '../../../config'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -83,15 +84,17 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.use('/', [
     checkUserHasPermissionTo(ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN),
-    insertJourneyIdentifier({ insertIdAfterElement: 3 }), // insert journey ID immediately after '/education-support-plan/:prisonNumber/review' - eg: '/education-support-plan/A1234BC/review/473e9ee4-37d6-4afb-92a2-5729b10cc60f/who-created-the-plan'
+    insertJourneyIdentifier({ insertIdAfterElement: 3 }), // insert journey ID immediately after '/education-support-plan/:prisonNumber/review' - eg: '/education-support-plan/A1234BC/review/473e9ee4-37d6-4afb-92a2-5729b10cc60f/who-reviewed-the-plan'
   ])
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
 
   router.get('/:journeyId/start', [
     retrieveEducationSupportPlan(educationSupportPlanService),
     createEmptyReviewEducationSupportPlanDtoIfNotInJourneyData,
-    async (_req: Request, res: Response) => {
-      return res.redirect('who-reviewed-the-plan')
+    async (req: Request, res: Response) => {
+      return res.redirect(
+        config.featureToggles.newEspJourneyEnabled ? 'review-existing-needs' : 'who-reviewed-the-plan',
+      )
     },
   ])
 

@@ -1,6 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import type { EducationSupportPlanDto } from 'dto'
 import YesNoValue from '../../../../enums/yesNoValue'
+import config from '../../../../config'
 
 export default class ReviewExistingNeedsController {
   getReviewExistingNeedsView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -16,6 +17,10 @@ export default class ReviewExistingNeedsController {
   submitReviewExistingNeedsForm: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const reviewExistingNeedsForm = { ...req.body }
     this.updateDtoFromForm(req, reviewExistingNeedsForm)
+
+    if (config.featureToggles.newEspJourneyEnabled) {
+      return res.redirect('who-created-the-plan')
+    }
 
     return res.redirect(
       reviewExistingNeedsForm.reviewExistingNeeds === YesNoValue.NO

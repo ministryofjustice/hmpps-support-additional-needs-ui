@@ -44,6 +44,7 @@ import retrieveConditions from '../../middleware/retrieveConditions'
 import retrieveChallenges from '../../middleware/retrieveChallenges'
 import retrieveSupportStrategies from '../../middleware/retrieveSupportStrategies'
 import reviewExistingNeedsSchema from '../validationSchemas/reviewExistingNeedsSchema'
+import config from '../../../config'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -86,8 +87,8 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
 
   router.get('/:journeyId/start', [
     createEmptyEducationSupportPlanDtoIfNotInJourneyData,
-    async (_req: Request, res: Response) => {
-      return res.redirect('who-created-the-plan')
+    async (req: Request, res: Response) => {
+      return res.redirect(config.featureToggles.newEspJourneyEnabled ? 'review-existing-needs' : 'who-created-the-plan')
     },
   ])
 

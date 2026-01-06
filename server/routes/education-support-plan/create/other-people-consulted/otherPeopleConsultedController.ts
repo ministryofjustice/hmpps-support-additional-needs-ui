@@ -1,6 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import type { EducationSupportPlanDto } from 'dto'
 import YesNoValue from '../../../../enums/yesNoValue'
+import config from '../../../../config'
 
 export default class OtherPeopleConsultedController {
   getOtherPeopleConsultedView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -27,6 +28,14 @@ export default class OtherPeopleConsultedController {
       }
       // The answer has been changed to Yes/true, so we need to redirect the user to the screens allowing them to add people
       return res.redirect('other-people-consulted/add-person?submitToCheckAnswers=true')
+    }
+
+    if (config.featureToggles.newEspJourneyEnabled) {
+      return res.redirect(
+        wereOtherPeopleConsultedForm.wereOtherPeopleConsulted === YesNoValue.NO
+          ? 'individual-support-requirements'
+          : 'other-people-consulted/add-person',
+      )
     }
 
     return res.redirect(
