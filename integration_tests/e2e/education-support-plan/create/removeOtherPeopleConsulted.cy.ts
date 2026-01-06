@@ -18,7 +18,7 @@ context('Add and remove Other People Consulted during creation of Education Supp
 
   it('should be able to add and remove other people consulted', () => {
     // Given
-    cy.visit(`/education-support-plan/${prisonNumber}/create/who-created-the-plan`)
+    cy.visit(`/education-support-plan/${prisonNumber}/create/start`)
 
     Page.verifyOnPage(WhoCreatedThePlanPage)
       .selectWhoCreatedThePlan(PlanCreatedByValue.MYSELF)

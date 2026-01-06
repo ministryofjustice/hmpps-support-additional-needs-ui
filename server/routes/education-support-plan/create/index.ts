@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Request, Response, Router } from 'express'
 import { Services } from '../../../services'
 import insertJourneyIdentifier from '../../../middleware/insertJourneyIdentifier'
 import setupJourneyData from '../../../middleware/setupJourneyData'
@@ -84,8 +84,15 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
 
-  router.get('/:journeyId/who-created-the-plan', [
+  router.get('/:journeyId/start', [
     createEmptyEducationSupportPlanDtoIfNotInJourneyData,
+    async (_req: Request, res: Response) => {
+      return res.redirect('who-created-the-plan')
+    },
+  ])
+
+  router.get('/:journeyId/who-created-the-plan', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(whoCreatedThePlanController.getWhoCreatedThePlanView),
   ])
   router.post('/:journeyId/who-created-the-plan', [

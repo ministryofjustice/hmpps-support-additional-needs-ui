@@ -45,7 +45,7 @@ context('Create an Education Support Plan', () => {
     cy.signIn()
 
     // When
-    cy.visit(`/education-support-plan/${prisonNumber}/create/who-created-the-plan`)
+    cy.visit(`/education-support-plan/${prisonNumber}/create/start`)
 
     // Then
     Page.verifyOnPage(WhoCreatedThePlanPage)
@@ -311,7 +311,7 @@ Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. M
     cy.signIn()
 
     // When
-    cy.visit(`/education-support-plan/${prisonNumber}/create/who-created-the-plan`, { failOnStatusCode: false })
+    cy.visit(`/education-support-plan/${prisonNumber}/create/start`, { failOnStatusCode: false })
 
     // Then
     Page.verifyOnPage(AuthorisationErrorPage)

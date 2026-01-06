@@ -44,7 +44,7 @@ Cypress.Commands.add(
   (options?: { prisonNumber?: string; reviewDate?: Date }) => {
     const reviewDate = options?.reviewDate || addMonths(startOfToday(), 3)
 
-    cy.visit(`/education-support-plan/${options?.prisonNumber || 'G6115VJ'}/create/who-created-the-plan`)
+    cy.visit(`/education-support-plan/${options?.prisonNumber || 'G6115VJ'}/create/start`)
 
     Page.verifyOnPage(WhoCreatedThePlanPage) //
       .selectWhoCreatedThePlan(PlanCreatedByValue.MYSELF)
@@ -107,7 +107,7 @@ Cypress.Commands.add(
   (options?: { prisonNumber?: string; reviewDate?: Date }) => {
     const reviewDate = options?.reviewDate || addMonths(startOfToday(), 3)
 
-    cy.visit(`/education-support-plan/${options?.prisonNumber || 'G6115VJ'}/review/who-reviewed-the-plan`)
+    cy.visit(`/education-support-plan/${options?.prisonNumber || 'G6115VJ'}/review/start`)
 
     Page.verifyOnPage(WhoReviewedThePlanPage) //
       .selectWhoReviewedThePlan(PlanReviewedByValue.MYSELF)
