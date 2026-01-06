@@ -53,7 +53,7 @@ generic-service:
     SEARCH_UI_DEFAULT_PAGINATION_PAGE_SIZE: "50"
     EDIT_AND_ARCHIVE_ENABLED: true
     EDIT_EHCP_ENABLED: false
-    NEW_EHCP_JOURNEY_ENABLED: false
+    NEW_ESP_JOURNEY_ENABLED: false
 
     # Comma delimited list of prison IDs that our service is rolled out into (active agencies)
     # Use spaces to aid readability if necessary; these are trimmed when the environment variable is read and processed.
