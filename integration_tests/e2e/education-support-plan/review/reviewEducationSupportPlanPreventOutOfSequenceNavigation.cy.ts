@@ -7,6 +7,7 @@ context('Prevent out of sequence navigation to pages in the Review Education Sup
   const prisonNumber = 'A00001A'
 
   const pages = [
+    'who-reviewed-the-plan',
     'other-people-consulted',
     'other-people-consulted/add-person',
     'other-people-consulted/list',

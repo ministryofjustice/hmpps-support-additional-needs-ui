@@ -55,7 +55,7 @@ context('Review an Education Support Plan', () => {
     cy.signIn()
 
     // When
-    cy.visit(`/education-support-plan/${prisonNumber}/review/who-reviewed-the-plan`)
+    cy.visit(`/education-support-plan/${prisonNumber}/review/start`)
 
     // Then
     Page.verifyOnPage(WhoReviewedThePlanPage)
@@ -309,7 +309,7 @@ Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. M
     cy.signIn()
 
     // When
-    cy.visit(`/education-support-plan/${prisonNumber}/review/who-reviewed-the-plan`, { failOnStatusCode: false })
+    cy.visit(`/education-support-plan/${prisonNumber}/review/start`, { failOnStatusCode: false })
 
     // Then
     Page.verifyOnPage(Error404Page)
@@ -322,7 +322,7 @@ Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. M
     cy.signIn()
 
     // When
-    cy.visit(`/education-support-plan/${prisonNumber}/review/who-reviewed-the-plan`)
+    cy.visit(`/education-support-plan/${prisonNumber}/review/start`)
 
     // Then
     Page.verifyOnPage(OverviewPage) //
@@ -335,7 +335,7 @@ Nam quis odio nulla. Nam metus arcu, tempus quis viverra non, varius ac felis. M
     cy.signIn()
 
     // When
-    cy.visit(`/education-support-plan/${prisonNumber}/review/who-reviewed-the-plan`, { failOnStatusCode: false })
+    cy.visit(`/education-support-plan/${prisonNumber}/review/start`, { failOnStatusCode: false })
 
     // Then
     Page.verifyOnPage(AuthorisationErrorPage)

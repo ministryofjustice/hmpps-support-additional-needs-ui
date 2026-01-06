@@ -8,7 +8,7 @@
     </p>
     {% if params.planStatus === 'PLAN_DUE' or params.planStatus === 'PLAN_OVERDUE' %}
       <p class="govuk-body govuk-!-display-none-print">
-        <a class="govuk-link" href="/education-support-plan/{{ params.prisonerSummary.prisonNumber }}/create/who-created-the-plan">Create an education support plan</a> by {{ params.planCreationDeadlineDate | formatDate('d MMM yyyy') }}
+        <a class="govuk-link" href="/education-support-plan/{{ params.prisonerSummary.prisonNumber }}/create/start">Create an education support plan</a> by {{ params.planCreationDeadlineDate | formatDate('d MMM yyyy') }}
       </p>
     {% endif %}
   </div>

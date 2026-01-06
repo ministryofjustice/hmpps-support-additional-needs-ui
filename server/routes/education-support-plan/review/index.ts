@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Request, Response, Router } from 'express'
 import { Services } from '../../../services'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
@@ -87,9 +87,17 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   ])
   router.use('/:journeyId', [setupJourneyData(journeyDataService)])
 
-  router.get('/:journeyId/who-reviewed-the-plan', [
+  router.get('/:journeyId/start', [
     retrieveEducationSupportPlan(educationSupportPlanService),
     createEmptyReviewEducationSupportPlanDtoIfNotInJourneyData,
+    async (_req: Request, res: Response) => {
+      return res.redirect('who-reviewed-the-plan')
+    },
+  ])
+
+  router.get('/:journeyId/who-reviewed-the-plan', [
+    checkEducationSupportPlanDtoExistsInJourneyData,
+    checkReviewEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(whoReviewedThePlanController.getWhoReviewedThePlanView),
   ])
   router.post('/:journeyId/who-reviewed-the-plan', [
