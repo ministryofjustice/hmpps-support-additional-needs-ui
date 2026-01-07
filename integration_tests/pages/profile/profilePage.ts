@@ -3,10 +3,9 @@ import ChallengeCategoryPage from '../challenges/challengeCategoryPage'
 import ScreenerDatePage from '../additional-learning-needs-screener/screenerDatePage'
 import SelectConditionsPage from '../conditions/selectConditionsPage'
 import SelectStrengthCategoryPage from '../strengths/selectStrengthCategoryPage'
-import WhoCreatedThePlanPage from '../education-support-plan/whoCreatedThePlanPage'
 import ReasonPage from '../education-support-plan/refuse-plan/reasonPage'
 import SelectSupportStrategyCategoryPage from '../support-strategies/selectSupportStrategyCategoryPage'
-import WhoReviewedThePlanPage from '../education-support-plan/whoReviewedThePlanPage'
+import ReviewExistingNeedsPage from '../education-support-plan/reviewExistingNeedsPage'
 
 export default abstract class ProfilePage extends Page {
   hasSuccessMessage<T extends ProfilePage>(message: string): T {
@@ -56,9 +55,9 @@ export default abstract class ProfilePage extends Page {
     return Page.verifyOnPage(SelectSupportStrategyCategoryPage)
   }
 
-  clickCreateEducationSupportPlanButton(): WhoCreatedThePlanPage {
+  clickCreateEducationSupportPlanButton(): ReviewExistingNeedsPage {
     this.createEducationSupportPlanButton().click()
-    return Page.verifyOnPage(WhoCreatedThePlanPage)
+    return Page.verifyOnPage(ReviewExistingNeedsPage)
   }
 
   clickDeclineEducationSupportPlanButton(): ReasonPage {
@@ -66,9 +65,9 @@ export default abstract class ProfilePage extends Page {
     return Page.verifyOnPage(ReasonPage)
   }
 
-  clickReviewEducationSupportPlanButton(): WhoReviewedThePlanPage {
+  clickReviewEducationSupportPlanButton(): ReviewExistingNeedsPage {
     this.reviewEducationSupportPlanButton().click()
-    return Page.verifyOnPage(WhoReviewedThePlanPage)
+    return Page.verifyOnPage(ReviewExistingNeedsPage)
   }
 
   actionsCardContainsEducationSupportPlanActions() {

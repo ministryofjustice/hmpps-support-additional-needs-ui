@@ -46,14 +46,14 @@ Cypress.Commands.add(
 
     cy.visit(`/education-support-plan/${options?.prisonNumber || 'G6115VJ'}/create/start`)
 
-    Page.verifyOnPage(WhoCreatedThePlanPage) //
+    Page.verifyOnPage(ReviewExistingNeedsPage) //
+      .selectExistingNeedsReviewed()
+      .submitPageTo(WhoCreatedThePlanPage)
+      //
       .selectWhoCreatedThePlan(PlanCreatedByValue.MYSELF)
       .submitPageTo(OtherPeopleConsultedPage)
       //
       .selectOtherPeopleWereNotConsulted()
-      .submitPageTo(ReviewExistingNeedsPage)
-      //
-      .selectDoNotReviewExistingNeeds()
       .submitPageTo(IndividualSupportRequirementsPage)
       //
       .enterSupportRequirements('Prisoner has requested large print books to help with reading')
@@ -109,7 +109,10 @@ Cypress.Commands.add(
 
     cy.visit(`/education-support-plan/${options?.prisonNumber || 'G6115VJ'}/review/start`)
 
-    Page.verifyOnPage(WhoReviewedThePlanPage) //
+    Page.verifyOnPage(ReviewExistingNeedsPage) //
+      .selectExistingNeedsReviewed()
+      .submitPageTo(WhoReviewedThePlanPage)
+      //
       .selectWhoReviewedThePlan(PlanReviewedByValue.MYSELF)
       .submitPageTo(OtherPeopleConsultedPage)
       //
@@ -121,9 +124,6 @@ Cypress.Commands.add(
       .submitPageTo(ReviewersViewOnProgressPage)
       //
       .enterReviewersViewOnProgress('Chris is working hard to improve his progress')
-      .submitPageTo(ReviewExistingNeedsPage)
-      //
-      .selectDoNotReviewExistingNeeds()
       .submitPageTo(TeachingAdjustmentsPage)
       //
       .selectTeachingAdjustmentsNotRequired()

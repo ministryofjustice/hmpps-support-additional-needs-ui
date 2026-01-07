@@ -6,15 +6,10 @@ export default class ReviewExistingNeedsPage extends Page {
     super('education-support-plan-review-existing-needs')
   }
 
-  selectReviewExistingNeeds(): ReviewExistingNeedsPage {
-    this.radio(YesNoValue.YES).click()
+  selectExistingNeedsReviewed(): ReviewExistingNeedsPage {
+    this.checkbox(YesNoValue.YES).click()
     return this
   }
 
-  selectDoNotReviewExistingNeeds(): ReviewExistingNeedsPage {
-    this.radio(YesNoValue.NO).click()
-    return this
-  }
-
-  private radio = (value: YesNoValue): PageElement => cy.get(`.govuk-radios__input[value='${value}']`)
+  private checkbox = (value: YesNoValue): PageElement => cy.get(`.govuk-checkboxes__input[value='${value}']`)
 }
