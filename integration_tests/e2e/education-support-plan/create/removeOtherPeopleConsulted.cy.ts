@@ -4,6 +4,7 @@ import PlanCreatedByValue from '../../../../server/enums/planCreatedByValue'
 import OtherPeopleConsultedPage from '../../../pages/education-support-plan/otherPeopleConsultedPage'
 import OtherPeopleConsultedAddPersonPage from '../../../pages/education-support-plan/otherPeopleConsultedAddPersonPage'
 import OtherPeopleConsultedListPage from '../../../pages/education-support-plan/otherPeopleConsultedListPage'
+import ReviewExistingNeedsPage from '../../../pages/education-support-plan/reviewExistingNeedsPage'
 
 context('Add and remove Other People Consulted during creation of Education Support Plan journey', () => {
   const prisonNumber = 'A00001A'
@@ -19,6 +20,10 @@ context('Add and remove Other People Consulted during creation of Education Supp
   it('should be able to add and remove other people consulted', () => {
     // Given
     cy.visit(`/education-support-plan/${prisonNumber}/create/start`)
+
+    Page.verifyOnPage(ReviewExistingNeedsPage) //
+      .selectExistingNeedsReviewed()
+      .submitPageTo(WhoCreatedThePlanPage)
 
     Page.verifyOnPage(WhoCreatedThePlanPage)
       .selectWhoCreatedThePlan(PlanCreatedByValue.MYSELF)

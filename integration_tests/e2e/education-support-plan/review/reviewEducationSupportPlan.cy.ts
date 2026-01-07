@@ -11,10 +11,6 @@ import OtherPeopleConsultedListPage from '../../../pages/education-support-plan/
 import IndividualViewOnProgressPage from '../../../pages/education-support-plan/individualViewOnProgressPage'
 import ReviewersViewOnProgressPage from '../../../pages/education-support-plan/reviewersViewOnProgressPage'
 import ReviewExistingNeedsPage from '../../../pages/education-support-plan/reviewExistingNeedsPage'
-import ReviewExistingStrengthsPage from '../../../pages/education-support-plan/reviewExistingStrengthsPage'
-import ReviewExistingChallengesPage from '../../../pages/education-support-plan/reviewExistingChallengesPage'
-import ReviewExistingConditionsPage from '../../../pages/education-support-plan/reviewExistingConditionsPage'
-import ReviewExistingSupportStrategiesPage from '../../../pages/education-support-plan/reviewExistingSupportStrategiesPage'
 import TeachingAdjustmentsPage from '../../../pages/education-support-plan/teachingAdjustmentsPage'
 import SpecificTeachingSkillsPage from '../../../pages/education-support-plan/specificTeachingSkillsPage'
 import ExamArrangementsPage from '../../../pages/education-support-plan/examArrangementsPage'
@@ -58,7 +54,7 @@ context('Review an Education Support Plan', () => {
     cy.visit(`/education-support-plan/${prisonNumber}/review/start`)
 
     // Then
-    Page.verifyOnPage(WhoReviewedThePlanPage)
+    Page.verifyOnPage(ReviewExistingNeedsPage)
   })
 
   it('should review a prisoners Education Support Plan, triggering validation on every screen', () => {
@@ -74,6 +70,15 @@ context('Review an Education Support Plan', () => {
       .clickReviewEducationSupportPlanButton()
 
     // When
+    Page.verifyOnPage(ReviewExistingNeedsPage) //
+      // submit the page without answering the question to trigger a validation error
+      .submitPageTo(ReviewExistingNeedsPage)
+      .hasErrorCount(1)
+      .hasFieldInError('reviewExistingNeeds')
+      // enter the fields and submit the form to the next page
+      .selectExistingNeedsReviewed()
+      .submitPageTo(WhoReviewedThePlanPage)
+
     Page.verifyOnPage(WhoReviewedThePlanPage) //
       // submit the page without answering the question to trigger a validation error
       .submitPageTo(WhoReviewedThePlanPage)
@@ -146,28 +151,9 @@ context('Review an Education Support Plan', () => {
       .hasFieldInError('reviewersViewOnProgress')
       // enter the field and submit the form to the next page
       .enterReviewersViewOnProgress('Chris is working hard to improve his progress')
-      .submitPageTo(ReviewExistingNeedsPage)
-
-    Page.verifyOnPage(ReviewExistingNeedsPage) //
-      // submit the page without answering the question to trigger a validation error
-      .submitPageTo(ReviewExistingNeedsPage)
-      .hasErrorCount(1)
-      .hasFieldInError('reviewExistingNeeds')
-      // enter the fields and submit the form to the next page
-      .selectReviewExistingNeeds()
-      .submitPageTo(ReviewExistingStrengthsPage)
-
-    Page.verifyOnPage(ReviewExistingStrengthsPage) //
-      .submitPageTo(ReviewExistingChallengesPage)
-
-    Page.verifyOnPage(ReviewExistingChallengesPage) //
-      .submitPageTo(ReviewExistingConditionsPage)
-
-    Page.verifyOnPage(ReviewExistingConditionsPage) //
-      .submitPageTo(ReviewExistingSupportStrategiesPage)
-
-    Page.verifyOnPage(ReviewExistingSupportStrategiesPage) //
       .submitPageTo(TeachingAdjustmentsPage)
+
+    Page.verifyOnPage(TeachingAdjustmentsPage)
       .hasNoErrors()
       // ELSP already has an answer to Teaching Adjustments - clear the answer to trigger a validation error
       .clearDetails()
