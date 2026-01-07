@@ -23,7 +23,6 @@ njkEnv //
   .addFilter('formatChallengeTypeScreenValue', formatChallengeTypeScreenValueFilter)
   .addFilter('formatChallengeIdentificationSourceScreenValue', formatChallengeIdentificationSourceScreenValueFilter)
   .addFilter('challengeSupportTextLookup', challengeStaffSupportTextLookupFilter)
-  .addGlobal('featureToggles', { editAndArchiveEnabled: true })
 
 const prisonNamesById = {
   BXI: 'Brixton (HMP)',

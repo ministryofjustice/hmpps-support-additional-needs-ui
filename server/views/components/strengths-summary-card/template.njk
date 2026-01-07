@@ -52,21 +52,19 @@
                 Last updated {{ strength.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ strength.updatedByDisplayName }}, {{ prisonName }}</span>
               </p>
 
-              {% if featureToggles.editAndArchiveEnabled %}
-                {% if showActions %}
-                  <ul class="govuk-summary-card__actions govuk-!-display-none-print">
-                    {% if userHasPermissionTo('EDIT_STRENGTHS') %}
-                      <li class="govuk-summary-card__action">
-                        <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ strength.prisonNumber }}/{{ strength.reference }}/edit/detail" data-qa="edit-strength-button">Edit</a>
-                      </li>
-                    {% endif %}
-                    {% if userHasPermissionTo('ARCHIVE_STRENGTHS') %}
-                      <li class="govuk-summary-card__action">
-                        <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ strength.prisonNumber }}/{{ strength.reference }}/archive/reason" data-qa="archive-strength-button">Move to history</a>
-                      </li>
-                    {% endif %}
-                  </ul>
-                {% endif %}
+              {% if showActions %}
+                <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                  {% if userHasPermissionTo('EDIT_STRENGTHS') %}
+                    <li class="govuk-summary-card__action">
+                      <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ strength.prisonNumber }}/{{ strength.reference }}/edit/detail" data-qa="edit-strength-button">Edit</a>
+                    </li>
+                  {% endif %}
+                  {% if userHasPermissionTo('ARCHIVE_STRENGTHS') %}
+                    <li class="govuk-summary-card__action">
+                      <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ strength.prisonNumber }}/{{ strength.reference }}/archive/reason" data-qa="archive-strength-button">Move to history</a>
+                    </li>
+                  {% endif %}
+                </ul>
               {% endif %}
             </div>
           </div>
