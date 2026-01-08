@@ -43,20 +43,9 @@
             {% endfor %}
 
           {% else %}
-            {% if featureToggles.editAndArchiveEnabled %}
-              <p class="govuk-body" data-qa="no-active-strengths-message">
-                {{ prisonerSummary | formatFirst_name_Last_name }} has no current strengths.
-              </p>
-            {% else %}
-              <div class="govuk-summary-card">
-                <div class="govuk-summary-card__content">
-                  <p class="govuk-body" data-qa="no-active-strengths-message">
-                    No strengths recorded
-                  </p>
-                </div>
-              </div>
-            {% endif %}
-
+            <p class="govuk-body" data-qa="no-active-strengths-message">
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no current strengths.
+            </p>
           {% endif %}
 
           <p class="govuk-body">
@@ -89,28 +78,24 @@
           {% endif %}
         {% endset %}
 
-        {% if featureToggles.editAndArchiveEnabled %}
-          {{ govukTabs({
-            items: [
-              {
-                label: 'Current (' + activeStrengthsCount + ')',
-                id: 'current-strengths',
-                panel: {
-                  html: activeStrengthsContent
-                }
-              },
-              {
-                label: 'History (' + archivedStrengthsCount + ')',
-                id: 'archived-strengths',
-                panel: {
-                  html: archivedStrengthsContent
-                }
+        {{ govukTabs({
+          items: [
+            {
+              label: 'Current (' + activeStrengthsCount + ')',
+              id: 'current-strengths',
+              panel: {
+                html: activeStrengthsContent
               }
-            ]
-          }) }}
-        {% else %}
-          {{ activeStrengthsContent | safe }}
-        {% endif %}
+            },
+            {
+              label: 'History (' + archivedStrengthsCount + ')',
+              id: 'archived-strengths',
+              panel: {
+                html: archivedStrengthsContent
+              }
+            }
+          ]
+        }) }}
 
       {% else %}
         <h3 class="govuk-heading-s" data-qa="strengths-unavailable-message">We cannot show these details right now</h3>

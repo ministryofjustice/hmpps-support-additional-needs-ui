@@ -33,21 +33,19 @@
                 Last updated {{ supportStrategy.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ supportStrategy.updatedByDisplayName }}, {{ prisonName }}</span>
               </p>
 
-              {% if featureToggles.editAndArchiveEnabled %}
-                {% if showActions %}
-                  <ul class="govuk-summary-card__actions govuk-!-display-none-print">
-                    {% if userHasPermissionTo('EDIT_SUPPORT_STRATEGIES') %}
-                      <li class="govuk-summary-card__action">
-                        <a class="govuk-link govuk-!-font-weight-regular" href="/support-strategies/{{ supportStrategy.prisonNumber }}/{{ supportStrategy.reference }}/edit/detail" data-qa="edit-support-strategy-button">Edit</a>
-                      </li>
-                    {% endif %}
-                    {% if userHasPermissionTo('ARCHIVE_SUPPORT_STRATEGIES') %}
-                      <li class="govuk-summary-card__action">
-                        <a class="govuk-link govuk-!-font-weight-regular" href="/support-strategies/{{ supportStrategy.prisonNumber }}/{{ supportStrategy.reference }}/archive/reason" data-qa="archive-support-strategy-button">Move to history</a>
-                      </li>
-                    {% endif %}
-                  </ul>
-                {% endif %}
+              {% if showActions %}
+                <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                  {% if userHasPermissionTo('EDIT_SUPPORT_STRATEGIES') %}
+                    <li class="govuk-summary-card__action">
+                      <a class="govuk-link govuk-!-font-weight-regular" href="/support-strategies/{{ supportStrategy.prisonNumber }}/{{ supportStrategy.reference }}/edit/detail" data-qa="edit-support-strategy-button">Edit</a>
+                    </li>
+                  {% endif %}
+                  {% if userHasPermissionTo('ARCHIVE_SUPPORT_STRATEGIES') %}
+                    <li class="govuk-summary-card__action">
+                      <a class="govuk-link govuk-!-font-weight-regular" href="/support-strategies/{{ supportStrategy.prisonNumber }}/{{ supportStrategy.reference }}/archive/reason" data-qa="archive-support-strategy-button">Move to history</a>
+                    </li>
+                  {% endif %}
+                </ul>
               {% endif %}
             </div>
           </div>

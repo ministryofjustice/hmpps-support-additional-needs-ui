@@ -44,21 +44,9 @@
             {% endfor %}
 
           {% else %}
-            {% if featureToggles.editAndArchiveEnabled %}
-              <p class="govuk-body" data-qa="no-active-support-strategies-message">
-                {{ prisonerSummary | formatFirst_name_Last_name }} has no current support strategies.
-              </p>
-            {% else %}
-              <div class="govuk-summary-card">
-                <div class="govuk-summary-card__content">
-                  <p class="govuk-body" data-qa="no-active-support-strategies-message">
-                    No support strategies recorded
-                  </p>
-                </div>
-              </div>
-
-            {% endif %}
-
+            <p class="govuk-body" data-qa="no-active-support-strategies-message">
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no current support strategies.
+            </p>
           {% endif %}
 
           <p class="govuk-body">
@@ -92,28 +80,24 @@
           {% endif %}
         {% endset %}
 
-        {% if featureToggles.editAndArchiveEnabled %}
-          {{ govukTabs({
-            items: [
-              {
-                label: 'Current (' + activeSupportStrategiesCount + ')',
-                id: 'current-support-strategies',
-                panel: {
-                  html: activeSupportStrategiesContent
-                }
-              },
-              {
-                label: 'History (' + archivedSupportStrategiesCount + ')',
-                id: 'archived-support-strategies',
-                panel: {
-                  html: archivedSupportStrategiesContent
-                }
+        {{ govukTabs({
+          items: [
+            {
+              label: 'Current (' + activeSupportStrategiesCount + ')',
+              id: 'current-support-strategies',
+              panel: {
+                html: activeSupportStrategiesContent
               }
-            ]
-          }) }}
-        {% else %}
-          {{ activeSupportStrategiesContent | safe }}
-        {% endif %}
+            },
+            {
+              label: 'History (' + archivedSupportStrategiesCount + ')',
+              id: 'archived-support-strategies',
+              panel: {
+                html: archivedSupportStrategiesContent
+              }
+            }
+          ]
+        }) }}
 
       {% else %}
         <h3 class="govuk-heading-s" data-qa="support-strategies-unavailable-message">We cannot show these details

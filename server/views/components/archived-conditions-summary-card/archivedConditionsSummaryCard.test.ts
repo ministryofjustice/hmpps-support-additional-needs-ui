@@ -17,7 +17,6 @@ const njkEnv = nunjucks.configure([
 njkEnv //
   .addFilter('formatDate', formatDateFilter)
   .addFilter('formatConditionTypeScreenValue', formatConditionTypeScreenValueFilter)
-  .addGlobal('featureToggles', { editAndArchiveEnabled: true })
 
 const prisonNamesById = {
   BXI: 'Brixton (HMP)',

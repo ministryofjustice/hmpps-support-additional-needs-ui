@@ -54,21 +54,9 @@
             }) }}
 
           {% else %}
-            {% if featureToggles.editAndArchiveEnabled %}
-              <p class="govuk-body" data-qa="no-active-conditions-message">
-                {{ prisonerSummary | formatFirst_name_Last_name }} has no current conditions.
-              </p>
-            {% else %}
-              <div class="govuk-summary-card">
-                <div class="govuk-summary-card__content">
-                  <p class="govuk-body" data-qa="no-active-conditions-message">
-                    No conditions recorded
-                  </p>
-                </div>
-              </div>
-
-            {% endif %}
-
+            <p class="govuk-body" data-qa="no-active-conditions-message">
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no current conditions.
+            </p>
           {% endif %}
 
           <p class="govuk-body">
@@ -108,28 +96,24 @@
           {% endif %}
         {% endset %}
 
-        {% if featureToggles.editAndArchiveEnabled %}
-          {{ govukTabs({
-            items: [
-              {
-                label: 'Current (' + activeConditionsCount + ')',
-                id: 'current-conditions',
-                panel: {
-                html: activeConditionsContent
-              }
-              },
-              {
-                label: 'History (' + archivedConditionsCount + ')',
-                id: 'archived-conditions',
-                panel: {
-                html: archivedConditionsContent
-              }
-              }
-            ]
-          }) }}
-        {% else %}
-          {{ activeConditionsContent | safe }}
-        {% endif %}
+        {{ govukTabs({
+          items: [
+            {
+              label: 'Current (' + activeConditionsCount + ')',
+              id: 'current-conditions',
+              panel: {
+              html: activeConditionsContent
+            }
+            },
+            {
+              label: 'History (' + archivedConditionsCount + ')',
+              id: 'archived-conditions',
+              panel: {
+              html: archivedConditionsContent
+            }
+            }
+          ]
+        }) }}
 
       {% else %}
         <h3 class="govuk-heading-s" data-qa="conditions-unavailable-message">We cannot show these details right now</h3>

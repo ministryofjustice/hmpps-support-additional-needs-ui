@@ -35,21 +35,19 @@
                 Last updated {{ condition.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ condition.updatedByDisplayName }}, {{ prisonName }}</span>
               </p>
 
-              {% if featureToggles.editAndArchiveEnabled %}
-                {% if showActions %}
-                  <ul class="govuk-summary-card__actions govuk-!-display-none-print">
-                    {% if userHasPermissionTo('EDIT_CONDITIONS') %}
-                      <li class="govuk-summary-card__action">
-                        <a class="govuk-link govuk-!-font-weight-regular" href="/conditions/{{ condition.prisonNumber }}/{{ condition.reference }}/edit/detail" data-qa="edit-condition-button">Edit</a>
-                      </li>
-                    {% endif %}
-                    {% if userHasPermissionTo('ARCHIVE_CONDITIONS') %}
-                      <li class="govuk-summary-card__action">
-                        <a class="govuk-link govuk-!-font-weight-regular" href="/conditions/{{ condition.prisonNumber }}/{{ condition.reference }}/archive/reason" data-qa="archive-condition-button">Move to history</a>
-                      </li>
-                    {% endif %}
-                  </ul>
-                {% endif %}
+              {% if showActions %}
+                <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                  {% if userHasPermissionTo('EDIT_CONDITIONS') %}
+                    <li class="govuk-summary-card__action">
+                      <a class="govuk-link govuk-!-font-weight-regular" href="/conditions/{{ condition.prisonNumber }}/{{ condition.reference }}/edit/detail" data-qa="edit-condition-button">Edit</a>
+                    </li>
+                  {% endif %}
+                  {% if userHasPermissionTo('ARCHIVE_CONDITIONS') %}
+                    <li class="govuk-summary-card__action">
+                      <a class="govuk-link govuk-!-font-weight-regular" href="/conditions/{{ condition.prisonNumber }}/{{ condition.reference }}/archive/reason" data-qa="archive-condition-button">Move to history</a>
+                    </li>
+                  {% endif %}
+                </ul>
               {% endif %}
             </div>
           </div>

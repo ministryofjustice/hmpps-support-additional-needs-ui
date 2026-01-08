@@ -43,20 +43,9 @@
             {% endfor %}
 
           {% else %}
-            {% if featureToggles.editAndArchiveEnabled %}
-              <p class="govuk-body" data-qa="no-active-challenges-message">
-                {{ prisonerSummary | formatFirst_name_Last_name }} has no current challenges.
-              </p>
-            {% else %}
-              <div class="govuk-summary-card">
-                <div class="govuk-summary-card__content">
-                  <p class="govuk-body" data-qa="no-active-challenges-message">
-                    No challenges recorded
-                  </p>
-                </div>
-              </div>
-            {% endif %}
-
+            <p class="govuk-body" data-qa="no-active-challenges-message">
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no current challenges.
+            </p>
           {% endif %}
 
           <p class="govuk-body">
@@ -89,28 +78,24 @@
           {% endif %}
         {% endset %}
 
-        {% if featureToggles.editAndArchiveEnabled %}
-          {{ govukTabs({
-            items: [
-              {
-                label: 'Current (' + activeChallengesCount + ')',
-                id: 'current-challenges',
-                panel: {
-                  html: activeChallengesContent
-                }
-              },
-              {
-                label: 'History (' + archivedChallengesCount + ')',
-                id: 'archived-challenges',
-                panel: {
-                  html: archivedChallengesContent
-                }
+        {{ govukTabs({
+          items: [
+            {
+              label: 'Current (' + activeChallengesCount + ')',
+              id: 'current-challenges',
+              panel: {
+                html: activeChallengesContent
               }
-            ]
-          }) }}
-        {% else %}
-          {{ activeChallengesContent | safe }}
-        {% endif %}
+            },
+            {
+              label: 'History (' + archivedChallengesCount + ')',
+              id: 'archived-challenges',
+              panel: {
+                html: archivedChallengesContent
+              }
+            }
+          ]
+        }) }}
 
       {% else %}
         <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>

@@ -21,7 +21,6 @@ njkEnv //
   .addFilter('formatDate', formatDateFilter)
   .addFilter('formatStrengthTypeScreenValue', formatStrengthTypeScreenValueFilter)
   .addFilter('formatStrengthIdentificationSourceScreenValue', formatStrengthIdentificationSourceScreenValueFilter)
-  .addGlobal('featureToggles', { editAndArchiveEnabled: true })
 
 const prisonNamesById = {
   BXI: 'Brixton (HMP)',

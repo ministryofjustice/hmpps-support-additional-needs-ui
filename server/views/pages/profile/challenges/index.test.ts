@@ -33,7 +33,6 @@ njkEnv //
   .addFilter('formatChallengeIdentificationSourceScreenValue', formatChallengeIdentificationSourceScreenValueFilter)
   .addFilter('formatChallengeTypeScreenValue', formatChallengeTypeScreenValueFilter)
   .addFilter('challengeSupportTextLookup', challengeStaffSupportTextLookupFilter)
-  .addGlobal('featureToggles', { editAndArchiveEnabled: true })
 
 const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',

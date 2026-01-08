@@ -31,7 +31,6 @@ njkEnv //
   .addFilter('formatStrengthCategoryScreenValue', formatStrengthCategoryScreenValueFilter)
   .addFilter('formatStrengthIdentificationSourceScreenValue', formatStrengthIdentificationSourceScreenValueFilter)
   .addFilter('formatStrengthTypeScreenValue', formatStrengthTypeScreenValueFilter)
-  .addGlobal('featureToggles', { editAndArchiveEnabled: true })
 
 const prisonerSummary = aValidPrisonerSummary({
   firstName: 'IFEREECA',
