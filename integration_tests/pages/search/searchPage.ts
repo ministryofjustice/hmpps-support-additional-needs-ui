@@ -9,7 +9,7 @@ export default class SearchPage extends Page {
   hasResultsDisplayed(expectedResultCount: number): SearchPage {
     this.searchResultsTable().should('be.visible')
     this.zeroResultsMessage().should('not.exist')
-    this.paginationResultsCount().should('contain', ` of ${expectedResultCount} results`)
+    this.paginationResultsCount().should('contain', `${expectedResultCount} total results`)
     return this
   }
 
@@ -63,22 +63,25 @@ export default class SearchPage extends Page {
   }
 
   paginationCurrentPageIs(value: number): SearchPage {
-    this.paginationControls().find(`li:nth-of-type(${value})`).should('have.attr', 'aria-current', 'page')
+    this.paginationControls()
+      .find(`li a[aria-current=page]`)
+      .should('contain.text', value)
+      .should('attr', 'aria-label', `Page ${value}`)
     return this
   }
 
   hasPreviousLinkDisplayed(): SearchPage {
-    this.paginationFirstLink().should('contain', 'Previous')
+    this.paginationPreviousPageLink().should('contain', 'Previous')
     return this
   }
 
   hasNextLinkDisplayed(): SearchPage {
-    this.paginationLastLink().should('contain', 'Next')
+    this.paginationNextPageLink().should('contain', 'Next')
     return this
   }
 
   hasPaginationLinkForPage(page: number): SearchPage {
-    this.paginationControls().find(`li:nth-of-type(${page}) a`).should('contain', `${page}`)
+    this.paginationControls().find(`li a`).should('contain', `${page}`)
     return this
   }
 
@@ -127,9 +130,11 @@ export default class SearchPage extends Page {
 
   private paginationResultsCount = (): PageElement => cy.get('[data-qa=search-results-pagination] p')
 
-  private paginationFirstLink = (): PageElement => cy.get('[data-qa=search-results-pagination] ul li:first-of-type a')
+  private paginationPreviousPageLink = (): PageElement =>
+    cy.get('[data-qa=search-results-pagination] .govuk-pagination__prev a')
 
-  private paginationLastLink = (): PageElement => cy.get('[data-qa=search-results-pagination] ul li:last-of-type a')
+  private paginationNextPageLink = (): PageElement =>
+    cy.get('[data-qa=search-results-pagination] .govuk-pagination__next a')
 
   private sortableTableHeaders = (): PageElement => cy.get('[data-qa=sortable-table-headers]')
 
