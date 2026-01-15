@@ -8,10 +8,14 @@ const reviewExistingNeedsSchema =
   async () => {
     const messages = {
       create: {
-        reviewExistingNeedsMandatoryMessage: `${config.featureToggles.newEspJourneyEnabled ? 'You must review' : 'Select whether you would like to review'} strengths, challenges and support needs before creating the plan`,
+        reviewExistingNeedsMandatoryMessage: config.featureToggles.newEspJourneyEnabled
+          ? `You must confirm that you have reviewed the person's support strategies, challenges, strengths and conditions`
+          : 'Select whether you would like to review strengths, challenges and support needs before creating the plan',
       },
       review: {
-        reviewExistingNeedsMandatoryMessage: `${config.featureToggles.newEspJourneyEnabled ? 'You must review' : 'Select if you want to review'} challenges, strengths, conditions and support strategies before reviewing the education support plan`,
+        reviewExistingNeedsMandatoryMessage: config.featureToggles.newEspJourneyEnabled
+          ? `You must confirm that you have reviewed the person's support strategies, challenges, strengths and conditions`
+          : 'Select if you want to review challenges, strengths, conditions and support strategies before reviewing the education support plan',
       },
     }
 
