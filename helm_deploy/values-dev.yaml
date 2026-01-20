@@ -28,7 +28,6 @@ generic-service:
     NEW_DPS_URL: 'https://dps-dev.prison.service.justice.gov.uk'
     COMPONENT_API_URL: 'https://frontend-components-dev.hmpps.service.justice.gov.uk'
     DPR_UI_REPORT_URL: 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk/dpr/request-report/report/san001/san-additional-needs-report/filters'
-    NEW_ESP_JOURNEY_ENABLED: true
     DPR_REPORT_ENABLED: true
 
   allowlist:
