@@ -111,5 +111,6 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('formatLast_name_comma_First_name', formatPrisonerNameFilter(NameFormat.Last_name_comma_First_name))
 
   njkEnv.addGlobal('dpsUrl', config.dpsHomeUrl)
+  njkEnv.addGlobal('dprReportUrl', config.dprReportUrl)
   njkEnv.addGlobal('featureToggles', config.featureToggles)
 }

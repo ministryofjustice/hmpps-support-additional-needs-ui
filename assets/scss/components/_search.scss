@@ -32,3 +32,11 @@
      background-color: govuk-colour("white");
    }
  }
+
+ .search-header-container {
+   display: flex;
+   a {
+     margin-left: auto;
+     align-content: space-around;
+   }
+ }

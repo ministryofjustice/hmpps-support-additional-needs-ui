@@ -1,50 +1,43 @@
 import authorisationMiddleware from './authorisationMiddleware'
-import ApplicationRole from '../enums/applicationRole'
+import DpsRole from '../enums/dpsRole'
 import ApplicationAction from '../enums/applicationAction'
 
 /**
- * A map of [ApplicationAction] to [ApplicationRole]s, to determine which role is required for any given action.
- * The list of [ApplicationRole]s should be considered an "or" list. Users require any one of the listed roles for each
+ * A map of [ApplicationAction] to [DpsRole]s, to determine which role is required for any given action.
+ * The list of [DpsRole]s should be considered an "or" list. Users require any one of the listed roles for each
  * action.
  */
-const rolesForAction = (): Record<ApplicationAction, Array<ApplicationRole>> => ({
+const rolesForAction = (): Record<ApplicationAction, Array<DpsRole>> => ({
   [ApplicationAction.SEARCH]: [],
   [ApplicationAction.VIEW_PROFILE]: [],
-  [ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
-  [ApplicationAction.RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
-  [ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
-  [ApplicationAction.UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN]: [ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.RECORD_EDUCATION_LEARNER_SUPPORT_PLAN]: [DpsRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.RECORD_DECLINED_EDUCATION_LEARNER_SUPPORT_PLAN]: [DpsRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.REVIEW_EDUCATION_LEARNER_SUPPORT_PLAN]: [DpsRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.UPDATE_EDUCATION_LEARNER_SUPPORT_PLAN]: [DpsRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_CHALLENGES]: [],
-  [ApplicationAction.EDIT_CHALLENGES]: [ApplicationRole.ROLE_SAN_EDITOR, ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
-  [ApplicationAction.ARCHIVE_CHALLENGES]: [ApplicationRole.ROLE_SAN_EDITOR, ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.EDIT_CHALLENGES]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.ARCHIVE_CHALLENGES]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_STRENGTHS]: [],
-  [ApplicationAction.EDIT_STRENGTHS]: [ApplicationRole.ROLE_SAN_EDITOR, ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
-  [ApplicationAction.ARCHIVE_STRENGTHS]: [ApplicationRole.ROLE_SAN_EDITOR, ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.EDIT_STRENGTHS]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.ARCHIVE_STRENGTHS]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_SUPPORT_STRATEGIES]: [],
-  [ApplicationAction.EDIT_SUPPORT_STRATEGIES]: [
-    ApplicationRole.ROLE_SAN_EDITOR,
-    ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
-  ],
-  [ApplicationAction.ARCHIVE_SUPPORT_STRATEGIES]: [
-    ApplicationRole.ROLE_SAN_EDITOR,
-    ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
-  ],
+  [ApplicationAction.EDIT_SUPPORT_STRATEGIES]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.ARCHIVE_SUPPORT_STRATEGIES]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_SELF_DECLARED_CONDITIONS]: [],
-  [ApplicationAction.RECORD_DIAGNOSED_CONDITIONS]: [
-    ApplicationRole.ROLE_SAN_EDITOR,
-    ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
-  ],
-  [ApplicationAction.EDIT_CONDITIONS]: [ApplicationRole.ROLE_SAN_EDITOR, ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
-  [ApplicationAction.ARCHIVE_CONDITIONS]: [ApplicationRole.ROLE_SAN_EDITOR, ApplicationRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.RECORD_DIAGNOSED_CONDITIONS]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.EDIT_CONDITIONS]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.ARCHIVE_CONDITIONS]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_ALN_SCREENER]: [],
   [ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE]: [
-    ApplicationRole.ROLE_SAN_EDITOR,
-    ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
+    DpsRole.ROLE_SAN_EDITOR,
+    DpsRole.ROLE_SAN_EDUCATION_MANAGER,
   ],
   [ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES_ON_SEARCH]: [
-    ApplicationRole.ROLE_SAN_EDITOR,
-    ApplicationRole.ROLE_SAN_EDUCATION_MANAGER,
+    DpsRole.ROLE_SAN_EDITOR,
+    DpsRole.ROLE_SAN_EDUCATION_MANAGER,
   ],
+  [ApplicationAction.VIEW_SAN_DPR_REPORT]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.USE_DPR_REPORTING_SERVICE]: [DpsRole.ROLE_PRISONS_REPORTING_USER],
 })
 
 /**
@@ -58,13 +51,13 @@ const checkUserHasPermissionTo = (action: ApplicationAction) => authorisationMid
  */
 const userHasPermissionTo = (action: ApplicationAction, userRoles: string[]): boolean => {
   const requiredRoles = rolesForAction()[action]
-  return requiredRoles.length === 0 || userRoles.some(role => requiredRoles.includes(role as ApplicationRole))
+  return requiredRoles.length === 0 || userRoles.some(role => requiredRoles.includes(role as DpsRole))
 }
 
 /**
- * Helper method to return an array of [ApplicationAction] for a given [ApplicationRole] that a user might have.
+ * Helper method to return an array of [ApplicationAction] for a given [DpsRole] that a user might have.
  */
-const userWithRoleCan = (role: ApplicationRole): Array<ApplicationAction> =>
+const userWithRoleCan = (role: DpsRole): Array<ApplicationAction> =>
   Object.keys(ApplicationAction)
     .filter(
       action =>

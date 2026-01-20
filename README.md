@@ -134,9 +134,10 @@ A changelog for the service is available [here](./CHANGELOG.md)
 ## Feature Toggles
 Features can be toggled by setting the relevant environment variable.
 
-| Name                     | Default Value | Type     | Description                                                                                                     |
-|--------------------------|---------------|----------|-----------------------------------------------------------------------------------------------------------------|
-| SOME_TOGGLE_ENABLED      | false         | Boolean  | Example feature toggle, for demonstration purposes.                                                             |
-| EDIT_EHCP_ENABLED        | false         | Boolean  | Set to true to enable the edit EHCP functionality.                                                              |
-| NEW_ESP_JOURNEY_ENABLED  | false         | Boolean  | Set to true to enable the new ESP journey.                                                                      |
+| Name                    | Default Value | Type     | Description                                             |
+|-------------------------|---------------|----------|---------------------------------------------------------|
+| SOME_TOGGLE_ENABLED     | false         | Boolean  | Example feature toggle, for demonstration purposes.     |
+| EDIT_EHCP_ENABLED       | false         | Boolean  | Set to true to enable the edit EHCP functionality.      |
+| NEW_ESP_JOURNEY_ENABLED | false         | Boolean  | Set to true to enable the new ESP journey.              |
+| DPR_REPORT_ENABLED      | false         | Boolean  | Set to true to enable the link to the DPR reporting UI. |
 
