@@ -41,13 +41,13 @@
   .govuk-tag {
     max-width: fit-content;
   }
+}
 
-  .action-icon {
-    margin-right: 8px;
-    vertical-align: middle;
-    width: 35px;
-    height: 28px;
-  }
+.action-icon {
+  margin-right: 8px;
+  vertical-align: middle;
+  width: 35px;
+  height: 28px;
 }
 
 .actions-card:has(.govuk-summary-card__content .govuk-list li),

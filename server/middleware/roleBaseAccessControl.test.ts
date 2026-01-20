@@ -1,5 +1,5 @@
 import { userWithRoleCan } from './roleBasedAccessControl'
-import ApplicationRole from '../enums/applicationRole'
+import DpsRole from '../enums/dpsRole'
 import ApplicationAction from '../enums/applicationAction'
 
 describe('roleBasedAccessControl', () => {
@@ -18,7 +18,7 @@ describe('roleBasedAccessControl', () => {
       ]
 
       // When
-      const actual = userWithRoleCan('SOME_NON_SAN_ROLE' as ApplicationRole)
+      const actual = userWithRoleCan('SOME_NON_SAN_ROLE' as DpsRole)
 
       // Then
       expect(actual).toEqual(expected)
@@ -49,10 +49,11 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.ARCHIVE_CHALLENGES,
         ApplicationAction.EDIT_SUPPORT_STRATEGIES,
         ApplicationAction.ARCHIVE_SUPPORT_STRATEGIES,
+        ApplicationAction.VIEW_SAN_DPR_REPORT,
       ]
 
       // When
-      const actual = userWithRoleCan(ApplicationRole.ROLE_SAN_EDUCATION_MANAGER)
+      const actual = userWithRoleCan(DpsRole.ROLE_SAN_EDUCATION_MANAGER)
 
       // Then
       expect(actual.sort()).toEqual(expected.sort())
@@ -79,10 +80,11 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.ARCHIVE_CHALLENGES,
         ApplicationAction.EDIT_SUPPORT_STRATEGIES,
         ApplicationAction.ARCHIVE_SUPPORT_STRATEGIES,
+        ApplicationAction.VIEW_SAN_DPR_REPORT,
       ]
 
       // When
-      const actual = userWithRoleCan(ApplicationRole.ROLE_SAN_EDITOR)
+      const actual = userWithRoleCan(DpsRole.ROLE_SAN_EDITOR)
 
       // Then
       expect(actual.sort()).toEqual(expected.sort())

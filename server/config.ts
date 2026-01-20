@@ -142,6 +142,7 @@ export default {
   environmentName: get('ENVIRONMENT_NAME', ''),
   dpsHomeUrl: get('DPS_URL', 'http://localhost:3000/', requiredInProduction),
   newDpsUrl: get('NEW_DPS_URL', 'http://localhost:3000/', requiredInProduction),
+  dprReportUrl: get('DPR_UI_REPORT_URL', 'http://localhost:3000/', requiredInProduction),
   applicationInsights: {
     connectionString: get('APPLICATIONINSIGHTS_CONNECTION_STRING', null),
   },
@@ -150,5 +151,6 @@ export default {
     // someToggleEnabled: toBoolean(get('SOME_TOGGLE_ENABLED', false)),
     editEhcpEnabled: toBoolean(get('EDIT_EHCP_ENABLED', false, requiredInProduction)),
     newEspJourneyEnabled: toBoolean(get('NEW_ESP_JOURNEY_ENABLED', false, requiredInProduction)),
+    dprReportEnabled: toBoolean(get('DPR_REPORT_ENABLED', false, requiredInProduction)),
   },
 }
