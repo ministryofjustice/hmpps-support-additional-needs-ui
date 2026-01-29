@@ -76,7 +76,7 @@ describe('Tests for the ALN Assessments Details component', () => {
     )
     expect(assessmentAtBrixton.find('[data-qa=assessment-date]').text().trim()).toEqual('6 January 2023')
     expect(assessmentAtBrixton.find('[data-qa=assessment-outcome]').text().trim()).toEqual(
-      'No Additional needs identified',
+      'No additional needs identified',
     )
     expect(assessmentAtBrixton.find('[data-qa=assessment-referral] li').length).toEqual(2)
     expect(assessmentAtBrixton.find('[data-qa=assessment-referral] li').eq(0).text().trim()).toEqual('Safer Custody')
