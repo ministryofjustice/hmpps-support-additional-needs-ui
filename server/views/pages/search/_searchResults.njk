@@ -34,12 +34,18 @@
             fieldName: 'RELEASE_DATE',
             headerText: 'Release date'
           }) }}
-          <th scope="col" class="govuk-table__header" data-qa="ADDITIONAL_NEEDS-column-header">
-            Additional needs
-          </th>
-          <th scope="col" class="govuk-table__header" data-qa="IN_EDUCATION-column-header">
-            In education
-          </th>
+          {{ sortableTableHeader({
+            sortBy: sortField,
+            sortOrder: sortDirection,
+            fieldName: 'HAS_ADDITIONAL_NEED',
+            headerText: 'Additional needs'
+          }) }}
+          {{ sortableTableHeader({
+            sortBy: sortField,
+            sortOrder: sortDirection,
+            fieldName: 'IN_EDUCATION',
+            headerText: 'In education'
+          }) }}
 
           {% if userHasPermissionTo('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_SEARCH') %}
             <th scope="col" class="govuk-table__header" data-qa="PLAN_STATUS-column-header">

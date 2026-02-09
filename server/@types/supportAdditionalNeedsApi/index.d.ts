@@ -645,7 +645,7 @@ export interface components {
         | 'OTHER'
       )[]
       /**
-       * @description The Prison identifier.
+       * @description The prison the strength was updated at
        * @example BXI
        */
       prisonId: string
@@ -768,7 +768,7 @@ export interface components {
        */
       hasCurrentEhcp: boolean
       /**
-       * @description The Prison identifier.
+       * @description The prison the EHCP was updated at
        * @example BXI
        */
       prisonId: string
@@ -834,7 +834,7 @@ export interface components {
        */
       conditionDetails: string
       /**
-       * @description The Prison identifier.
+       * @description The prison the condition was updated at
        * @example BXI
        */
       prisonId: string
@@ -954,7 +954,7 @@ export interface components {
         | 'OTHER'
       )[]
       /**
-       * @description The Prison identifier.
+       * @description The prison the challenge was updated at
        * @example BXI
        */
       prisonId: string
@@ -1147,7 +1147,7 @@ export interface components {
     }
     CreateEducationSupportPlanRequest: {
       /**
-       * @description The Prison identifier.
+       * @description The prisonId that the person is a resident at at the time of creating their plan.
        * @example BXI
        */
       prisonId: string
@@ -1318,7 +1318,7 @@ export interface components {
     }
     SupportPlanReviewRequest: {
       /**
-       * @description The Prison identifier.
+       * @description The prisonId that the person is a resident at at the time of creating the review.
        * @example BXI
        */
       prisonId: string
@@ -1497,7 +1497,7 @@ export interface components {
     }
     ALNScreenerRequest: {
       /**
-       * @description The Prison identifier.
+       * @description The prison the ALN screener was keyed in at
        * @example BXI
        */
       prisonId: string
@@ -1527,7 +1527,7 @@ export interface components {
     }
     UpdatePlanCreationStatusRequest: {
       /**
-       * @description The Prison identifier.
+       * @description The prison the schedule was updated at
        * @example BXI
        */
       prisonId: string
@@ -2016,7 +2016,7 @@ export interface components {
       /**
        * Format: date-time
        * @description If the plan was declined by the prisoner, the timestamp that the plan was exempted.
-       * @example 2025-10-04
+       * @example 2025-10-04T00:00:00.000+00:00
        */
       exemptionRecordedAt?: string
     }
@@ -2033,7 +2033,7 @@ export interface components {
       url: string
       /**
        * @description A link to the modal view of the persons needs in SAN
-       * @example https://support-for-additional-needs-dev.hmpps.service.justice.gov.uk/profile/A5052DY/overview/modal
+       * @example https://support-for-additional-needs-dev.hmpps.service.justice.gov.uk/code-fragment/A5052DY/additional-needs
        */
       modalUrl: string
       /**
@@ -3076,7 +3076,15 @@ export interface operations {
     parameters: {
       query?: {
         prisonerNameOrNumber?: string
-        sortBy?: 'PRISONER_NAME' | 'PRISON_NUMBER' | 'CELL_LOCATION' | 'RELEASE_DATE' | 'DEADLINE_DATE' | 'PLAN_STATUS'
+        sortBy?:
+          | 'PRISONER_NAME'
+          | 'PRISON_NUMBER'
+          | 'CELL_LOCATION'
+          | 'RELEASE_DATE'
+          | 'DEADLINE_DATE'
+          | 'PLAN_STATUS'
+          | 'HAS_ADDITIONAL_NEED'
+          | 'IN_EDUCATION'
         sortDirection?: 'ASC' | 'DESC'
         page?: number
         pageSize?: number
