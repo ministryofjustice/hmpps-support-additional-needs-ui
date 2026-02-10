@@ -16,7 +16,7 @@
 
             <div class="govuk-checkboxes {{ 'govuk-form-group--error' if fieldError }}" data-module="govuk-checkboxes" {{ 'aria-describedby="strengthTypeCodes-error"' if fieldError }}>
 
-              <h1 class="govuk-heading-l">Select the strengths identified by the screener</h1>
+              <h1 class="govuk-heading-l">Select the strengths identified by the screener for {{ prisonerSummary | formatFirst_name_Last_name }}</h1>
 
               {% if fieldError %}
                 <p id="strengthTypeCodes-error" class="govuk-error-message">
