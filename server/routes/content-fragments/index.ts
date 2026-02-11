@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response, Router } from 'express'
 import jwksRsa from 'jwks-rsa'
 import { expressjwt, GetVerificationKey } from 'express-jwt'
+import { PrisonerBasePermission, prisonerPermissionsGuard } from '@ministryofjustice/hmpps-prison-permissions-lib'
 import { Services } from '../../services'
 import config from '../../config'
 import additionalNeedsContentFragmentRoutes from './additional-needs'
 import retrievePrisonerSummary from '../../middleware/retrievePrisonerSummary'
-import checkPrisonerInCaseload from '../../middleware/checkPrisonerInCaseloadMiddleware'
 import setUpCurrentUser from '../../middleware/setUpCurrentUser'
 
 /**
@@ -20,7 +20,7 @@ import setUpCurrentUser from '../../middleware/setUpCurrentUser'
  * to carry the user token.
  */
 const setupContentFragmentRoutes = (services: Services): Router => {
-  const { prisonerService } = services
+  const { prisonPermissionsService, prisonerService } = services
 
   const router = Router({ mergeParams: true })
 
@@ -34,11 +34,9 @@ const setupContentFragmentRoutes = (services: Services): Router => {
   router.param('prisonNumber', retrievePrisonerSummary(prisonerService))
   router.param(
     'prisonNumber',
-    checkPrisonerInCaseload({
-      allowGlobal: true,
-      allowGlobalPom: true,
-      allowInactive: true,
-      activeCaseloadOnly: false,
+    prisonerPermissionsGuard(prisonPermissionsService, {
+      requestDependentOn: [PrisonerBasePermission.read],
+      getPrisonerNumberFunction: (req: Request) => req.params.prisonNumber,
     }),
   )
 

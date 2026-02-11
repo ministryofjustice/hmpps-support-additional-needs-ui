@@ -24,7 +24,7 @@ export const user: HmppsUser = {
   staffId: 1234,
   userRoles: [],
   activeCaseLoadId: 'BXI',
-  caseLoadIds: ['BXI', 'MDI'],
+  caseLoads: [{ caseLoadId: 'BXI' }, { caseLoadId: 'MDI' }],
 }
 
 export const flashProvider = jest.fn()
