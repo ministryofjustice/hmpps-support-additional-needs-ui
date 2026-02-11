@@ -30,6 +30,7 @@ describe('searchService', () => {
     const sortBy = SearchSortField.CELL_LOCATION
     const sortDirection = SearchSortDirection.ASC
     const prisonerNameOrNumber = 'A1234BC'
+    const planStatus = PlanActionStatus.NEEDS_PLAN
 
     it('should search prisoners in prison', async () => {
       // Given
@@ -90,6 +91,7 @@ describe('searchService', () => {
         sortBy,
         sortDirection,
         prisonerNameOrNumber,
+        planStatus,
       )
 
       // Then
@@ -98,6 +100,7 @@ describe('searchService', () => {
         prisonId,
         username,
         prisonerNameOrNumber,
+        planStatus,
         page,
         pageSize,
         sortBy,
@@ -112,7 +115,16 @@ describe('searchService', () => {
 
       // When
       const actual = await searchService
-        .searchPrisonersInPrison(prisonId, username, page, pageSize, sortBy, sortDirection, prisonerNameOrNumber)
+        .searchPrisonersInPrison(
+          prisonId,
+          username,
+          page,
+          pageSize,
+          sortBy,
+          sortDirection,
+          prisonerNameOrNumber,
+          planStatus,
+        )
         .catch(e => e)
 
       // Then
@@ -121,6 +133,7 @@ describe('searchService', () => {
         prisonId,
         username,
         prisonerNameOrNumber,
+        planStatus,
         page,
         pageSize,
         sortBy,

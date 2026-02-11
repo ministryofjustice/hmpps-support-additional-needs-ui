@@ -11,6 +11,35 @@
   display: inline-block;
 }
 
+// Custom column widths
+// https://design-system.service.gov.uk/components/table/#custom-column-widths
+
+.app-u-width-10 {
+  width: 10% !important;
+}
+.app-u-width-15 {
+  width: 15% !important;
+}
+.app-u-width-20 {
+  width: 20% !important;
+}
+.app-u-width-30 {
+  width: 30% !important;
+}
+.app-u-width-40 {
+  width: 40% !important;
+}
+.app-u-width-50 {
+  width: 50% !important;
+}
+.app-u-width-60 {
+  width: 60% !important;
+}
+
+.hmpps-width-20 {
+  width: 20em;
+}
+
 .app-u-multiline-text {
   display: block;
   white-space: pre-line;

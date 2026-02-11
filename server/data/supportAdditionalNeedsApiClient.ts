@@ -68,6 +68,7 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     prisonId: string,
     username: string,
     prisonerNameOrNumber?: string,
+    planStatus?: PlanActionStatus,
     page?: number,
     pageSize?: number,
     sortBy?: SearchSortField,
@@ -78,6 +79,7 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
         path: `/search/prisons/${prisonId}/people`,
         query: {
           prisonerNameOrNumber,
+          planStatus,
           page,
           pageSize,
           sortBy,

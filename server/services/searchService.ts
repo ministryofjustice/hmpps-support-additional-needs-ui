@@ -3,6 +3,7 @@ import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiCl
 import SearchSortField from '../enums/searchSortField'
 import SearchSortDirection from '../enums/searchSortDirection'
 import { toPrisonerSearch } from '../data/mappers/prisonerSearchMapper'
+import PlanActionStatus from '../enums/planActionStatus'
 
 export default class SearchService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -15,12 +16,14 @@ export default class SearchService {
     sortBy: SearchSortField,
     sortDirection: SearchSortDirection,
     prisonerNameOrNumber?: string,
+    planStatus?: PlanActionStatus,
   ): Promise<PrisonerSearch> {
     return toPrisonerSearch(
       await this.supportAdditionalNeedsApiClient.getPrisonersByPrisonId(
         prisonId,
         username,
         prisonerNameOrNumber,
+        planStatus,
         page,
         pageSize,
         sortBy,
