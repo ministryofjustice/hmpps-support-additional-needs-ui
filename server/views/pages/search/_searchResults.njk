@@ -12,13 +12,15 @@
    search term and page are maintained.
   #}
   <form class="form" method="get">
-    <input type="hidden" name="searchTerm" value="{{ searchTerm }}" />
-    <input type="hidden" name="page" value="{{ page }}" />
+    <input type="hidden" name="searchTerm" value="{{ planStatusFilter.searchTerm }}" />
+    <input type="hidden" name="planStatusFilter" value="{{ planStatusFilter.planStatusFilter }}" />
 
     <table class="govuk-table" data-qa="search-results-table">
       <caption><span class="govuk-visually-hidden">column headers with buttons are sortable.</span></caption>
       <thead class="govuk-table__head">
         <tr class="govuk-table__row" data-qa="sortable-table-headers">
+          {%  set sortField = searchOptions.sortField %}
+          {%  set sortDirection = searchOptions.sortDirection %}
           {{ sortableTableHeader({
             sortBy: sortField,
             sortOrder: sortDirection,
@@ -157,6 +159,6 @@
 
 
 {% else %}
-  <h2 class="govuk-heading-m" data-qa="zero-results-message">0 results for "{{ searchTerm }}"</h2>
+  <h2 class="govuk-heading-m" data-qa="zero-results-message">0 results for "{{ searchOptions.searchTerm }}"</h2>
   <p class="govuk-body govuk-!-font-size-19">Check your spelling and search again, or clear the search and browse for the prisoner.</p>
 {% endif %}

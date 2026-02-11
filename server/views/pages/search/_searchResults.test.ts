@@ -34,7 +34,9 @@ const templateParams = {
       pagination: {},
     },
   },
-  searchTerm: '',
+  searchOptions: {
+    searchTerm: '',
+  },
   userHasPermissionTo,
 }
 
@@ -194,7 +196,9 @@ describe('Tests for _searchResults', () => {
           pagination: {},
         },
       },
-      searchTerm: 'John',
+      searchOptions: {
+        searchTerm: 'John',
+      },
     }
 
     // When

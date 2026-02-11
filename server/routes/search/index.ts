@@ -8,6 +8,7 @@ import config from '../../config'
 import { Result } from '../../utils/result/result'
 import { PrisonUser } from '../../interfaces/hmppsUser'
 import ApplicationAction from '../../enums/applicationAction'
+import PlanActionStatus from '../../enums/planActionStatus'
 
 const searchRoutes = (services: Services): Router => {
   const router = Router({ mergeParams: true })
@@ -31,6 +32,7 @@ const searchRoutes = (services: Services): Router => {
       Object.values(SearchSortDirection).find(value => value === sortOptions[1]) || defaultSortDirection
 
     const searchTerm = (req.query.searchTerm as string) || ''
+    const planStatusFilter = Object.values(PlanActionStatus).find(values => values === req.query.planStatusFilter)
     const page = parseInt((req.query.page as string) || '1', 10)
     const pageSize = config.searchUiDefaultPaginationPageSize
     const { activeCaseLoadId, username } = res.locals.user as PrisonUser
@@ -46,13 +48,11 @@ const searchRoutes = (services: Services): Router => {
         sortField,
         sortDirection,
         searchTerm,
+        planStatusFilter,
       ),
       apiErrorCallback,
     )
-    res.locals.searchTerm = searchTerm
-    res.locals.sortField = sortField
-    res.locals.sortDirection = sortDirection
-    res.locals.page = page
+    res.locals.searchOptions = { searchTerm, planStatusFilter, sortField, sortDirection, page }
 
     next()
   }

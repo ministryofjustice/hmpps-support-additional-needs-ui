@@ -3,34 +3,51 @@
      This ensures that when the Search page is filtered the current sort field and order are maintained.
   #}
   <form class="form" method="get">
-    <input type="hidden" name="sort" value="{{ sortField }},{{ sortDirection }}" />
+    <input type="hidden" name="sort" value="{{ searchOptions.sortField }},{{ searchOptions.sortDirection }}" />
     <fieldset class="govuk-fieldset">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Search for a prisoner</legend>
-        <div class="govuk-form-group govuk-form-group--inline govuk-!-margin-bottom-3">
-          <div class="govuk-form-group govuk-form-group__item govuk-!-width-one-half">
-              <label class="govuk-label" for="searchTerm">
-                Prisoner's name or prison number
-              </label>
-              <input class="govuk-input"
-                id="searchTerm"
-                name="searchTerm"
-                type="search"
-                value="{{ searchTerm }}"
-                maxlength="200">
-          </div>
-          <div class="govuk-form-group__button">
-            <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true" data-qa="apply-filters">
-              Search
-            </button>
-          </div>
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Filter by</legend>
+      <div class="govuk-form-group govuk-form-group--inline govuk-!-margin-bottom-3">
+        <div class="govuk-form-group govuk-form-group__item">
+            <label class="govuk-label" for="searchTerm">
+              Prisoner's name or prison number
+            </label>
+            <input class="govuk-input hmpps-width-20"
+              id="searchTerm"
+              name="searchTerm"
+              type="search"
+              value="{{ searchOptions.searchTerm }}"
+              maxlength="200">
         </div>
-      {% if searchTerm %}
+        <div class="govuk-form-group govuk-form-group__item">
+          <label class="govuk-label" for="planStatusFilter">
+            Education plan status
+          </label>
+          <select class="govuk-select" id="planStatusFilter" name="planStatusFilter">
+            <option value="" {{ 'selected' if searchOptions.planStatusFilter === ''}}>All statuses</option>
+            <option value="ACTIVE_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'ACTIVE_PLAN'}}>Active plan</option>
+            <option value="PLAN_DUE" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_DUE'}}>Plan due</option>
+            <option value="NEEDS_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'NEEDS_PLAN'}}>Needs plan</option>
+            <option value="REVIEW_DUE" {{ 'selected' if searchOptions.planStatusFilter === 'REVIEW_DUE'}}>Review due</option>
+            <option value="PLAN_OVERDUE" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_OVERDUE'}}>Plan overdue</option>
+            <option value="REVIEW_OVERDUE" {{ 'selected' if searchOptions.planStatusFilter === 'REVIEW_OVERDUE'}}>Review overdue</option>
+            <option value="PLAN_DECLINED" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_DECLINED'}}>Plan declined</option>
+            <option value="INACTIVE_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'INACTIVE_PLAN'}}>Inactive plan</option>
+            <option value="NO_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'NO_PLAN'}}>No plan</option>
+          </select>
+        </div>
+        <div class="govuk-form-group__button">
+          <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true" data-qa="apply-filters">
+            Apply filters
+          </button>
+        </div>
+      </div>
+      {% if searchOptions.searchTerm or searchOptions.planStatusFilter %}
         <p class="govuk-!-margin-bottom-0">
           {# Reset the Search page filters using an anchor link with blank searchTerm field values.
               The link also contains the current sort options to ensure the current sort field and direction are maintained after
               reseting the filter.
           #}
-          <a class="govuk-link govuk-link--no-visited-state" href="/search?searchTerm=&sort={{ sortField }},{{ sortDirection }}" data-qa="clear-filters">
+          <a class="govuk-link govuk-link--no-visited-state" href="/search?searchTerm=&planStatusFilter=&sort={{ searchOptions.sortField }},{{ searchOptions.sortDirection }}" data-qa="clear-filters">
             Clear<span class="govuk-visually-hidden"> filter options</span>
           </a>
         </p>

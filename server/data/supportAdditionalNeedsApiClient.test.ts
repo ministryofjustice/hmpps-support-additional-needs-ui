@@ -40,6 +40,7 @@ import anArchiveChallengeRequest from '../testsupport/archiveChallengeRequestTes
 import anUpdateEhcpRequest from '../testsupport/updateEhcpRequestTestDataBuilder'
 import anEhcpStatusResponse from '../testsupport/ehcpStatusResponseTestDataBuilder'
 import anAdditionalNeedsFactorsResponse from '../testsupport/additionalNeedsFactorsResponseTestDataBuilder'
+import PlanActionStatus from '../enums/planActionStatus'
 
 describe('supportAdditionalNeedsApiClient', () => {
   const username = 'A-DPS-USER'
@@ -117,6 +118,7 @@ describe('supportAdditionalNeedsApiClient', () => {
     it('should get prisoners by prison id given filtering, pagination and sorting options are specified', async () => {
       // Given
       const prisonerNameOrNumber = 'YMYNNEUMAR'
+      const planStatus = PlanActionStatus.NO_PLAN
       const page = 2
       const pageSize = 20
       const sortBy = SearchSortField.CELL_LOCATION
@@ -131,7 +133,7 @@ describe('supportAdditionalNeedsApiClient', () => {
       })
       supportAdditionalNeedsApi
         .get(
-          `/search/prisons/${prisonId}/people?prisonerNameOrNumber=${prisonerNameOrNumber}&page=${page}&pageSize=${pageSize}&sortBy=${sortBy}&sortDirection=${sortDirection}`,
+          `/search/prisons/${prisonId}/people?prisonerNameOrNumber=${prisonerNameOrNumber}&planStatus=${planStatus}&page=${page}&pageSize=${pageSize}&sortBy=${sortBy}&sortDirection=${sortDirection}`,
         )
         .matchHeader('authorization', `Bearer ${systemToken}`)
         .reply(200, searchByPrisonResponse)
@@ -141,6 +143,7 @@ describe('supportAdditionalNeedsApiClient', () => {
         prisonId,
         username,
         prisonerNameOrNumber,
+        planStatus,
         page,
         pageSize,
         sortBy,
