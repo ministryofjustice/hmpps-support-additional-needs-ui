@@ -58,22 +58,10 @@
           <span class="app-u-multiline-text">{{ educationSupportPlan.additionalInformation | default("None", true) }}</span>
         </dd>
       </div>
-
-      {% if not featureToggles.editEhcpEnabled %}
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Current EHCP
-          </dt>
-          <dd class="govuk-summary-list__value" data-qa="education-health-care-plan">
-            {{ educationSupportPlan.hasCurrentEhcp | formatYesNo }}
-          </dd>
-        </div>
-      {% endif %}
     </dl>
   </div>
 </div>
 
-{% if featureToggles.editEhcpEnabled %}
 <div class="govuk-summary-card" data-qa="education-support-plan-ehcp-summary-card">
   <div class="govuk-summary-card__content">
     <dl class="govuk-summary-list">
@@ -96,7 +84,6 @@
     </dl>
   </div>
 </div>
-{% endif %}
 
 {% if planHasNotBeenReviewed %}
   {# Only display the Prisoner's view on support needed, and ELSP Creation Audit fields if the ELSP has not been reviewed #}
