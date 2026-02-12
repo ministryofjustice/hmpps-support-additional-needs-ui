@@ -12,8 +12,8 @@
    search term and page are maintained.
   #}
   <form class="form" method="get">
-    <input type="hidden" name="searchTerm" value="{{ planStatusFilter.searchTerm }}" />
-    <input type="hidden" name="planStatusFilter" value="{{ planStatusFilter.planStatusFilter }}" />
+    <input type="hidden" name="searchTerm" value="{{ searchOptions.searchTerm }}" />
+    <input type="hidden" name="planStatusFilter" value="{{ searchOptions.planStatusFilter }}" />
 
     <table class="govuk-table" data-qa="search-results-table">
       <caption><span class="govuk-visually-hidden">column headers with buttons are sortable.</span></caption>
