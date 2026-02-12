@@ -1,21 +1,16 @@
 import { z } from 'zod'
 import { createSchema } from '../../../middleware/validationMiddleware'
 import YesNoValue from '../../../enums/yesNoValue'
-import config from '../../../config'
 
 const reviewExistingNeedsSchema =
   (options: { journey: 'create' | 'review' } = { journey: 'create' }) =>
   async () => {
     const messages = {
       create: {
-        reviewExistingNeedsMandatoryMessage: config.featureToggles.newEspJourneyEnabled
-          ? `You must confirm that you have reviewed the person's support strategies, challenges, strengths and conditions`
-          : 'Select whether you would like to review strengths, challenges and support needs before creating the plan',
+        reviewExistingNeedsMandatoryMessage: `You must confirm that you have reviewed the person's support strategies, challenges, strengths and conditions`,
       },
       review: {
-        reviewExistingNeedsMandatoryMessage: config.featureToggles.newEspJourneyEnabled
-          ? `You must confirm that you have reviewed the person's support strategies, challenges, strengths and conditions`
-          : 'Select if you want to review challenges, strengths, conditions and support strategies before reviewing the education support plan',
+        reviewExistingNeedsMandatoryMessage: `You must confirm that you have reviewed the person's support strategies, challenges, strengths and conditions`,
       },
     }
 

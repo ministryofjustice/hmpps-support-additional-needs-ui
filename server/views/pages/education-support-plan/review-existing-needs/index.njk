@@ -11,56 +11,28 @@
         <div class="govuk-form-group">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-          {% if featureToggles.newEspJourneyEnabled %}
-            {{ govukCheckboxes({
-              name: "reviewExistingNeeds",
-              fieldset: {
-                legend: {
-                  text: "You must review " + prisonerSummary | formatFirst_name_Last_name + "'s support strategies, challenges, strengths and conditions",
-                  isPageHeading: true,
-                  classes: "govuk-fieldset__legend--l"
-                }
-              },
-              hint: {
-                html: '<a href="/profile/' + prisonerSummary.prisonNumber + '/overview" target="_blank" class="govuk-link">Review and update their support strategies, challenges, strengths and conditions (opens in a new tab).</a>',
-                classes: 'govuk-!-margin-top-3 govuk-!-margin-bottom-6'
-              },
-              items: [
-                {
-                  value: "YES",
-                  text: "I have reviewed these",
-                  checked: form.reviewExistingNeeds === "YES"
-                }
-              ],
-              errorMessage: errors | findError('reviewExistingNeeds')
-            }) }}
-          {% else %}
-
-
-            {{ govukRadios({
-              name: "reviewExistingNeeds",
-              fieldset: {
-                legend: {
-                  text: "Do you want to review " + prisonerSummary | formatFirst_name_Last_name + "'s challenges, strengths and support strategies before " + ("reviewing the" if mode == 'review' else "creating an") + " education support plan?",
-                  isPageHeading: true,
-                  classes: "govuk-fieldset__legend--l"
-                }
-              },
-              items: [
-                {
-                  value: "YES",
-                  text: "Yes",
-                  checked: form.reviewExistingNeeds === "YES"
-                },
-                {
-                  value: "NO",
-                  text: "No, we have already reviewed them",
-                  checked: form.reviewExistingNeeds === "NO"
-                }
-              ],
-              errorMessage: errors | findError('reviewExistingNeeds')
-            }) }}
-          {% endif %}
+          {{ govukCheckboxes({
+            name: "reviewExistingNeeds",
+            fieldset: {
+              legend: {
+                text: "You must review " + prisonerSummary | formatFirst_name_Last_name + "'s support strategies, challenges, strengths and conditions",
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+              }
+            },
+            hint: {
+              html: '<a href="/profile/' + prisonerSummary.prisonNumber + '/overview" target="_blank" class="govuk-link">Review and update their support strategies, challenges, strengths and conditions (opens in a new tab).</a>',
+              classes: 'govuk-!-margin-top-3 govuk-!-margin-bottom-6'
+            },
+            items: [
+              {
+                value: "YES",
+                text: "I have reviewed these",
+                checked: form.reviewExistingNeeds === "YES"
+              }
+            ],
+            errorMessage: errors | findError('reviewExistingNeeds')
+          }) }}
         </div>
 
         {{ govukButton({

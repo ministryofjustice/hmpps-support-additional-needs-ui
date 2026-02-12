@@ -8,10 +8,6 @@ import OtherPeopleConsultedController from './other-people-consulted/otherPeople
 import AddPersonConsultedController from './other-people-consulted/addPersonConsultedController'
 import OtherPeopleConsultedListController from './other-people-consulted/otherPeopleConsultedListController'
 import ReviewExistingNeedsController from './review-existing-needs/reviewExistingNeedsController'
-import ReviewExistingChallengesController from './review-existing-needs/reviewExistingChallengesController'
-import ReviewExistingStrengthsController from './review-existing-needs/reviewExistingStrengthsController'
-import ReviewExistingConditionsController from './review-existing-needs/reviewExistingConditionsController'
-import ReviewExistingSupportStrategiesController from './review-existing-needs/reviewExistingSupportStrategiesController'
 import IndividualSupportRequirementsController from './individual-support-requirements/individualSupportRequirementsController'
 import TeachingAdjustmentsController from './teaching-adjustments/teachingAdjustmentsController'
 import SpecificTeachingSkillsController from './specific-teaching-skills/specificTeachingSkillsController'
@@ -37,27 +33,10 @@ import additionalInformationSchema from '../validationSchemas/additionalInformat
 import individualSupportRequirementsSchema from '../validationSchemas/individualSupportRequirementsSchema'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
-import retrieveStrengths from '../../middleware/retrieveStrengths'
-import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
-import retrieveAlnScreeners from '../../middleware/retrieveAlnScreeners'
-import retrieveConditions from '../../middleware/retrieveConditions'
-import retrieveChallenges from '../../middleware/retrieveChallenges'
-import retrieveSupportStrategies from '../../middleware/retrieveSupportStrategies'
 import reviewExistingNeedsSchema from '../validationSchemas/reviewExistingNeedsSchema'
-import config from '../../../config'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
-  const {
-    additionalLearningNeedsService,
-    auditService,
-    challengeService,
-    conditionService,
-    educationSupportPlanService,
-    journeyDataService,
-    prisonService,
-    strengthService,
-    supportStrategyService,
-  } = services
+  const { auditService, educationSupportPlanService, journeyDataService } = services
   const router = Router({ mergeParams: true })
 
   const whoCreatedThePlanController = new WhoCreatedThePlanController()
@@ -65,10 +44,6 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   const addPersonConsultedController = new AddPersonConsultedController()
   const otherPeopleConsultedListController = new OtherPeopleConsultedListController()
   const reviewExistingNeedsController = new ReviewExistingNeedsController()
-  const reviewExistingStrengthsController = new ReviewExistingStrengthsController()
-  const reviewExistingChallengesController = new ReviewExistingChallengesController()
-  const reviewExistingConditionsController = new ReviewExistingConditionsController()
-  const reviewExistingSupportStrategiesController = new ReviewExistingSupportStrategiesController()
   const individualSupportRequirementsController = new IndividualSupportRequirementsController()
   const teachingAdjustmentsController = new TeachingAdjustmentsController()
   const specificTeachingSkillsController = new SpecificTeachingSkillsController()
@@ -88,7 +63,7 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
   router.get('/:journeyId/start', [
     createEmptyEducationSupportPlanDtoIfNotInJourneyData,
     async (req: Request, res: Response) => {
-      return res.redirect(config.featureToggles.newEspJourneyEnabled ? 'review-existing-needs' : 'who-created-the-plan')
+      return res.redirect('review-existing-needs')
     },
   ])
 
@@ -137,52 +112,6 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
     checkEducationSupportPlanDtoExistsInJourneyData,
     validate(reviewExistingNeedsSchema({ journey: 'create' })),
     asyncMiddleware(reviewExistingNeedsController.submitReviewExistingNeedsForm),
-  ])
-
-  router.get('/:journeyId/review-existing-needs/strengths', [
-    checkEducationSupportPlanDtoExistsInJourneyData,
-    retrievePrisonsLookup(prisonService),
-    retrieveStrengths(strengthService),
-    retrieveAlnScreeners(additionalLearningNeedsService),
-    asyncMiddleware(reviewExistingStrengthsController.getReviewExistingStrengthsView),
-  ])
-  router.post('/:journeyId/review-existing-needs/strengths', [
-    checkEducationSupportPlanDtoExistsInJourneyData,
-    asyncMiddleware(reviewExistingStrengthsController.submitReviewExistingStrengthsForm),
-  ])
-
-  router.get('/:journeyId/review-existing-needs/challenges', [
-    checkEducationSupportPlanDtoExistsInJourneyData,
-    retrievePrisonsLookup(prisonService),
-    retrieveChallenges(challengeService),
-    retrieveAlnScreeners(additionalLearningNeedsService),
-    asyncMiddleware(reviewExistingChallengesController.getReviewExistingChallengesView),
-  ])
-  router.post('/:journeyId/review-existing-needs/challenges', [
-    checkEducationSupportPlanDtoExistsInJourneyData,
-    asyncMiddleware(reviewExistingChallengesController.submitReviewExistingChallengesForm),
-  ])
-
-  router.get('/:journeyId/review-existing-needs/conditions', [
-    checkEducationSupportPlanDtoExistsInJourneyData,
-    retrievePrisonsLookup(prisonService),
-    retrieveConditions(conditionService),
-    asyncMiddleware(reviewExistingConditionsController.getReviewExistingConditionsView),
-  ])
-  router.post('/:journeyId/review-existing-needs/conditions', [
-    checkEducationSupportPlanDtoExistsInJourneyData,
-    asyncMiddleware(reviewExistingConditionsController.submitReviewExistingConditionsForm),
-  ])
-
-  router.get('/:journeyId/review-existing-needs/support-strategies', [
-    checkEducationSupportPlanDtoExistsInJourneyData,
-    retrievePrisonsLookup(prisonService),
-    retrieveSupportStrategies(supportStrategyService),
-    asyncMiddleware(reviewExistingSupportStrategiesController.getReviewExistingSupportStrategiesView),
-  ])
-  router.post('/:journeyId/review-existing-needs/support-strategies', [
-    checkEducationSupportPlanDtoExistsInJourneyData,
-    asyncMiddleware(reviewExistingSupportStrategiesController.submitReviewExistingSupportStrategiesForm),
   ])
 
   router.get('/:journeyId/individual-support-requirements', [

@@ -1,5 +1,4 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import config from '../../../../config'
 
 export default class OtherPeopleConsultedListController {
   getOtherPeopleConsultedListView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -28,14 +27,8 @@ export default class OtherPeopleConsultedListController {
       )
     }
 
-    if (config.featureToggles.newEspJourneyEnabled) {
-      return res.redirect(
-        req.query?.submitToCheckAnswers !== 'true' ? '../individual-support-requirements' : '../check-your-answers',
-      )
-    }
-
     return res.redirect(
-      req.query?.submitToCheckAnswers !== 'true' ? '../review-existing-needs' : '../check-your-answers',
+      req.query?.submitToCheckAnswers !== 'true' ? '../individual-support-requirements' : '../check-your-answers',
     )
   }
 

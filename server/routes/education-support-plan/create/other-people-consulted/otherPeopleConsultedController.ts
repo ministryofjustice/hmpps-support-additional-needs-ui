@@ -1,7 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import type { EducationSupportPlanDto } from 'dto'
 import YesNoValue from '../../../../enums/yesNoValue'
-import config from '../../../../config'
 
 export default class OtherPeopleConsultedController {
   getOtherPeopleConsultedView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -30,17 +29,9 @@ export default class OtherPeopleConsultedController {
       return res.redirect('other-people-consulted/add-person?submitToCheckAnswers=true')
     }
 
-    if (config.featureToggles.newEspJourneyEnabled) {
-      return res.redirect(
-        wereOtherPeopleConsultedForm.wereOtherPeopleConsulted === YesNoValue.NO
-          ? 'individual-support-requirements'
-          : 'other-people-consulted/add-person',
-      )
-    }
-
     return res.redirect(
       wereOtherPeopleConsultedForm.wereOtherPeopleConsulted === YesNoValue.NO
-        ? 'review-existing-needs'
+        ? 'individual-support-requirements'
         : 'other-people-consulted/add-person',
     )
   }
