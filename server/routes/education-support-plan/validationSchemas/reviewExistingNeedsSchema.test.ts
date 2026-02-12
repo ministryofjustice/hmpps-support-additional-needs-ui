@@ -55,7 +55,7 @@ describe('reviewExistingNeedsSchema', () => {
       const expectedErrors: Array<Error> = [
         {
           href: '#reviewExistingNeeds',
-          text: 'Select whether you would like to review strengths, challenges and support needs before creating the plan',
+          text: "You must confirm that you have reviewed the person's support strategies, challenges, strengths and conditions",
         },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
@@ -90,7 +90,7 @@ describe('reviewExistingNeedsSchema', () => {
       const expectedErrors: Array<Error> = [
         {
           href: '#reviewExistingNeeds',
-          text: 'Select if you want to review challenges, strengths, conditions and support strategies before reviewing the education support plan',
+          text: "You must confirm that you have reviewed the person's support strategies, challenges, strengths and conditions",
         },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)

@@ -1,6 +1,5 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import type { ReviewEducationSupportPlanDto } from 'dto'
-import config from '../../../../config'
 
 export default class ReviewersViewOnProgressController {
   getReviewersViewOnProgressView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -23,11 +22,7 @@ export default class ReviewersViewOnProgressController {
     const reviewersViewOnProgressForm = { ...req.body }
     this.updateDtoFromForm(req, reviewersViewOnProgressForm)
 
-    if (config.featureToggles.newEspJourneyEnabled) {
-      return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'teaching-adjustments' : 'check-your-answers')
-    }
-
-    return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'review-existing-needs' : 'check-your-answers')
+    return res.redirect(req.query?.submitToCheckAnswers !== 'true' ? 'teaching-adjustments' : 'check-your-answers')
   }
 
   private populateFormFromDto = (dto: ReviewEducationSupportPlanDto) => {

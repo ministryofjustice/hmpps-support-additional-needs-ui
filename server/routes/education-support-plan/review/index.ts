@@ -46,7 +46,6 @@ import LearningNeedsSupportPractitionerSupportController from './learning-needs-
 import AdditionalInformationController from './additional-information/additionalInformationController'
 import ReviewSupportPlanController from './review-support-plan/reviewSupportPlanController'
 import CheckYourAnswersController from './check-your-answers/checkYourAnswersController'
-import config from '../../../config'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -92,9 +91,7 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
     retrieveEducationSupportPlan(educationSupportPlanService),
     createEmptyReviewEducationSupportPlanDtoIfNotInJourneyData,
     async (req: Request, res: Response) => {
-      return res.redirect(
-        config.featureToggles.newEspJourneyEnabled ? 'review-existing-needs' : 'who-reviewed-the-plan',
-      )
+      return res.redirect('review-existing-needs')
     },
   ])
 

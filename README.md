@@ -137,6 +137,5 @@ Features can be toggled by setting the relevant environment variable.
 | Name                    | Default Value | Type     | Description                                             |
 |-------------------------|---------------|----------|---------------------------------------------------------|
 | SOME_TOGGLE_ENABLED     | false         | Boolean  | Example feature toggle, for demonstration purposes.     |
-| NEW_ESP_JOURNEY_ENABLED | false         | Boolean  | Set to true to enable the new ESP journey.              |
 | DPR_REPORT_ENABLED      | false         | Boolean  | Set to true to enable the link to the DPR reporting UI. |
 

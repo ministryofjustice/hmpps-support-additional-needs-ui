@@ -76,7 +76,7 @@ describe('reviewExistingNeedsController', () => {
       reviewExistingNeeds: YesNoValue.YES,
     }
 
-    const expectedNextRoute = 'review-existing-needs/strengths'
+    const expectedNextRoute = 'who-created-the-plan'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       reviewExistingNeeds: true,
@@ -97,7 +97,7 @@ describe('reviewExistingNeedsController', () => {
       reviewExistingNeeds: YesNoValue.NO,
     }
 
-    const expectedNextRoute = 'individual-support-requirements'
+    const expectedNextRoute = 'who-created-the-plan'
     const expectedEducationSupportPlanDto = {
       ...aValidEducationSupportPlanDto(),
       reviewExistingNeeds: false,

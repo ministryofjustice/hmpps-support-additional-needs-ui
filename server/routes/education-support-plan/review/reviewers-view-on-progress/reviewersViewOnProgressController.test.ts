@@ -77,7 +77,7 @@ describe('reviewersViewOnProgressController', () => {
       reviewersViewOnProgress: 'Chris has made average progress',
     }
 
-    const expectedNextRoute = 'review-existing-needs'
+    const expectedNextRoute = 'teaching-adjustments'
     const expectedReviewEducationSupportPlanDto = {
       ...aValidReviewEducationSupportPlanDto(),
       reviewersViewOnProgress: 'Chris has made average progress',
