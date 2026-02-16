@@ -7,7 +7,7 @@
     classes: "js-back-link"
   }) }}
 
-  <p class="govuk-body">
+  <span class="govuk-caption-l">
     {% if mode == 'edit' %}
       Edit education support plan
     {% elseif mode == 'review' %}
@@ -15,4 +15,5 @@
     {% else %}
       Create an education support plan
     {% endif %}
+  </span>
 {% endblock %}
