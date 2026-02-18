@@ -87,44 +87,28 @@
               {% set deadlineDate = prisoner.deadlineDate %}
               <td class="govuk-table__cell" data-qa-plan-status="{{ planStatus }}">
                 {% if planStatus == 'NEEDS_PLAN' %}
-                  <span class="govuk-tag govuk-tag--yellow" data-qa="needs-plan-tag">
-                    Needs plan
-                  </span>
+                  <span class="govuk-tag govuk-tag--yellow" data-qa="needs-plan-tag">{{ 'NEEDS_PLAN' | formatPlanActionStatus }}</span>
 
                 {% elseif planStatus == 'PLAN_DUE' %}
-                  <span class="govuk-tag govuk-tag--yellow" data-qa="plan-due-tag">
-                    Plan due
-                  </span>
+                  <span class="govuk-tag govuk-tag--yellow" data-qa="plan-due-tag">{{ 'PLAN_DUE' | formatPlanActionStatus }}</span>
 
                 {% elseif planStatus == 'ACTIVE_PLAN' %}
-                  <span class="govuk-tag govuk-tag--green" data-qa="active-plan-tag">
-                    Active plan
-                  </span>
+                  <span class="govuk-tag govuk-tag--green" data-qa="active-plan-tag">{{ 'ACTIVE_PLAN' | formatPlanActionStatus }}</span>
 
                 {% elseif planStatus == 'PLAN_OVERDUE' %}
-                  <span class="govuk-tag govuk-tag--red" data-qa="plan-overdue-tag">
-                    Plan overdue
-                  </span>
+                  <span class="govuk-tag govuk-tag--red" data-qa="plan-overdue-tag">{{ 'PLAN_OVERDUE' | formatPlanActionStatus }}</span>
 
                 {% elseif planStatus == 'INACTIVE_PLAN' %}
-                  <span class="govuk-tag govuk-tag--grey" data-qa="inactive-plan-tag">
-                    Inactive plan
-                  </span>
+                  <span class="govuk-tag govuk-tag--grey" data-qa="inactive-plan-tag">{{ 'INACTIVE_PLAN' | formatPlanActionStatus }}</span>
 
                 {% elseif planStatus == 'PLAN_DECLINED' %}
-                  <span class="govuk-tag govuk-tag--grey" data-qa="plan-declined-tag">
-                    Plan declined
-                  </span>
+                  <span class="govuk-tag govuk-tag--grey" data-qa="plan-declined-tag">{{ 'PLAN_DECLINED' | formatPlanActionStatus }}</span>
 
                 {% elseif planStatus == 'REVIEW_DUE' %}
-                  <span class="govuk-tag govuk-tag--yellow" data-qa="review-due-tag">
-                    Review due
-                  </span>
+                  <span class="govuk-tag govuk-tag--yellow" data-qa="review-due-tag">{{ 'REVIEW_DUE' | formatPlanActionStatus }}</span>
 
                 {% elseif planStatus == 'REVIEW_OVERDUE' %}
-                  <span class="govuk-tag govuk-tag--red" data-qa="review-overdue-tag">
-                    Review overdue
-                  </span>
+                  <span class="govuk-tag govuk-tag--red" data-qa="review-overdue-tag">{{ 'REVIEW_OVERDUE' | formatPlanActionStatus }}</span>
 
                 {% else %}
                   <span data-qa="no-plan-tag">
@@ -159,6 +143,6 @@
 
 
 {% else %}
-  <h2 class="govuk-heading-m" data-qa="zero-results-message">0 results for "{{ searchOptions.searchTerm }}"</h2>
-  <p class="govuk-body govuk-!-font-size-19">Check your spelling and search again, or clear the search and browse for the prisoner.</p>
+  <h2 class="govuk-heading-m" data-qa="zero-results-message">0 results for "{{ searchOptions.planStatusFilter | formatPlanActionStatus if (not searchOptions.searchTerm and searchOptions.planStatusFilter) else searchOptions.searchTerm }}"</h2>
+  <p class="govuk-body govuk-!-font-size-19">Check your spelling and filter and search again, or clear your search and browse for a prisoner.</p>
 {% endif %}

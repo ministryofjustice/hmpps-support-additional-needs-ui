@@ -35,6 +35,7 @@ import formatChallengeIdentificationSourceScreenValueFilter from '../filters/for
 import dedupeArrayFilter from '../filters/dedupeArrayFilter'
 import mapPropertyFromArrayFilter from '../filters/mapPropertyFromArrayFilter'
 import groupArrayByPropertyFilter from '../filters/groupArrayByPropertyFilter'
+import formatPlanActionStatusFilter from '../filters/formatPlanActionStatusFilter'
 
 export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
@@ -95,6 +96,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addFilter('groupArrayByProperty', groupArrayByPropertyFilter)
   njkEnv.addFilter('challengeSupportTextLookup', challengeStaffSupportTextLookupFilter)
   njkEnv.addFilter('formatAlnAssessmentReferralScreenValue', formatAlnAssessmentReferralScreenValueFilter)
+  njkEnv.addFilter('formatPlanActionStatus', formatPlanActionStatusFilter)
 
   // Name format filters
   njkEnv.addFilter('formatFIRST_NAME_ONLY', formatPrisonerNameFilter(NameFormat.FIRST_NAME_ONLY))
