@@ -18,23 +18,27 @@
               value="{{ searchOptions.searchTerm }}"
               maxlength="200">
         </div>
-        <div class="govuk-form-group govuk-form-group__item">
-          <label class="govuk-label" for="planStatusFilter">
-            Education plan status
-          </label>
-          <select class="govuk-select" id="planStatusFilter" name="planStatusFilter">
-            <option value="" {{ 'selected' if searchOptions.planStatusFilter === ''}}>All statuses</option>
-            <option value="ACTIVE_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'ACTIVE_PLAN'}}>{{ 'ACTIVE_PLAN' | formatPlanActionStatus }}</option>
-            <option value="PLAN_DUE" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_DUE'}}>{{ 'PLAN_DUE' | formatPlanActionStatus }}</option>
-            <option value="NEEDS_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'NEEDS_PLAN'}}>{{ 'NEEDS_PLAN' | formatPlanActionStatus }}</option>
-            <option value="REVIEW_DUE" {{ 'selected' if searchOptions.planStatusFilter === 'REVIEW_DUE'}}>{{ 'REVIEW_DUE' | formatPlanActionStatus }}</option>
-            <option value="PLAN_OVERDUE" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_OVERDUE'}}>{{ 'PLAN_OVERDUE' | formatPlanActionStatus }}</option>
-            <option value="REVIEW_OVERDUE" {{ 'selected' if searchOptions.planStatusFilter === 'REVIEW_OVERDUE'}}>{{ 'REVIEW_OVERDUE' | formatPlanActionStatus }}</option>
-            <option value="PLAN_DECLINED" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_DECLINED'}}>{{ 'PLAN_DECLINED' | formatPlanActionStatus }}</option>
-            <option value="INACTIVE_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'INACTIVE_PLAN'}}>{{ 'INACTIVE_PLAN' | formatPlanActionStatus }}</option>
-            <option value="NO_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'NO_PLAN'}}>{{ 'NO_PLAN' | formatPlanActionStatus }}</option>
-          </select>
-        </div>
+
+        {% if userHasPermissionTo('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_SEARCH') %}
+          <div class="govuk-form-group govuk-form-group__item">
+            <label class="govuk-label" for="planStatusFilter">
+              Education plan status
+            </label>
+            <select class="govuk-select" id="planStatusFilter" name="planStatusFilter">
+              <option value="" {{ 'selected' if searchOptions.planStatusFilter === ''}}>All statuses</option>
+              <option value="ACTIVE_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'ACTIVE_PLAN'}}>{{ 'ACTIVE_PLAN' | formatPlanActionStatus }}</option>
+              <option value="PLAN_DUE" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_DUE'}}>{{ 'PLAN_DUE' | formatPlanActionStatus }}</option>
+              <option value="NEEDS_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'NEEDS_PLAN'}}>{{ 'NEEDS_PLAN' | formatPlanActionStatus }}</option>
+              <option value="REVIEW_DUE" {{ 'selected' if searchOptions.planStatusFilter === 'REVIEW_DUE'}}>{{ 'REVIEW_DUE' | formatPlanActionStatus }}</option>
+              <option value="PLAN_OVERDUE" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_OVERDUE'}}>{{ 'PLAN_OVERDUE' | formatPlanActionStatus }}</option>
+              <option value="REVIEW_OVERDUE" {{ 'selected' if searchOptions.planStatusFilter === 'REVIEW_OVERDUE'}}>{{ 'REVIEW_OVERDUE' | formatPlanActionStatus }}</option>
+              <option value="PLAN_DECLINED" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_DECLINED'}}>{{ 'PLAN_DECLINED' | formatPlanActionStatus }}</option>
+              <option value="INACTIVE_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'INACTIVE_PLAN'}}>{{ 'INACTIVE_PLAN' | formatPlanActionStatus }}</option>
+              <option value="NO_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'NO_PLAN'}}>{{ 'NO_PLAN' | formatPlanActionStatus }}</option>
+            </select>
+          </div>
+        {% endif %}
+
         <div class="govuk-form-group__button">
           <button type="submit" class="govuk-button" data-module="govuk-button" data-prevent-double-click="true" data-qa="apply-filters">
             Apply filters
