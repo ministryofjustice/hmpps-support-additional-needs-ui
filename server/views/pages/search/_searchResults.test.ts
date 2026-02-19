@@ -7,6 +7,7 @@ import formatPrisonerNameFilter, { NameFormat } from '../../../filters/formatPri
 import formatYesNoFilter from '../../../filters/formatYesNoFilter'
 import PlanActionStatus from '../../../enums/planActionStatus'
 import aValidPrisonerSearchSummary from '../../../testsupport/prisonerSearchSummaryTestDataBuilder'
+import formatPlanActionStatusFilter from '../../../filters/formatPlanActionStatusFilter'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/govuk/',
@@ -22,6 +23,7 @@ njkEnv //
   .addFilter('formatDate', formatDate)
   .addFilter('formatLast_name_comma_First_name', formatPrisonerNameFilter(NameFormat.Last_name_comma_First_name))
   .addFilter('formatYesNo', formatYesNoFilter)
+  .addFilter('formatPlanActionStatus', formatPlanActionStatusFilter)
 
 const template = '_searchResults.njk'
 
@@ -185,7 +187,7 @@ describe('Tests for _searchResults', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('VIEW_ELSP_DEADLINES_AND_STATUSES_ON_SEARCH')
   })
 
-  it('should not render search results when there are no results', () => {
+  it('should not render search results given only search term was used and there are no results', () => {
     // Given
     const params = {
       ...templateParams,
@@ -206,7 +208,55 @@ describe('Tests for _searchResults', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('[data-qa=search-results-table]').length).toEqual(0)
     expect($('[data-qa=zero-results-message]').text().trim()).toEqual('0 results for "John"')
+  })
+
+  it('should not render search results given both search term and plan status status filter was used and there are no results', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      searchResults: {
+        value: {
+          prisoners: [] as Array<PrisonerSearchSummary>,
+          page: 0,
+          pagination: {},
+        },
+      },
+      searchOptions: {
+        searchTerm: 'John',
+        planStatusFilter: 'PLAN_DUE',
+      },
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=zero-results-message]').text().trim()).toEqual('0 results for "John"')
+  })
+
+  it('should not render search results given only plan status status filter was used and there are no results', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      searchResults: {
+        value: {
+          prisoners: [] as Array<PrisonerSearchSummary>,
+          page: 0,
+          pagination: {},
+        },
+      },
+      searchOptions: {
+        planStatusFilter: 'PLAN_DUE',
+      },
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=zero-results-message]').text().trim()).toEqual('0 results for "Plan due"')
   })
 })

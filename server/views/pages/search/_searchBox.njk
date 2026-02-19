@@ -24,15 +24,15 @@
           </label>
           <select class="govuk-select" id="planStatusFilter" name="planStatusFilter">
             <option value="" {{ 'selected' if searchOptions.planStatusFilter === ''}}>All statuses</option>
-            <option value="ACTIVE_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'ACTIVE_PLAN'}}>Active plan</option>
-            <option value="PLAN_DUE" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_DUE'}}>Plan due</option>
-            <option value="NEEDS_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'NEEDS_PLAN'}}>Needs plan</option>
-            <option value="REVIEW_DUE" {{ 'selected' if searchOptions.planStatusFilter === 'REVIEW_DUE'}}>Review due</option>
-            <option value="PLAN_OVERDUE" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_OVERDUE'}}>Plan overdue</option>
-            <option value="REVIEW_OVERDUE" {{ 'selected' if searchOptions.planStatusFilter === 'REVIEW_OVERDUE'}}>Review overdue</option>
-            <option value="PLAN_DECLINED" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_DECLINED'}}>Plan declined</option>
-            <option value="INACTIVE_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'INACTIVE_PLAN'}}>Inactive plan</option>
-            <option value="NO_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'NO_PLAN'}}>No plan</option>
+            <option value="ACTIVE_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'ACTIVE_PLAN'}}>{{ 'ACTIVE_PLAN' | formatPlanActionStatus }}</option>
+            <option value="PLAN_DUE" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_DUE'}}>{{ 'PLAN_DUE' | formatPlanActionStatus }}</option>
+            <option value="NEEDS_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'NEEDS_PLAN'}}>{{ 'NEEDS_PLAN' | formatPlanActionStatus }}</option>
+            <option value="REVIEW_DUE" {{ 'selected' if searchOptions.planStatusFilter === 'REVIEW_DUE'}}>{{ 'REVIEW_DUE' | formatPlanActionStatus }}</option>
+            <option value="PLAN_OVERDUE" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_OVERDUE'}}>{{ 'PLAN_OVERDUE' | formatPlanActionStatus }}</option>
+            <option value="REVIEW_OVERDUE" {{ 'selected' if searchOptions.planStatusFilter === 'REVIEW_OVERDUE'}}>{{ 'REVIEW_OVERDUE' | formatPlanActionStatus }}</option>
+            <option value="PLAN_DECLINED" {{ 'selected' if searchOptions.planStatusFilter === 'PLAN_DECLINED'}}>{{ 'PLAN_DECLINED' | formatPlanActionStatus }}</option>
+            <option value="INACTIVE_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'INACTIVE_PLAN'}}>{{ 'INACTIVE_PLAN' | formatPlanActionStatus }}</option>
+            <option value="NO_PLAN" {{ 'selected' if searchOptions.planStatusFilter === 'NO_PLAN'}}>{{ 'NO_PLAN' | formatPlanActionStatus }}</option>
           </select>
         </div>
         <div class="govuk-form-group__button">
