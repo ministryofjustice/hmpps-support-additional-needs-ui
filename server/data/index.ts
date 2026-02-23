@@ -4,12 +4,13 @@
  * In particular, applicationinsights automatically collects bunyan logs
  */
 import { AuthenticationClient, InMemoryTokenStore, RedisTokenStore } from '@ministryofjustice/hmpps-auth-clients'
+import { TelemetryClient } from 'applicationinsights'
 import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureAppInsights'
-import applicationInfoSupplier from '../applicationInfo'
+import applicationInfoSupplier, { ApplicationInfo } from '../applicationInfo'
 
 const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
-buildAppInsightsClient(applicationInfo)
+const telemetryClient = buildAppInsightsClient(applicationInfo)
 
 import { createRedisClient } from './redisClient'
 import config from '../config'
@@ -31,6 +32,7 @@ import CuriousApiClient from './curiousApiClient'
 import ReferenceDataStore from './referenceDataStore/referenceDataStore'
 import InMemoryReferenceDataStore from './referenceDataStore/inMemoryReferenceDataStore'
 import RedisReferenceDataStore from './referenceDataStore/redisReferenceDataStore'
+import { PrisonerSearchStore } from './prisonerSearchStore/prisonerSearchStore'
 
 export const dataAccess = () => {
   const systemTokenStore = config.redis.enabled
@@ -53,6 +55,8 @@ export const dataAccess = () => {
 
   return {
     applicationInfo,
+    hmppsAuthClient,
+    telemetryClient,
     hmppsAuditClient: new HmppsAuditClient(config.sqs.audit),
     journeyDataStore: config.redis.enabled
       ? new RedisJourneyDataStore(createRedisClient())
@@ -77,14 +81,16 @@ export const dataAccess = () => {
 export type DataAccess = ReturnType<typeof dataAccess>
 
 export {
+  type ApplicationInfo,
   AuthenticationClient,
+  type TelemetryClient,
   HmppsAuditClient,
   type JourneyDataStore,
-  ManageUsersApiClient,
   PrisonRegisterClient,
   type PrisonRegisterStore,
   PrisonerSearchClient,
-  type RedisPrisonRegisterStore,
+  type PrisonerSearchStore,
+  ManageUsersApiClient,
   SupportAdditionalNeedsApiClient,
   CuriousApiClient,
   type ReferenceDataStore,

@@ -43,7 +43,9 @@ export default function setUpCurrentUser(services: Services): Router {
 
         const { userService } = services
         const userCaseLoadDetail = await userService.getUserCaseLoads(res.locals.user.token)
-        res.locals.user.caseLoadIds = userCaseLoadDetail.caseloads.map((caseload: PrisonCaseload) => caseload.id)
+        res.locals.user.caseLoads = userCaseLoadDetail.caseloads.map((caseload: PrisonCaseload) => ({
+          caseLoadId: caseload.id,
+        }))
 
         if (userCaseLoadDetail.activeCaseload) {
           res.locals.user.activeCaseLoadId = userCaseLoadDetail.activeCaseload.id

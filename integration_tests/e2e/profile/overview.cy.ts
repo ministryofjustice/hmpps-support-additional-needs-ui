@@ -11,6 +11,7 @@ import ConditionsPage from '../../pages/profile/conditionsPage'
 import StrengthsPage from '../../pages/profile/strengthsPage'
 import ChallengesPage from '../../pages/profile/challengesPage'
 import aPlanActionStatus from '../../../server/testsupport/planActionStatusTestDataBuilder'
+import AuthSignInPage from '../../pages/authSignIn'
 
 context('Profile Overview Page', () => {
   const prisonNumber = 'H4115SD'
@@ -80,16 +81,16 @@ context('Profile Overview Page', () => {
     Page.verifyOnPage(Error404Page)
   })
 
-  it('should display 404 page given requesting the overview page for a prisoner not in the user caseloads', () => {
+  it('should display sign in page given requesting the overview page for a prisoner not in the user caseloads', () => {
     // Given
     const prisonerNotInCaseload = 'A9404DY' // Prisoner is in Pentonville (PVI) which is not one of the user's caseloads
     cy.task('getPrisonerById', prisonerNotInCaseload)
 
     // When
-    cy.visit(`/profile/${prisonerNotInCaseload}/overview`, { failOnStatusCode: false })
+    cy.visit(`/profile/${prisonerNotInCaseload}/overview`)
 
     // Then
-    Page.verifyOnPage(Error404Page)
+    Page.verifyOnPage(AuthSignInPage)
   })
 
   it('should be able to use the tab bar to navigate between the different profile pages', () => {

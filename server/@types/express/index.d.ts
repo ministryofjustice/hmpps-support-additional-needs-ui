@@ -10,6 +10,7 @@ import type {
   StrengthResponseDto,
   SupportStrategyDto,
 } from 'dto'
+import type { PrisonerSummary } from 'viewModels'
 import { HmppsUser } from '../../interfaces/hmppsUser'
 
 export declare module 'express-session' {
@@ -49,6 +50,9 @@ export declare global {
       verified?: boolean
       id: string
       journeyData: JourneyData
+      middleware?: {
+        prisonerData?: PrisonerSummary
+      }
       logout(done: (err: unknown) => void): void
       userClickedOnButton(buttonName: string): boolean
     }

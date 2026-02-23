@@ -1,4 +1,5 @@
-import { dataAccess } from '../data'
+import { PermissionsService as PrisonPermissionsService } from '@ministryofjustice/hmpps-prison-permissions-lib'
+import { ApplicationInfo, dataAccess } from '../data'
 import AuditService from './auditService'
 import JourneyDataService from './journeyDataService'
 import PrisonerService from './prisonerService'
@@ -16,10 +17,14 @@ import SupportStrategyService from './supportStrategyService'
 import AdditionalLearningNeedsScreenerService from './additionalLearningNeedsScreenerService'
 import EducationSupportPlanReviewService from './educationSupportPlanReviewService'
 import AdditionalNeedsService from './additionalNeedsService'
+import logger from '../../logger'
+import config from '../config'
 
 export const services = () => {
   const {
     applicationInfo,
+    telemetryClient,
+    hmppsAuthClient,
     hmppsAuditClient,
     journeyDataStore,
     prisonerSearchClient,
@@ -31,6 +36,13 @@ export const services = () => {
     curiousApiClient,
     referenceDataStore,
   } = dataAccess()
+
+  const prisonPermissionsService = PrisonPermissionsService.create({
+    prisonerSearchConfig: config.apis.prisonerSearch,
+    authenticationClient: hmppsAuthClient,
+    logger,
+    telemetryClient,
+  })
 
   return {
     applicationInfo,
@@ -51,27 +63,30 @@ export const services = () => {
     additionalLearningNeedsService: new AdditionalLearningNeedsScreenerService(supportAdditionalNeedsApiClient),
     educationSupportPlanReviewService: new EducationSupportPlanReviewService(supportAdditionalNeedsApiClient),
     additionalNeedsService: new AdditionalNeedsService(supportAdditionalNeedsApiClient),
+    prisonPermissionsService,
   }
 }
 
 export type Services = ReturnType<typeof services>
 
 export {
-  AdditionalLearningNeedsScreenerService,
-  AdditionalNeedsService,
+  type ApplicationInfo,
   AuditService,
-  ChallengeService,
-  ConditionService,
-  CuriousService,
-  EducationSupportPlanReviewService,
-  EducationSupportPlanService,
-  EducationSupportPlanScheduleService,
   JourneyDataService,
   PrisonerService,
   PrisonService,
-  ReferenceDataService,
+  UserService,
   SearchService,
+  CuriousService,
+  EducationSupportPlanService,
+  EducationSupportPlanScheduleService,
+  ChallengeService,
+  ConditionService,
+  ReferenceDataService,
   StrengthService,
   SupportStrategyService,
-  UserService,
+  AdditionalLearningNeedsScreenerService,
+  EducationSupportPlanReviewService,
+  AdditionalNeedsService,
+  PrisonPermissionsService,
 }
