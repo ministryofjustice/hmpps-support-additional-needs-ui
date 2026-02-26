@@ -14,7 +14,7 @@ const strengthTypeScreenValues = new Map<StrengthType, string>([
 
   // More specific Strength Types
   [StrengthType.HANDWRITING, 'Handwriting'],
-  [StrengthType.TURN_TAKING, 'Turn taking'],
+  [StrengthType.TURN_TAKING, 'Turn-taking'],
   [StrengthType.READING, 'Reading'],
   [StrengthType.SPEED_OF_CALCULATION, 'Speed of calculation'],
   [StrengthType.RESTFULNESS, 'Restfulness'],
@@ -48,7 +48,7 @@ const strengthTypeScreenValues = new Map<StrengthType, string>([
   [StrengthType.EMOTIONAL_CONTROL, 'Emotional control'],
   [StrengthType.MATHS_CONFIDENCE, 'Maths confidence'],
   [StrengthType.SPORTING_BALL_SKILLS, 'Sporting ball skills'],
-  [StrengthType.VISUAL_SPATIAL_SKILLS, 'Visual spatial skills'],
+  [StrengthType.VISUAL_SPATIAL_SKILLS, 'Visual-spatial skills'],
   [StrengthType.READING_VISUAL_DISCRIMINATION, 'Reading (visual discrimination)'],
   [StrengthType.FRACTIONS_PERCENTAGES, 'Fractions and percentages'],
   [StrengthType.TIME_ALLOCATION, 'Time allocation/prioritisation'],

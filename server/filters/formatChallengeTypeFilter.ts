@@ -14,7 +14,7 @@ const challengeTypeScreenValues = new Map<ChallengeType, string>([
 
   // More specific Challenge Types
   [ChallengeType.HANDWRITING, 'Handwriting'],
-  [ChallengeType.TURN_TAKING, 'Turn taking'],
+  [ChallengeType.TURN_TAKING, 'Turn-taking'],
   [ChallengeType.READING, 'Reading'],
   [ChallengeType.SPEED_OF_CALCULATION, 'Speed of calculation'],
   [ChallengeType.RESTFULNESS, 'Restfulness'],
@@ -48,7 +48,7 @@ const challengeTypeScreenValues = new Map<ChallengeType, string>([
   [ChallengeType.EMOTIONAL_CONTROL, 'Emotional control'],
   [ChallengeType.MATHS_CONFIDENCE, 'Maths confidence'],
   [ChallengeType.SPORTING_BALL_SKILLS, 'Sporting ball skills'],
-  [ChallengeType.VISUAL_SPATIAL_SKILLS, 'Visual spatial skills'],
+  [ChallengeType.VISUAL_SPATIAL_SKILLS, 'Visual-spatial skills'],
   [ChallengeType.READING_VISUAL_DISCRIMINATION, 'Reading (visual discrimination)'],
   [ChallengeType.FRACTIONS_PERCENTAGES, 'Fractions and percentages'],
   [ChallengeType.TIME_ALLOCATION, 'Time allocation/prioritisation'],
