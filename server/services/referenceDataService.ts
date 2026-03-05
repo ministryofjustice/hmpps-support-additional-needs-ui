@@ -3,6 +3,7 @@ import type { ReferenceDataItemDto } from 'dto'
 import { ReferenceDataStore, SupportAdditionalNeedsApiClient } from '../data'
 import ReferenceDataDomain from '../enums/referenceDataDomain'
 import { toGroupedReferenceDataItems, toReferenceDataItems } from '../data/mappers/referenceDataListResponseMapper'
+import { challengesReferenceData, strengthsReferenceData } from '../data/referenceData/screenerReferenceData'
 import logger from '../../logger'
 
 const REFERENCE_DATA_CACHE_TTL_HOURS = 24
@@ -29,14 +30,8 @@ export default class ReferenceDataService {
   /**
    * Returns the Challenges reference data items, grouped by the Challenge categoryCode
    */
-  async getChallenges(
-    username: string,
-    includeInactive: boolean = false,
-  ): Promise<Record<string, Array<ReferenceDataItemDto>>> {
-    return toGroupedReferenceDataItems(
-      (await this.getCachedReferenceData(ReferenceDataDomain.CHALLENGE, false, includeInactive)) ||
-        (await this.retrieveAndCacheReferenceData(ReferenceDataDomain.CHALLENGE, false, includeInactive, username)),
-    )
+  async getChallenges(): Promise<Record<string, Array<ReferenceDataItemDto>>> {
+    return toGroupedReferenceDataItems(challengesReferenceData)
   }
 
   /**
@@ -55,14 +50,8 @@ export default class ReferenceDataService {
   /**
    * Returns the Strengths reference data items, grouped by the Strength categoryCode
    */
-  async getStrengths(
-    username: string,
-    includeInactive: boolean = false,
-  ): Promise<Record<string, Array<ReferenceDataItemDto>>> {
-    return toGroupedReferenceDataItems(
-      (await this.getCachedReferenceData(ReferenceDataDomain.STRENGTH, false, includeInactive)) ||
-        (await this.retrieveAndCacheReferenceData(ReferenceDataDomain.STRENGTH, false, includeInactive, username)),
-    )
+  async getStrengths(): Promise<Record<string, Array<ReferenceDataItemDto>>> {
+    return toGroupedReferenceDataItems(strengthsReferenceData)
   }
 
   /**
