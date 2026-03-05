@@ -15,7 +15,7 @@ const retrieveReferenceData = (
         res.locals.challengesReferenceData = await referenceDataService.getChallenges()
         break
       case ReferenceDataDomain.STRENGTH:
-        res.locals.strengthsReferenceData = await referenceDataService.getStrengths(req.user.username, false)
+        res.locals.strengthsReferenceData = await referenceDataService.getStrengths()
         break
       case ReferenceDataDomain.CONDITION:
         res.locals.conditionsReferenceData = await referenceDataService.getConditions(req.user.username, false)

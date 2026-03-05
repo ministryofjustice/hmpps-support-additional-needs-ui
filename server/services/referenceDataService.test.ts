@@ -302,131 +302,22 @@ describe('referenceDataService', () => {
   })
 
   describe('getStrengths', () => {
-    it('should get and cache strengths reference data given ref data not in cache and API returns the ref data', async () => {
-      // Given
-      referenceDataStore.getReferenceData.mockResolvedValue(null)
-
-      const apiResponse = aValidReferenceDataListResponse({
-        referenceDataList: [
-          aValidStrengthReferenceData({
-            code: 'HANDWRITING',
-            categoryCode: 'PHYSICAL_SKILLS',
-            areaCode: 'PHYSICAL_SENSORY',
-          }),
-        ],
-      })
-      supportAdditionalNeedsApiClient.getReferenceData.mockResolvedValue(apiResponse)
-
-      const expected: Record<string, Array<ReferenceDataItemDto>> = {
-        PHYSICAL_SKILLS: [{ code: 'HANDWRITING', areaCode: 'PHYSICAL_SENSORY' }],
-      }
-
+    it('should return hardcoded strengths reference data grouped by categoryCode', async () => {
       // When
-      const actual = await service.getStrengths(username)
+      const actual = await service.getStrengths()
 
       // Then
-      expect(actual).toEqual(expected)
-      expect(referenceDataStore.getReferenceData).toHaveBeenCalledWith(ReferenceDataDomain.STRENGTH, false, false)
-      expect(supportAdditionalNeedsApiClient.getReferenceData).toHaveBeenCalledWith(
-        username,
-        ReferenceDataDomain.STRENGTH,
-        { categoriesOnly: false, includeInactive: false },
-      )
-      expect(referenceDataStore.setReferenceData).toHaveBeenCalledWith(
-        ReferenceDataDomain.STRENGTH,
-        false,
-        false,
-        apiResponse,
-        24,
-      )
-    })
-
-    it('should get and cache strengths reference data given ref data not in cache and API returns the ref data and saving in cache returns an error', async () => {
-      // Given
-      referenceDataStore.getReferenceData.mockResolvedValue(null)
-      referenceDataStore.setReferenceData.mockRejectedValue(Error('some error caching the reference data'))
-
-      const apiResponse = aValidReferenceDataListResponse({
-        referenceDataList: [
-          aValidStrengthReferenceData({
-            code: 'HANDWRITING',
-            categoryCode: 'PHYSICAL_SKILLS',
-            areaCode: 'PHYSICAL_SENSORY',
-          }),
-        ],
-      })
-      supportAdditionalNeedsApiClient.getReferenceData.mockResolvedValue(apiResponse)
-
-      const expected: Record<string, Array<ReferenceDataItemDto>> = {
-        PHYSICAL_SKILLS: [{ code: 'HANDWRITING', areaCode: 'PHYSICAL_SENSORY' }],
-      }
-
-      // When
-      const actual = await service.getStrengths(username)
-
-      // Then
-      expect(actual).toEqual(expected)
-      expect(referenceDataStore.getReferenceData).toHaveBeenCalledWith(ReferenceDataDomain.STRENGTH, false, false)
-      expect(supportAdditionalNeedsApiClient.getReferenceData).toHaveBeenCalledWith(
-        username,
-        ReferenceDataDomain.STRENGTH,
-        { categoriesOnly: false, includeInactive: false },
-      )
-      expect(referenceDataStore.setReferenceData).toHaveBeenCalledWith(
-        ReferenceDataDomain.STRENGTH,
-        false,
-        false,
-        apiResponse,
-        24,
-      )
-    })
-
-    it('should get strengths reference data given ref data is in the cache', async () => {
-      // Given
-      const apiResponse = aValidReferenceDataListResponse({
-        referenceDataList: [
-          aValidStrengthReferenceData({
-            code: 'HANDWRITING',
-            categoryCode: 'PHYSICAL_SKILLS',
-            areaCode: 'PHYSICAL_SENSORY',
-          }),
-        ],
-      })
-      referenceDataStore.getReferenceData.mockResolvedValue(apiResponse)
-
-      const expected: Record<string, Array<ReferenceDataItemDto>> = {
-        PHYSICAL_SKILLS: [{ code: 'HANDWRITING', areaCode: 'PHYSICAL_SENSORY' }],
-      }
-
-      // When
-      const actual = await service.getStrengths(username)
-
-      // Then
-      expect(actual).toEqual(expected)
-      expect(referenceDataStore.getReferenceData).toHaveBeenCalledWith(ReferenceDataDomain.STRENGTH, false, false)
+      expect(actual).toHaveProperty('LITERACY_SKILLS')
+      expect(actual).toHaveProperty('NUMERACY_SKILLS')
+      expect(actual).toHaveProperty('ATTENTION_ORGANISING_TIME')
+      expect(actual).toHaveProperty('MEMORY')
+      expect(actual).toHaveProperty('LANGUAGE_COMM_SKILLS')
+      expect(actual).toHaveProperty('EMOTIONS_FEELINGS')
+      expect(actual).toHaveProperty('PHYSICAL_SKILLS')
+      expect(actual).toHaveProperty('SENSORY')
+      expect(actual.PHYSICAL_SKILLS[0]).toEqual({ code: 'HANDWRITING', areaCode: 'PHYSICAL_SENSORY' })
+      expect(referenceDataStore.getReferenceData).not.toHaveBeenCalled()
       expect(supportAdditionalNeedsApiClient.getReferenceData).not.toHaveBeenCalled()
-      expect(referenceDataStore.setReferenceData).not.toHaveBeenCalled()
-    })
-
-    it('should not get strengths reference data given ref data is not in the cache and API returns an error', async () => {
-      // Given
-      referenceDataStore.getReferenceData.mockResolvedValue(null)
-
-      const expectedError = new Error('Internal Server Error')
-      supportAdditionalNeedsApiClient.getReferenceData.mockRejectedValue(expectedError)
-
-      // When
-      const actual = await service.getStrengths(username).catch(e => e)
-
-      // Then
-      expect(actual).toEqual(expectedError)
-      expect(referenceDataStore.getReferenceData).toHaveBeenCalledWith(ReferenceDataDomain.STRENGTH, false, false)
-      expect(supportAdditionalNeedsApiClient.getReferenceData).toHaveBeenCalledWith(
-        username,
-        ReferenceDataDomain.STRENGTH,
-        { categoriesOnly: false, includeInactive: false },
-      )
-      expect(referenceDataStore.setReferenceData).not.toHaveBeenCalled()
     })
   })
 
