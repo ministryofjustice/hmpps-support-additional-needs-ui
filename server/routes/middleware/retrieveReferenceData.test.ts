@@ -44,7 +44,7 @@ describe('retrieveReferenceData', () => {
     expect(res.locals.challengesReferenceData).toEqual(expectedReferenceData)
     expect(res.locals.strengthsReferenceData).toBeUndefined()
     expect(res.locals.conditionsReferenceData).toBeUndefined()
-    expect(referenceDataService.getChallenges).toHaveBeenCalledWith(username, false)
+    expect(referenceDataService.getChallenges).toHaveBeenCalledWith()
   })
 
   it('should retrieve the strengths reference data', async () => {

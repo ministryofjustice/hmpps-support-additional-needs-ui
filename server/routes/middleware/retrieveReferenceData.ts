@@ -12,7 +12,7 @@ const retrieveReferenceData = (
   return async (req: Request, res: Response, next: NextFunction) => {
     switch (referenceDataDomain) {
       case ReferenceDataDomain.CHALLENGE:
-        res.locals.challengesReferenceData = await referenceDataService.getChallenges(req.user.username, false)
+        res.locals.challengesReferenceData = await referenceDataService.getChallenges()
         break
       case ReferenceDataDomain.STRENGTH:
         res.locals.strengthsReferenceData = await referenceDataService.getStrengths(req.user.username, false)

@@ -153,131 +153,22 @@ describe('referenceDataService', () => {
   })
 
   describe('getChallenges', () => {
-    it('should get and cache challenges reference data given ref data not in cache and API returns the ref data', async () => {
-      // Given
-      referenceDataStore.getReferenceData.mockResolvedValue(null)
-
-      const apiResponse = aValidReferenceDataListResponse({
-        referenceDataList: [
-          aValidChallengeReferenceData({
-            code: 'ALPHABET_ORDERING',
-            categoryCode: 'LITERACY_SKILLS',
-            areaCode: 'COGNITION_LEARNING',
-          }),
-        ],
-      })
-      supportAdditionalNeedsApiClient.getReferenceData.mockResolvedValue(apiResponse)
-
-      const expected: Record<string, Array<ReferenceDataItemDto>> = {
-        LITERACY_SKILLS: [{ code: 'ALPHABET_ORDERING', areaCode: 'COGNITION_LEARNING' }],
-      }
-
+    it('should return hardcoded challenges reference data grouped by categoryCode', async () => {
       // When
-      const actual = await service.getChallenges(username)
+      const actual = await service.getChallenges()
 
       // Then
-      expect(actual).toEqual(expected)
-      expect(referenceDataStore.getReferenceData).toHaveBeenCalledWith(ReferenceDataDomain.CHALLENGE, false, false)
-      expect(supportAdditionalNeedsApiClient.getReferenceData).toHaveBeenCalledWith(
-        username,
-        ReferenceDataDomain.CHALLENGE,
-        { categoriesOnly: false, includeInactive: false },
-      )
-      expect(referenceDataStore.setReferenceData).toHaveBeenCalledWith(
-        ReferenceDataDomain.CHALLENGE,
-        false,
-        false,
-        apiResponse,
-        24,
-      )
-    })
-
-    it('should get and cache challenges reference data given ref data not in cache and API returns the ref data and saving in cache returns an error', async () => {
-      // Given
-      referenceDataStore.getReferenceData.mockResolvedValue(null)
-      referenceDataStore.setReferenceData.mockRejectedValue(Error('some error caching the reference data'))
-
-      const apiResponse = aValidReferenceDataListResponse({
-        referenceDataList: [
-          aValidChallengeReferenceData({
-            code: 'ALPHABET_ORDERING',
-            categoryCode: 'LITERACY_SKILLS',
-            areaCode: 'COGNITION_LEARNING',
-          }),
-        ],
-      })
-      supportAdditionalNeedsApiClient.getReferenceData.mockResolvedValue(apiResponse)
-
-      const expected: Record<string, Array<ReferenceDataItemDto>> = {
-        LITERACY_SKILLS: [{ code: 'ALPHABET_ORDERING', areaCode: 'COGNITION_LEARNING' }],
-      }
-
-      // When
-      const actual = await service.getChallenges(username)
-
-      // Then
-      expect(actual).toEqual(expected)
-      expect(referenceDataStore.getReferenceData).toHaveBeenCalledWith(ReferenceDataDomain.CHALLENGE, false, false)
-      expect(supportAdditionalNeedsApiClient.getReferenceData).toHaveBeenCalledWith(
-        username,
-        ReferenceDataDomain.CHALLENGE,
-        { categoriesOnly: false, includeInactive: false },
-      )
-      expect(referenceDataStore.setReferenceData).toHaveBeenCalledWith(
-        ReferenceDataDomain.CHALLENGE,
-        false,
-        false,
-        apiResponse,
-        24,
-      )
-    })
-
-    it('should get challenges reference data given ref data is in the cache', async () => {
-      // Given
-      const apiResponse = aValidReferenceDataListResponse({
-        referenceDataList: [
-          aValidChallengeReferenceData({
-            code: 'ALPHABET_ORDERING',
-            categoryCode: 'LITERACY_SKILLS',
-            areaCode: 'COGNITION_LEARNING',
-          }),
-        ],
-      })
-      referenceDataStore.getReferenceData.mockResolvedValue(apiResponse)
-
-      const expected: Record<string, Array<ReferenceDataItemDto>> = {
-        LITERACY_SKILLS: [{ code: 'ALPHABET_ORDERING', areaCode: 'COGNITION_LEARNING' }],
-      }
-
-      // When
-      const actual = await service.getChallenges(username)
-
-      // Then
-      expect(actual).toEqual(expected)
-      expect(referenceDataStore.getReferenceData).toHaveBeenCalledWith(ReferenceDataDomain.CHALLENGE, false, false)
+      expect(actual).toHaveProperty('LITERACY_SKILLS')
+      expect(actual).toHaveProperty('NUMERACY_SKILLS')
+      expect(actual).toHaveProperty('ATTENTION_ORGANISING_TIME')
+      expect(actual).toHaveProperty('MEMORY')
+      expect(actual).toHaveProperty('LANGUAGE_COMM_SKILLS')
+      expect(actual).toHaveProperty('EMOTIONS_FEELINGS')
+      expect(actual).toHaveProperty('PHYSICAL_SKILLS')
+      expect(actual).toHaveProperty('SENSORY')
+      expect(actual.LITERACY_SKILLS[0]).toEqual({ code: 'READING', areaCode: 'COGNITION_LEARNING' })
+      expect(referenceDataStore.getReferenceData).not.toHaveBeenCalled()
       expect(supportAdditionalNeedsApiClient.getReferenceData).not.toHaveBeenCalled()
-      expect(referenceDataStore.setReferenceData).not.toHaveBeenCalled()
-    })
-
-    it('should not get challenge reference data given ref data is not in the cache and API returns an error', async () => {
-      // Given
-      referenceDataStore.getReferenceData.mockResolvedValue(null)
-
-      const expectedError = new Error('Internal Server Error')
-      supportAdditionalNeedsApiClient.getReferenceData.mockRejectedValue(expectedError)
-
-      // When
-      const actual = await service.getChallenges(username).catch(e => e)
-
-      // Then
-      expect(actual).toEqual(expectedError)
-      expect(referenceDataStore.getReferenceData).toHaveBeenCalledWith(ReferenceDataDomain.CHALLENGE, false, false)
-      expect(supportAdditionalNeedsApiClient.getReferenceData).toHaveBeenCalledWith(
-        username,
-        ReferenceDataDomain.CHALLENGE,
-        { categoriesOnly: false, includeInactive: false },
-      )
-      expect(referenceDataStore.setReferenceData).not.toHaveBeenCalled()
     })
   })
 
