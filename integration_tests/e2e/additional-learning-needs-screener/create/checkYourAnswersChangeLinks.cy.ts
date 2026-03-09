@@ -47,7 +47,7 @@ context(`Change links on the Check Your Answers page when creating an Education 
       .selectChallenge(ChallengeType.NUMBER_RECALL)
       .selectChallenge(ChallengeType.BALANCE)
       .submitPageTo(CheckYourAnswersPage)
-      .hasChallenges('Arithmetic', 'Number recall', 'Balance')
+      .hasChallenges('Number recall', 'Arithmetic', 'Balance')
 
       // check and update strengths
       .hasNoStrengths()
@@ -71,8 +71,8 @@ context(`Change links on the Check Your Answers page when creating an Education 
             '$[?(' +
               "@.prisonId == 'BXI' && " +
               '@.challenges.size() == 3 && ' +
-              "@.challenges[0].challengeTypeCode == 'ARITHMETIC' && " +
-              "@.challenges[1].challengeTypeCode == 'NUMBER_RECALL' && " +
+              "@.challenges[0].challengeTypeCode == 'NUMBER_RECALL' && " +
+              "@.challenges[1].challengeTypeCode == 'ARITHMETIC' && " +
               "@.challenges[2].challengeTypeCode == 'BALANCE' && " +
               '@.strengths.size() == 3 && ' +
               "@.strengths[0].strengthTypeCode == 'READING' && " +

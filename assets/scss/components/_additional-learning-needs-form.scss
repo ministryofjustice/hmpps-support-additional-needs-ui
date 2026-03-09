@@ -1,7 +1,7 @@
 .additional-learning-needs-form {
   .govuk-fieldset {
     section {
-      column-count: 3;
+      column-count: 2;
       @include govuk-responsive-margin(6, 'bottom');
     }
   }
