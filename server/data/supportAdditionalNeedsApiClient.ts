@@ -15,7 +15,7 @@ import type {
   CreateConditionsRequest,
   CreateEducationSupportPlanRequest,
   CreateStrengthsRequest,
-  CreateSupportStrategiesRequest, // test comment
+  CreateSupportStrategiesRequest,
   EducationSupportPlanResponse,
   PlanActionStatus,
   PlanCreationSchedulesResponse,
