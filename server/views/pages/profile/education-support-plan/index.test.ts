@@ -193,6 +193,38 @@ describe('Profile education support plan page', () => {
       expect($('[data-qa=elsp-unavailable-message]').length).toEqual(0)
       expect($('[data-qa=api-error-banner]').length).toEqual(0)
     })
+
+    it("should render the Learner's initial view on support needed collapsible within the prisoner's view on progress card", () => {
+      // Given
+      const params = {
+        ...templateParams,
+        educationSupportPlan: Result.fulfilled(
+          aValidEducationSupportPlanDto({
+            individualSupport: 'Headphones to help him with noise.',
+            createdAt: startOfDay('2025-04-10'),
+          }),
+        ),
+        educationSupportPlanReviews: Result.fulfilled([
+          aValidReviewEducationSupportPlanDto({
+            prisonerViewOnProgress: 'Chris is pleased with his progress',
+            createdAt: startOfDay('2025-11-03'),
+          }),
+        ]),
+      }
+
+      // When
+      const content = njkEnv.render(template, params)
+      const $ = cheerio.load(content)
+
+      // Then
+      const summaryCard = $('[data-qa=education-support-plan-review-individuals-view-on-progress-summary-card]')
+      expect(summaryCard.length).toEqual(1)
+      const detailsSummaries = summaryCard.find('.govuk-details__summary-text')
+      expect(detailsSummaries.last().text().trim()).toEqual("Learner's initial view on support needed")
+      const detailsContent = summaryCard.find('.govuk-details__text').last()
+      expect(detailsContent.find('p').eq(0).text().trim()).toEqual('Headphones to help him with noise.')
+      expect(detailsContent.find('p').eq(1).text().trim()).toEqual('Added 10 Apr 2025')
+    })
   })
 
   it('should render the profile education support plan page given the prisoner has an ELSP but the lifecycle status is INACTIVE_PLAN', () => {
