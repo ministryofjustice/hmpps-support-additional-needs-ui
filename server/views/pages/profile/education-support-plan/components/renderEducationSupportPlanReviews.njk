@@ -2,6 +2,7 @@
 
 {% set educationSupportPlanReviews = params.educationSupportPlanReviews %}
 {% set prisonerSummary = params.prisonerSummary %}
+{% set educationSupportPlan = params.educationSupportPlan %}
 
 {% if educationSupportPlanReviews.length > 0 %}
   {% set reviewsSortedByDate = educationSupportPlanReviews | sort(attribute = 'createdAt', reverse = true) %}
@@ -28,6 +29,18 @@
           html: previousPrisonerViewsOnProgress
         }) }}
       {% endif %}
+      {% set learnersInitialViewOnSupportNeeded %}
+        <ul class="govuk-list">
+          <li>
+            <p class="govuk-body app-u-multiline-text govuk-!-margin-bottom-2">{{ educationSupportPlan.individualSupport | default('None', true) }}</p>
+            <p class="govuk-hint">Added {{ educationSupportPlan.createdAt | formatDate('d MMM yyyy') }}</p>
+          </li>
+        </ul>
+      {% endset %}
+      {{ govukDetails({
+        summaryText: "Learner's initial view on support needed",
+        html: learnersInitialViewOnSupportNeeded
+      }) }}
     </div>
   </div>
 
