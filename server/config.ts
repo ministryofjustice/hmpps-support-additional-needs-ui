@@ -150,5 +150,6 @@ export default {
   featureToggles: {
     // someToggleEnabled: toBoolean(get('SOME_TOGGLE_ENABLED', false)),
     dprReportEnabled: toBoolean(get('DPR_REPORT_ENABLED', false, requiredInProduction)),
+    sanDataDeletionEnabled: toBoolean(get('SAN_DATA_DELETION_FEATURE_ENABLED', false, requiredInProduction)),
   },
 }
