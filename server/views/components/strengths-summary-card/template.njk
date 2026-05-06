@@ -54,6 +54,13 @@
 
               {% if showActions %}
                 <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                  {% if featureToggles.sanDataDeletionEnabled %}
+                    {% if userHasPermissionTo('DELETE_STRENGTHS') %}
+                      <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ strength.prisonNumber }}/{{ strength.reference }}/delete/reason" data-qa="delete-strength-button">Delete</a>
+                      </li>
+                    {% endif %}
+                  {% endif %}
                   {% if userHasPermissionTo('EDIT_STRENGTHS') %}
                     <li class="govuk-summary-card__action">
                       <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ strength.prisonNumber }}/{{ strength.reference }}/edit/detail" data-qa="edit-strength-button">Edit</a>
@@ -63,13 +70,6 @@
                     <li class="govuk-summary-card__action">
                       <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ strength.prisonNumber }}/{{ strength.reference }}/archive/reason" data-qa="archive-strength-button">Move to history</a>
                     </li>
-                  {% endif %}
-                  {% if featureToggles.sanDataDeletionEnabled %}
-                    {% if userHasPermissionTo('DELETE_STRENGTHS') %}
-                      <li class="govuk-summary-card__action">
-                        <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ strength.prisonNumber }}/{{ strength.reference }}/delete/reason" data-qa="delete-strength-button">Delete</a>
-                      </li>
-                    {% endif %}
                   {% endif %}
                 </ul>
               {% endif %}

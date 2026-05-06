@@ -30,9 +30,12 @@
         <h1 class="govuk-heading-l">Are you sure you want to delete {{ prisonerSummary | formatFirst_name_Last_name }}'s strength?</h1>
       {% endif %}
 
-      {{ govukInsetText({
-        html: '<h2 class="govuk-heading-s govuk-!-margin-bottom-1">Deletion reason</h2><p class="govuk-body">' + deleteReasonLabel | trim + '</p>'
-      }) }}
+      <div class="govuk-summary-card app-summary-card--grey govuk-!-margin-bottom-6" data-qa="delete-reason-summary">
+        <div class="govuk-summary-card__content">
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Deletion reason</h2>
+          <p class="govuk-body govuk-!-margin-bottom-0" data-qa="delete-reason">{{ deleteReasonLabel | trim }}</p>
+        </div>
+      </div>
 
       {{ govukWarningText({
         text: "Data will be permanently deleted and cannot be retrieved.",
@@ -42,19 +45,24 @@
       <form class="form" method="post" novalidate="">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-        {{ govukButton({
-          id: "submit-button",
-          text: "Yes, delete",
-          type: "submit",
-          classes: "govuk-button--warning",
-          attributes: {"data-qa": "submit-button"},
-          preventDoubleClick: true
-        }) }}
-      </form>
+        <div class="govuk-button-group">
+          {{ govukButton({
+            id: "submit-button",
+            text: "Yes, delete",
+            type: "submit",
+            classes: "govuk-button--warning",
+            attributes: {"data-qa": "submit-button"},
+            preventDoubleClick: true
+          }) }}
 
-      <p class="govuk-body">
-        <a class="govuk-link" href="/profile/{{ prisonerSummary.prisonNumber }}/strengths{% if mode == 'history' %}#archived-strengths{% else %}#current-strengths{% endif %}" data-qa="no-delete-link">No, go back to overview</a>
-      </p>
+          {{ govukButton({
+            text: "No, go back to overview",
+            href: "/profile/" + prisonerSummary.prisonNumber + "/strengths" + ("#archived-strengths" if mode == 'history' else "#current-strengths"),
+            classes: "govuk-button--secondary",
+            attributes: {"data-qa": "no-delete-link"}
+          }) }}
+        </div>
+      </form>
 
     </div>
   </div>

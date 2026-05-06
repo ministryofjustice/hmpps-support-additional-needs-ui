@@ -13,18 +13,14 @@
         <h1 class="govuk-heading-l">Review the strength for {{ prisonerSummary | formatFirst_name_Last_name }} that you want to delete</h1>
       {% endif %}
 
-      <dl class="govuk-summary-list govuk-!-margin-bottom-8">
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Strength type</dt>
-          <dd class="govuk-summary-list__value">{{ dto.strengthCategory | formatStrengthCategoryScreenValue | default(dto.strengthCategory, true) }}</dd>
+      <div class="govuk-summary-card app-summary-card--grey govuk-!-margin-bottom-8" data-qa="strength-to-delete-summary">
+        <div class="govuk-summary-card__content">
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-1" data-qa="strength-to-delete-category">
+            {{ dto.strengthCategory | formatStrengthCategoryScreenValue | default(dto.strengthCategory, true) }}
+          </h2>
+          <p class="govuk-body app-u-multiline-text govuk-!-margin-bottom-0" data-qa="strength-to-delete-symptoms">{{ dto.symptoms }}</p>
         </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">Details</dt>
-          <dd class="govuk-summary-list__value">
-            <p class="govuk-body app-u-multiline-text">{{ dto.symptoms }}</p>
-          </dd>
-        </div>
-      </dl>
+      </div>
 
       <form class="form" method="post" novalidate="">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
