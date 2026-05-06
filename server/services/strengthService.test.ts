@@ -331,4 +331,46 @@ describe('strengthService', () => {
       )
     })
   })
+
+  describe('deleteStrength', () => {
+    it('should delete strength by calling the API client with correct args', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.deleteStrength.mockResolvedValue(null)
+      const prisonId = 'BXI'
+      const reason = 'ENTERED_IN_ERROR'
+
+      // When
+      await service.deleteStrength(username, prisonNumber, strengthReference, prisonId, reason)
+
+      // Then
+      expect(supportAdditionalNeedsApiClient.deleteStrength).toHaveBeenCalledWith(
+        prisonNumber,
+        strengthReference,
+        username,
+        prisonId,
+        reason,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.deleteStrength.mockRejectedValue(expectedError)
+
+      // When
+      const actual = await service
+        .deleteStrength(username, prisonNumber, strengthReference, 'BXI', 'ENTERED_IN_ERROR')
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.deleteStrength).toHaveBeenCalledWith(
+        prisonNumber,
+        strengthReference,
+        username,
+        'BXI',
+        'ENTERED_IN_ERROR',
+      )
+    })
+  })
 })

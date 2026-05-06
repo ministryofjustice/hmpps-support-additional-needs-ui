@@ -5,6 +5,7 @@ import StrengthType from '../../../server/enums/strengthType'
 import zeroIndexed from '../../utils/zeroIndexed'
 import StrengthDetailPage from '../strengths/strengthDetailPage'
 import ArchiveStrengthReasonPage from '../strengths/archiveStrengthReasonPage'
+import DeleteStrengthReasonPage from '../strengths/deleteStrengthReasonPage'
 
 export default class StrengthsPage extends ProfilePage {
   constructor() {
@@ -20,6 +21,16 @@ export default class StrengthsPage extends ProfilePage {
   clickToArchiveNthNonAlnStrength(index: number): ArchiveStrengthReasonPage {
     this.nonAlnStrengths().eq(zeroIndexed(index)).find('[data-qa=archive-strength-button]').click()
     return Page.verifyOnPage(ArchiveStrengthReasonPage)
+  }
+
+  clickToDeleteNthNonAlnStrength(index: number): DeleteStrengthReasonPage {
+    this.nonAlnStrengths().eq(zeroIndexed(index)).find('[data-qa=delete-strength-button]').click()
+    return Page.verifyOnPage(DeleteStrengthReasonPage)
+  }
+
+  doesNotHaveDeleteStrengthButton(): StrengthsPage {
+    cy.get('[data-qa=delete-strength-button]').should('not.exist')
+    return this
   }
 
   hasActiveStrengthsSummaryCard(category: StrengthCategory): StrengthsPage {

@@ -284,6 +284,41 @@ const stubArchiveStrength500Error = (options?: {
     },
   })
 
+const stubDeleteStrength = (options?: { prisonNumber?: string; strengthReference?: string }): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPathPattern: `/support-additional-needs-api/profile/${options?.prisonNumber || 'G6115VJ'}/strengths/${options?.strengthReference || 'c88a6c48-97e2-4c04-93b5-98619966447b'}`,
+    },
+    response: {
+      status: 204,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {},
+    },
+  })
+
+const stubDeleteStrength500Error = (options?: {
+  prisonNumber?: string
+  strengthReference?: string
+}): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPathPattern: `/support-additional-needs-api/profile/${options?.prisonNumber || 'G6115VJ'}/strengths/${options?.strengthReference || 'c88a6c48-97e2-4c04-93b5-98619966447b'}`,
+    },
+    response: {
+      status: 500,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        status: 500,
+        errorCode: null,
+        userMessage: 'An unexpected error occurred',
+        developerMessage: 'An unexpected error occurred',
+        moreInfo: null,
+      },
+    },
+  })
+
 export default {
   stubCreateStrengths,
   stubCreateStrengths500Error,
@@ -297,4 +332,6 @@ export default {
   stubUpdateStrength500Error,
   stubArchiveStrength,
   stubArchiveStrength500Error,
+  stubDeleteStrength,
+  stubDeleteStrength500Error,
 }
