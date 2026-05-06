@@ -25,7 +25,7 @@ const deleteStrengthRoutes = (services: Services): Router => {
   router.use('/', [
     requireFeatureToggle('sanDataDeletionEnabled'),
     checkUserHasPermissionTo(ApplicationAction.DELETE_STRENGTHS),
-    insertJourneyIdentifier({ insertIdAfterElement: 4 }), // insert journey ID immediately after '/strengths/:prisonNumber/:strengthReference/delete/reason' - eg: '/strengths/A1234BC/187168d1-.../delete/473e9ee4-.../reason'
+    insertJourneyIdentifier({ insertIdAfterElement: 4 }),
   ])
   router.use('/:journeyId', [
     setupJourneyData(journeyDataService),

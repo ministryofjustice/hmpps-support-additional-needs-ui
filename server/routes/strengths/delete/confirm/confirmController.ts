@@ -41,7 +41,7 @@ export default class ConfirmController {
     }
 
     req.journeyData.strengthDto = undefined
-    this.auditService.logDeleteStrength(this.deleteStrengthAuditData(req, dto)) // no need to wait for response
+    this.auditService.logDeleteStrength(this.deleteStrengthAuditData(req, dto))
     return res.redirectWithSuccess(`/profile/${prisonNumber}/strengths#current-strengths`, 'Strength deleted.')
   }
 

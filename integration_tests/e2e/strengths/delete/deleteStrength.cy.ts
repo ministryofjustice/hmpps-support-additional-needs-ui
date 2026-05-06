@@ -14,7 +14,7 @@ context('Delete a Strength (Current tab)', () => {
 
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] }) // user has the role that gives them permission to delete strengths
+    cy.task('stubSignIn', { roles: ['ROLE_SAN_EDUCATION_MANAGER'] })
     cy.task('getPrisonerById', prisonNumber)
     cy.task('stubGetPlanActionStatus', { prisonNumber })
     cy.task('stubGetStrengths', { prisonNumber, strengthReference })
