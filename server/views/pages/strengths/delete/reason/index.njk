@@ -1,0 +1,49 @@
+{% extends "../../layout.njk" %}
+
+{% set pageId = 'delete-strength-reason' %}
+{% set pageTitle = applicationName + ' - ' + ('Delete history strength reason' if mode == 'history' else 'Delete strength reason') %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {% set legendText = "Select a reason for deleting " + (prisonerSummary | formatFirst_name_Last_name) + ("'s history strength" if mode == 'history' else "'s strength") %}
+        {% set enteredInErrorText = "History strength entered in error" if mode == 'history' else "Strength entered in error" %}
+        {{ govukRadios({
+          name: "deleteReason",
+          fieldset: {
+            legend: {
+              text: legendText,
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          items: [
+            {
+              value: "DATA_PROCESSING_OBJECTION",
+              text: "Prisoner objected to change in data processing",
+              checked: form.deleteReason === "DATA_PROCESSING_OBJECTION"
+            },
+            {
+              value: "ENTERED_IN_ERROR",
+              text: enteredInErrorText,
+              checked: form.deleteReason === "ENTERED_IN_ERROR"
+            }
+          ],
+          errorMessage: errors | findError('deleteReason')
+        }) }}
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

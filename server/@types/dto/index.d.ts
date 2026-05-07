@@ -172,6 +172,7 @@ declare module 'dto' {
     fromALNScreener: boolean
     alnScreenerDate?: Date
     archiveReason?: string
+    deleteReason?: string
   }
 
   /**

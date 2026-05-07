@@ -1,0 +1,14 @@
+import Page, { PageElement } from '../page'
+
+export default class DeleteStrengthReasonPage extends Page {
+  constructor() {
+    super('delete-strength-reason')
+  }
+
+  selectReason(value: 'DATA_PROCESSING_OBJECTION' | 'ENTERED_IN_ERROR'): DeleteStrengthReasonPage {
+    this.reasonRadio(value).click()
+    return this
+  }
+
+  private reasonRadio = (value: string): PageElement => cy.get(`input[name=deleteReason][value="${value}"]`)
+}

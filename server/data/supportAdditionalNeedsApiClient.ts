@@ -337,6 +337,25 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     )
   }
 
+  async deleteStrength(
+    prisonNumber: string,
+    strengthReference: string,
+    username: string,
+    prisonId: string,
+    reason: string,
+  ): Promise<void> {
+    return this.delete<void>(
+      {
+        path: `/profile/${prisonNumber}/strengths/${strengthReference}`,
+        query: {
+          prisonId,
+          reason,
+        },
+      },
+      asSystem(username),
+    )
+  }
+
   async createSupportStrategies(
     prisonNumber: string,
     username: string,

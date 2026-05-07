@@ -4,6 +4,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    gap: govuk-spacing(4);
     @include govuk-responsive-margin(3, 'bottom');
 
     & > * {
@@ -13,5 +14,17 @@
     ul {
       min-width: fit-content;
     }
+  }
+}
+
+// Modifier: makes the entire summary card (title bar + content area) share the
+// same light-grey background. Used by review-style screens where the card is
+// presented as a single uniform panel rather than a title-strip-on-white-body.
+.app-summary-card--grey {
+  background-color: govuk-colour("light-grey");
+  border-color: govuk-colour("light-grey");
+
+  .govuk-summary-card__content {
+    background-color: govuk-colour("light-grey");
   }
 }

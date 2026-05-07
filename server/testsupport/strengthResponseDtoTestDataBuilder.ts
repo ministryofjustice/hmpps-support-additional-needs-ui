@@ -24,6 +24,7 @@ const aValidStrengthResponseDto = (
     fromALNScreener?: boolean
     alnScreenerDate?: Date
     archiveReason?: string
+    deleteReason?: string
   },
 ): StrengthResponseDto => ({
   prisonNumber: options?.prisonNumber || 'A1234BC',
@@ -40,6 +41,7 @@ const aValidStrengthResponseDto = (
   fromALNScreener: options?.fromALNScreener == null ? true : options?.fromALNScreener,
   alnScreenerDate: options?.alnScreenerDate === null ? null : options?.alnScreenerDate,
   archiveReason: options?.archiveReason,
+  deleteReason: options?.deleteReason,
   ...validDtoAuditFields(options),
 })
 

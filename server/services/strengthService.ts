@@ -76,4 +76,25 @@ export default class StrengthService {
       throw e
     }
   }
+
+  async deleteStrength(
+    username: string,
+    prisonNumber: string,
+    strengthReference: string,
+    prisonId: string,
+    reason: string,
+  ): Promise<void> {
+    try {
+      await this.supportAdditionalNeedsApiClient.deleteStrength(
+        prisonNumber,
+        strengthReference,
+        username,
+        prisonId,
+        reason,
+      )
+    } catch (e) {
+      logger.error(`Error deleting Strength for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
 }
