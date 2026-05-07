@@ -101,6 +101,11 @@ const pageViewEventMap: Record<string, Page> = {
   '/strengths/:prisonNumber/:strengthReference/delete/:journeyId/review': Page.DELETE_STRENGTH_REVIEW,
   '/strengths/:prisonNumber/:strengthReference/delete/:journeyId/confirm': Page.DELETE_STRENGTH_CONFIRM,
 
+  // Delete history strengths routes
+  '/strengths/:prisonNumber/:strengthReference/history-delete/:journeyId/reason': Page.DELETE_HISTORY_STRENGTH_REASON,
+  '/strengths/:prisonNumber/:strengthReference/history-delete/:journeyId/review': Page.DELETE_HISTORY_STRENGTH_REVIEW,
+  '/strengths/:prisonNumber/:strengthReference/history-delete/:journeyId/confirm': Page.DELETE_HISTORY_STRENGTH_CONFIRM,
+
   // Create challenges routes
   '/challenges/:prisonNumber/create/:journeyId/select-category': Page.CREATE_CHALLENGE_CATEGORY,
   '/challenges/:prisonNumber/create/:journeyId/detail': Page.CREATE_CHALLENGE_DETAILS,
@@ -154,6 +159,9 @@ const pageViewEventMap: Record<string, Page> = {
   '/strengths/:prisonNumber/:strengthReference/delete/reason': null,
   '/strengths/:prisonNumber/:strengthReference/delete/review': null,
   '/strengths/:prisonNumber/:strengthReference/delete/confirm': null,
+  '/strengths/:prisonNumber/:strengthReference/history-delete/reason': null,
+  '/strengths/:prisonNumber/:strengthReference/history-delete/review': null,
+  '/strengths/:prisonNumber/:strengthReference/history-delete/confirm': null,
   '/challenges/:prisonNumber/create/select-category': null,
   '/challenges/:prisonNumber/:challengeReference/edit/detail': null,
   '/challenges/:prisonNumber/:challengeReference/archive/reason': null,
