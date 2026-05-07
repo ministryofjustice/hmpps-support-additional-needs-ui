@@ -170,6 +170,14 @@ const pageViewEventMap: Record<string, Page> = {
   '/support-strategies/:prisonNumber/:supportStrategyReference/archive/:journeyId/reason':
     Page.ARCHIVE_SUPPORT_STRATEGY_REASON,
 
+  // Delete Support Strategies routes
+  '/support-strategies/:prisonNumber/:supportStrategyReference/delete/:journeyId/reason':
+    Page.DELETE_SUPPORT_STRATEGY_REASON,
+  '/support-strategies/:prisonNumber/:supportStrategyReference/delete/:journeyId/review':
+    Page.DELETE_SUPPORT_STRATEGY_REVIEW,
+  '/support-strategies/:prisonNumber/:supportStrategyReference/delete/:journeyId/confirm':
+    Page.DELETE_SUPPORT_STRATEGY_CONFIRM,
+
   // Non audit routes. These routes do not raise an audit event
   '/': null,
   '/favicon.ico': null,
@@ -210,6 +218,9 @@ const pageViewEventMap: Record<string, Page> = {
   '/support-strategies/:prisonNumber/create/select-category': null,
   '/support-strategies/:prisonNumber/:supportStrategyReference/edit/detail': null,
   '/support-strategies/:prisonNumber/:supportStrategyReference/archive/reason': null,
+  '/support-strategies/:prisonNumber/:supportStrategyReference/delete/reason': null,
+  '/support-strategies/:prisonNumber/:supportStrategyReference/delete/review': null,
+  '/support-strategies/:prisonNumber/:supportStrategyReference/delete/confirm': null,
 }
 
 export default function auditMiddleware({ auditService }: Services) {

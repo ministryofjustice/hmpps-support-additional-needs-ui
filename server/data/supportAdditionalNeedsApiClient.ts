@@ -462,6 +462,25 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     )
   }
 
+  async deleteSupportStrategy(
+    prisonNumber: string,
+    supportStrategyReference: string,
+    username: string,
+    prisonId: string,
+    reason: string,
+  ): Promise<void> {
+    return this.delete<void>(
+      {
+        path: `/profile/${prisonNumber}/support-strategies/${supportStrategyReference}`,
+        query: {
+          prisonId,
+          reason,
+        },
+      },
+      asSystem(username),
+    )
+  }
+
   async createAdditionalLearningNeedsScreener(
     prisonNumber: string,
     username: string,

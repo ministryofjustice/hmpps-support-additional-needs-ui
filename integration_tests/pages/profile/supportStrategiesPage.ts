@@ -4,6 +4,7 @@ import SupportStrategyType from '../../../server/enums/supportStrategyType'
 import SupportStrategyDetailPage from '../support-strategies/supportStrategyDetailPage'
 import zeroIndexed from '../../utils/zeroIndexed'
 import ArchiveSupportStrategyReasonPage from '../support-strategies/archiveSupportStrategyReasonPage'
+import DeleteSupportStrategyReasonPage from '../support-strategies/deleteSupportStrategyReasonPage'
 
 export default class SupportStrategiesPage extends ProfilePage {
   constructor() {
@@ -19,6 +20,16 @@ export default class SupportStrategiesPage extends ProfilePage {
   clickToArchiveNthSupportStrategy(index: number): ArchiveSupportStrategyReasonPage {
     this.supportStrategies().eq(zeroIndexed(index)).find('[data-qa=archive-support-strategy-button]').click()
     return Page.verifyOnPage(ArchiveSupportStrategyReasonPage)
+  }
+
+  clickToDeleteNthSupportStrategy(index: number): DeleteSupportStrategyReasonPage {
+    this.supportStrategies().eq(zeroIndexed(index)).find('[data-qa=delete-support-strategy-button]').click()
+    return Page.verifyOnPage(DeleteSupportStrategyReasonPage)
+  }
+
+  doesNotHaveDeleteSupportStrategyButton(): SupportStrategiesPage {
+    cy.get('[data-qa=delete-support-strategy-button]').should('not.exist')
+    return this
   }
 
   hasActiveSupportStrategySummaryCard(category: SupportStrategyType): SupportStrategiesPage {

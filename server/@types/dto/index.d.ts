@@ -198,6 +198,7 @@ declare module 'dto' {
     supportStrategyCategory?: string
     active: boolean
     archiveReason?: string
+    deleteReason?: string
   }
 
   export interface ReferenceDataItemDto {

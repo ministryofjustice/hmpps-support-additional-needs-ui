@@ -52,6 +52,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.DELETE_CHALLENGES,
         ApplicationAction.EDIT_SUPPORT_STRATEGIES,
         ApplicationAction.ARCHIVE_SUPPORT_STRATEGIES,
+        ApplicationAction.DELETE_SUPPORT_STRATEGIES,
         ApplicationAction.VIEW_SAN_DPR_REPORT,
       ]
 
@@ -86,6 +87,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.DELETE_CHALLENGES,
         ApplicationAction.EDIT_SUPPORT_STRATEGIES,
         ApplicationAction.ARCHIVE_SUPPORT_STRATEGIES,
+        ApplicationAction.DELETE_SUPPORT_STRATEGIES,
         ApplicationAction.VIEW_SAN_DPR_REPORT,
       ]
 
