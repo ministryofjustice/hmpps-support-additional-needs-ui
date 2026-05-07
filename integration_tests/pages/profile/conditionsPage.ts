@@ -32,6 +32,21 @@ export default class ConditionsPage extends ProfilePage {
     return this
   }
 
+  clickHistoryTab(): ConditionsPage {
+    cy.get('a.govuk-tabs__tab[href="#archived-conditions"]').click()
+    return this
+  }
+
+  clickToDeleteNthArchivedCondition(index: number): DeleteConditionReasonPage {
+    this.archivedConditions().eq(zeroIndexed(index)).find('[data-qa=delete-archived-condition-button]').click()
+    return Page.verifyOnPage(DeleteConditionReasonPage)
+  }
+
+  doesNotHaveDeleteArchivedConditionButton(): ConditionsPage {
+    cy.get('[data-qa=delete-archived-condition-button]').should('not.exist')
+    return this
+  }
+
   hasActiveDiagnosedConditions(...conditions: Array<ConditionType>): ConditionsPage {
     this.diagnosedConditionsSummaryCard({ active: true }).should('be.visible')
     this.diagnosedConditionsSummaryCard({ active: true })
@@ -114,5 +129,10 @@ export default class ConditionsPage extends ProfilePage {
   private activeConditions = (): PageElement =>
     cy.get(
       `[data-qa=active-diagnosed-conditions-summary-card] .govuk-summary-list__row, [data-qa=active-self-declared-conditions-summary-card] .govuk-summary-list__row`,
+    )
+
+  private archivedConditions = (): PageElement =>
+    cy.get(
+      `[data-qa=archived-diagnosed-conditions-summary-card] .govuk-summary-list__row, [data-qa=archived-self-declared-conditions-summary-card] .govuk-summary-list__row`,
     )
 }

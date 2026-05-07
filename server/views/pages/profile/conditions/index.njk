@@ -75,6 +75,8 @@
               archivedConditions: archivedConditions | filterArrayOnProperty('source', 'CONFIRMED_DIAGNOSIS'),
               prisonNamesById: prisonNamesById,
               title: 'Confirmed diagnoses',
+              showActions: true,
+              userHasPermissionTo: userHasPermissionTo,
               attributes: {
                 'data-qa': 'archived-diagnosed-conditions-summary-card'
               }
@@ -84,6 +86,8 @@
               archivedConditions: archivedConditions | filterArrayOnProperty('source', 'SELF_DECLARED'),
               prisonNamesById: prisonNamesById,
               title: 'Self-declared conditions',
+              showActions: true,
+              userHasPermissionTo: userHasPermissionTo,
               attributes: {
                 'data-qa': 'archived-self-declared-conditions-summary-card'
               }

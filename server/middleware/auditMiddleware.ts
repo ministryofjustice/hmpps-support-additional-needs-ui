@@ -150,6 +150,14 @@ const pageViewEventMap: Record<string, Page> = {
   '/conditions/:prisonNumber/:conditionReference/delete/:journeyId/review': Page.DELETE_CONDITION_REVIEW,
   '/conditions/:prisonNumber/:conditionReference/delete/:journeyId/confirm': Page.DELETE_CONDITION_CONFIRM,
 
+  // Delete history conditions routes
+  '/conditions/:prisonNumber/:conditionReference/history-delete/:journeyId/reason':
+    Page.DELETE_HISTORY_CONDITION_REASON,
+  '/conditions/:prisonNumber/:conditionReference/history-delete/:journeyId/review':
+    Page.DELETE_HISTORY_CONDITION_REVIEW,
+  '/conditions/:prisonNumber/:conditionReference/history-delete/:journeyId/confirm':
+    Page.DELETE_HISTORY_CONDITION_CONFIRM,
+
   // Create Support Strategies routes
   '/support-strategies/:prisonNumber/create/:journeyId/select-category': Page.CREATE_SUPPORT_STRATEGY_CATEGORY,
   '/support-strategies/:prisonNumber/create/:journeyId/detail': Page.CREATE_SUPPORT_STRATEGY_DETAILS,
@@ -196,6 +204,9 @@ const pageViewEventMap: Record<string, Page> = {
   '/conditions/:prisonNumber/:conditionReference/delete/reason': null,
   '/conditions/:prisonNumber/:conditionReference/delete/review': null,
   '/conditions/:prisonNumber/:conditionReference/delete/confirm': null,
+  '/conditions/:prisonNumber/:conditionReference/history-delete/reason': null,
+  '/conditions/:prisonNumber/:conditionReference/history-delete/review': null,
+  '/conditions/:prisonNumber/:conditionReference/history-delete/confirm': null,
   '/support-strategies/:prisonNumber/create/select-category': null,
   '/support-strategies/:prisonNumber/:supportStrategyReference/edit/detail': null,
   '/support-strategies/:prisonNumber/:supportStrategyReference/archive/reason': null,
