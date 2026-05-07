@@ -32,6 +32,24 @@ export default class SupportStrategiesPage extends ProfilePage {
     return this
   }
 
+  clickHistoryTab(): SupportStrategiesPage {
+    cy.get('a.govuk-tabs__tab[href="#archived-support-strategies"]').click()
+    return this
+  }
+
+  clickToDeleteNthArchivedSupportStrategy(index: number): DeleteSupportStrategyReasonPage {
+    this.archivedSupportStrategies()
+      .eq(zeroIndexed(index))
+      .find('[data-qa=delete-archived-support-strategy-button]')
+      .click()
+    return Page.verifyOnPage(DeleteSupportStrategyReasonPage)
+  }
+
+  doesNotHaveDeleteArchivedSupportStrategyButton(): SupportStrategiesPage {
+    cy.get('[data-qa=delete-archived-support-strategy-button]').should('not.exist')
+    return this
+  }
+
   hasActiveSupportStrategySummaryCard(category: SupportStrategyType): SupportStrategiesPage {
     this.supportStrategyCategorySummaryCard({ category, active: true }).should('be.visible')
     return this
@@ -51,5 +69,9 @@ export default class SupportStrategiesPage extends ProfilePage {
   }): PageElement =>
     cy.get(`[data-qa=${options.active ? 'active' : 'archived'}-support-strategy-summary-card_${options.category}]`)
 
-  private supportStrategies = (): PageElement => cy.get('.govuk-summary-list__row.support-strategy')
+  private supportStrategies = (): PageElement =>
+    cy.get(`[data-qa^=active-support-strategy-summary-card_] .govuk-summary-list__row.support-strategy`)
+
+  private archivedSupportStrategies = (): PageElement =>
+    cy.get(`[data-qa^=archived-support-strategy-summary-card_] .govuk-summary-list__row.support-strategy`)
 }
