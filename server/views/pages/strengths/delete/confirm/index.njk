@@ -7,7 +7,7 @@
   {% if dto.deleteReason == 'DATA_PROCESSING_OBJECTION' %}
     Prisoner objected to change in data processing
   {% elif dto.deleteReason == 'ENTERED_IN_ERROR' %}
-    {% if mode == 'history' %}History strength entered in error{% else %}Strength entered in error{% endif %}
+    {% if mode == 'history' %}History strength{% else %}Strength{% endif %} entered in error
   {% else %}
     {{ dto.deleteReason }}
   {% endif %}
@@ -24,11 +24,7 @@
         </div>
       {% endif %}
 
-      {% if mode == 'history' %}
-        <h1 class="govuk-heading-l">Are you sure you want to delete {{ prisonerSummary | formatFirst_name_Last_name }}'s history strength?</h1>
-      {% else %}
-        <h1 class="govuk-heading-l">Are you sure you want to delete {{ prisonerSummary | formatFirst_name_Last_name }}'s strength?</h1>
-      {% endif %}
+      <h1 class="govuk-heading-l">Are you sure you want to delete {{ prisonerSummary | formatFirst_name_Last_name }}'s {% if mode == 'history' %}history {% endif %}strength?</h1>
 
       <div class="govuk-summary-card app-summary-card--grey govuk-!-margin-bottom-6" data-qa="delete-reason-summary">
         <div class="govuk-summary-card__content">

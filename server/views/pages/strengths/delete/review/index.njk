@@ -7,11 +7,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      {% if mode == 'history' %}
-        <h1 class="govuk-heading-l">Review the history strength for {{ prisonerSummary | formatFirst_name_Last_name }} that you want to delete</h1>
-      {% else %}
-        <h1 class="govuk-heading-l">Review the strength for {{ prisonerSummary | formatFirst_name_Last_name }} that you want to delete</h1>
-      {% endif %}
+      <h1 class="govuk-heading-l">Review the {% if mode == 'history' %}history {% endif %}strength for {{ prisonerSummary | formatFirst_name_Last_name }} that you want to delete</h1>
 
       <div class="govuk-summary-card app-summary-card--grey govuk-!-margin-bottom-8" data-qa="strength-to-delete-summary">
         <div class="govuk-summary-card__content">
