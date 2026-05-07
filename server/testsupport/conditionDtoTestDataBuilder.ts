@@ -21,6 +21,7 @@ const aValidConditionDto = (
     source?: ConditionSource
     active?: boolean
     archiveReason?: string
+    deleteReason?: string
   },
 ): ConditionDto => ({
   prisonId: options?.prisonId == null ? null : options?.prisonId || 'BXI',
@@ -35,6 +36,7 @@ const aValidConditionDto = (
   conditionName: options?.conditionName === null ? null : options?.conditionName || 'Phonological dyslexia',
   active: options?.active == null ? true : options?.active,
   archiveReason: options?.archiveReason,
+  deleteReason: options?.deleteReason,
   ...validDtoAuditFields(options),
 })
 

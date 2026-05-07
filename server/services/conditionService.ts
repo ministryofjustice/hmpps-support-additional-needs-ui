@@ -75,4 +75,25 @@ export default class ConditionService {
       throw e
     }
   }
+
+  async deleteCondition(
+    username: string,
+    prisonNumber: string,
+    conditionReference: string,
+    prisonId: string,
+    reason: string,
+  ): Promise<void> {
+    try {
+      await this.supportAdditionalNeedsApiClient.deleteCondition(
+        prisonNumber,
+        conditionReference,
+        username,
+        prisonId,
+        reason,
+      )
+    } catch (e) {
+      logger.error(`Error deleting Condition for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
 }

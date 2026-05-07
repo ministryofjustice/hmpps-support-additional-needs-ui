@@ -292,6 +292,25 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     )
   }
 
+  async deleteCondition(
+    prisonNumber: string,
+    conditionReference: string,
+    username: string,
+    prisonId: string,
+    reason: string,
+  ): Promise<void> {
+    return this.delete<void>(
+      {
+        path: `/profile/${prisonNumber}/conditions/${conditionReference}`,
+        query: {
+          prisonId,
+          reason,
+        },
+      },
+      asSystem(username),
+    )
+  }
+
   async createStrengths(
     prisonNumber: string,
     username: string,

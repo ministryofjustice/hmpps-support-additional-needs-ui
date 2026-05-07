@@ -1,0 +1,37 @@
+{% extends "../../layout.njk" %}
+
+{% set pageId = 'delete-condition-review' %}
+{% set pageTitle = applicationName + ' - ' + ('Delete history condition review' if mode == 'history' else 'Delete condition review') %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">Review the {% if mode == 'history' %}history {% endif %}condition for {{ prisonerSummary | formatFirst_name_Last_name }} that you want to delete</h1>
+
+      <div class="govuk-summary-card app-summary-card--grey govuk-!-margin-bottom-8" data-qa="condition-to-delete-summary">
+        <div class="govuk-summary-card__content">
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-1" data-qa="condition-to-delete-type">
+            {{ dto.conditionTypeCode | formatConditionTypeScreenValue | default(dto.conditionTypeCode, true) }}
+          </h2>
+          {% if dto.conditionName %}
+            <p class="govuk-body govuk-!-margin-bottom-2" data-qa="condition-to-delete-name">{{ dto.conditionName }}</p>
+          {% endif %}
+          <p class="govuk-body app-u-multiline-text govuk-!-margin-bottom-0" data-qa="condition-to-delete-details">{{ dto.conditionDetails }}</p>
+        </div>
+      </div>
+
+      <form class="form" method="post" novalidate="">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
