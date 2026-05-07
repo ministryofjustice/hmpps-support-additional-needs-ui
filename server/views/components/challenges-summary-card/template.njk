@@ -55,6 +55,11 @@
 
               {% if showActions %}
                 <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                  {% if featureToggles.sanDataDeletionEnabled and userHasPermissionTo('DELETE_CHALLENGES') %}
+                    <li class="govuk-summary-card__action">
+                      <a class="govuk-link govuk-!-font-weight-regular" href="/challenges/{{ challenge.prisonNumber }}/{{ challenge.reference }}/delete/reason" data-qa="delete-challenge-button">Delete</a>
+                    </li>
+                  {% endif %}
                   {% if userHasPermissionTo('EDIT_CHALLENGES') %}
                     <li class="govuk-summary-card__action">
                       <a class="govuk-link govuk-!-font-weight-regular" href="/challenges/{{ challenge.prisonNumber }}/{{ challenge.reference }}/edit/detail" data-qa="edit-challenge-button">Edit</a>

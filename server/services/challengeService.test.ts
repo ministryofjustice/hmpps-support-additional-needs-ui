@@ -260,6 +260,48 @@ describe('challengeService', () => {
     })
   })
 
+  describe('deleteChallenge', () => {
+    it('should delete challenge by calling the API client with correct args', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.deleteChallenge.mockResolvedValue(null)
+      const prisonId = 'BXI'
+      const reason = 'ENTERED_IN_ERROR'
+
+      // When
+      await service.deleteChallenge(username, prisonNumber, challengeReference, prisonId, reason)
+
+      // Then
+      expect(supportAdditionalNeedsApiClient.deleteChallenge).toHaveBeenCalledWith(
+        prisonNumber,
+        challengeReference,
+        username,
+        prisonId,
+        reason,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.deleteChallenge.mockRejectedValue(expectedError)
+
+      // When
+      const actual = await service
+        .deleteChallenge(username, prisonNumber, challengeReference, 'BXI', 'ENTERED_IN_ERROR')
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.deleteChallenge).toHaveBeenCalledWith(
+        prisonNumber,
+        challengeReference,
+        username,
+        'BXI',
+        'ENTERED_IN_ERROR',
+      )
+    })
+  })
+
   describe('archiveChallenge', () => {
     it('should archive challenge', async () => {
       // Given

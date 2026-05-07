@@ -17,6 +17,7 @@ const rolesForAction = (): Record<ApplicationAction, Array<DpsRole>> => ({
   [ApplicationAction.RECORD_CHALLENGES]: [],
   [ApplicationAction.EDIT_CHALLENGES]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.ARCHIVE_CHALLENGES]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
+  [ApplicationAction.DELETE_CHALLENGES]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_STRENGTHS]: [],
   [ApplicationAction.EDIT_STRENGTHS]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.ARCHIVE_STRENGTHS]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
