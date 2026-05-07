@@ -33,6 +33,21 @@ export default class StrengthsPage extends ProfilePage {
     return this
   }
 
+  clickHistoryTab(): StrengthsPage {
+    cy.get('a.govuk-tabs__tab[href="#archived-strengths"]').click()
+    return this
+  }
+
+  clickToDeleteNthArchivedStrength(index: number): DeleteStrengthReasonPage {
+    this.archivedStrengths().eq(zeroIndexed(index)).find('[data-qa=delete-archived-strength-button]').click()
+    return Page.verifyOnPage(DeleteStrengthReasonPage)
+  }
+
+  doesNotHaveDeleteArchivedStrengthButton(): StrengthsPage {
+    cy.get('[data-qa=delete-archived-strength-button]').should('not.exist')
+    return this
+  }
+
   hasActiveStrengthsSummaryCard(category: StrengthCategory): StrengthsPage {
     this.strengthCategorySummaryCard({ category, active: true }).should('be.visible')
     return this
@@ -132,4 +147,6 @@ export default class StrengthsPage extends ProfilePage {
     cy.get(`[data-qa=${options.active ? 'active' : 'archived'}-strengths-summary-card_${options.category}]`)
 
   private nonAlnStrengths = (): PageElement => cy.get('.govuk-summary-list__row.non-aln-strength')
+
+  private archivedStrengths = (): PageElement => cy.get('.govuk-summary-list__row.archived-strength')
 }
