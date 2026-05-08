@@ -35,6 +35,11 @@
 
               {% if showActions %}
                 <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                  {% if featureToggles.sanDataDeletionEnabled and userHasPermissionTo('DELETE_SUPPORT_STRATEGIES') %}
+                    <li class="govuk-summary-card__action">
+                      <a class="govuk-link govuk-!-font-weight-regular" href="/support-strategies/{{ supportStrategy.prisonNumber }}/{{ supportStrategy.reference }}/delete/reason" data-qa="delete-support-strategy-button">Delete</a>
+                    </li>
+                  {% endif %}
                   {% if userHasPermissionTo('EDIT_SUPPORT_STRATEGIES') %}
                     <li class="govuk-summary-card__action">
                       <a class="govuk-link govuk-!-font-weight-regular" href="/support-strategies/{{ supportStrategy.prisonNumber }}/{{ supportStrategy.reference }}/edit/detail" data-qa="edit-support-strategy-button">Edit</a>

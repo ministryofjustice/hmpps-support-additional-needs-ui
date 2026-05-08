@@ -1702,6 +1702,64 @@ describe('supportAdditionalNeedsApiClient', () => {
     })
   })
 
+  describe('deleteSupportStrategy', () => {
+    it('should delete a prisoners support strategy via query string params with no request body', async () => {
+      // Given
+      const deletePrisonId = 'BXI'
+      const deleteReason = 'ENTERED_IN_ERROR'
+
+      supportAdditionalNeedsApi
+        .delete(`/profile/${prisonNumber}/support-strategies/${supportStrategyReference}`)
+        .query({ prisonId: deletePrisonId, reason: deleteReason })
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .reply(204)
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient.deleteSupportStrategy(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+        deletePrisonId,
+        deleteReason,
+      )
+
+      // Then
+      expect(actual).toEqual({})
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+
+    it('should rethrow error given API returns an error', async () => {
+      // Given
+      const deletePrisonId = 'BXI'
+      const deleteReason = 'ENTERED_IN_ERROR'
+
+      const apiErrorResponse = {
+        status: 500,
+        userMessage: 'Service unavailable',
+        developerMessage: 'Service unavailable',
+      }
+      supportAdditionalNeedsApi
+        .delete(`/profile/${prisonNumber}/support-strategies/${supportStrategyReference}`)
+        .query({ prisonId: deletePrisonId, reason: deleteReason })
+        .matchHeader('authorization', `Bearer ${systemToken}`)
+        .thrice()
+        .reply(500, apiErrorResponse)
+
+      const expectedError = new Error('Internal Server Error')
+
+      // When
+      const actual = await supportAdditionalNeedsApiClient
+        .deleteSupportStrategy(prisonNumber, supportStrategyReference, username, deletePrisonId, deleteReason)
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(mockAuthenticationClient.getToken).toHaveBeenCalledWith(username)
+      expect(nock.isDone()).toBe(true)
+    })
+  })
+
   describe('getChallenges', () => {
     it('should get challenges for a prisoner', async () => {
       // Given

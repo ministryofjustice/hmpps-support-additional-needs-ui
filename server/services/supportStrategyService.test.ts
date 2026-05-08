@@ -339,4 +339,46 @@ describe('supportStrategyService', () => {
       )
     })
   })
+
+  describe('deleteSupportStrategy', () => {
+    it('should delete support strategy by calling the API client with correct args', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.deleteSupportStrategy.mockResolvedValue(null)
+      const prisonId = 'BXI'
+      const reason = 'ENTERED_IN_ERROR'
+
+      // When
+      await service.deleteSupportStrategy(username, prisonNumber, supportStrategyReference, prisonId, reason)
+
+      // Then
+      expect(supportAdditionalNeedsApiClient.deleteSupportStrategy).toHaveBeenCalledWith(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+        prisonId,
+        reason,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.deleteSupportStrategy.mockRejectedValue(expectedError)
+
+      // When
+      const actual = await service
+        .deleteSupportStrategy(username, prisonNumber, supportStrategyReference, 'BXI', 'ENTERED_IN_ERROR')
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.deleteSupportStrategy).toHaveBeenCalledWith(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+        'BXI',
+        'ENTERED_IN_ERROR',
+      )
+    })
+  })
 })

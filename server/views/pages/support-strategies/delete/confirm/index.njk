@@ -1,0 +1,65 @@
+{% extends "../../layout.njk" %}
+
+{% set pageId = 'delete-support-strategy-confirm' %}
+{% set pageTitle = applicationName + ' - ' + ('Delete history support strategy are you sure' if mode == 'history' else 'Delete support strategy are you sure') %}
+
+{% set deleteReasonLabel %}
+  {% if dto.deleteReason == 'DATA_PROCESSING_OBJECTION' %}
+    Prisoner objected to change in data processing
+  {% elif dto.deleteReason == 'ENTERED_IN_ERROR' %}
+    {% if mode == 'history' %}History support strategy{% else %}Support strategy{% endif %} entered in error
+  {% else %}
+    {{ dto.deleteReason }}
+  {% endif %}
+{% endset %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% if errorDeletingSupportStrategy %}
+        <div class="hmpps-api-error-banner govuk-!-margin-bottom-4" data-qa="api-error-banner">
+          <p>Sorry, there is a problem with the service</p>
+          <p>There was a problem deleting the support strategy. Try again later.</p>
+        </div>
+      {% endif %}
+
+      <h1 class="govuk-heading-l">Are you sure you want to delete {{ prisonerSummary | formatFirst_name_Last_name }}'s {% if mode == 'history' %}history {% endif %}support strategy?</h1>
+
+      <div class="govuk-summary-card app-summary-card--grey govuk-!-margin-bottom-6" data-qa="delete-reason-summary">
+        <div class="govuk-summary-card__content">
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Deletion reason</h2>
+          <p class="govuk-body govuk-!-margin-bottom-0" data-qa="delete-reason">{{ deleteReasonLabel | trim }}</p>
+        </div>
+      </div>
+
+      {{ govukWarningText({
+        text: "Data will be permanently deleted and cannot be retrieved.",
+        iconFallbackText: "Warning"
+      }) }}
+
+      <form class="form" method="post" novalidate="">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            id: "submit-button",
+            text: "Yes, delete",
+            type: "submit",
+            classes: "govuk-button--warning",
+            attributes: {"data-qa": "submit-button"},
+            preventDoubleClick: true
+          }) }}
+
+          {{ govukButton({
+            text: "No, go back to overview",
+            href: "/profile/" + prisonerSummary.prisonNumber + "/support-strategies" + ("#archived-support-strategies" if mode == 'history' else "#current-support-strategies"),
+            classes: "govuk-button--secondary",
+            attributes: {"data-qa": "no-delete-link"}
+          }) }}
+        </div>
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

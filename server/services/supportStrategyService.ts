@@ -98,4 +98,25 @@ export default class SupportStrategyService {
       throw e
     }
   }
+
+  async deleteSupportStrategy(
+    username: string,
+    prisonNumber: string,
+    supportStrategyReference: string,
+    prisonId: string,
+    reason: string,
+  ): Promise<void> {
+    try {
+      await this.supportAdditionalNeedsApiClient.deleteSupportStrategy(
+        prisonNumber,
+        supportStrategyReference,
+        username,
+        prisonId,
+        reason,
+      )
+    } catch (e) {
+      logger.error(`Error deleting Support Strategy for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
 }
