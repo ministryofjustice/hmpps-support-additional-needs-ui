@@ -33,6 +33,21 @@ export default class ChallengesPage extends ProfilePage {
     return this
   }
 
+  clickHistoryTab(): ChallengesPage {
+    cy.get('a.govuk-tabs__tab[href="#archived-challenges"]').click()
+    return this
+  }
+
+  clickToDeleteNthArchivedChallenge(index: number): DeleteChallengeReasonPage {
+    this.archivedChallenges().eq(zeroIndexed(index)).find('[data-qa=delete-archived-challenge-button]').click()
+    return Page.verifyOnPage(DeleteChallengeReasonPage)
+  }
+
+  doesNotHaveDeleteArchivedChallengeButton(): ChallengesPage {
+    cy.get('[data-qa=delete-archived-challenge-button]').should('not.exist')
+    return this
+  }
+
   hasActiveChallengesSummaryCard(category: ChallengeCategory): ChallengesPage {
     this.challengeCategorySummaryCard({ category, active: true }).should('be.visible')
     return this
@@ -132,4 +147,6 @@ export default class ChallengesPage extends ProfilePage {
     cy.get(`[data-qa=${options.active ? 'active' : 'archived'}-challenges-summary-card-${options.category}]`)
 
   private nonAlnChallenges = (): PageElement => cy.get('.govuk-summary-list__row.non-aln-challenge')
+
+  private archivedChallenges = (): PageElement => cy.get('.govuk-summary-list__row.archived-challenge')
 }
