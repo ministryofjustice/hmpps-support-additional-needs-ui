@@ -145,6 +145,11 @@ const pageViewEventMap: Record<string, Page> = {
   // Archive conditions routes
   '/conditions/:prisonNumber/:conditionReference/archive/:journeyId/reason': Page.ARCHIVE_CONDITION_REASON,
 
+  // Delete conditions routes
+  '/conditions/:prisonNumber/:conditionReference/delete/:journeyId/reason': Page.DELETE_CONDITION_REASON,
+  '/conditions/:prisonNumber/:conditionReference/delete/:journeyId/review': Page.DELETE_CONDITION_REVIEW,
+  '/conditions/:prisonNumber/:conditionReference/delete/:journeyId/confirm': Page.DELETE_CONDITION_CONFIRM,
+
   // Create Support Strategies routes
   '/support-strategies/:prisonNumber/create/:journeyId/select-category': Page.CREATE_SUPPORT_STRATEGY_CATEGORY,
   '/support-strategies/:prisonNumber/create/:journeyId/detail': Page.CREATE_SUPPORT_STRATEGY_DETAILS,
@@ -188,6 +193,9 @@ const pageViewEventMap: Record<string, Page> = {
   '/conditions/:prisonNumber/create/select-conditions': null,
   '/conditions/:prisonNumber/:conditionReference/edit/detail': null,
   '/conditions/:prisonNumber/:conditionReference/archive/reason': null,
+  '/conditions/:prisonNumber/:conditionReference/delete/reason': null,
+  '/conditions/:prisonNumber/:conditionReference/delete/review': null,
+  '/conditions/:prisonNumber/:conditionReference/delete/confirm': null,
   '/support-strategies/:prisonNumber/create/select-category': null,
   '/support-strategies/:prisonNumber/:supportStrategyReference/edit/detail': null,
   '/support-strategies/:prisonNumber/:supportStrategyReference/archive/reason': null,

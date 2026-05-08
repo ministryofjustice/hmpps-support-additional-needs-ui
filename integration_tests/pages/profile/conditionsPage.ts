@@ -4,6 +4,7 @@ import ConditionType from '../../../server/enums/conditionType'
 import zeroIndexed from '../../utils/zeroIndexed'
 import EditConditionDetailPage from '../conditions/editConditionDetailPage'
 import ArchiveConditionReasonPage from '../conditions/archiveConditionReasonPage'
+import DeleteConditionReasonPage from '../conditions/deleteConditionReasonPage'
 
 export default class ConditionsPage extends ProfilePage {
   constructor() {
@@ -19,6 +20,16 @@ export default class ConditionsPage extends ProfilePage {
   clickToArchiveNthCondition(index: number): ArchiveConditionReasonPage {
     this.activeConditions().eq(zeroIndexed(index)).find('[data-qa=archive-condition-button]').click()
     return Page.verifyOnPage(ArchiveConditionReasonPage)
+  }
+
+  clickToDeleteNthCondition(index: number): DeleteConditionReasonPage {
+    this.activeConditions().eq(zeroIndexed(index)).find('[data-qa=delete-condition-button]').click()
+    return Page.verifyOnPage(DeleteConditionReasonPage)
+  }
+
+  doesNotHaveDeleteConditionButton(): ConditionsPage {
+    cy.get('[data-qa=delete-condition-button]').should('not.exist')
+    return this
   }
 
   hasActiveDiagnosedConditions(...conditions: Array<ConditionType>): ConditionsPage {

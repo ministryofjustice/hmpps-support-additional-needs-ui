@@ -273,6 +273,48 @@ describe('conditionService', () => {
     })
   })
 
+  describe('deleteCondition', () => {
+    it('should delete condition by calling the API client with correct args', async () => {
+      // Given
+      supportAdditionalNeedsApiClient.deleteCondition.mockResolvedValue(null)
+      const prisonId = 'BXI'
+      const reason = 'ENTERED_IN_ERROR'
+
+      // When
+      await service.deleteCondition(username, prisonNumber, conditionReference, prisonId, reason)
+
+      // Then
+      expect(supportAdditionalNeedsApiClient.deleteCondition).toHaveBeenCalledWith(
+        prisonNumber,
+        conditionReference,
+        username,
+        prisonId,
+        reason,
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      // Given
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.deleteCondition.mockRejectedValue(expectedError)
+
+      // When
+      const actual = await service
+        .deleteCondition(username, prisonNumber, conditionReference, 'BXI', 'ENTERED_IN_ERROR')
+        .catch(e => e)
+
+      // Then
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.deleteCondition).toHaveBeenCalledWith(
+        prisonNumber,
+        conditionReference,
+        username,
+        'BXI',
+        'ENTERED_IN_ERROR',
+      )
+    })
+  })
+
   describe('archiveCondition', () => {
     it('should archive condition', async () => {
       // Given
