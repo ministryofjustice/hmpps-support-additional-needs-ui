@@ -4,6 +4,7 @@ import archiveSupportStrategiesRoutes from './archive'
 import createSupportStrategiesRoutes from './create'
 import editSupportStrategiesRoutes from './edit'
 import deleteSupportStrategyRoutes from './delete'
+import historyDeleteSupportStrategyRoutes from './history-delete'
 
 const supportStrategiesRoutes = (services: Services): Router => {
   return Router({ mergeParams: true }) //
@@ -11,6 +12,7 @@ const supportStrategiesRoutes = (services: Services): Router => {
     .use('/:supportStrategyReference/edit', editSupportStrategiesRoutes(services))
     .use('/:supportStrategyReference/archive', archiveSupportStrategiesRoutes(services))
     .use('/:supportStrategyReference/delete', deleteSupportStrategyRoutes(services))
+    .use('/:supportStrategyReference/history-delete', historyDeleteSupportStrategyRoutes(services))
 }
 
 export default supportStrategiesRoutes

@@ -178,6 +178,14 @@ const pageViewEventMap: Record<string, Page> = {
   '/support-strategies/:prisonNumber/:supportStrategyReference/delete/:journeyId/confirm':
     Page.DELETE_SUPPORT_STRATEGY_CONFIRM,
 
+  // Delete history Support Strategies routes
+  '/support-strategies/:prisonNumber/:supportStrategyReference/history-delete/:journeyId/reason':
+    Page.DELETE_HISTORY_SUPPORT_STRATEGY_REASON,
+  '/support-strategies/:prisonNumber/:supportStrategyReference/history-delete/:journeyId/review':
+    Page.DELETE_HISTORY_SUPPORT_STRATEGY_REVIEW,
+  '/support-strategies/:prisonNumber/:supportStrategyReference/history-delete/:journeyId/confirm':
+    Page.DELETE_HISTORY_SUPPORT_STRATEGY_CONFIRM,
+
   // Non audit routes. These routes do not raise an audit event
   '/': null,
   '/favicon.ico': null,
@@ -221,6 +229,9 @@ const pageViewEventMap: Record<string, Page> = {
   '/support-strategies/:prisonNumber/:supportStrategyReference/delete/reason': null,
   '/support-strategies/:prisonNumber/:supportStrategyReference/delete/review': null,
   '/support-strategies/:prisonNumber/:supportStrategyReference/delete/confirm': null,
+  '/support-strategies/:prisonNumber/:supportStrategyReference/history-delete/reason': null,
+  '/support-strategies/:prisonNumber/:supportStrategyReference/history-delete/review': null,
+  '/support-strategies/:prisonNumber/:supportStrategyReference/history-delete/confirm': null,
 }
 
 export default function auditMiddleware({ auditService }: Services) {
