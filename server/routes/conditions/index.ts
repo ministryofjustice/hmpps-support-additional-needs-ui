@@ -4,6 +4,7 @@ import archiveConditionRoutes from './archive'
 import createConditionsRoutes from './create'
 import editConditionRoutes from './edit'
 import deleteConditionRoutes from './delete'
+import historyDeleteConditionRoutes from './history-delete'
 
 const conditionsRoutes = (services: Services): Router => {
   return Router({ mergeParams: true }) //
@@ -11,6 +12,7 @@ const conditionsRoutes = (services: Services): Router => {
     .use('/:conditionReference/edit', editConditionRoutes(services))
     .use('/:conditionReference/archive', archiveConditionRoutes(services))
     .use('/:conditionReference/delete', deleteConditionRoutes(services))
+    .use('/:conditionReference/history-delete', historyDeleteConditionRoutes(services))
 }
 
 export default conditionsRoutes
