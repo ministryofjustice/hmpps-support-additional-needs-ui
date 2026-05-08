@@ -293,6 +293,41 @@ const stubArchiveChallenge500Error = (options?: {
     },
   })
 
+const stubDeleteChallenge = (options?: { prisonNumber?: string; challengeReference?: string }): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPathPattern: `/support-additional-needs-api/profile/${options?.prisonNumber || 'G6115VJ'}/challenges/${options?.challengeReference || 'c88a6c48-97e2-4c04-93b5-98619966447b'}`,
+    },
+    response: {
+      status: 204,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {},
+    },
+  })
+
+const stubDeleteChallenge500Error = (options?: {
+  prisonNumber?: string
+  challengeReference?: string
+}): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPathPattern: `/support-additional-needs-api/profile/${options?.prisonNumber || 'G6115VJ'}/challenges/${options?.challengeReference || 'c88a6c48-97e2-4c04-93b5-98619966447b'}`,
+    },
+    response: {
+      status: 500,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        status: 500,
+        errorCode: null,
+        userMessage: 'An unexpected error occurred',
+        developerMessage: 'An unexpected error occurred',
+        moreInfo: null,
+      },
+    },
+  })
+
 export default {
   stubCreateChallenges,
   stubCreateChallenges500Error,
@@ -306,4 +341,6 @@ export default {
   stubUpdateChallenge500Error,
   stubArchiveChallenge,
   stubArchiveChallenge500Error,
+  stubDeleteChallenge,
+  stubDeleteChallenge500Error,
 }

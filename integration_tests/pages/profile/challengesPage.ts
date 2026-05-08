@@ -5,6 +5,7 @@ import ChallengeType from '../../../server/enums/challengeType'
 import ChallengeDetailPage from '../challenges/challengeDetailPage'
 import zeroIndexed from '../../utils/zeroIndexed'
 import ArchiveChallengeReasonPage from '../challenges/archiveChallengeReasonPage'
+import DeleteChallengeReasonPage from '../challenges/deleteChallengeReasonPage'
 
 export default class ChallengesPage extends ProfilePage {
   constructor() {
@@ -20,6 +21,16 @@ export default class ChallengesPage extends ProfilePage {
   clickToArchiveNthNonAlnChallenge(index: number): ArchiveChallengeReasonPage {
     this.nonAlnChallenges().eq(zeroIndexed(index)).find('[data-qa=archive-challenge-button]').click()
     return Page.verifyOnPage(ArchiveChallengeReasonPage)
+  }
+
+  clickToDeleteNthNonAlnChallenge(index: number): DeleteChallengeReasonPage {
+    this.nonAlnChallenges().eq(zeroIndexed(index)).find('[data-qa=delete-challenge-button]').click()
+    return Page.verifyOnPage(DeleteChallengeReasonPage)
+  }
+
+  doesNotHaveDeleteChallengeButton(): ChallengesPage {
+    cy.get('[data-qa=delete-challenge-button]').should('not.exist')
+    return this
   }
 
   hasActiveChallengesSummaryCard(category: ChallengeCategory): ChallengesPage {

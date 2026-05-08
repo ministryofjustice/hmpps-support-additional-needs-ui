@@ -209,6 +209,25 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     )
   }
 
+  async deleteChallenge(
+    prisonNumber: string,
+    challengeReference: string,
+    username: string,
+    prisonId: string,
+    reason: string,
+  ): Promise<void> {
+    return this.delete<void>(
+      {
+        path: `/profile/${prisonNumber}/challenges/${challengeReference}`,
+        query: {
+          prisonId,
+          reason,
+        },
+      },
+      asSystem(username),
+    )
+  }
+
   async createConditions(
     prisonNumber: string,
     username: string,

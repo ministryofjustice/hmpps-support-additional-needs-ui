@@ -122,6 +122,7 @@ declare module 'dto' {
     howIdentifiedOther?: string
     alnScreenerDate?: Date
     archiveReason?: string
+    deleteReason?: string
   }
 
   export interface ConditionsList {

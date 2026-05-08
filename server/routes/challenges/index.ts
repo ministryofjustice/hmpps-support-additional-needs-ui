@@ -3,12 +3,14 @@ import { Services } from '../../services'
 import archiveChallengeRoutes from './archive'
 import createChallengeRoutes from './create'
 import editChallengeRoutes from './edit'
+import deleteChallengeRoutes from './delete'
 
 const challengesRoutes = (services: Services): Router => {
   return Router({ mergeParams: true }) //
     .use('/create', createChallengeRoutes(services))
     .use('/:challengeReference/edit', editChallengeRoutes(services))
     .use('/:challengeReference/archive', archiveChallengeRoutes(services))
+    .use('/:challengeReference/delete', deleteChallengeRoutes(services))
 }
 
 export default challengesRoutes

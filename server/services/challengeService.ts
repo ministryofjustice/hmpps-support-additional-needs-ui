@@ -80,4 +80,25 @@ export default class ChallengeService {
       throw e
     }
   }
+
+  async deleteChallenge(
+    username: string,
+    prisonNumber: string,
+    challengeReference: string,
+    prisonId: string,
+    reason: string,
+  ): Promise<void> {
+    try {
+      await this.supportAdditionalNeedsApiClient.deleteChallenge(
+        prisonNumber,
+        challengeReference,
+        username,
+        prisonId,
+        reason,
+      )
+    } catch (e) {
+      logger.error(`Error deleting Challenge for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
 }
