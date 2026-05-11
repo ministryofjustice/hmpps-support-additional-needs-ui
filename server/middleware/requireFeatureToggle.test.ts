@@ -7,7 +7,6 @@ jest.mock('../config', () => ({
   default: {
     featureToggles: {
       sanDataDeletionEnabled: false,
-      dprReportEnabled: true,
     },
   },
 }))
@@ -19,15 +18,6 @@ describe('requireFeatureToggle', () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
-  })
-
-  it('should call next() when the toggle is enabled', () => {
-    const middleware = requireFeatureToggle('dprReportEnabled')
-
-    middleware(req, res, next)
-
-    expect(next).toHaveBeenCalledTimes(1)
-    expect(next).toHaveBeenCalledWith()
   })
 
   it('should call next(NotFound) when the toggle is disabled', () => {

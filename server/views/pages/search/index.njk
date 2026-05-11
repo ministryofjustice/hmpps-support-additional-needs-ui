@@ -20,15 +20,13 @@
       <div class="search-header-container">
         <h1 class="govuk-heading-l">Manage support for additional needs</h1>
 
-        {% if featureToggles.dprReportEnabled %}
-          {% if userHasPermissionTo('USE_DPR_REPORTING_SERVICE') and userHasPermissionTo('VIEW_SAN_DPR_REPORT') %}
-            <a href="{{ dprReportUrl }}" target="_blank" class="govuk-link govuk-body" data-qa="dpr-report-link">
-              <span>
-                <img src="/assets/images/icon-document-magnifying-glass.svg" role="presentation" alt="" class="action-icon" />
-                View additional needs reporting
-              </span>
-            </a>
-          {% endif %}
+        {% if userHasPermissionTo('USE_DPR_REPORTING_SERVICE') and userHasPermissionTo('VIEW_SAN_DPR_REPORT') %}
+          <a href="{{ dprReportUrl }}" target="_blank" class="govuk-link govuk-body" data-qa="dpr-report-link">
+            <span>
+              <img src="/assets/images/icon-document-magnifying-glass.svg" role="presentation" alt="" class="action-icon" />
+              View additional needs reporting
+            </span>
+          </a>
         {% endif %}
       </div>
 
