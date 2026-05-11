@@ -137,6 +137,5 @@ Features can be toggled by setting the relevant environment variable.
 | Name                              | Default Value | Type     | Description                                                                                                                                                                                |
 |-----------------------------------|---------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | SOME_TOGGLE_ENABLED               | false         | Boolean  | Example feature toggle, for demonstration purposes.                                                                                                                                        |
-| DPR_REPORT_ENABLED                | false         | Boolean  | Set to true to enable the link to the DPR reporting UI.                                                                                                                                    |
 | SAN_DATA_DELETION_FEATURE_ENABLED | false         | Boolean  | Set to true to enable the SAN data-deletion journeys (delete challenges/strengths/conditions/support strategies/screener results). Must remain false in prod until stakeholder comms ready. |
 

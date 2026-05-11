@@ -149,7 +149,6 @@ export default {
   searchUiDefaultPaginationPageSize: Number(get('SEARCH_UI_DEFAULT_PAGINATION_PAGE_SIZE', 50, requiredInProduction)),
   featureToggles: {
     // someToggleEnabled: toBoolean(get('SOME_TOGGLE_ENABLED', false)),
-    dprReportEnabled: toBoolean(get('DPR_REPORT_ENABLED', false, requiredInProduction)),
     sanDataDeletionEnabled: toBoolean(get('SAN_DATA_DELETION_FEATURE_ENABLED', false, requiredInProduction)),
   },
 }
