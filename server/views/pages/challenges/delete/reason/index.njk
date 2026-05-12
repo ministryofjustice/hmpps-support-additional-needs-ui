@@ -1,7 +1,7 @@
 {% extends "../../layout.njk" %}
 
 {% set pageId = 'delete-challenge-reason' %}
-{% set pageTitle = applicationName + ' - ' + ('Delete history challenge reason' if mode == 'history' else 'Delete challenge reason') %}
+{% set pageTitle = 'Delete history challenge reason' if mode == 'history' else 'Delete challenge reason' %}
 
 {% block content %}
   <div class="govuk-grid-row">

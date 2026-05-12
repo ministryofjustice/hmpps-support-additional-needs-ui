@@ -46,20 +46,23 @@
             <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Reason for moving to History</h3>
             <p class="govuk-body app-u-multiline-text" data-qa="archived-challenge-reason">{{ challenge.archiveReason }}</p>
 
-            <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="archived-challenge-audit">
-              {% set prisonName = params.prisonNamesById[challenge.updatedAtPrison] | default(challenge.updatedAtPrison) %}
-              Moved to history on {{ challenge.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ challenge.updatedByDisplayName }}, {{ prisonName }}</span>
-            </p>
+            <div class="actions-wrapper">
+              <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="archived-challenge-audit">
+                {% set prisonName = params.prisonNamesById[challenge.updatedAtPrison] | default(challenge.updatedAtPrison) %}
+                Moved to history on {{ challenge.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ challenge.updatedByDisplayName }}, {{ prisonName }}</span>
+              </p>
 
-            {% if showActions %}
-              <ul class="govuk-summary-card__actions govuk-!-display-none-print">
-                {% if featureToggles.sanDataDeletionEnabled and userHasPermissionTo('DELETE_CHALLENGES') %}
-                  <li class="govuk-summary-card__action">
-                    <a class="govuk-link govuk-!-font-weight-regular" href="/challenges/{{ challenge.prisonNumber }}/{{ challenge.reference }}/history-delete/reason" data-qa="delete-archived-challenge-button">Delete</a>
-                  </li>
-                {% endif %}
-              </ul>
-            {% endif %}
+              {% if showActions %}
+                <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                  {% if featureToggles.sanDataDeletionEnabled and userHasPermissionTo('DELETE_CHALLENGES') %}
+                    <li class="govuk-summary-card__action">
+                      <a class="govuk-link govuk-!-font-weight-regular" href="/challenges/{{ challenge.prisonNumber }}/{{ challenge.reference }}/history-delete/reason" data-qa="delete-archived-challenge-button">Delete</a>
+                    </li>
+                  {% endif %}
+                </ul>
+              {% endif %}
+            </div>
+
           </div>
         {% endfor %}
       </div>

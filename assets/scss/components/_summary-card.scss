@@ -3,7 +3,7 @@
   .actions-wrapper {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: govuk-spacing(4);
     @include govuk-responsive-margin(3, 'bottom');
 

@@ -1,7 +1,7 @@
 {% extends "../../layout.njk" %}
 
 {% set pageId = 'delete-support-strategy-confirm' %}
-{% set pageTitle = applicationName + ' - ' + ('Delete history support strategy are you sure' if mode == 'history' else 'Delete support strategy are you sure') %}
+{% set pageTitle = 'Delete history support strategy are you sure' if mode == 'history' else 'Delete support strategy are you sure' %}
 
 {% set deleteReasonLabel %}
   {% if dto.deleteReason == 'DATA_PROCESSING_OBJECTION' %}

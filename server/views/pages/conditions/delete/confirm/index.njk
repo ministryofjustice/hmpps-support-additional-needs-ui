@@ -1,7 +1,7 @@
 {% extends "../../layout.njk" %}
 
 {% set pageId = 'delete-condition-confirm' %}
-{% set pageTitle = applicationName + ' - ' + ('Delete history condition are you sure' if mode == 'history' else 'Delete condition are you sure') %}
+{% set pageTitle = 'Delete history condition are you sure' if mode == 'history' else 'Delete condition are you sure' %}
 
 {% set deleteReasonLabel %}
   {% if dto.deleteReason == 'DATA_PROCESSING_OBJECTION' %}
