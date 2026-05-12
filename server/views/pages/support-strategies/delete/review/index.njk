@@ -1,7 +1,7 @@
 {% extends "../../layout.njk" %}
 
 {% set pageId = 'delete-support-strategy-review' %}
-{% set pageTitle = applicationName + ' - ' + ('Delete history support strategy review' if mode == 'history' else 'Delete support strategy review') %}
+{% set pageTitle = 'Delete history support strategy review' if mode == 'history' else 'Delete support strategy review' %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -11,6 +11,9 @@
 
       <div class="govuk-summary-card app-summary-card--grey govuk-!-margin-bottom-8" data-qa="support-strategy-to-delete-summary">
         <div class="govuk-summary-card__content">
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-1" data-qa="support-strategy-to-delete-category">
+            {{ dto.supportStrategyTypeCode | formatSupportStrategyTypeScreenValue | default(dto.supportStrategyTypeCode, true) }}
+          </h2>
           <p class="govuk-body app-u-multiline-text govuk-!-margin-bottom-0" data-qa="support-strategy-to-delete-details">{{ dto.supportStrategyDetails }}</p>
         </div>
       </div>

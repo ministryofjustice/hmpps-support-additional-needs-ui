@@ -1,7 +1,7 @@
 {% extends "../../layout.njk" %}
 
 {% set pageId = 'delete-challenge-confirm' %}
-{% set pageTitle = applicationName + ' - ' + ('Delete history challenge are you sure' if mode == 'history' else 'Delete challenge are you sure') %}
+{% set pageTitle = 'Delete history challenge are you sure' if mode == 'history' else 'Delete challenge are you sure' %}
 
 {% set deleteReasonLabel %}
   {% if dto.deleteReason == 'DATA_PROCESSING_OBJECTION' %}
