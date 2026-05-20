@@ -32,6 +32,7 @@ const rolesForAction = (): Record<ApplicationAction, Array<DpsRole>> => ({
   [ApplicationAction.ARCHIVE_CONDITIONS]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.DELETE_CONDITIONS]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.RECORD_ALN_SCREENER]: [],
+  [ApplicationAction.DELETE_ALN_SCREENER]: [DpsRole.ROLE_SAN_EDITOR, DpsRole.ROLE_SAN_EDUCATION_MANAGER],
   [ApplicationAction.VIEW_ELSP_DEADLINES_AND_STATUSES_ON_PROFILE]: [
     DpsRole.ROLE_SAN_EDITOR,
     DpsRole.ROLE_SAN_EDUCATION_MANAGER,

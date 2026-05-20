@@ -1,0 +1,61 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'delete-aln-screener-review' %}
+{% set pageTitle = applicationName + ' - Delete screener review' %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h1 class="govuk-heading-l">Review the screener challenges and strengths for {{ prisonerSummary | formatFirst_name_Last_name }} you need to delete</h1>
+
+      {% if groupedChallenges | length %}
+        <h2 class="govuk-heading-m">Challenges</h2>
+        <div class="govuk-summary-card app-summary-card--grey govuk-!-margin-bottom-6" data-qa="screener-challenges-to-delete-summary">
+          <div class="govuk-summary-card__content">
+            {% for category, challenges in groupedChallenges %}
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-1" data-qa="screener-challenge-category">
+                {{ category | formatChallengeCategoryScreenValue | default(category, true) }}
+              </h3>
+              <ul class="govuk-list govuk-!-margin-bottom-4" data-qa="screener-challenge-list">
+                {% for challenge in challenges %}
+                  <li>{{ challenge.challengeTypeCode | formatChallengeTypeScreenValue | default(challenge.challengeTypeCode, true) }}</li>
+                {% endfor %}
+              </ul>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if groupedStrengths | length %}
+        <h2 class="govuk-heading-m">Strengths</h2>
+        <div class="govuk-summary-card app-summary-card--grey govuk-!-margin-bottom-6" data-qa="screener-strengths-to-delete-summary">
+          <div class="govuk-summary-card__content">
+            {% for category, strengths in groupedStrengths %}
+              <h3 class="govuk-heading-s govuk-!-margin-bottom-1" data-qa="screener-strength-category">
+                {{ category | formatStrengthCategoryScreenValue | default(category, true) }}
+              </h3>
+              <ul class="govuk-list govuk-!-margin-bottom-4" data-qa="screener-strength-list">
+                {% for strength in strengths %}
+                  <li>{{ strength.strengthTypeCode | formatStrengthTypeScreenValue | default(strength.strengthTypeCode, true) }}</li>
+                {% endfor %}
+              </ul>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <form class="form" method="post" novalidate="">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

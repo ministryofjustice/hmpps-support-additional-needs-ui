@@ -6,6 +6,7 @@ import type {
   EducationSupportPlanDto,
   RefuseEducationSupportPlanDto,
   ReviewEducationSupportPlanDto,
+  ScreenerDeletionDto,
   StrengthDto,
   StrengthResponseDto,
   SupportStrategyDto,
@@ -39,6 +40,7 @@ export declare global {
       strengthDto?: StrengthDto | StrengthResponseDto
       supportStrategyDto?: SupportStrategyDto | SupportStrategyResponseDto
       alnScreenerDto?: AlnScreenerDto
+      screenerDeletionDto?: ScreenerDeletionDto
     }
 
     interface Response {

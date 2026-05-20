@@ -84,10 +84,21 @@
               {% endfor %}
             </ul>
 
-            <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-strengths-audit">
-              {% set prisonName = params.prisonNamesById[latestAlnScreener.createdAtPrison] | default(latestAlnScreener.createdAtPrison) %}
-              From Additional Learning Needs Screener completed on {{ latestAlnScreener.screenerDate | formatDate('d MMM yyyy') }}, {{ prisonName }}
-            </p>
+            <div class="actions-wrapper">
+              <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="aln-strengths-audit">
+                {% set prisonName = params.prisonNamesById[latestAlnScreener.createdAtPrison] | default(latestAlnScreener.createdAtPrison) %}
+                From Additional Learning Needs Screener completed on {{ latestAlnScreener.screenerDate | formatDate('d MMM yyyy') }}, {{ prisonName }}
+              </p>
+
+              {% if showActions and featureToggles.sanDataDeletionEnabled and userHasPermissionTo('DELETE_ALN_SCREENER') %}
+                {% set alnStrengthPrisonNumber = params.prisonNumber | default(strengthsFromMostRecentAlnScreener[0].prisonNumber) %}
+                <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                  <li class="govuk-summary-card__action">
+                    <a class="govuk-link govuk-!-font-weight-regular" href="/aln-screener/{{ alnStrengthPrisonNumber }}/delete/reason?from=strengths" data-qa="delete-aln-screener-button">Delete</a>
+                  </li>
+                </ul>
+              {% endif %}
+            </div>
           </div>
         {% endif %}
       </div>

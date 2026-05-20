@@ -232,6 +232,19 @@ declare module 'dto' {
   }
 
   /**
+   * DTO held in journeyData for the duration of the "delete the latest ALN Screener" journey.
+   * Carries the latest screener payload (so the review and confirm pages can render without
+   * re-hitting the API), the user's chosen deletion reason, and the entry-point overview URL
+   * so the post-confirm redirect can return the user where they came from.
+   */
+  export interface ScreenerDeletionDto {
+    prisonNumber: string
+    latestScreener: AlnScreenerResponseDto
+    deleteReason?: string
+    returnTo?: string
+  }
+
+  /**
    * DTO collating the Additional Learning Needs (ALN) and Learning Difficulties and Disabilities (LDD) assessments that have been recorded in Curious
    */
   export interface CuriousAlnAndLddAssessmentsDto {

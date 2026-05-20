@@ -505,6 +505,24 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     )
   }
 
+  async deleteAdditionalLearningNeedsScreener(
+    prisonNumber: string,
+    username: string,
+    prisonId: string,
+    reason: string,
+  ): Promise<void> {
+    return this.delete<void>(
+      {
+        path: `/profile/${prisonNumber}/aln-screener`,
+        query: {
+          prisonId,
+          reason,
+        },
+      },
+      asSystem(username),
+    )
+  }
+
   async getPlanActionStatus(prisonNumber: string, username: string): Promise<PlanActionStatus> {
     return this.get<PlanActionStatus>(
       {

@@ -153,10 +153,57 @@ const stubGetAlnScreeners500Error = (prisonNumber = 'G6115VJ'): SuperAgentReques
     },
   })
 
+const stubGetAlnScreenersEmpty = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: `/support-additional-needs-api/profile/${prisonNumber}/aln-screener`,
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: { screeners: [] },
+    },
+  })
+
+const stubDeleteAlnScreener = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPattern: `/support-additional-needs-api/profile/${prisonNumber}/aln-screener(\\?.*)?`,
+    },
+    response: {
+      status: 204,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
+const stubDeleteAlnScreener500Error = (prisonNumber = 'G6115VJ'): SuperAgentRequest =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPattern: `/support-additional-needs-api/profile/${prisonNumber}/aln-screener(\\?.*)?`,
+    },
+    response: {
+      status: 500,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        status: 500,
+        errorCode: null,
+        userMessage: 'An unexpected error occurred',
+        developerMessage: 'An unexpected error occurred',
+        moreInfo: null,
+      },
+    },
+  })
+
 export default {
   stubRecordAlnScreener,
   stubRecordAlnScreener500Error,
   stubGetAlnScreeners,
   stubGetAlnScreeners404Error,
   stubGetAlnScreeners500Error,
+  stubGetAlnScreenersEmpty,
+  stubDeleteAlnScreener,
+  stubDeleteAlnScreener500Error,
 }

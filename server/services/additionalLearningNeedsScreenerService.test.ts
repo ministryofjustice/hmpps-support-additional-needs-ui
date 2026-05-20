@@ -205,4 +205,34 @@ describe('additionalLearningNeedsScreenerService', () => {
       )
     })
   })
+
+  describe('deleteLatestScreener', () => {
+    it('should delete the latest ALN Screener', async () => {
+      supportAdditionalNeedsApiClient.deleteAdditionalLearningNeedsScreener.mockResolvedValue(null)
+
+      await service.deleteLatestScreener(username, prisonNumber, 'BXI', 'ENTERED_IN_ERROR')
+
+      expect(supportAdditionalNeedsApiClient.deleteAdditionalLearningNeedsScreener).toHaveBeenCalledWith(
+        prisonNumber,
+        username,
+        'BXI',
+        'ENTERED_IN_ERROR',
+      )
+    })
+
+    it('should rethrow error given API client throws error', async () => {
+      const expectedError = new Error('Internal Server Error')
+      supportAdditionalNeedsApiClient.deleteAdditionalLearningNeedsScreener.mockRejectedValue(expectedError)
+
+      const actual = await service.deleteLatestScreener(username, prisonNumber, 'BXI', 'ENTERED_IN_ERROR').catch(e => e)
+
+      expect(actual).toEqual(expectedError)
+      expect(supportAdditionalNeedsApiClient.deleteAdditionalLearningNeedsScreener).toHaveBeenCalledWith(
+        prisonNumber,
+        username,
+        'BXI',
+        'ENTERED_IN_ERROR',
+      )
+    })
+  })
 })

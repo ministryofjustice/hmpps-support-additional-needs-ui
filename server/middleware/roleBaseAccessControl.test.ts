@@ -53,6 +53,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.EDIT_SUPPORT_STRATEGIES,
         ApplicationAction.ARCHIVE_SUPPORT_STRATEGIES,
         ApplicationAction.DELETE_SUPPORT_STRATEGIES,
+        ApplicationAction.DELETE_ALN_SCREENER,
         ApplicationAction.VIEW_SAN_DPR_REPORT,
       ]
 
@@ -88,6 +89,7 @@ describe('roleBasedAccessControl', () => {
         ApplicationAction.EDIT_SUPPORT_STRATEGIES,
         ApplicationAction.ARCHIVE_SUPPORT_STRATEGIES,
         ApplicationAction.DELETE_SUPPORT_STRATEGIES,
+        ApplicationAction.DELETE_ALN_SCREENER,
         ApplicationAction.VIEW_SAN_DPR_REPORT,
       ]
 
