@@ -1,3 +1,4 @@
+import DeleteReason from '../../../../server/enums/deleteReason'
 import Page from '../../../pages/page'
 import SupportStrategiesPage from '../../../pages/profile/supportStrategiesPage'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
@@ -65,7 +66,7 @@ context('Delete a Support Strategy (History tab)', () => {
       .submitPageTo(DeleteSupportStrategyReasonPage)
       .hasErrorCount(1)
       .hasFieldInError('deleteReason')
-      .selectReason('ENTERED_IN_ERROR')
+      .selectReason(DeleteReason.ENTERED_IN_ERROR)
       .submitPageTo(DeleteSupportStrategyReviewPage)
 
     Page.verifyOnPage(DeleteSupportStrategyReviewPage) //
@@ -114,7 +115,7 @@ context('Delete a Support Strategy (History tab)', () => {
 
     cy.visit(`/support-strategies/${prisonNumber}/${supportStrategyReference}/history-delete/reason`)
     Page.verifyOnPage(DeleteSupportStrategyReasonPage) //
-      .selectReason('ENTERED_IN_ERROR')
+      .selectReason(DeleteReason.ENTERED_IN_ERROR)
       .submitPageTo(DeleteSupportStrategyReviewPage)
 
     Page.verifyOnPage(DeleteSupportStrategyReviewPage) //
@@ -133,7 +134,7 @@ context('Delete a Support Strategy (History tab)', () => {
 
     cy.visit(`/support-strategies/${prisonNumber}/${supportStrategyReference}/history-delete/reason`)
     Page.verifyOnPage(DeleteSupportStrategyReasonPage) //
-      .selectReason('DATA_PROCESSING_OBJECTION')
+      .selectReason(DeleteReason.DATA_PROCESSING_OBJECTION)
       .submitPageTo(DeleteSupportStrategyReviewPage)
 
     Page.verifyOnPage(DeleteSupportStrategyReviewPage) //

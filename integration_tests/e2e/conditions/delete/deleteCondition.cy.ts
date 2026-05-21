@@ -1,3 +1,4 @@
+import DeleteReason from '../../../../server/enums/deleteReason'
 import Page from '../../../pages/page'
 import ConditionsPage from '../../../pages/profile/conditionsPage'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
@@ -38,7 +39,7 @@ context('Delete a Condition (Current tab)', () => {
       .hasErrorCount(1)
       .hasFieldInError('deleteReason')
       // Select a reason and continue
-      .selectReason('ENTERED_IN_ERROR')
+      .selectReason(DeleteReason.ENTERED_IN_ERROR)
       .submitPageTo(DeleteConditionReviewPage)
 
     // Review page - continue to confirm
@@ -95,7 +96,7 @@ context('Delete a Condition (Current tab)', () => {
     // Drive journey to the confirm page
     cy.visit(`/conditions/${prisonNumber}/${conditionReference}/delete/reason`)
     Page.verifyOnPage(DeleteConditionReasonPage) //
-      .selectReason('ENTERED_IN_ERROR')
+      .selectReason(DeleteReason.ENTERED_IN_ERROR)
       .submitPageTo(DeleteConditionReviewPage)
 
     Page.verifyOnPage(DeleteConditionReviewPage) //
@@ -118,7 +119,7 @@ context('Delete a Condition (Current tab)', () => {
     // Drive journey to the confirm page
     cy.visit(`/conditions/${prisonNumber}/${conditionReference}/delete/reason`)
     Page.verifyOnPage(DeleteConditionReasonPage) //
-      .selectReason('DATA_PROCESSING_OBJECTION')
+      .selectReason(DeleteReason.DATA_PROCESSING_OBJECTION)
       .submitPageTo(DeleteConditionReviewPage)
 
     Page.verifyOnPage(DeleteConditionReviewPage) //

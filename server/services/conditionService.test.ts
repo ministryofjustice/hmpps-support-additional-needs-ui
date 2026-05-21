@@ -1,5 +1,6 @@
 import { parseISO } from 'date-fns'
 import type { ConditionDto } from 'dto'
+import DeleteReason from '../enums/deleteReason'
 import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiClient'
 import ConditionService from './conditionService'
 import { aValidConditionDto, aValidConditionsList } from '../testsupport/conditionDtoTestDataBuilder'
@@ -278,7 +279,7 @@ describe('conditionService', () => {
       // Given
       supportAdditionalNeedsApiClient.deleteCondition.mockResolvedValue(null)
       const prisonId = 'BXI'
-      const reason = 'ENTERED_IN_ERROR'
+      const reason = DeleteReason.ENTERED_IN_ERROR
 
       // When
       await service.deleteCondition(username, prisonNumber, conditionReference, prisonId, reason)
@@ -300,7 +301,7 @@ describe('conditionService', () => {
 
       // When
       const actual = await service
-        .deleteCondition(username, prisonNumber, conditionReference, 'BXI', 'ENTERED_IN_ERROR')
+        .deleteCondition(username, prisonNumber, conditionReference, 'BXI', DeleteReason.ENTERED_IN_ERROR)
         .catch(e => e)
 
       // Then
@@ -310,7 +311,7 @@ describe('conditionService', () => {
         conditionReference,
         username,
         'BXI',
-        'ENTERED_IN_ERROR',
+        DeleteReason.ENTERED_IN_ERROR,
       )
     })
   })

@@ -42,6 +42,7 @@ import SearchSortField from '../enums/searchSortField'
 import SearchSortDirection from '../enums/searchSortDirection'
 import restClientErrorHandler from './restClientErrorHandler'
 import ReferenceDataDomain from '../enums/referenceDataDomain'
+import DeleteReason from '../enums/deleteReason'
 
 export default class SupportAdditionalNeedsApiClient extends RestClient {
   constructor(authenticationClient: AuthenticationClient) {
@@ -214,7 +215,7 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     challengeReference: string,
     username: string,
     prisonId: string,
-    reason: string,
+    reason: DeleteReason,
   ): Promise<void> {
     return this.delete<void>(
       {
@@ -297,7 +298,7 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     conditionReference: string,
     username: string,
     prisonId: string,
-    reason: string,
+    reason: DeleteReason,
   ): Promise<void> {
     return this.delete<void>(
       {
@@ -380,7 +381,7 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     strengthReference: string,
     username: string,
     prisonId: string,
-    reason: string,
+    reason: DeleteReason,
   ): Promise<void> {
     return this.delete<void>(
       {
@@ -467,7 +468,7 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     supportStrategyReference: string,
     username: string,
     prisonId: string,
-    reason: string,
+    reason: DeleteReason,
   ): Promise<void> {
     return this.delete<void>(
       {
@@ -509,7 +510,7 @@ export default class SupportAdditionalNeedsApiClient extends RestClient {
     prisonNumber: string,
     username: string,
     prisonId: string,
-    reason: string,
+    reason: DeleteReason,
   ): Promise<void> {
     return this.delete<void>(
       {

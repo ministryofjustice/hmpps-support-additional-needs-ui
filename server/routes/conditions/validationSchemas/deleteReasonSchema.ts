@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { createSchema } from '../../../middleware/validationMiddleware'
+import DeleteReason from '../../../enums/deleteReason'
 
 const deleteReasonSchema =
   (options: { mode: 'active' | 'history' } = { mode: 'active' }) =>
@@ -11,7 +12,7 @@ const deleteReasonSchema =
 
     return createSchema({
       deleteReason: z //
-        .enum(['DATA_PROCESSING_OBJECTION', 'ENTERED_IN_ERROR'], {
+        .enum(DeleteReason, {
           message: messages[options.mode].mandatoryMessage,
         }),
     })

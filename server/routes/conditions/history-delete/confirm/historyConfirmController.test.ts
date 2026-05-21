@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import DeleteReason from '../../../../enums/deleteReason'
 import HistoryConfirmController from './historyConfirmController'
 import ConditionService from '../../../../services/conditionService'
 import AuditService from '../../../../services/auditService'
@@ -22,7 +23,7 @@ describe('history-delete/confirm/historyConfirmController', () => {
     reference: conditionReference,
     prisonNumber,
     active: false,
-    deleteReason: 'ENTERED_IN_ERROR',
+    deleteReason: DeleteReason.ENTERED_IN_ERROR,
   })
 
   const flash = jest.fn()
@@ -54,7 +55,7 @@ describe('history-delete/confirm/historyConfirmController', () => {
   })
 
   describe('getConfirmView', () => {
-    it('should render the confirm view with mode: history and no API error', async () => {
+    it('should render the confirm view with mode: history', async () => {
       // Given
       flash.mockReturnValue([])
 
@@ -63,26 +64,6 @@ describe('history-delete/confirm/historyConfirmController', () => {
         prisonerSummary,
         mode: 'history',
         dto: conditionDto,
-        errorDeletingCondition: false,
-      }
-
-      // When
-      await controller.getConfirmView(req, res, next)
-
-      // Then
-      expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
-    })
-
-    it('should render the confirm view with API error banner when flash is set', async () => {
-      // Given
-      flash.mockReturnValue(['true'])
-
-      const expectedViewTemplate = 'pages/conditions/delete/confirm/index'
-      const expectedViewModel = {
-        prisonerSummary,
-        mode: 'history',
-        dto: conditionDto,
-        errorDeletingCondition: true,
       }
 
       // When
@@ -109,7 +90,7 @@ describe('history-delete/confirm/historyConfirmController', () => {
         prisonNumber,
         conditionReference,
         'BXI',
-        'ENTERED_IN_ERROR',
+        DeleteReason.ENTERED_IN_ERROR,
       )
       expect(req.journeyData.conditionDto).toBeUndefined()
       expect(auditService.logDeleteCondition).toHaveBeenCalledWith(

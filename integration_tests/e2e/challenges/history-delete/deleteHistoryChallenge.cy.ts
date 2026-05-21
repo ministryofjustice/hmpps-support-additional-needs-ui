@@ -1,3 +1,4 @@
+import DeleteReason from '../../../../server/enums/deleteReason'
 import Page from '../../../pages/page'
 import ChallengesPage from '../../../pages/profile/challengesPage'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
@@ -67,7 +68,7 @@ context('Delete a Challenge (History tab)', () => {
       .hasErrorCount(1)
       .hasFieldInError('deleteReason')
       // Select a reason and continue
-      .selectReason('ENTERED_IN_ERROR')
+      .selectReason(DeleteReason.ENTERED_IN_ERROR)
       .submitPageTo(DeleteChallengeReviewPage)
 
     // Review page - continue to confirm
@@ -124,7 +125,7 @@ context('Delete a Challenge (History tab)', () => {
     // Drive journey to the confirm page
     cy.visit(`/challenges/${prisonNumber}/${challengeReference}/history-delete/reason`)
     Page.verifyOnPage(DeleteChallengeReasonPage) //
-      .selectReason('ENTERED_IN_ERROR')
+      .selectReason(DeleteReason.ENTERED_IN_ERROR)
       .submitPageTo(DeleteChallengeReviewPage)
 
     Page.verifyOnPage(DeleteChallengeReviewPage) //
@@ -147,7 +148,7 @@ context('Delete a Challenge (History tab)', () => {
     // Drive journey to the confirm page
     cy.visit(`/challenges/${prisonNumber}/${challengeReference}/history-delete/reason`)
     Page.verifyOnPage(DeleteChallengeReasonPage) //
-      .selectReason('DATA_PROCESSING_OBJECTION')
+      .selectReason(DeleteReason.DATA_PROCESSING_OBJECTION)
       .submitPageTo(DeleteChallengeReviewPage)
 
     Page.verifyOnPage(DeleteChallengeReviewPage) //

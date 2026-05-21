@@ -3,6 +3,7 @@ import { DtoAuditFields, validDtoAuditFields } from './auditFieldsTestDataBuilde
 import ChallengeType from '../enums/challengeType'
 import ChallengeCategory from '../enums/challengeCategory'
 import ChallengeIdentificationSource from '../enums/challengeIdentificationSource'
+import DeleteReason from '../enums/deleteReason'
 
 const aValidChallengeResponseDto = (
   options?: DtoAuditFields & {
@@ -16,7 +17,7 @@ const aValidChallengeResponseDto = (
     fromALNScreener?: boolean
     alnScreenerDate?: Date
     archiveReason?: string
-    deleteReason?: string
+    deleteReason?: DeleteReason
   },
 ): ChallengeResponseDto => ({
   prisonNumber: options?.prisonNumber || 'A1234BC',

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import DeleteReason from '../../../../enums/deleteReason'
 import ReviewController from './reviewController'
 import ConditionService from '../../../../services/conditionService'
 import { aValidConditionDto } from '../../../../testsupport/conditionDtoTestDataBuilder'
@@ -18,7 +19,7 @@ describe('delete/review/reviewController', () => {
   const conditionDto = aValidConditionDto({
     reference: conditionReference,
     prisonNumber,
-    deleteReason: 'ENTERED_IN_ERROR',
+    deleteReason: DeleteReason.ENTERED_IN_ERROR,
   })
 
   const req = {

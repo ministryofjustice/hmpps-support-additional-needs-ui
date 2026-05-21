@@ -1,5 +1,6 @@
 import { parseISO } from 'date-fns'
 import type { StrengthResponseDto } from 'dto'
+import DeleteReason from '../enums/deleteReason'
 import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiClient'
 import StrengthService from './strengthService'
 import { aValidStrengthResponseDto, aValidStrengthsList } from '../testsupport/strengthResponseDtoTestDataBuilder'
@@ -337,7 +338,7 @@ describe('strengthService', () => {
       // Given
       supportAdditionalNeedsApiClient.deleteStrength.mockResolvedValue(null)
       const prisonId = 'BXI'
-      const reason = 'ENTERED_IN_ERROR'
+      const reason = DeleteReason.ENTERED_IN_ERROR
 
       // When
       await service.deleteStrength(username, prisonNumber, strengthReference, prisonId, reason)
@@ -359,7 +360,7 @@ describe('strengthService', () => {
 
       // When
       const actual = await service
-        .deleteStrength(username, prisonNumber, strengthReference, 'BXI', 'ENTERED_IN_ERROR')
+        .deleteStrength(username, prisonNumber, strengthReference, 'BXI', DeleteReason.ENTERED_IN_ERROR)
         .catch(e => e)
 
       // Then
@@ -369,7 +370,7 @@ describe('strengthService', () => {
         strengthReference,
         username,
         'BXI',
-        'ENTERED_IN_ERROR',
+        DeleteReason.ENTERED_IN_ERROR,
       )
     })
   })

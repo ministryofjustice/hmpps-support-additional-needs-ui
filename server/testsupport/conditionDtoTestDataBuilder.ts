@@ -2,6 +2,7 @@ import type { ConditionDto, ConditionsList } from 'dto'
 import ConditionSource from '../enums/conditionSource'
 import ConditionType from '../enums/conditionType'
 import { DtoAuditFields, validDtoAuditFields } from './auditFieldsTestDataBuilder'
+import DeleteReason from '../enums/deleteReason'
 
 const aValidConditionsList = (options?: {
   prisonNumber?: string
@@ -21,7 +22,7 @@ const aValidConditionDto = (
     source?: ConditionSource
     active?: boolean
     archiveReason?: string
-    deleteReason?: string
+    deleteReason?: DeleteReason
   },
 ): ConditionDto => ({
   prisonId: options?.prisonId == null ? null : options?.prisonId || 'BXI',

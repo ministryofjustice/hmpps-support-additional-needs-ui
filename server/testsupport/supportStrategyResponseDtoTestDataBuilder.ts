@@ -2,6 +2,7 @@ import type { SupportStrategyResponseDto } from 'dto'
 import { DtoAuditFields, validDtoAuditFields } from './auditFieldsTestDataBuilder'
 import SupportStrategyType from '../enums/supportStrategyType'
 import SupportStrategyCategory from '../enums/supportStrategyCategory'
+import DeleteReason from '../enums/deleteReason'
 
 const aValidSupportStrategyResponseDto = (
   options?: DtoAuditFields & {
@@ -11,7 +12,7 @@ const aValidSupportStrategyResponseDto = (
     details?: string
     active?: boolean
     archiveReason?: string
-    deleteReason?: string
+    deleteReason?: DeleteReason
   },
 ): SupportStrategyResponseDto => ({
   prisonNumber: options?.prisonNumber || 'A1234BC',

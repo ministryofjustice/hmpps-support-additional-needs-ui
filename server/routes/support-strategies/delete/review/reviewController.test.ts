@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import DeleteReason from '../../../../enums/deleteReason'
 import ReviewController from './reviewController'
 import SupportStrategyService from '../../../../services/supportStrategyService'
 import aValidSupportStrategyResponseDto from '../../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
@@ -18,7 +19,7 @@ describe('delete/review/reviewController', () => {
   const supportStrategyDto = aValidSupportStrategyResponseDto({
     reference: supportStrategyReference,
     prisonNumber,
-    deleteReason: 'ENTERED_IN_ERROR',
+    deleteReason: DeleteReason.ENTERED_IN_ERROR,
   })
 
   const req = {

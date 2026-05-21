@@ -3,6 +3,7 @@ import { SupportAdditionalNeedsApiClient } from '../data'
 import logger from '../../logger'
 import toAlnScreenerRequest from '../data/mappers/alnScreenerRequestMapper'
 import { toAlnScreenerList } from '../data/mappers/alnScreenerResponseDtoMapper'
+import DeleteReason from '../enums/deleteReason'
 
 export default class AdditionalLearningNeedsScreenerService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -35,7 +36,12 @@ export default class AdditionalLearningNeedsScreenerService {
     }
   }
 
-  async deleteLatestScreener(username: string, prisonNumber: string, prisonId: string, reason: string): Promise<void> {
+  async deleteLatestScreener(
+    username: string,
+    prisonNumber: string,
+    prisonId: string,
+    reason: DeleteReason,
+  ): Promise<void> {
     try {
       await this.supportAdditionalNeedsApiClient.deleteAdditionalLearningNeedsScreener(
         prisonNumber,

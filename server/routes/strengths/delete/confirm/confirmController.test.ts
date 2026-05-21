@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import DeleteReason from '../../../../enums/deleteReason'
 import ConfirmController from './confirmController'
 import StrengthService from '../../../../services/strengthService'
 import AuditService from '../../../../services/auditService'
@@ -21,7 +22,7 @@ describe('delete/confirm/confirmController', () => {
   const strengthDto = aValidStrengthResponseDto({
     reference: strengthReference,
     prisonNumber,
-    deleteReason: 'ENTERED_IN_ERROR',
+    deleteReason: DeleteReason.ENTERED_IN_ERROR,
   })
 
   const flash = jest.fn()
@@ -53,7 +54,7 @@ describe('delete/confirm/confirmController', () => {
   })
 
   describe('getConfirmView', () => {
-    it('should render the confirm view with no API error', async () => {
+    it('should render the confirm view', async () => {
       // Given
       flash.mockReturnValue([])
 
@@ -62,26 +63,6 @@ describe('delete/confirm/confirmController', () => {
         prisonerSummary,
         mode: 'active',
         dto: strengthDto,
-        errorDeletingStrength: false,
-      }
-
-      // When
-      await controller.getConfirmView(req, res, next)
-
-      // Then
-      expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
-    })
-
-    it('should render the confirm view with API error banner when flash is set', async () => {
-      // Given
-      flash.mockReturnValue(['true'])
-
-      const expectedViewTemplate = 'pages/strengths/delete/confirm/index'
-      const expectedViewModel = {
-        prisonerSummary,
-        mode: 'active',
-        dto: strengthDto,
-        errorDeletingStrength: true,
       }
 
       // When
@@ -108,7 +89,7 @@ describe('delete/confirm/confirmController', () => {
         prisonNumber,
         strengthReference,
         'BXI',
-        'ENTERED_IN_ERROR',
+        DeleteReason.ENTERED_IN_ERROR,
       )
       expect(req.journeyData.strengthDto).toBeUndefined()
       expect(auditService.logDeleteStrength).toHaveBeenCalledWith(

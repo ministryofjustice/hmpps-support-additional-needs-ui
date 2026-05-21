@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import DeleteReason from '../../../../enums/deleteReason'
 import ReviewController from './reviewController'
 import ChallengeService from '../../../../services/challengeService'
 import aValidChallengeResponseDto from '../../../../testsupport/challengeResponseDtoTestDataBuilder'
@@ -18,7 +19,7 @@ describe('delete/review/reviewController', () => {
   const challengeDto = aValidChallengeResponseDto({
     reference: challengeReference,
     prisonNumber,
-    deleteReason: 'ENTERED_IN_ERROR',
+    deleteReason: DeleteReason.ENTERED_IN_ERROR,
   })
 
   const req = {

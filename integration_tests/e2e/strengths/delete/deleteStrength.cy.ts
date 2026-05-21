@@ -1,3 +1,4 @@
+import DeleteReason from '../../../../server/enums/deleteReason'
 import Page from '../../../pages/page'
 import StrengthsPage from '../../../pages/profile/strengthsPage'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
@@ -38,7 +39,7 @@ context('Delete a Strength (Current tab)', () => {
       .hasErrorCount(1)
       .hasFieldInError('deleteReason')
       // Select a reason and continue
-      .selectReason('ENTERED_IN_ERROR')
+      .selectReason(DeleteReason.ENTERED_IN_ERROR)
       .submitPageTo(DeleteStrengthReviewPage)
 
     // Review page - continue to confirm
@@ -95,7 +96,7 @@ context('Delete a Strength (Current tab)', () => {
     // Drive journey to the confirm page
     cy.visit(`/strengths/${prisonNumber}/${strengthReference}/delete/reason`)
     Page.verifyOnPage(DeleteStrengthReasonPage) //
-      .selectReason('ENTERED_IN_ERROR')
+      .selectReason(DeleteReason.ENTERED_IN_ERROR)
       .submitPageTo(DeleteStrengthReviewPage)
 
     Page.verifyOnPage(DeleteStrengthReviewPage) //
@@ -118,7 +119,7 @@ context('Delete a Strength (Current tab)', () => {
     // Drive journey to the confirm page
     cy.visit(`/strengths/${prisonNumber}/${strengthReference}/delete/reason`)
     Page.verifyOnPage(DeleteStrengthReasonPage) //
-      .selectReason('DATA_PROCESSING_OBJECTION')
+      .selectReason(DeleteReason.DATA_PROCESSING_OBJECTION)
       .submitPageTo(DeleteStrengthReviewPage)
 
     Page.verifyOnPage(DeleteStrengthReviewPage) //

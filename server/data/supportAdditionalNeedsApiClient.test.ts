@@ -1,6 +1,7 @@
 import type { AuthenticationClient } from '@ministryofjustice/hmpps-auth-clients'
 import nock from 'nock'
 import { isEqual, isMatch } from 'lodash'
+import DeleteReason from '../enums/deleteReason'
 import SupportAdditionalNeedsApiClient from './supportAdditionalNeedsApiClient'
 import aValidSearchByPrisonResponse from '../testsupport/searchByPrisonResponseTestDataBuiilder'
 import aValidPerson from '../testsupport/personTestDataBuilder'
@@ -1224,7 +1225,7 @@ describe('supportAdditionalNeedsApiClient', () => {
     it('should delete a prisoners challenge via query string params with no request body', async () => {
       // Given
       const deletePrisonId = 'BXI'
-      const deleteReason = 'ENTERED_IN_ERROR'
+      const deleteReason = DeleteReason.ENTERED_IN_ERROR
 
       supportAdditionalNeedsApi
         .delete(`/profile/${prisonNumber}/challenges/${challengeReference}`)
@@ -1250,7 +1251,7 @@ describe('supportAdditionalNeedsApiClient', () => {
     it('should rethrow error given API returns an error', async () => {
       // Given
       const deletePrisonId = 'BXI'
-      const deleteReason = 'ENTERED_IN_ERROR'
+      const deleteReason = DeleteReason.ENTERED_IN_ERROR
 
       const apiErrorResponse = {
         status: 500,
@@ -1282,7 +1283,7 @@ describe('supportAdditionalNeedsApiClient', () => {
     it('should delete a prisoners condition via query string params with no request body', async () => {
       // Given
       const deletePrisonId = 'BXI'
-      const deleteReason = 'ENTERED_IN_ERROR'
+      const deleteReason = DeleteReason.ENTERED_IN_ERROR
 
       supportAdditionalNeedsApi
         .delete(`/profile/${prisonNumber}/conditions/${conditionReference}`)
@@ -1308,7 +1309,7 @@ describe('supportAdditionalNeedsApiClient', () => {
     it('should rethrow error given API returns an error', async () => {
       // Given
       const deletePrisonId = 'BXI'
-      const deleteReason = 'ENTERED_IN_ERROR'
+      const deleteReason = DeleteReason.ENTERED_IN_ERROR
 
       const apiErrorResponse = {
         status: 500,
@@ -1340,7 +1341,7 @@ describe('supportAdditionalNeedsApiClient', () => {
     it('should delete a prisoners strength via query string params with no request body', async () => {
       // Given
       const deletePrisonId = 'BXI'
-      const deleteReason = 'ENTERED_IN_ERROR'
+      const deleteReason = DeleteReason.ENTERED_IN_ERROR
 
       supportAdditionalNeedsApi
         .delete(`/profile/${prisonNumber}/strengths/${strengthReference}`)
@@ -1366,7 +1367,7 @@ describe('supportAdditionalNeedsApiClient', () => {
     it('should rethrow error given API returns an error', async () => {
       // Given
       const deletePrisonId = 'BXI'
-      const deleteReason = 'ENTERED_IN_ERROR'
+      const deleteReason = DeleteReason.ENTERED_IN_ERROR
 
       const apiErrorResponse = {
         status: 500,
@@ -1706,7 +1707,7 @@ describe('supportAdditionalNeedsApiClient', () => {
     it('should delete a prisoners support strategy via query string params with no request body', async () => {
       // Given
       const deletePrisonId = 'BXI'
-      const deleteReason = 'ENTERED_IN_ERROR'
+      const deleteReason = DeleteReason.ENTERED_IN_ERROR
 
       supportAdditionalNeedsApi
         .delete(`/profile/${prisonNumber}/support-strategies/${supportStrategyReference}`)
@@ -1732,7 +1733,7 @@ describe('supportAdditionalNeedsApiClient', () => {
     it('should rethrow error given API returns an error', async () => {
       // Given
       const deletePrisonId = 'BXI'
-      const deleteReason = 'ENTERED_IN_ERROR'
+      const deleteReason = DeleteReason.ENTERED_IN_ERROR
 
       const apiErrorResponse = {
         status: 500,
@@ -2126,7 +2127,7 @@ describe('supportAdditionalNeedsApiClient', () => {
     it('should delete the latest ALN Screener via query string params with no request body', async () => {
       // Given
       const deletePrisonId = 'BXI'
-      const deleteReason = 'ENTERED_IN_ERROR'
+      const deleteReason = DeleteReason.ENTERED_IN_ERROR
 
       supportAdditionalNeedsApi
         .delete(`/profile/${prisonNumber}/aln-screener`)
@@ -2151,7 +2152,7 @@ describe('supportAdditionalNeedsApiClient', () => {
     it('should rethrow error given API returns an error', async () => {
       // Given
       const deletePrisonId = 'BXI'
-      const deleteReason = 'ENTERED_IN_ERROR'
+      const deleteReason = DeleteReason.ENTERED_IN_ERROR
 
       const apiErrorResponse = {
         status: 500,

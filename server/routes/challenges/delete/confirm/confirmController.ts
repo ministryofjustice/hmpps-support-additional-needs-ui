@@ -19,7 +19,6 @@ export default class ConfirmController {
       prisonerSummary,
       mode: 'active',
       dto: challengeResponseDto,
-      errorDeletingChallenge: req.flash('pageHasApiErrors')[0] != null,
     }
 
     return res.render('pages/challenges/delete/confirm/index', viewRenderArgs)

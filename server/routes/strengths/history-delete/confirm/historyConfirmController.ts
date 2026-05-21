@@ -19,7 +19,6 @@ export default class HistoryConfirmController {
       prisonerSummary,
       mode: 'history',
       dto: strengthResponseDto,
-      errorDeletingStrength: req.flash('pageHasApiErrors')[0] != null,
     }
 
     return res.render('pages/strengths/delete/confirm/index', viewRenderArgs)

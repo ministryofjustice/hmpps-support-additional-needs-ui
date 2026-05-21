@@ -11,6 +11,7 @@ declare module 'dto' {
   import SupportStrategyType from '../../enums/supportStrategyType'
   import AlnAssessmentReferral from '../../enums/alnAssessmentReferral'
   import PlanActionStatus from '../../enums/planActionStatus'
+  import DeleteReason from '../../enums/deleteReason'
 
   /**
    * Interface defining common reference and audit related properties that DTO types can inherit through extension.
@@ -122,7 +123,7 @@ declare module 'dto' {
     howIdentifiedOther?: string
     alnScreenerDate?: Date
     archiveReason?: string
-    deleteReason?: string
+    deleteReason?: DeleteReason
   }
 
   export interface ConditionsList {
@@ -139,7 +140,7 @@ declare module 'dto' {
     source: ConditionSource
     active?: boolean
     archiveReason?: string
-    deleteReason?: string
+    deleteReason?: DeleteReason
   }
 
   /**
@@ -174,7 +175,7 @@ declare module 'dto' {
     fromALNScreener: boolean
     alnScreenerDate?: Date
     archiveReason?: string
-    deleteReason?: string
+    deleteReason?: DeleteReason
   }
 
   /**
@@ -198,7 +199,7 @@ declare module 'dto' {
     supportStrategyCategory?: string
     active: boolean
     archiveReason?: string
-    deleteReason?: string
+    deleteReason?: DeleteReason
   }
 
   export interface ReferenceDataItemDto {
@@ -240,7 +241,7 @@ declare module 'dto' {
   export interface ScreenerDeletionDto {
     prisonNumber: string
     latestScreener: AlnScreenerResponseDto
-    deleteReason?: string
+    deleteReason?: DeleteReason
     returnTo?: string
   }
 
