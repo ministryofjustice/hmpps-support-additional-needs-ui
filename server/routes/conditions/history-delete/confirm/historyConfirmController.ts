@@ -19,7 +19,6 @@ export default class HistoryConfirmController {
       prisonerSummary,
       mode: 'history',
       dto: conditionDto,
-      errorDeletingCondition: req.flash('pageHasApiErrors')[0] != null,
     }
 
     return res.render('pages/conditions/delete/confirm/index', viewRenderArgs)

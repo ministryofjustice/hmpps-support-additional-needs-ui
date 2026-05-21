@@ -17,13 +17,6 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      {% if errorDeletingScreener %}
-        <div class="hmpps-api-error-banner govuk-!-margin-bottom-4" data-qa="api-error-banner">
-          <p>Sorry, there is a problem with the service</p>
-          <p>There was a problem deleting the screener results. Try again later.</p>
-        </div>
-      {% endif %}
-
       <h1 class="govuk-heading-l">Are you sure you want to delete {{ prisonerSummary | formatFirst_name_Last_name }}'s screener results?</h1>
 
       <div class="govuk-summary-card app-summary-card--grey govuk-!-margin-bottom-6" data-qa="delete-reason-summary">

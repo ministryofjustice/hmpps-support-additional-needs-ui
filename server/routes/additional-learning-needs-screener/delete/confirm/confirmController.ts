@@ -18,7 +18,6 @@ export default class ConfirmController {
     const viewRenderArgs = {
       prisonerSummary,
       dto,
-      errorDeletingScreener: req.flash('pageHasApiErrors')[0] != null,
     }
 
     return res.render('pages/additional-learning-needs-screener/delete/confirm/index', viewRenderArgs)

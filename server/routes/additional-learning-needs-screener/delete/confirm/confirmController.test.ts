@@ -57,7 +57,7 @@ describe('delete/confirm/confirmController (ALN screener)', () => {
   })
 
   describe('getConfirmView', () => {
-    it('renders the confirm view with no API error', async () => {
+    it('renders the confirm view', async () => {
       flash.mockReturnValue([])
 
       await controller.getConfirmView(req, res, next)
@@ -65,19 +65,6 @@ describe('delete/confirm/confirmController (ALN screener)', () => {
       expect(res.render).toHaveBeenCalledWith('pages/additional-learning-needs-screener/delete/confirm/index', {
         prisonerSummary,
         dto: req.journeyData.screenerDeletionDto,
-        errorDeletingScreener: false,
-      })
-    })
-
-    it('renders the confirm view with an API error banner when flash is set', async () => {
-      flash.mockReturnValue(['true'])
-
-      await controller.getConfirmView(req, res, next)
-
-      expect(res.render).toHaveBeenCalledWith('pages/additional-learning-needs-screener/delete/confirm/index', {
-        prisonerSummary,
-        dto: req.journeyData.screenerDeletionDto,
-        errorDeletingScreener: true,
       })
     })
   })

@@ -1,4 +1,5 @@
 import { format, startOfToday } from 'date-fns'
+import DeleteReason from '../enums/deleteReason'
 import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiClient'
 import AdditionalLearningNeedsScreenerService from './additionalLearningNeedsScreenerService'
 import {
@@ -210,13 +211,13 @@ describe('additionalLearningNeedsScreenerService', () => {
     it('should delete the latest ALN Screener', async () => {
       supportAdditionalNeedsApiClient.deleteAdditionalLearningNeedsScreener.mockResolvedValue(null)
 
-      await service.deleteLatestScreener(username, prisonNumber, 'BXI', 'ENTERED_IN_ERROR')
+      await service.deleteLatestScreener(username, prisonNumber, 'BXI', DeleteReason.ENTERED_IN_ERROR)
 
       expect(supportAdditionalNeedsApiClient.deleteAdditionalLearningNeedsScreener).toHaveBeenCalledWith(
         prisonNumber,
         username,
         'BXI',
-        'ENTERED_IN_ERROR',
+        DeleteReason.ENTERED_IN_ERROR,
       )
     })
 
@@ -224,14 +225,16 @@ describe('additionalLearningNeedsScreenerService', () => {
       const expectedError = new Error('Internal Server Error')
       supportAdditionalNeedsApiClient.deleteAdditionalLearningNeedsScreener.mockRejectedValue(expectedError)
 
-      const actual = await service.deleteLatestScreener(username, prisonNumber, 'BXI', 'ENTERED_IN_ERROR').catch(e => e)
+      const actual = await service
+        .deleteLatestScreener(username, prisonNumber, 'BXI', DeleteReason.ENTERED_IN_ERROR)
+        .catch(e => e)
 
       expect(actual).toEqual(expectedError)
       expect(supportAdditionalNeedsApiClient.deleteAdditionalLearningNeedsScreener).toHaveBeenCalledWith(
         prisonNumber,
         username,
         'BXI',
-        'ENTERED_IN_ERROR',
+        DeleteReason.ENTERED_IN_ERROR,
       )
     })
   })

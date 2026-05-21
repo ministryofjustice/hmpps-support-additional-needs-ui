@@ -1,5 +1,6 @@
 import { parseISO } from 'date-fns'
 import type { SupportStrategyResponseDto } from 'dto'
+import DeleteReason from '../enums/deleteReason'
 import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiClient'
 import SupportStrategyService from './supportStrategyService'
 import aValidSupportStrategyDto from '../testsupport/supportStrategyDtoTestDataBuilder'
@@ -345,7 +346,7 @@ describe('supportStrategyService', () => {
       // Given
       supportAdditionalNeedsApiClient.deleteSupportStrategy.mockResolvedValue(null)
       const prisonId = 'BXI'
-      const reason = 'ENTERED_IN_ERROR'
+      const reason = DeleteReason.ENTERED_IN_ERROR
 
       // When
       await service.deleteSupportStrategy(username, prisonNumber, supportStrategyReference, prisonId, reason)
@@ -367,7 +368,7 @@ describe('supportStrategyService', () => {
 
       // When
       const actual = await service
-        .deleteSupportStrategy(username, prisonNumber, supportStrategyReference, 'BXI', 'ENTERED_IN_ERROR')
+        .deleteSupportStrategy(username, prisonNumber, supportStrategyReference, 'BXI', DeleteReason.ENTERED_IN_ERROR)
         .catch(e => e)
 
       // Then
@@ -377,7 +378,7 @@ describe('supportStrategyService', () => {
         supportStrategyReference,
         username,
         'BXI',
-        'ENTERED_IN_ERROR',
+        DeleteReason.ENTERED_IN_ERROR,
       )
     })
   })

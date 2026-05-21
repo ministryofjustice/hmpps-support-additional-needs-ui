@@ -5,6 +5,7 @@ import logger from '../../logger'
 import { toConditionDto, toConditionsList } from '../data/mappers/conditionDtoMapper'
 import toUpdateConditionRequest from '../data/mappers/updateConditionRequestMapper'
 import toArchiveConditionRequest from '../data/mappers/archiveConditionRequestMapper'
+import DeleteReason from '../enums/deleteReason'
 
 export default class ConditionService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -81,7 +82,7 @@ export default class ConditionService {
     prisonNumber: string,
     conditionReference: string,
     prisonId: string,
-    reason: string,
+    reason: DeleteReason,
   ): Promise<void> {
     try {
       await this.supportAdditionalNeedsApiClient.deleteCondition(

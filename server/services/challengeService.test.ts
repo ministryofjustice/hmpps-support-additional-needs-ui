@@ -1,4 +1,5 @@
 import type { ChallengeResponseDto } from 'dto'
+import DeleteReason from '../enums/deleteReason'
 import SupportAdditionalNeedsApiClient from '../data/supportAdditionalNeedsApiClient'
 import ChallengeService from './challengeService'
 import aValidChallengeDto from '../testsupport/challengeDtoTestDataBuilder'
@@ -265,7 +266,7 @@ describe('challengeService', () => {
       // Given
       supportAdditionalNeedsApiClient.deleteChallenge.mockResolvedValue(null)
       const prisonId = 'BXI'
-      const reason = 'ENTERED_IN_ERROR'
+      const reason = DeleteReason.ENTERED_IN_ERROR
 
       // When
       await service.deleteChallenge(username, prisonNumber, challengeReference, prisonId, reason)
@@ -287,7 +288,7 @@ describe('challengeService', () => {
 
       // When
       const actual = await service
-        .deleteChallenge(username, prisonNumber, challengeReference, 'BXI', 'ENTERED_IN_ERROR')
+        .deleteChallenge(username, prisonNumber, challengeReference, 'BXI', DeleteReason.ENTERED_IN_ERROR)
         .catch(e => e)
 
       // Then
@@ -297,7 +298,7 @@ describe('challengeService', () => {
         challengeReference,
         username,
         'BXI',
-        'ENTERED_IN_ERROR',
+        DeleteReason.ENTERED_IN_ERROR,
       )
     })
   })

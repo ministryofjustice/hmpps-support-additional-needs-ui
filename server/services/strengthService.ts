@@ -5,6 +5,7 @@ import logger from '../../logger'
 import { toStrengthsList, toStrengthResponseDto } from '../data/mappers/strengthResponseDtoMapper'
 import toUpdateStrengthRequest from '../data/mappers/updateStrengthRequestMapper'
 import toArchiveStrengthRequest from '../data/mappers/archiveStrengthRequestMapper'
+import DeleteReason from '../enums/deleteReason'
 
 export default class StrengthService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -82,7 +83,7 @@ export default class StrengthService {
     prisonNumber: string,
     strengthReference: string,
     prisonId: string,
-    reason: string,
+    reason: DeleteReason,
   ): Promise<void> {
     try {
       await this.supportAdditionalNeedsApiClient.deleteStrength(

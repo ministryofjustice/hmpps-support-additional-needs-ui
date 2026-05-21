@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import DeleteReason from '../../../../enums/deleteReason'
 import ConfirmController from './confirmController'
 import SupportStrategyService from '../../../../services/supportStrategyService'
 import AuditService from '../../../../services/auditService'
@@ -21,7 +22,7 @@ describe('delete/confirm/confirmController', () => {
   const supportStrategyDto = aValidSupportStrategyResponseDto({
     reference: supportStrategyReference,
     prisonNumber,
-    deleteReason: 'ENTERED_IN_ERROR',
+    deleteReason: DeleteReason.ENTERED_IN_ERROR,
   })
 
   const flash = jest.fn()
@@ -53,7 +54,7 @@ describe('delete/confirm/confirmController', () => {
   })
 
   describe('getConfirmView', () => {
-    it('should render the confirm view with no API error', async () => {
+    it('should render the confirm view', async () => {
       flash.mockReturnValue([])
 
       const expectedViewTemplate = 'pages/support-strategies/delete/confirm/index'
@@ -61,23 +62,6 @@ describe('delete/confirm/confirmController', () => {
         prisonerSummary,
         mode: 'active',
         dto: supportStrategyDto,
-        errorDeletingSupportStrategy: false,
-      }
-
-      await controller.getConfirmView(req, res, next)
-
-      expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
-    })
-
-    it('should render the confirm view with API error banner when flash is set', async () => {
-      flash.mockReturnValue(['true'])
-
-      const expectedViewTemplate = 'pages/support-strategies/delete/confirm/index'
-      const expectedViewModel = {
-        prisonerSummary,
-        mode: 'active',
-        dto: supportStrategyDto,
-        errorDeletingSupportStrategy: true,
       }
 
       await controller.getConfirmView(req, res, next)
@@ -99,7 +83,7 @@ describe('delete/confirm/confirmController', () => {
         prisonNumber,
         supportStrategyReference,
         'BXI',
-        'ENTERED_IN_ERROR',
+        DeleteReason.ENTERED_IN_ERROR,
       )
       expect(req.journeyData.supportStrategyDto).toBeUndefined()
       expect(auditService.logDeleteSupportStrategy).toHaveBeenCalledWith(

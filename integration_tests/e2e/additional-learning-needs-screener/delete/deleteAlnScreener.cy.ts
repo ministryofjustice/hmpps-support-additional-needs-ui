@@ -1,3 +1,4 @@
+import DeleteReason from '../../../../server/enums/deleteReason'
 import Page from '../../../pages/page'
 import StrengthsPage from '../../../pages/profile/strengthsPage'
 import ChallengesPage from '../../../pages/profile/challengesPage'
@@ -38,7 +39,7 @@ context('Delete an ALN Screener', () => {
       .submitPageTo(DeleteAlnScreenerReasonPage)
       .hasErrorCount(1)
       .hasFieldInError('deleteReason')
-      .selectReason('ENTERED_IN_ERROR')
+      .selectReason(DeleteReason.ENTERED_IN_ERROR)
       .submitPageTo(DeleteAlnScreenerReviewPage)
 
     Page.verifyOnPage(DeleteAlnScreenerReviewPage) //
@@ -64,7 +65,7 @@ context('Delete an ALN Screener', () => {
       .clickToDeleteAlnScreener()
 
     Page.verifyOnPage(DeleteAlnScreenerReasonPage) //
-      .selectReason('DATA_PROCESSING_OBJECTION')
+      .selectReason(DeleteReason.DATA_PROCESSING_OBJECTION)
       .submitPageTo(DeleteAlnScreenerReviewPage)
 
     Page.verifyOnPage(DeleteAlnScreenerReviewPage) //
@@ -109,7 +110,7 @@ context('Delete an ALN Screener', () => {
 
     cy.visit(`/aln-screener/${prisonNumber}/delete/reason`)
     Page.verifyOnPage(DeleteAlnScreenerReasonPage) //
-      .selectReason('ENTERED_IN_ERROR')
+      .selectReason(DeleteReason.ENTERED_IN_ERROR)
       .submitPageTo(DeleteAlnScreenerReviewPage)
 
     Page.verifyOnPage(DeleteAlnScreenerReviewPage) //
@@ -128,7 +129,7 @@ context('Delete an ALN Screener', () => {
 
     cy.visit(`/aln-screener/${prisonNumber}/delete/reason`)
     Page.verifyOnPage(DeleteAlnScreenerReasonPage) //
-      .selectReason('DATA_PROCESSING_OBJECTION')
+      .selectReason(DeleteReason.DATA_PROCESSING_OBJECTION)
       .submitPageTo(DeleteAlnScreenerReviewPage)
 
     Page.verifyOnPage(DeleteAlnScreenerReviewPage) //

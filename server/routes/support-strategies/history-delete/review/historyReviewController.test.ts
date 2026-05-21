@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import DeleteReason from '../../../../enums/deleteReason'
 import HistoryReviewController from './historyReviewController'
 import SupportStrategyService from '../../../../services/supportStrategyService'
 import aValidSupportStrategyResponseDto from '../../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
@@ -19,7 +20,7 @@ describe('history-delete/review/historyReviewController', () => {
     reference: supportStrategyReference,
     prisonNumber,
     active: false,
-    deleteReason: 'ENTERED_IN_ERROR',
+    deleteReason: DeleteReason.ENTERED_IN_ERROR,
   })
 
   const req = {

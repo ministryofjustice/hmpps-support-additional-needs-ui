@@ -8,6 +8,7 @@ import {
 } from '../data/mappers/supportStrategyResponseDtoMapper'
 import toUpdateSupportStrategyRequest from '../data/mappers/updateSupportStrategyRequestMapper'
 import toArchiveSupportStrategyRequest from '../data/mappers/archiveSupportStrategyRequestMapper'
+import DeleteReason from '../enums/deleteReason'
 
 export default class SupportStrategyService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -104,7 +105,7 @@ export default class SupportStrategyService {
     prisonNumber: string,
     supportStrategyReference: string,
     prisonId: string,
-    reason: string,
+    reason: DeleteReason,
   ): Promise<void> {
     try {
       await this.supportAdditionalNeedsApiClient.deleteSupportStrategy(

@@ -19,7 +19,6 @@ export default class ConfirmController {
       prisonerSummary,
       mode: 'active',
       dto: supportStrategyResponseDto,
-      errorDeletingSupportStrategy: req.flash('pageHasApiErrors')[0] != null,
     }
 
     return res.render('pages/support-strategies/delete/confirm/index', viewRenderArgs)

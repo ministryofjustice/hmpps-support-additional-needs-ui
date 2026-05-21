@@ -3,6 +3,7 @@ import StrengthIdentificationSource from '../enums/strengthIdentificationSource'
 import StrengthType from '../enums/strengthType'
 import { DtoAuditFields, validDtoAuditFields } from './auditFieldsTestDataBuilder'
 import StrengthCategory from '../enums/strengthCategory'
+import DeleteReason from '../enums/deleteReason'
 
 const aValidStrengthsList = (options?: {
   prisonNumber?: string
@@ -24,7 +25,7 @@ const aValidStrengthResponseDto = (
     fromALNScreener?: boolean
     alnScreenerDate?: Date
     archiveReason?: string
-    deleteReason?: string
+    deleteReason?: DeleteReason
   },
 ): StrengthResponseDto => ({
   prisonNumber: options?.prisonNumber || 'A1234BC',

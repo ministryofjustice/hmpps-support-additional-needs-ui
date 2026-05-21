@@ -1,11 +1,12 @@
 import Page, { PageElement } from '../page'
+import DeleteReason from '../../../server/enums/deleteReason'
 
 export default class DeleteSupportStrategyReasonPage extends Page {
   constructor() {
     super('delete-support-strategy-reason')
   }
 
-  selectReason(value: 'DATA_PROCESSING_OBJECTION' | 'ENTERED_IN_ERROR'): DeleteSupportStrategyReasonPage {
+  selectReason(value: DeleteReason): DeleteSupportStrategyReasonPage {
     this.reasonRadio(value).click()
     return this
   }

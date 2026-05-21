@@ -5,6 +5,7 @@ import logger from '../../logger'
 import { toChallengeDto, toChallengeResponseDto } from '../data/mappers/challengeDtoMapper'
 import toUpdateChallengeRequest from '../data/mappers/updateChallengeRequestMapper'
 import toArchiveChallengeRequest from '../data/mappers/archiveChallengeRequestMapper'
+import DeleteReason from '../enums/deleteReason'
 
 export default class ChallengeService {
   constructor(private readonly supportAdditionalNeedsApiClient: SupportAdditionalNeedsApiClient) {}
@@ -86,7 +87,7 @@ export default class ChallengeService {
     prisonNumber: string,
     challengeReference: string,
     prisonId: string,
-    reason: string,
+    reason: DeleteReason,
   ): Promise<void> {
     try {
       await this.supportAdditionalNeedsApiClient.deleteChallenge(
