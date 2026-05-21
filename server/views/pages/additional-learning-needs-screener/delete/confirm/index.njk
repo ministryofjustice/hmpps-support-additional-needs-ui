@@ -1,7 +1,7 @@
 {% extends "../layout.njk" %}
 
 {% set pageId = 'delete-aln-screener-confirm' %}
-{% set pageTitle = applicationName + ' - Delete screener are you sure' %}
+{% set pageTitle = 'Delete screener challenges and strengths confirm' %}
 
 {% set deleteReasonLabel %}
   {% if dto.deleteReason == 'DATA_PROCESSING_OBJECTION' %}
@@ -53,7 +53,7 @@
 
           {{ govukButton({
             text: "No, go back to overview",
-            href: dto.returnTo if dto.returnTo else ("/profile/" + prisonerSummary.prisonNumber + "/overview"),
+            href: dto.returnTo,
             classes: "govuk-button--secondary",
             attributes: {"data-qa": "no-delete-link"}
           }) }}
