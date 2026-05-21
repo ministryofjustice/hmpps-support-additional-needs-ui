@@ -6,6 +6,7 @@ import zeroIndexed from '../../utils/zeroIndexed'
 import StrengthDetailPage from '../strengths/strengthDetailPage'
 import ArchiveStrengthReasonPage from '../strengths/archiveStrengthReasonPage'
 import DeleteStrengthReasonPage from '../strengths/deleteStrengthReasonPage'
+import DeleteAlnScreenerReasonPage from '../additional-learning-needs-screener/deleteAlnScreenerReasonPage'
 
 export default class StrengthsPage extends ProfilePage {
   constructor() {
@@ -30,6 +31,16 @@ export default class StrengthsPage extends ProfilePage {
 
   doesNotHaveDeleteStrengthButton(): StrengthsPage {
     cy.get('[data-qa=delete-strength-button]').should('not.exist')
+    return this
+  }
+
+  clickToDeleteAlnScreener(): DeleteAlnScreenerReasonPage {
+    cy.get('[data-qa=delete-aln-screener-button]').first().click()
+    return Page.verifyOnPage(DeleteAlnScreenerReasonPage)
+  }
+
+  doesNotHaveDeleteAlnScreenerButton(): StrengthsPage {
+    cy.get('[data-qa=delete-aln-screener-button]').should('not.exist')
     return this
   }
 

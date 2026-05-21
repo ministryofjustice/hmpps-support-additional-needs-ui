@@ -34,4 +34,18 @@ export default class AdditionalLearningNeedsScreenerService {
       throw e
     }
   }
+
+  async deleteLatestScreener(username: string, prisonNumber: string, prisonId: string, reason: string): Promise<void> {
+    try {
+      await this.supportAdditionalNeedsApiClient.deleteAdditionalLearningNeedsScreener(
+        prisonNumber,
+        username,
+        prisonId,
+        reason,
+      )
+    } catch (e) {
+      logger.error(`Error deleting current ALN Screener for [${prisonNumber}]`, e)
+      throw e
+    }
+  }
 }

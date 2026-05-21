@@ -135,6 +135,11 @@ const pageViewEventMap: Record<string, Page> = {
   '/aln-screener/:prisonNumber/create/:journeyId/add-strengths': Page.RECORD_ALN_SCREENER_STRENGTHS,
   '/aln-screener/:prisonNumber/create/:journeyId/check-your-answers': Page.RECORD_ALN_SCREENER_CHECK_YOUR_ANSWERS,
 
+  // Delete ALN Screener routes
+  '/aln-screener/:prisonNumber/delete/:journeyId/reason': Page.DELETE_ALN_SCREENER_REASON,
+  '/aln-screener/:prisonNumber/delete/:journeyId/review': Page.DELETE_ALN_SCREENER_REVIEW,
+  '/aln-screener/:prisonNumber/delete/:journeyId/confirm': Page.DELETE_ALN_SCREENER_CONFIRM,
+
   // Create conditions routes
   '/conditions/:prisonNumber/create/:journeyId/select-conditions': Page.CREATE_CONDITIONS_SELECT_CONDITIONS,
   '/conditions/:prisonNumber/create/:journeyId/details': Page.CREATE_CONDITIONS_DETAILS,
@@ -214,6 +219,9 @@ const pageViewEventMap: Record<string, Page> = {
   '/challenges/:prisonNumber/:challengeReference/history-delete/review': null,
   '/challenges/:prisonNumber/:challengeReference/history-delete/confirm': null,
   '/aln-screener/:prisonNumber/create/screener-date': null,
+  '/aln-screener/:prisonNumber/delete/reason': null,
+  '/aln-screener/:prisonNumber/delete/review': null,
+  '/aln-screener/:prisonNumber/delete/confirm': null,
   '/conditions/:prisonNumber/create/select-conditions': null,
   '/conditions/:prisonNumber/:conditionReference/edit/detail': null,
   '/conditions/:prisonNumber/:conditionReference/archive/reason': null,

@@ -1,0 +1,65 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'delete-aln-screener-confirm' %}
+{% set pageTitle = 'Delete screener challenges and strengths are you sure' %}
+
+{% set deleteReasonLabel %}
+  {% if dto.deleteReason == 'DATA_PROCESSING_OBJECTION' %}
+    Prisoner objected to change in data processing
+  {% elif dto.deleteReason == 'ENTERED_IN_ERROR' %}
+    Challenges entered in error
+  {% else %}
+    {{ dto.deleteReason }}
+  {% endif %}
+{% endset %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% if errorDeletingScreener %}
+        <div class="hmpps-api-error-banner govuk-!-margin-bottom-4" data-qa="api-error-banner">
+          <p>Sorry, there is a problem with the service</p>
+          <p>There was a problem deleting the screener results. Try again later.</p>
+        </div>
+      {% endif %}
+
+      <h1 class="govuk-heading-l">Are you sure you want to delete {{ prisonerSummary | formatFirst_name_Last_name }}'s screener results?</h1>
+
+      <div class="govuk-summary-card app-summary-card--grey govuk-!-margin-bottom-6" data-qa="delete-reason-summary">
+        <div class="govuk-summary-card__content">
+          <h2 class="govuk-heading-s govuk-!-margin-bottom-1">Deletion reason</h2>
+          <p class="govuk-body govuk-!-margin-bottom-0" data-qa="delete-reason">{{ deleteReasonLabel | trim }}</p>
+        </div>
+      </div>
+
+      {{ govukWarningText({
+        text: "Data will be permanently deleted and cannot be retrieved.",
+        iconFallbackText: "Warning"
+      }) }}
+
+      <form class="form" method="post" novalidate="">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            id: "submit-button",
+            text: "Yes, delete",
+            type: "submit",
+            classes: "govuk-button--warning",
+            attributes: {"data-qa": "submit-button"},
+            preventDoubleClick: true
+          }) }}
+
+          {{ govukButton({
+            text: "No, go back to overview",
+            href: dto.returnTo,
+            classes: "govuk-button--secondary",
+            attributes: {"data-qa": "no-delete-link"}
+          }) }}
+        </div>
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

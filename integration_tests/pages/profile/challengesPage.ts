@@ -6,6 +6,7 @@ import ChallengeDetailPage from '../challenges/challengeDetailPage'
 import zeroIndexed from '../../utils/zeroIndexed'
 import ArchiveChallengeReasonPage from '../challenges/archiveChallengeReasonPage'
 import DeleteChallengeReasonPage from '../challenges/deleteChallengeReasonPage'
+import DeleteAlnScreenerReasonPage from '../additional-learning-needs-screener/deleteAlnScreenerReasonPage'
 
 export default class ChallengesPage extends ProfilePage {
   constructor() {
@@ -30,6 +31,16 @@ export default class ChallengesPage extends ProfilePage {
 
   doesNotHaveDeleteChallengeButton(): ChallengesPage {
     cy.get('[data-qa=delete-challenge-button]').should('not.exist')
+    return this
+  }
+
+  clickToDeleteAlnScreener(): DeleteAlnScreenerReasonPage {
+    cy.get('[data-qa=delete-aln-screener-button]').first().click()
+    return Page.verifyOnPage(DeleteAlnScreenerReasonPage)
+  }
+
+  doesNotHaveDeleteAlnScreenerButton(): ChallengesPage {
+    cy.get('[data-qa=delete-aln-screener-button]').should('not.exist')
     return this
   }
 

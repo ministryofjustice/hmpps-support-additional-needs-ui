@@ -1,0 +1,50 @@
+{% extends "../layout.njk" %}
+
+{% set pageId = 'delete-aln-screener-reason' %}
+{% set pageTitle = 'Delete screener challenges and strengths reason' %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <form class="form" method="post" novalidate="">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {{ govukRadios({
+          name: "deleteReason",
+          fieldset: {
+            legend: {
+              text: "Select a reason for deleting " + (prisonerSummary | formatFirst_name_Last_name) + "'s screener challenges and strengths",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--l"
+            }
+          },
+          hint: {
+            html: '<strong>All current screener results for this person will be deleted.</strong>'
+          },
+          items: [
+            {
+              value: "DATA_PROCESSING_OBJECTION",
+              text: "Prisoner objected to change in data processing",
+              checked: form.deleteReason === "DATA_PROCESSING_OBJECTION"
+            },
+            {
+              value: "ENTERED_IN_ERROR",
+              text: "Challenges entered in error",
+              checked: form.deleteReason === "ENTERED_IN_ERROR"
+            }
+          ],
+          errorMessage: errors | findError('deleteReason')
+        }) }}
+
+        {{ govukButton({
+          id: "submit-button",
+          text: "Continue",
+          type: "submit",
+          attributes: {"data-qa": "submit-button"},
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
