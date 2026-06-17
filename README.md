@@ -11,41 +11,13 @@ This contractual information links to Curious, the contract management system fo
 
 # Development and maintenance
 
-## Imported Types
-Some types are imported from the Open API docs for support-additional-needs-api, manage-users-api, prisoner-search-api,
-curious-api and prison-register-api.
-You will need to install the node module `openapi-typescript` globally with the following command:
-
-`npm install -g openapi-typescript`
-
-To update the types from the Open API docs run the following commands:
-
-```shell
-npx openapi-typescript https://support-for-additional-needs-api-dev.hmpps.service.justice.gov.uk/v3/api-docs -o server/@types/supportAdditionalNeedsApi/index.d.ts
-npx openapi-typescript https://prisoner-search-dev.prison.service.justice.gov.uk/v3/api-docs -o server/@types/prisonerSearchApi/index.d.ts
-npx openapi-typescript https://prison-register-dev.hmpps.service.justice.gov.uk/v3/api-docs -o server/@types/prisonRegisterApi/index.d.ts
-npx openapi-typescript https://manage-users-api-dev.hmpps.service.justice.gov.uk/v3/api-docs -o server/@types/manageUsersApi/index.d.ts
-npx openapi-typescript https://testservices.sequation.net/sequation-virtual-campus2-api/v3/api-docs -o server/@types/curiousApi/index.d.ts
-```
-
-Note that you will need to run prettier over the generated files and possibly handle other errors before compiling.
-
-The types are inherited for use in `server/@types/supportAdditionalNeedsApiClient/index.d.ts`,
-`server/@types/manageUsersApiClient/index.d.ts`, `server/@types/prisonerSearchApiClient/index.d.ts`,
-`server/@types/curiousApiClient/index.d.ts` and `server/@types/prisonerRegisterApiClient/index.d.ts` which may
-also need tweaking for use.
-
-Do not re-import the specs lightly! Reformatting the generated code with prettier is no small task, especially with
-large specs such as Prisoner Search.
-
 ### Dependencies
 
-### HMPPS Auth
 The app requires:
 * hmpps-auth - for authentication
 * redis - session store and token caching
 
-## Running the app via docker-compose
+## Running the app locally
 
 The easiest way to run the app is to use docker compose to create the service and all dependencies.
 
@@ -59,10 +31,10 @@ To start the main services excluding the example typescript template app:
 
 `docker compose up --scale=app=0`
 
-Create an environment file by copying `.env.example` -> `.env`
+Create an environment file by copying `.env.example` -> `.env` and updating the secrets from kubernetes.
 Environment variables set in here will be available when running `start:dev`
 
-Install dependencies using `npm install`, ensuring you are using `node v20`
+Install dependencies using `npm run setup`, ensuring you are using `node v24`
 
 Note: Using `nvm` (or [fnm](https://github.com/Schniz/fnm)), run `nvm install --latest-npm` within the repository folder
 to use the correct version of node, and the latest version of npm. This matches the `engines` config in `package.json`
@@ -71,34 +43,6 @@ and the github pipeline build config.
 And then, to build the assets and start the app with esbuild:
 
 `npm run start:dev`
-
-
-### Auth Code flow
-
-These are used to allow authenticated users to access the application. After the user is redirected from auth back to
-the application, the typescript app will use the returned auth code to request a JWT token for that user containing the
-user's roles. The JWT token will be verified and then stored in the user's session.
-
-These credentials are configured using the following env variables:
-
-- `AUTH_CODE_CLIENT_ID`
-- `AUTH_CODE_CLIENT_SECRET`
-
-### Client Credentials flow
-The client creds environment variables are `CLIENT_CREDS_CLIENT_ID` and `CLIENT_CREDS_CLIENT_ID`. The client requires the following roles:
-
-* `ROLE_SUPPORT_ADDITIONAL_NEEDS__SEARCH__RO` - to be able to call the Support Additional Needs API; search endpoint
-* `ROLE_SUPPORT_ADDITIONAL_NEEDS__ELSP__RW` - to be able to call the Support Additional Needs API; plan, conditions, challenges, strengths endpoint
-
-In addition a specific client for accessing the Curious REST API is required. The env vars are `CURIOUS_API_CLIENT_ID` and `CURIOUS_API_CLIENT_SECRET`.
-This client should only carry the role `ROLE_CURIOUS_API` and no others.
-
-### User Roles
-Once the UI is running users will need to authenticate with `hmpps-auth` using a valid DPS user. The DPS roles that the user
-has determines the functionality they will be able to access:
-
-* `ROLE_SAN_EDITOR`
-* `ROLE_SAN_EDUCATION_MANAGER`
 
 ### Run linter
 
@@ -127,6 +71,33 @@ Or run tests with the cypress UI:
 
 `npm run int-test-ui`
 
+### Auth Code flow
+
+These are used to allow authenticated users to access the application. After the user is redirected from auth back to
+the application, the typescript app will use the returned auth code to request a JWT token for that user containing the
+user's roles. The JWT token will be verified and then stored in the user's session.
+
+These credentials are configured using the following env variables:
+
+- `AUTH_CODE_CLIENT_ID`
+- `AUTH_CODE_CLIENT_SECRET`
+
+### Client Credentials flow
+The client creds environment variables are `CLIENT_CREDS_CLIENT_ID` and `CLIENT_CREDS_CLIENT_ID`. The client requires the following roles:
+
+* `ROLE_SUPPORT_ADDITIONAL_NEEDS__SEARCH__RO` - to be able to call the Support Additional Needs API; search endpoint
+* `ROLE_SUPPORT_ADDITIONAL_NEEDS__ELSP__RW` - to be able to call the Support Additional Needs API; plan, conditions, challenges, strengths endpoint
+
+In addition a specific client for accessing the Curious REST API is required. The env vars are `CURIOUS_API_CLIENT_ID` and `CURIOUS_API_CLIENT_SECRET`.
+This client should only carry the role `ROLE_CURIOUS_API` and no others.
+
+### User Roles
+Once the UI is running users will need to authenticate with `hmpps-auth` using a valid DPS user. The DPS roles that the user
+has determines the functionality they will be able to access:
+
+* `ROLE_SAN_EDITOR`
+* `ROLE_SAN_EDUCATION_MANAGER`
+
 ## Change log
 
 A changelog for the service is available [here](./CHANGELOG.md)
@@ -138,4 +109,32 @@ Features can be toggled by setting the relevant environment variable.
 |-----------------------------------|---------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | SOME_TOGGLE_ENABLED               | false         | Boolean  | Example feature toggle, for demonstration purposes.                                                                                                                                        |
 | SAN_DATA_DELETION_FEATURE_ENABLED | false         | Boolean  | Set to true to enable the SAN data-deletion journeys (delete challenges/strengths/conditions/support strategies/screener results). Must remain false in prod until stakeholder comms ready. |
+
+## Imported Types
+Some types are imported from the Open API docs for support-additional-needs-api, manage-users-api, prisoner-search-api,
+curious-api and prison-register-api.
+
+### Updating the types
+NOTE: Do not re-import the specs lightly! Reformatting the generated code with prettier is no small task, especially with large specs such as Prisoner Search.
+
+You will need to install the node module `openapi-typescript` globally with the following command:
+
+`npm install -g openapi-typescript`
+
+To update the types from the Open API docs run the following commands:
+
+```shell
+npx openapi-typescript https://support-for-additional-needs-api-dev.hmpps.service.justice.gov.uk/v3/api-docs -o server/@types/supportAdditionalNeedsApi/index.d.ts
+npx openapi-typescript https://prisoner-search-dev.prison.service.justice.gov.uk/v3/api-docs -o server/@types/prisonerSearchApi/index.d.ts
+npx openapi-typescript https://prison-register-dev.hmpps.service.justice.gov.uk/v3/api-docs -o server/@types/prisonRegisterApi/index.d.ts
+npx openapi-typescript https://manage-users-api-dev.hmpps.service.justice.gov.uk/v3/api-docs -o server/@types/manageUsersApi/index.d.ts
+npx openapi-typescript https://testservices.sequation.net/sequation-virtual-campus2-api/v3/api-docs -o server/@types/curiousApi/index.d.ts
+```
+
+Note that you will need to run prettier over the generated files and possibly handle other errors before compiling.
+
+The types are inherited for use in `server/@types/supportAdditionalNeedsApiClient/index.d.ts`,
+`server/@types/manageUsersApiClient/index.d.ts`, `server/@types/prisonerSearchApiClient/index.d.ts`,
+`server/@types/curiousApiClient/index.d.ts` and `server/@types/prisonerRegisterApiClient/index.d.ts` which may
+also need tweaking for use.
 
