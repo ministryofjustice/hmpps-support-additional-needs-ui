@@ -11,6 +11,7 @@ const strengthTypeScreenValues = new Map<StrengthType, string>([
   [StrengthType.LANGUAGE_COMM_SKILLS_DEFAULT, 'Language and communication skills'],
   [StrengthType.PROCESSING_SPEED, 'Processing speed'],
   [StrengthType.MEMORY, 'Memory'],
+  [StrengthType.GENERAL_DEFAULT, 'General'],
 
   // More specific Strength Types
   [StrengthType.HANDWRITING, 'Handwriting'],
@@ -95,6 +96,7 @@ const strengthTypeHintTextValues = new Map<StrengthType, string>([
   [StrengthType.LANGUAGE_COMM_SKILLS_DEFAULT, 'Things like taking turns, listening and language fluency'],
   [StrengthType.PROCESSING_SPEED, 'Things like taking time to understand and follow instructions'],
   [StrengthType.MEMORY, 'Things like remembering and recalling information'],
+  [StrengthType.GENERAL_DEFAULT, 'Any strength or interest not covered by the categories'],
 ])
 
 const formatStrengthTypeScreenValueFilter = (value: StrengthType): string => strengthTypeScreenValues.get(value)

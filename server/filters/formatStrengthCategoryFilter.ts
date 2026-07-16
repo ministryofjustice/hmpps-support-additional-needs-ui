@@ -10,6 +10,7 @@ const strengthCategoryScreenValues: Record<StrengthCategory, string> = {
   LANGUAGE_COMM_SKILLS: 'Language and communication skills',
   PROCESSING_SPEED: 'Processing speed',
   MEMORY: 'Memory',
+  GENERAL: 'General',
 }
 
 const formatStrengthCategoryScreenValueFilter = (value: StrengthCategory): string => strengthCategoryScreenValues[value]
