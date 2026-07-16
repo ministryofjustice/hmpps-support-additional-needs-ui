@@ -1,13 +1,14 @@
 {% extends "../../layout.njk" %}
 
 {% set pageId = 'delete-strength-confirm' %}
-{% set pageTitle = 'Delete history strength are you sure' if mode == 'history' else 'Delete strength are you sure' %}
+{% set pageTitle = 'Delete history strength or interest are you sure' if mode == 'history' else 'Delete strength or interest are you sure' %}
+{% set strengthNoun = 'history strength or interest' if mode == 'history' else 'strength or interest' %}
 
 {% set deleteReasonLabel %}
   {% if dto.deleteReason == 'DATA_PROCESSING_OBJECTION' %}
     Prisoner objected to change in data processing
   {% elif dto.deleteReason == 'ENTERED_IN_ERROR' %}
-    {% if mode == 'history' %}History strength{% else %}Strength{% endif %} entered in error
+    {% if mode == 'history' %}History strength or interest{% else %}Strength or interest{% endif %} entered in error
   {% else %}
     {{ dto.deleteReason }}
   {% endif %}
@@ -17,7 +18,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
-      <h1 class="govuk-heading-l">Are you sure you want to delete {{ prisonerSummary | formatFirst_name_Last_name }}'s {% if mode == 'history' %}history {% endif %}strength?</h1>
+      <h1 class="govuk-heading-l">Are you sure you want to delete {{ prisonerSummary | formatFirst_name_Last_name }}'s {{ strengthNoun }}?</h1>
 
       <div class="govuk-summary-card app-summary-card--grey govuk-!-margin-bottom-6" data-qa="delete-reason-summary">
         <div class="govuk-summary-card__content">

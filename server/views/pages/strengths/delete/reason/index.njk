@@ -1,7 +1,8 @@
 {% extends "../../layout.njk" %}
 
 {% set pageId = 'delete-strength-reason' %}
-{% set pageTitle = 'Delete history strength reason' if mode == 'history' else 'Delete strength reason' %}
+{% set pageTitle = 'Delete history strength or interest reason' if mode == 'history' else 'Delete strength or interest reason' %}
+{% set strengthNoun = 'history strength or interest' if mode == 'history' else 'strength or interest' %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -10,8 +11,8 @@
       <form class="form" method="post" novalidate="">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-        {% set legendText = "Select a reason for deleting " + (prisonerSummary | formatFirst_name_Last_name) + ("'s history strength" if mode == 'history' else "'s strength") %}
-        {% set enteredInErrorText = "History strength entered in error" if mode == 'history' else "Strength entered in error" %}
+        {% set legendText = "Select a reason for deleting " + (prisonerSummary | formatFirst_name_Last_name) + "'s " + strengthNoun %}
+        {% set enteredInErrorText = ("History strength or interest" if mode == 'history' else "Strength or interest") + " entered in error" %}
         {{ govukRadios({
           name: "deleteReason",
           fieldset: {

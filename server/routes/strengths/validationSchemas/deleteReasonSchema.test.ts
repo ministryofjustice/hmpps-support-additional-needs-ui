@@ -61,7 +61,7 @@ describe('deleteReasonSchema', () => {
         const expectedErrors: Array<Error> = [
           {
             href: '#deleteReason',
-            text: 'Add reason for deleting strength',
+            text: 'Add reason for deleting strength or interest',
           },
         ]
         const expectedInvalidForm = JSON.stringify(requestBody)
@@ -88,7 +88,7 @@ describe('deleteReasonSchema', () => {
       const expectedErrors: Array<Error> = [
         {
           href: '#deleteReason',
-          text: 'Add reason for deleting strength',
+          text: 'Add reason for deleting strength or interest',
         },
       ]
 
@@ -113,7 +113,7 @@ describe('deleteReasonSchema', () => {
       const expectedErrors: Array<Error> = [
         {
           href: '#deleteReason',
-          text: 'Add reason for deleting history strength',
+          text: 'Add reason for deleting history strength or interest',
         },
       ]
 

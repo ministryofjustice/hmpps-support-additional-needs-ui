@@ -52,7 +52,7 @@ context('Delete a Strength (Current tab)', () => {
 
     // Then - verify success banner
     Page.verifyOnPage(StrengthsPage) //
-      .hasSuccessMessage('Strength deleted.')
+      .hasSuccessMessage('Strength or interest deleted')
 
     // And verify the DELETE request was made with the correct query params
     cy.wiremockVerify(

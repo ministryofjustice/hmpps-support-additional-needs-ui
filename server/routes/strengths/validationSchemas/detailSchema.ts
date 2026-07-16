@@ -8,11 +8,11 @@ const detailSchema = async () => {
   const DETAIL_MAX_LENGTH = 4000
   const HOW_IDENTIFIED_OTHER_MAX_LENGTH = 200
 
-  const detailMandatoryMessage = 'Enter a description of the strength'
-  const detailMaxLengthMessage = `Description of the strength must be ${DETAIL_MAX_LENGTH} characters or less`
-  const howIdentifiedMandatoryMessage = 'Select at least one option for how this strength was identified'
-  const howIdentifiedOtherMandatoryMessage = 'Enter details of how this strength was identified'
-  const howIdentifiedOtherMaxLengthMessage = `How this strength was identified must be ${HOW_IDENTIFIED_OTHER_MAX_LENGTH} characters or less`
+  const detailMandatoryMessage = 'Enter a description of the strength or interest'
+  const detailMaxLengthMessage = `Description of the strength or interest must be ${DETAIL_MAX_LENGTH} characters or less`
+  const howIdentifiedMandatoryMessage = 'Select at least one option for how this strength or interest was identified'
+  const howIdentifiedOtherMandatoryMessage = 'Enter details of how this strength or interest was identified'
+  const howIdentifiedOtherMaxLengthMessage = `How this strength or interest was identified must be ${HOW_IDENTIFIED_OTHER_MAX_LENGTH} characters or less`
 
   return createSchema({
     description: z //

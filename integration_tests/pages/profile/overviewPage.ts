@@ -40,7 +40,7 @@ export default class OverviewPage extends ProfilePage {
   }
 
   hasNoStrengthsRecorded(): OverviewPage {
-    this.strengthsSummaryCardContent().should('contain', 'No strengths recorded')
+    this.strengthsSummaryCardContent().should('contain', 'No strengths and interests recorded')
     this.strengthsUnavailableMessage().should('not.exist')
     return this
   }

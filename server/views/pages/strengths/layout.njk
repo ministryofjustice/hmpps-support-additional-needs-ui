@@ -10,11 +10,11 @@
   {% if errorRecordingStrength %}
     <div class="hmpps-api-error-banner govuk-!-margin-bottom-4" data-qa="api-error-banner">
       <p>Sorry, there is a problem with the service</p>
-      <p>There was a problem recording the strength. Try again later.</p>
+      <p>There was a problem recording the strength or interest. Try again later.</p>
     </div>
   {% endif %}
 
   {% if not mode == 'archive' %}
-    <p class="govuk-body">{{ 'Edit' if mode == 'edit' else 'Add' }} strength</p>
+    <p class="govuk-body">{{ 'Edit' if mode == 'edit' else 'Add' }} strength or interest</p>
   {% endif %}
 {% endblock %}

@@ -81,7 +81,7 @@ describe('detailSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#description',
-        text: 'Enter a description of the strength',
+        text: 'Enter a description of the strength or interest',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -111,7 +111,7 @@ describe('detailSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#description',
-        text: 'Description of the strength must be 4000 characters or less',
+        text: 'Description of the strength or interest must be 4000 characters or less',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -150,7 +150,7 @@ describe('detailSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#howIdentified',
-        text: 'Select at least one option for how this strength was identified',
+        text: 'Select at least one option for how this strength or interest was identified',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -191,7 +191,7 @@ describe('detailSchema', () => {
       const expectedErrors: Array<Error> = [
         {
           href: '#howIdentifiedOther',
-          text: 'Enter details of how this strength was identified',
+          text: 'Enter details of how this strength or interest was identified',
         },
       ]
       const expectedInvalidForm = JSON.stringify(requestBody)
@@ -222,7 +222,7 @@ describe('detailSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#howIdentifiedOther',
-        text: 'How this strength was identified must be 200 characters or less',
+        text: 'How this strength or interest was identified must be 200 characters or less',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)

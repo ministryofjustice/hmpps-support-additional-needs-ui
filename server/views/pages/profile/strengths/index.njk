@@ -4,12 +4,12 @@
 {% from "../../../components/strengths-summary-card/macro.njk" import strengthsSummaryCard %}
 
 {% set pageId = 'profile-strengths' %}
-{% set pageTitle = "Support for additional needs - Strengths" %}
+{% set pageTitle = "Support for additional needs - Strengths and interests" %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <h2 class="govuk-heading-m">Strengths</h2>
+      <h2 class="govuk-heading-m">Strengths and interests</h2>
     </div>
   </div>
 
@@ -45,14 +45,14 @@
 
           {% else %}
             <p class="govuk-body" data-qa="no-active-strengths-message">
-              {{ prisonerSummary | formatFirst_name_Last_name }} has no current strengths.
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no current strengths or interests.
             </p>
           {% endif %}
 
           <p class="govuk-body">
             {% if userHasPermissionTo('RECORD_STRENGTHS') %}
               <a class="govuk-link govuk-!-display-none-print" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category">
-                Add a strength
+                Add a strength or interest
               </a>
             {% endif %}
           </p>
@@ -76,7 +76,7 @@
 
           {% else %}
             <p class="govuk-body" data-qa="no-archived-strengths-message">
-              {{ prisonerSummary | formatFirst_name_Last_name }} has no previous strengths.
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no previous strengths or interests.
             </p>
           {% endif %}
         {% endset %}

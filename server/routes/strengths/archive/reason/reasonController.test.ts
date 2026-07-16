@@ -121,7 +121,7 @@ describe('reasonController', () => {
     await controller.submitReasonForm(req, res, next)
 
     // Then
-    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Strength moved to History')
+    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Strength or interest moved to History')
     expect(req.journeyData.strengthDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
     expect(strengthService.archiveStrength).toHaveBeenCalledWith(username, strengthReference, expectedStrengthDto)

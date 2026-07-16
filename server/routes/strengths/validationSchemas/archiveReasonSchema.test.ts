@@ -52,7 +52,7 @@ describe('archiveReasonSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#archiveReason',
-        text: 'Add reason for moving this strength to the History',
+        text: 'Add reason for moving this strength or interest to the History',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)
@@ -78,7 +78,7 @@ describe('archiveReasonSchema', () => {
     const expectedErrors: Array<Error> = [
       {
         href: '#archiveReason',
-        text: 'Reason for moving this strength to the History must be 4000 characters or less',
+        text: 'Reason for moving this strength or interest to the History must be 4000 characters or less',
       },
     ]
     const expectedInvalidForm = JSON.stringify(requestBody)

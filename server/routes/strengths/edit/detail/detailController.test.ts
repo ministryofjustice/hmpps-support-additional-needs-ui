@@ -123,7 +123,7 @@ describe('detailController', () => {
     await controller.submitDetailForm(req, res, next)
 
     // Then
-    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Strength updated')
+    expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Strength or interest updated')
     expect(req.journeyData.strengthDto).toBeUndefined()
     expect(flash).not.toHaveBeenCalled()
     expect(strengthService.updateStrength).toHaveBeenCalledWith(username, strengthReference, expectedStrengthDto)
