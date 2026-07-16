@@ -8,6 +8,7 @@ enum StrengthCategory {
   LANGUAGE_COMM_SKILLS = 'LANGUAGE_COMM_SKILLS',
   PROCESSING_SPEED = 'PROCESSING_SPEED',
   MEMORY = 'MEMORY',
+  GENERAL = 'GENERAL',
 }
 
 export default StrengthCategory

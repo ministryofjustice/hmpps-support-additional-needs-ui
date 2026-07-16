@@ -92,6 +92,14 @@
                   text: "SENSORY" | formatStrengthTypeHintText
                 },
                 checked: form.category === "SENSORY"
+              },
+              {
+                value: "GENERAL_DEFAULT",
+                text: "GENERAL_DEFAULT" | formatStrengthTypeScreenValue,
+                hint: {
+                  text: "GENERAL_DEFAULT" | formatStrengthTypeHintText
+                },
+                checked: form.category === "GENERAL_DEFAULT"
               }
             ],
             errorMessage: errors | findError('category')
