@@ -56,7 +56,7 @@ export default class DetailController {
     const { prisonNumber } = strengthResponseDto
     req.journeyData.strengthDto = undefined
     this.auditService.logEditStrength(this.editStrengthsAuditData(req, strengthResponseDto)) // no need to wait for response
-    return res.redirectWithSuccess(`/profile/${prisonNumber}/strengths`, 'Strength updated')
+    return res.redirectWithSuccess(`/profile/${prisonNumber}/strengths`, 'Strength or interest updated')
   }
 
   private updateDtoFromForm = (

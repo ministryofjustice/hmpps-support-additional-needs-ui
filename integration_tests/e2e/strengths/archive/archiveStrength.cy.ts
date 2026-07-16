@@ -44,7 +44,7 @@ context('Archive a Strength', () => {
 
     // Then
     Page.verifyOnPage(StrengthsPage) //
-      .hasSuccessMessage('Strength moved to History')
+      .hasSuccessMessage('Strength or interest moved to History')
 
     cy.wiremockVerify(
       putRequestedFor(

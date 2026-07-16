@@ -50,7 +50,7 @@ context('Create a Strength', () => {
       .submitPageTo(StrengthDetailPage)
 
     Page.verifyOnPage(StrengthDetailPage)
-      .hasPageHeading('Add emotions and feelings strength')
+      .hasPageHeading('Add emotions and feelings strength or interest for Abby Kyriakopoulos')
       // submit the page without answering the question to trigger a validation error
       .submitPageTo(StrengthDetailPage)
       .hasErrorCount(2)
@@ -73,7 +73,7 @@ context('Create a Strength', () => {
 
     // Then
     Page.verifyOnPage(StrengthsPage) //
-      .hasSuccessMessage('Strength added')
+      .hasSuccessMessage('Strength or interest added')
 
     cy.wiremockVerify(
       postRequestedFor(urlEqualTo(`/support-additional-needs-api/profile/${prisonNumber}/strengths`)) //

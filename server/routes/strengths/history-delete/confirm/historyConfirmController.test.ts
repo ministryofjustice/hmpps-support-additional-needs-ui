@@ -103,7 +103,7 @@ describe('history-delete/confirm/historyConfirmController', () => {
           who: username,
         }),
       )
-      expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'History strength deleted.')
+      expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'History strength or interest deleted')
       expect(flash).not.toHaveBeenCalled()
     })
 

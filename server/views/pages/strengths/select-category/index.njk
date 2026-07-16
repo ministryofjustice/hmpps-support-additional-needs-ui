@@ -1,7 +1,7 @@
 {% extends "../layout.njk" %}
 
 {% set pageId = 'create-strength-select-category' %}
-{% set pageTitle = "Add strength - Select a category" %}
+{% set pageTitle = "Add strength or interest - Select a category" %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -15,7 +15,7 @@
             name: "category",
             fieldset: {
               legend: {
-                text: "Select category",
+                text: "Select a category of strength or interest for " + (prisonerSummary | formatFirst_name_Last_name),
                 isPageHeading: true,
                 classes: "govuk-fieldset__legend--l"
               }

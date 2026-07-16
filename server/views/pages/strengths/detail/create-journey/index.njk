@@ -1,12 +1,12 @@
 {% extends "../../layout.njk" %}
 
 {% set pageId = 'strength-detail' %}
-{% set pageTitle = "Add strength - Add strength category" %}
+{% set pageTitle = "Add strength or interest - Add strength or interest category" %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-l">Add {{ category | formatStrengthTypeScreenValue | lower }} strength</h1>
+      <h1 class="govuk-heading-l">Add {{ category | formatStrengthTypeScreenValue | lower }} strength or interest for {{ prisonerSummary | formatFirst_name_Last_name }}</h1>
     </div>
   </div>
 
@@ -24,14 +24,14 @@
             value: form.description,
             type: "text",
             label: {
-              text: "Description of strength",
+              text: "Description of strength or interest",
               classes: "govuk-label--m",
               attributes: { "aria-live": "polite" }
             },
             hint: {
               text: "Note the things they are good at and enjoy."
             },
-            attributes: { "aria-label" : "Enter the description of the strength" },
+            attributes: { "aria-label" : "Enter the description of the strength or interest" },
             errorMessage: errors | findError('description')
           }) }}
 
@@ -46,7 +46,7 @@
                 attributes: { "aria-live": "polite" }
               },
               attributes: {
-                "aria-label" : "Give details as to how this strength was identified"
+                "aria-label" : "Give details as to how this strength or interest was identified"
               },
               errorMessage: errors | findError('howIdentifiedOther')
             }) }}
@@ -56,7 +56,7 @@
             name: "howIdentified",
             fieldset: {
               legend: {
-                text: "How was this strength identified?",
+                text: "How was this strength or interest identified?",
                 classes: "govuk-fieldset__legend--m"
               }
             },
@@ -111,7 +111,7 @@
 
         {{ govukButton({
           id: "submit-button",
-          text: "Add strength",
+          text: "Add strength or interest",
           type: "submit",
           attributes: {"data-qa": "submit-button"},
           preventDoubleClick: true

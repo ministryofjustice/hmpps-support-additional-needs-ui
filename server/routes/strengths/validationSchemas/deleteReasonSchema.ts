@@ -6,8 +6,8 @@ const deleteReasonSchema =
   (options: { mode: 'active' | 'history' } = { mode: 'active' }) =>
   async () => {
     const messages = {
-      active: { mandatoryMessage: 'Add reason for deleting strength' },
-      history: { mandatoryMessage: 'Add reason for deleting history strength' },
+      active: { mandatoryMessage: 'Add reason for deleting strength or interest' },
+      history: { mandatoryMessage: 'Add reason for deleting history strength or interest' },
     }
 
     return createSchema({

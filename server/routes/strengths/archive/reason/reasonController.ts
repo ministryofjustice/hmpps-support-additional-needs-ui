@@ -52,7 +52,10 @@ export default class ReasonController {
     const { prisonNumber } = strengthResponseDto
     req.journeyData.strengthDto = undefined
     this.auditService.logArchiveStrength(this.archiveStrengthAuditData(req, strengthResponseDto)) // no need to wait for response
-    return res.redirectWithSuccess(`/profile/${prisonNumber}/strengths#archived-strengths`, 'Strength moved to History')
+    return res.redirectWithSuccess(
+      `/profile/${prisonNumber}/strengths#archived-strengths`,
+      'Strength or interest moved to History',
+    )
   }
 
   private updateDtoFromForm = (req: Request, form: { archiveReason: string }) => {

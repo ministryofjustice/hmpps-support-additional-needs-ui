@@ -41,7 +41,10 @@ export default class HistoryConfirmController {
 
     req.journeyData.strengthDto = undefined
     this.auditService.logDeleteStrength(this.deleteStrengthAuditData(req, dto))
-    return res.redirectWithSuccess(`/profile/${prisonNumber}/strengths#archived-strengths`, 'History strength deleted.')
+    return res.redirectWithSuccess(
+      `/profile/${prisonNumber}/strengths#archived-strengths`,
+      'History strength or interest deleted',
+    )
   }
 
   private deleteStrengthAuditData = (req: Request, dto: StrengthResponseDto): BaseAuditData => {

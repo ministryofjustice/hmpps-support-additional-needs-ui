@@ -103,7 +103,7 @@ describe('delete/confirm/confirmController', () => {
           who: username,
         }),
       )
-      expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Strength deleted.')
+      expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Strength or interest deleted')
       expect(flash).not.toHaveBeenCalled()
     })
 

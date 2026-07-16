@@ -7,18 +7,18 @@
 
 <div class="govuk-summary-card" data-qa="strengths-summary-card">
   <div class="govuk-summary-card__title-wrapper">
-    <h2 class="govuk-summary-card__title">Strengths</h2>
+    <h2 class="govuk-summary-card__title">Strengths and interests</h2>
     <ul class="govuk-summary-card__actions govuk-!-display-none-print">
       {% if groupedStrengths.isFulfilled() %}
         {% if categories.length === 0 %}
           {% if userHasPermissionTo('RECORD_STRENGTHS') %}
             <li class="govuk-summary-card__action">
-              <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category" data-qa="add-strength-button">Add strengths</a>
+              <a class="govuk-link govuk-!-font-weight-regular" href="/strengths/{{ prisonerSummary.prisonNumber }}/create/select-category" data-qa="add-strength-button">Add strengths and interests</a>
             </li>
           {% endif %}
         {% else %}
           <li class="govuk-summary-card__action">
-            <a class="govuk-link govuk-!-font-weight-regular" href="/profile/{{ prisonerSummary.prisonNumber }}/strengths" data-qa="view-strengths-button">View strengths</a>
+            <a class="govuk-link govuk-!-font-weight-regular" href="/profile/{{ prisonerSummary.prisonNumber }}/strengths" data-qa="view-strengths-button">View strengths and interests</a>
           </li>
         {% endif %}
       {% endif %}
@@ -36,7 +36,7 @@
         </ul>
       {% else %}
           <p class="govuk-body" data-qa="no-strengths-recorded-message">
-            No strengths recorded
+            No strengths and interests recorded
           </p>
       {% endif %}
 

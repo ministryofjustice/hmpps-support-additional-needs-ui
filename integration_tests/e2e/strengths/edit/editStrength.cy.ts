@@ -64,7 +64,7 @@ context('Edit a Strength', () => {
 
     // Then
     Page.verifyOnPage(StrengthsPage) //
-      .hasSuccessMessage('Strength updated')
+      .hasSuccessMessage('Strength or interest updated')
 
     cy.wiremockVerify(
       putRequestedFor(
