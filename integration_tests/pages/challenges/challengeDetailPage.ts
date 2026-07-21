@@ -39,10 +39,32 @@ export default class ChallengeDetailPage extends Page {
     return this
   }
 
+  howChallengeIdentifiedIsSelected(option: ChallengeIdentificationSource): ChallengeDetailPage {
+    this.checkbox(option).should('be.checked')
+    return this
+  }
+
+  hasHowChallengeIdentifiedOptionCount(count: number): ChallengeDetailPage {
+    cy.get(`.govuk-checkboxes__input[name='howIdentified']`).should('have.length', count)
+    return this
+  }
+
+  mappingWarningIsDisplayed(): ChallengeDetailPage {
+    this.mappingWarning().should('exist')
+    return this
+  }
+
+  mappingWarningIsNotDisplayed(): ChallengeDetailPage {
+    this.mappingWarning().should('not.exist')
+    return this
+  }
+
   private descriptionField = (): PageElement => cy.get('textarea[name=description]')
 
   private otherIdentificationSourceField = (): PageElement => cy.get('input[name=howIdentifiedOther]')
 
   private checkbox = (option: ChallengeIdentificationSource): PageElement =>
     cy.get(`.govuk-checkboxes__input[value='${option}']`)
+
+  private mappingWarning = (): PageElement => cy.get(`[data-qa='how-identified-mapping-warning']`)
 }

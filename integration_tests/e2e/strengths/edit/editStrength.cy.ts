@@ -4,6 +4,7 @@ import StrengthDetailPage from '../../../pages/strengths/strengthDetailPage'
 import OverviewPage from '../../../pages/profile/overviewPage'
 import StrengthsPage from '../../../pages/profile/strengthsPage'
 import StrengthIdentificationSource from '../../../../server/enums/strengthIdentificationSource'
+import { aValidStrengthResponse } from '../../../../server/testsupport/strengthResponseTestDataBuilder'
 import { putRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
@@ -79,6 +80,73 @@ context('Edit a Strength', () => {
               "@.howIdentified[0] == 'EDUCATION_SKILLS_WORK' && " +
               "@.howIdentified[1] == 'OTHER' && " +
               "@.howIdentifiedOther == 'John has demonstrated his maths strengths in class' " +
+              ')]',
+          ),
+        ),
+    )
+  })
+
+  it('should show the consolidated list without the mapping warning when editing a record already on the new list', () => {
+    // Given
+    cy.task('stubGetStrength', {
+      prisonNumber,
+      strengthReference,
+      strength: aValidStrengthResponse({ howIdentified: [StrengthIdentificationSource.EDUCATION_SKILLS_WORK] }),
+    })
+    cy.signIn()
+
+    // When
+    cy.visit(`/strengths/${prisonNumber}/${strengthReference}/edit/detail`)
+
+    // Then
+    Page.verifyOnPage(StrengthDetailPage) //
+      .hasHowStrengthIdentifiedOptionCount(5)
+      .mappingWarningIsNotDisplayed()
+      .howStrengthIdentifiedIsSelected(StrengthIdentificationSource.EDUCATION_SKILLS_WORK)
+  })
+
+  it('should map legacy identification reasons to the consolidated list, show the warning, and save the new reasons', () => {
+    // Given - a legacy strength holding deprecated identification sources
+    cy.task('stubGetStrength', {
+      prisonNumber,
+      strengthReference,
+      strength: aValidStrengthResponse({
+        howIdentified: [
+          StrengthIdentificationSource.CONVERSATIONS,
+          StrengthIdentificationSource.COLLEAGUE_INFO,
+          StrengthIdentificationSource.OTHER_SCREENING_TOOL,
+        ],
+        howIdentifiedOther: null,
+      }),
+    })
+    cy.signIn()
+
+    // When
+    cy.visit(`/strengths/${prisonNumber}/${strengthReference}/edit/detail`)
+
+    // Then
+    Page.verifyOnPage(StrengthDetailPage) //
+      .hasHowStrengthIdentifiedOptionCount(5)
+      .mappingWarningIsDisplayed()
+      // CONVERSATIONS -> SELF_DISCLOSURE
+      .howStrengthIdentifiedIsSelected(StrengthIdentificationSource.SELF_DISCLOSURE)
+      // COLLEAGUE_INFO and OTHER_SCREENING_TOOL both -> FORMAL_PROCESSES (de-duped)
+      .howStrengthIdentifiedIsSelected(StrengthIdentificationSource.FORMAL_PROCESSES)
+      .submitPageTo(StrengthsPage)
+
+    Page.verifyOnPage(StrengthsPage) //
+      .hasSuccessMessage('Strength or interest updated')
+
+    cy.wiremockVerify(
+      putRequestedFor(
+        urlEqualTo(`/support-additional-needs-api/profile/${prisonNumber}/strengths/${strengthReference}`),
+      ) //
+        .withRequestBody(
+          matchingJsonPath(
+            '$[?(' +
+              '@.howIdentified.size() == 2 && ' +
+              "@.howIdentified[0] == 'SELF_DISCLOSURE' && " +
+              "@.howIdentified[1] == 'FORMAL_PROCESSES' " +
               ')]',
           ),
         ),

@@ -126,7 +126,7 @@ describe('Tests for Strengths Summary Card component', () => {
     expect(secondStrength.find('p').eq(0).text().trim()).toEqual('Can read at speed')
     expect(secondStrength.find('[data-qa=non-aln-strength-how-identified] li').length).toEqual(1)
     expect(secondStrength.find('[data-qa=non-aln-strength-how-identified] li').eq(0).text().trim()).toEqual(
-      'Direct observation in education, skills and work',
+      'Observed in education, skills and work',
     ) // EDUCATION_SKILLS_WORK
     expect(secondStrength.find('[data-qa=non-aln-strength-audit]').text().trim()).toEqual(
       'Last updated 10 Feb 2025 by Person 1, Leeds (HMP)',

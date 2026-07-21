@@ -4,6 +4,10 @@ import StrengthIdentificationSource from '../../../../enums/strengthIdentificati
 import { Result } from '../../../../utils/result/result'
 import { AuditService, StrengthService } from '../../../../services'
 import { asArray } from '../../../../utils/utils'
+import {
+  consolidateIdentificationSources,
+  containsDeprecatedIdentificationSource,
+} from '../../../../utils/identificationSourceConsolidation'
 import { BaseAuditData } from '../../../../services/auditService'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
 
@@ -28,6 +32,7 @@ export default class DetailController {
       form: detailForm,
       category: strengthDto.strengthTypeCode,
       mode: 'edit',
+      showIdentificationMappingWarning: containsDeprecatedIdentificationSource(strengthDto.howIdentified),
       errorRecordingStrength: req.flash('pageHasApiErrors')[0] != null,
     }
     return res.render('pages/strengths/detail/edit-journey/index', viewRenderArgs)
@@ -73,7 +78,7 @@ export default class DetailController {
   private populateFormFromDto = (strengthDto: StrengthResponseDto) => {
     return {
       description: strengthDto.symptoms,
-      howIdentified: strengthDto.howIdentified || [],
+      howIdentified: consolidateIdentificationSources(strengthDto.howIdentified || []),
       howIdentifiedOther: strengthDto.howIdentifiedOther,
     }
   }

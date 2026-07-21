@@ -51,10 +51,19 @@ describe('detailController', () => {
     }
   })
 
-  it('should render the view when there is no previously submitted invalid form', async () => {
+  it('should render the view given a record whose reasons are already on the consolidated list', async () => {
     // Given
     flash.mockReturnValue([])
     res.locals.invalidForm = undefined
+    req.journeyData = {
+      strengthDto: aValidStrengthResponseDto({
+        reference: strengthReference,
+        strengthTypeCode: StrengthType.ARITHMETIC,
+        symptoms: 'Has difficulty adding up',
+        howIdentified: [StrengthIdentificationSource.EDUCATION_SKILLS_WORK],
+        howIdentifiedOther: null,
+      }),
+    }
 
     const expectedViewTemplate = 'pages/strengths/detail/edit-journey/index'
     const expectedViewModel = {
@@ -62,10 +71,50 @@ describe('detailController', () => {
       errorRecordingStrength: false,
       form: {
         description: 'Has difficulty adding up',
-        howIdentified: [StrengthIdentificationSource.CONVERSATIONS],
+        howIdentified: [StrengthIdentificationSource.EDUCATION_SKILLS_WORK],
         howIdentifiedOther: null as string,
       },
       mode: 'edit',
+      showIdentificationMappingWarning: false,
+    }
+
+    // When
+    await controller.getDetailView(req, res, next)
+
+    // Then
+    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
+  })
+
+  it('should map deprecated reasons to the consolidated list and flag the warning', async () => {
+    // Given
+    flash.mockReturnValue([])
+    res.locals.invalidForm = undefined
+    req.journeyData = {
+      strengthDto: aValidStrengthResponseDto({
+        reference: strengthReference,
+        strengthTypeCode: StrengthType.ARITHMETIC,
+        symptoms: 'Has difficulty adding up',
+        howIdentified: [
+          StrengthIdentificationSource.CONVERSATIONS,
+          StrengthIdentificationSource.COLLEAGUE_INFO,
+          StrengthIdentificationSource.OTHER_SCREENING_TOOL,
+        ],
+        howIdentifiedOther: null,
+      }),
+    }
+
+    const expectedViewTemplate = 'pages/strengths/detail/edit-journey/index'
+    const expectedViewModel = {
+      category: StrengthType.ARITHMETIC,
+      errorRecordingStrength: false,
+      form: {
+        description: 'Has difficulty adding up',
+        // CONVERSATIONS -> SELF_DISCLOSURE, COLLEAGUE_INFO + OTHER_SCREENING_TOOL -> FORMAL_PROCESSES (de-duped)
+        howIdentified: [StrengthIdentificationSource.SELF_DISCLOSURE, StrengthIdentificationSource.FORMAL_PROCESSES],
+        howIdentifiedOther: null as string,
+      },
+      mode: 'edit',
+      showIdentificationMappingWarning: true,
     }
 
     // When
@@ -78,6 +127,13 @@ describe('detailController', () => {
   it('should render view given previously submitted invalid form', async () => {
     // Given
     flash.mockReturnValue([])
+    req.journeyData = {
+      strengthDto: aValidStrengthResponseDto({
+        reference: strengthReference,
+        strengthTypeCode: StrengthType.ARITHMETIC,
+        howIdentified: [StrengthIdentificationSource.EDUCATION_SKILLS_WORK],
+      }),
+    }
     const invalidForm = {
       howIdentified: ['not-a-valid-value'],
     }
@@ -89,6 +145,7 @@ describe('detailController', () => {
       form: invalidForm,
       errorRecordingStrength: false,
       mode: 'edit',
+      showIdentificationMappingWarning: false,
     }
 
     // When
@@ -97,6 +154,37 @@ describe('detailController', () => {
     // Then
     expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors')
+  })
+
+  it('should keep the mapping warning flagged on an invalid form re-render of a legacy record', async () => {
+    // Given
+    flash.mockReturnValue([])
+    req.journeyData = {
+      strengthDto: aValidStrengthResponseDto({
+        reference: strengthReference,
+        strengthTypeCode: StrengthType.ARITHMETIC,
+        howIdentified: [StrengthIdentificationSource.CONVERSATIONS],
+      }),
+    }
+    const invalidForm = {
+      howIdentified: [StrengthIdentificationSource.SELF_DISCLOSURE],
+    }
+    res.locals.invalidForm = invalidForm
+
+    const expectedViewTemplate = 'pages/strengths/detail/edit-journey/index'
+    const expectedViewModel = {
+      category: StrengthType.ARITHMETIC,
+      form: invalidForm,
+      errorRecordingStrength: false,
+      mode: 'edit',
+      showIdentificationMappingWarning: true,
+    }
+
+    // When
+    await controller.getDetailView(req, res, next)
+
+    // Then
+    expect(res.render).toHaveBeenCalledWith(expectedViewTemplate, expectedViewModel)
   })
 
   it('should submit form and redirect to next route given calling API is successful', async () => {

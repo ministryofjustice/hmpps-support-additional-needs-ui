@@ -103,7 +103,7 @@ describe('Tests for Archived Strengths Summary Card component', () => {
     expect(secondStrength.find('p').eq(0).text().trim()).toEqual('Can read at speed')
     expect(secondStrength.find('[data-qa=archived-strength-how-identified] li').length).toEqual(1)
     expect(secondStrength.find('[data-qa=archived-strength-how-identified] li').eq(0).text().trim()).toEqual(
-      'Direct observation in education, skills and work',
+      'Observed in education, skills and work',
     ) // EDUCATION_SKILLS_WORK
     expect(secondStrength.find('[data-qa=archived-strength-audit]').text().trim()).toEqual(
       'Moved to history on 10 Feb 2025 by Person 1, Leeds (HMP)',
