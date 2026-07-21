@@ -133,7 +133,7 @@ describe('Tests for Challenges Summary Card component', () => {
     expect(secondChallenge.find('p').eq(0).text().trim()).toEqual('Is very slow at reading')
     expect(secondChallenge.find('[data-qa=non-aln-challenge-how-identified] li').length).toEqual(1)
     expect(secondChallenge.find('[data-qa=non-aln-challenge-how-identified] li').eq(0).text().trim()).toEqual(
-      'Direct observation in education, skills and work',
+      'Observed in education, skills and work',
     ) // EDUCATION_SKILLS_WORK
     expect(secondChallenge.find('[data-qa=non-aln-challenge-audit]').text().trim()).toEqual(
       'Last updated 10 Feb 2025 by Person 1, Leeds (HMP)',

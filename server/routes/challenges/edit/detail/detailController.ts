@@ -4,6 +4,10 @@ import ChallengeIdentificationSource from '../../../../enums/challengeIdentifica
 import { Result } from '../../../../utils/result/result'
 import { AuditService, ChallengeService } from '../../../../services'
 import { asArray } from '../../../../utils/utils'
+import {
+  consolidateIdentificationSources,
+  containsDeprecatedIdentificationSource,
+} from '../../../../utils/identificationSourceConsolidation'
 import { BaseAuditData } from '../../../../services/auditService'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
 
@@ -28,6 +32,7 @@ export default class DetailController {
       form: detailForm,
       category: challengeDto.challengeTypeCode,
       mode: 'edit',
+      showIdentificationMappingWarning: containsDeprecatedIdentificationSource(challengeDto.howIdentified),
       errorRecordingChallenge: req.flash('pageHasApiErrors')[0] != null,
     }
     return res.render('pages/challenges/detail/edit-journey/index', viewRenderArgs)
@@ -73,7 +78,7 @@ export default class DetailController {
   private populateFormFromDto = (challengeDto: ChallengeResponseDto) => {
     return {
       description: challengeDto.symptoms,
-      howIdentified: challengeDto.howIdentified || [],
+      howIdentified: consolidateIdentificationSources(challengeDto.howIdentified || []),
       howIdentifiedOther: challengeDto.howIdentifiedOther,
     }
   }

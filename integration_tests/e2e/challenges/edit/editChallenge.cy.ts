@@ -5,6 +5,7 @@ import AuthorisationErrorPage from '../../../pages/authorisationError'
 import ChallengeDetailPage from '../../../pages/challenges/challengeDetailPage'
 import OverviewPage from '../../../pages/profile/overviewPage'
 import ChallengeIdentificationSource from '../../../../server/enums/challengeIdentificationSource'
+import { aValidChallengeResponse } from '../../../../server/testsupport/challengeResponseTestDataBuilder'
 import { putRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
@@ -81,6 +82,69 @@ context('Edit a Challenge', () => {
               "@.howIdentified[0] == 'EDUCATION_SKILLS_WORK' && " +
               "@.howIdentified[1] == 'OTHER' && " +
               "@.howIdentifiedOther == 'Chris has been observed by many people to struggle with empathy' " +
+              ')]',
+          ),
+        ),
+    )
+  })
+
+  it('should show the consolidated list without the mapping warning when editing a record already on the new list', () => {
+    // Given - the default stubbed challenge has howIdentified: ['EDUCATION_SKILLS_WORK'] (a retained value)
+    cy.signIn()
+
+    // When
+    cy.visit(`/challenges/${prisonNumber}/${challengeReference}/edit/detail`)
+
+    // Then
+    Page.verifyOnPage(ChallengeDetailPage) //
+      .hasHowChallengeIdentifiedOptionCount(5)
+      .mappingWarningIsNotDisplayed()
+      .howChallengeIdentifiedIsSelected(ChallengeIdentificationSource.EDUCATION_SKILLS_WORK)
+  })
+
+  it('should map legacy identification reasons to the consolidated list, show the warning, and save the new reasons', () => {
+    // Given - a legacy challenge holding deprecated identification sources
+    cy.task('stubGetChallenge', {
+      prisonNumber,
+      challengeReference,
+      challenge: aValidChallengeResponse({
+        symptoms: 'Chris struggles showing empathy when dealing with others',
+        howIdentified: [
+          ChallengeIdentificationSource.CONVERSATIONS,
+          ChallengeIdentificationSource.COLLEAGUE_INFO,
+          ChallengeIdentificationSource.OTHER_SCREENING_TOOL,
+        ],
+        howIdentifiedOther: null,
+      }),
+    })
+    cy.signIn()
+
+    // When
+    cy.visit(`/challenges/${prisonNumber}/${challengeReference}/edit/detail`)
+
+    // Then
+    Page.verifyOnPage(ChallengeDetailPage) //
+      .hasHowChallengeIdentifiedOptionCount(5)
+      .mappingWarningIsDisplayed()
+      // CONVERSATIONS -> SELF_DISCLOSURE
+      .howChallengeIdentifiedIsSelected(ChallengeIdentificationSource.SELF_DISCLOSURE)
+      // COLLEAGUE_INFO and OTHER_SCREENING_TOOL both -> FORMAL_PROCESSES (de-duped)
+      .howChallengeIdentifiedIsSelected(ChallengeIdentificationSource.FORMAL_PROCESSES)
+      .submitPageTo(ChallengesPage)
+
+    Page.verifyOnPage(ChallengesPage) //
+      .hasSuccessMessage('Challenge updated')
+
+    cy.wiremockVerify(
+      putRequestedFor(
+        urlEqualTo(`/support-additional-needs-api/profile/${prisonNumber}/challenges/${challengeReference}`),
+      ) //
+        .withRequestBody(
+          matchingJsonPath(
+            '$[?(' +
+              '@.howIdentified.size() == 2 && ' +
+              "@.howIdentified[0] == 'SELF_DISCLOSURE' && " +
+              "@.howIdentified[1] == 'FORMAL_PROCESSES' " +
               ')]',
           ),
         ),

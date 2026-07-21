@@ -54,6 +54,16 @@
             }) }}
           {% endset -%}
 
+          {% set howIdentifiedMappingWarning %}
+            {% if showIdentificationMappingWarning %}
+              {{ govukWarningText({
+                text: "This is an updated list. We have mapped the original selection to the equivalent option.",
+                iconFallbackText: "Warning",
+                attributes: { "data-qa": "how-identified-mapping-warning" }
+              }) }}
+            {% endif %}
+          {% endset %}
+
           {{ govukCheckboxes({
             name: "howIdentified",
             fieldset: {
@@ -65,45 +75,35 @@
             hint: {
               text: 'Select all that apply'
             },
+            formGroup: {
+              beforeInputs: {
+                html: howIdentifiedMappingWarning
+              }
+            },
             items: [
               {
                 value: "EDUCATION_SKILLS_WORK",
-                text: "EDUCATION_SKILLS_WORK" | formatStrengthIdentificationSourceScreenValue,
+                text: "EDUCATION_SKILLS_WORK" | formatChallengeIdentificationSourceScreenValue,
                 checked: form.howIdentified.includes("EDUCATION_SKILLS_WORK")
               },
               {
                 value: "WIDER_PRISON",
-                text: "WIDER_PRISON" | formatStrengthIdentificationSourceScreenValue,
+                text: "WIDER_PRISON" | formatChallengeIdentificationSourceScreenValue,
                 checked: form.howIdentified.includes("WIDER_PRISON")
               },
               {
-                value: "CONVERSATIONS",
-                text: "CONVERSATIONS" | formatStrengthIdentificationSourceScreenValue,
-                checked: form.howIdentified.includes("CONVERSATIONS")
-              },
-              {
-                value: "COLLEAGUE_INFO",
-                text: "COLLEAGUE_INFO" | formatStrengthIdentificationSourceScreenValue,
-                checked: form.howIdentified.includes("COLLEAGUE_INFO")
-              },
-              {
-                value: "FORMAL_PROCESSES",
-                text: "FORMAL_PROCESSES" | formatStrengthIdentificationSourceScreenValue,
-                checked: form.howIdentified.includes("FORMAL_PROCESSES")
-              },
-              {
                 value: "SELF_DISCLOSURE",
-                text: "SELF_DISCLOSURE" | formatStrengthIdentificationSourceScreenValue,
+                text: "SELF_DISCLOSURE" | formatChallengeIdentificationSourceScreenValue,
                 checked: form.howIdentified.includes("SELF_DISCLOSURE")
               },
               {
-                value: "OTHER_SCREENING_TOOL",
-                text: "OTHER_SCREENING_TOOL" | formatStrengthIdentificationSourceScreenValue,
-                checked: form.howIdentified.includes("OTHER_SCREENING_TOOL")
+                value: "FORMAL_PROCESSES",
+                text: "FORMAL_PROCESSES" | formatChallengeIdentificationSourceScreenValue,
+                checked: form.howIdentified.includes("FORMAL_PROCESSES")
               },
               {
                 value: "OTHER",
-                text: "OTHER" | formatStrengthIdentificationSourceScreenValue,
+                text: "OTHER" | formatChallengeIdentificationSourceScreenValue,
                 checked: form.howIdentified.includes("OTHER"),
                 conditional: {
                   html: otherHtml
