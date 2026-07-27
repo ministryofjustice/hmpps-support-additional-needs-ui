@@ -46,17 +46,29 @@ describe('prisonerSearchMapper', () => {
           to: 2,
         },
         items: [
-          { text: '1', href: '?searchTerm=Peigh&sort=PRISONER_NAME,ASC&page=1', selected: false },
-          { text: '2', href: '?searchTerm=Peigh&sort=PRISONER_NAME,ASC&page=2', selected: true },
-          { text: '3', href: '?searchTerm=Peigh&sort=PRISONER_NAME,ASC&page=3', selected: false },
+          {
+            text: '1',
+            href: '?searchTerm=Peigh&planStatusFilter=PLAN_DECLINED&sort=PRISONER_NAME,ASC&page=1',
+            selected: false,
+          },
+          {
+            text: '2',
+            href: '?searchTerm=Peigh&planStatusFilter=PLAN_DECLINED&sort=PRISONER_NAME,ASC&page=2',
+            selected: true,
+          },
+          {
+            text: '3',
+            href: '?searchTerm=Peigh&planStatusFilter=PLAN_DECLINED&sort=PRISONER_NAME,ASC&page=3',
+            selected: false,
+          },
         ],
         previous: {
           text: 'Previous',
-          href: '?searchTerm=Peigh&sort=PRISONER_NAME,ASC&page=1',
+          href: '?searchTerm=Peigh&planStatusFilter=PLAN_DECLINED&sort=PRISONER_NAME,ASC&page=1',
         },
         next: {
           text: 'Next',
-          href: '?searchTerm=Peigh&sort=PRISONER_NAME,ASC&page=3',
+          href: '?searchTerm=Peigh&planStatusFilter=PLAN_DECLINED&sort=PRISONER_NAME,ASC&page=3',
         },
         prisoners: [
           aValidPrisonerSearchSummary({
@@ -81,6 +93,7 @@ describe('prisonerSearchMapper', () => {
         sortField: SearchSortField.PRISONER_NAME,
         sortDirection: SearchSortDirection.ASC,
         searchTerm: 'Peigh',
+        planStatusFilter: PlanActionStatus.PLAN_DECLINED,
       }
 
       // When
