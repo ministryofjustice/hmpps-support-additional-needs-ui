@@ -34,6 +34,7 @@ export default class SearchService {
         sortField: sortBy,
         sortDirection,
         searchTerm: prisonerNameOrNumber,
+        planStatusFilter: planStatus,
       },
     )
   }

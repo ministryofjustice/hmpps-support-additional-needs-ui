@@ -3,12 +3,14 @@ import type { PaginationMetaData, Person, SearchByPrisonResponse } from 'support
 import { startOfDay } from 'date-fns'
 import SearchSortField from '../../enums/searchSortField'
 import SearchSortDirection from '../../enums/searchSortDirection'
+import PlanActionStatus from '../../enums/planActionStatus'
 
 type SearchOptions = {
   prisonId: string
   sortField: SearchSortField
   sortDirection: SearchSortDirection
   searchTerm?: string
+  planStatusFilter?: PlanActionStatus
 }
 
 const toPrisonerSearch = (apiResponse: SearchByPrisonResponse, searchOptions: SearchOptions): PrisonerSearch => ({
@@ -77,6 +79,7 @@ const buildPageLinks = (
 const buildQueryString = (searchOptions: SearchOptions, page: number): string => {
   const queryStringParams = [
     searchOptions.searchTerm && `searchTerm=${decodeURIComponent(searchOptions.searchTerm)}`,
+    searchOptions.planStatusFilter && `planStatusFilter=${decodeURIComponent(searchOptions.planStatusFilter)}`,
     `sort=${searchOptions.sortField},${searchOptions.sortDirection}`,
     `page=${page}`,
   ].filter(val => !!val)
