@@ -28,6 +28,7 @@ generic-service:
     NEW_DPS_URL: "https://dps-preprod.prison.service.justice.gov.uk"
     COMPONENT_API_URL: "https://frontend-components-preprod.hmpps.service.justice.gov.uk"
     DPR_UI_REPORT_URL: 'https://digital-prison-reporting-mi-ui-preprod.hmpps.service.justice.gov.uk/dpr/request-report/report/dpr_san001/san-additional-needs-report/filters'
+    DISPLAY_CHALLENGES_AND_SUPPORT_STRATEGIES_COMBINED: false
 
 generic-prometheus-alerts:
   alertSeverity: hmpps-support-additional-needs-preprod
