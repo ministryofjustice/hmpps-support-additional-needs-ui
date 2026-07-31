@@ -150,5 +150,8 @@ export default {
   featureToggles: {
     // someToggleEnabled: toBoolean(get('SOME_TOGGLE_ENABLED', false)),
     sanDataDeletionEnabled: toBoolean(get('SAN_DATA_DELETION_FEATURE_ENABLED', false, requiredInProduction)),
+    displayChallengesAndSupportStrategiesCombined: toBoolean(
+      get('DISPLAY_CHALLENGES_AND_SUPPORT_STRATEGIES_COMBINED', false, requiredInProduction),
+    ),
   },
 }
