@@ -9,7 +9,11 @@
       {% if supportStrategiesData %}
         {% if supportStrategiesData | length %}
           <li class="govuk-summary-card__action">
-            <a class="govuk-link govuk-!-font-weight-regular" href="/profile/{{ prisonerSummary.prisonNumber }}/support-strategies" data-qa="view-support-strategies-button">View support strategies</a>
+            {% if featureToggles.displayChallengesAndSupportStrategiesCombined %}
+              <a class="govuk-link govuk-!-font-weight-regular" href="/profile/{{ prisonerSummary.prisonNumber }}/challenges-and-support" data-qa="view-support-strategies-button">View challenges and support</a>
+            {% else %}
+              <a class="govuk-link govuk-!-font-weight-regular" href="/profile/{{ prisonerSummary.prisonNumber }}/support-strategies" data-qa="view-support-strategies-button">View support strategies</a>
+            {% endif %}
           </li>
         {% else %}
           {% if userHasPermissionTo('RECORD_SUPPORT_STRATEGIES') %}

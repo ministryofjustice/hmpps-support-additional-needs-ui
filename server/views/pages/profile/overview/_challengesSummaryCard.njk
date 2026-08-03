@@ -18,7 +18,11 @@
           {% endif %}
         {% else %}
           <li class="govuk-summary-card__action">
-            <a class="govuk-link govuk-!-font-weight-regular" href="/profile/{{ prisonerSummary.prisonNumber }}/challenges" data-qa="view-challenges-button">View challenges</a>
+            {% if featureToggles.displayChallengesAndSupportStrategiesCombined %}
+              <a class="govuk-link govuk-!-font-weight-regular" href="/profile/{{ prisonerSummary.prisonNumber }}/challenges-and-support" data-qa="view-challenges-button">View challenges and support</a>
+            {% else %}
+              <a class="govuk-link govuk-!-font-weight-regular" href="/profile/{{ prisonerSummary.prisonNumber }}/challenges" data-qa="view-challenges-button">View challenges</a>
+            {% endif %}
           </li>
         {% endif %}
       {% endif %}

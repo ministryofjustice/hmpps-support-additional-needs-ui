@@ -13,6 +13,7 @@ const pageViewEventMap: Record<string, Page> = {
   '/profile/:prisonNumber/conditions': Page.PROFILE_CONDITIONS,
   '/profile/:prisonNumber/strengths': Page.PROFILE_STRENGTHS,
   '/profile/:prisonNumber/challenges': Page.PROFILE_CHALLENGES,
+  '/profile/:prisonNumber/challenges-and-support': Page.PROFILE_CHALLENGES_AND_SUPPORT,
   '/profile/:prisonNumber/education-support-plan': Page.PROFILE_EDUCATION_SUPPORT_PLAN,
 
   // Create ELSP routes
