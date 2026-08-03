@@ -47,24 +47,38 @@
               Overview
             </a>
           </li>
-          <li class="moj-sub-navigation__item">
-            <a class="moj-sub-navigation__link"
-               data-qa="tab-overview"
-               {% if tab === 'support-strategies' -%} aria-current="page" {% endif %}
-               href="support-strategies"
-            >
-              Support strategies
-            </a>
-          </li>
-          <li class="moj-sub-navigation__item">
-            <a class="moj-sub-navigation__link"
-               data-qa="tab-overview"
-              {% if tab === 'challenges' -%} aria-current="page" {% endif %}
-               href="challenges"
-            >
-              Challenges
-            </a>
-          </li>
+
+          {% if featureToggles.displayChallengesAndSupportStrategiesCombined %}
+            <li class="moj-sub-navigation__item">
+              <a class="moj-sub-navigation__link"
+                 data-qa="tab-overview"
+                {% if tab === 'challenges-and-support' -%} aria-current="page" {% endif %}
+                 href="challenges-and-support"
+              >
+                Challenges and support
+              </a>
+            </li>
+          {% else %}
+            <li class="moj-sub-navigation__item">
+              <a class="moj-sub-navigation__link"
+                 data-qa="tab-overview"
+                 {% if tab === 'support-strategies' -%} aria-current="page" {% endif %}
+                 href="support-strategies"
+              >
+                Support strategies
+              </a>
+            </li>
+            <li class="moj-sub-navigation__item">
+              <a class="moj-sub-navigation__link"
+                 data-qa="tab-overview"
+                {% if tab === 'challenges' -%} aria-current="page" {% endif %}
+                 href="challenges"
+              >
+                Challenges
+              </a>
+            </li>
+          {% endif %}
+
           <li class="moj-sub-navigation__item">
             <a class="moj-sub-navigation__link"
                data-qa="tab-overview"
