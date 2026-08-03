@@ -18,9 +18,35 @@
 
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
 
-      {% if activeChallenges.isFulfilled() and archivedChallenges.isFulfilled() and activeSupportStrategies.isFulfilled() and archivedSupportStrategies.isFulfilled() %}
-        {# Main page content to go here #}
+      {% if activeChallengesAndSupport.isFulfilled() and archivedChallengesAndSupport.isFulfilled() %}
+        {# The active and archived Challenges and Support Strategies are already grouped by category #}
+        {% set activeChallengesAndSupport = activeChallengesAndSupport.value %}
+        {% set archivedChallengesAndSupport = archivedChallengesAndSupport.value %}
 
+        {# Get the count of active and archived Challenges and Support Strategies groupings (ie. their categories) #}
+        {% set activeGroupCount = activeChallengesAndSupport | length %}
+        {% set archivedGroupCount = archivedChallengesAndSupport | length %}
+
+        {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+
+        {{ govukTabs({
+          items: [
+            {
+              label: 'Current (' + activeGroupCount + ')',
+              id: 'current-challenges-and-support',
+              panel: {
+                html: ''
+              }
+            },
+            {
+              label: 'History (' + archivedGroupCount + ')',
+              id: 'archived-challenges-and-support',
+              panel: {
+                html: ''
+              }
+            }
+          ]
+        }) }}
 
       {% else %}
         <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>

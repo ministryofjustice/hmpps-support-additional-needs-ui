@@ -1,6 +1,5 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express'
-import toGroupedChallengesPromise from '../../utils/groupedChallengesMapper'
-import toGroupedSupportStrategiesPromise from '../../utils/groupedSupportStrategiesMapper'
+import toGroupedChallengesAndSupportPromise from '../../utils/groupedChallengesAndSupportMapper'
 
 export default class ChallengesAndSupportController {
   getChallengesAndSupportView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -18,10 +17,18 @@ export default class ChallengesAndSupportController {
       prisonerSummary,
       educationSupportPlanLifecycleStatus,
       tab: 'challenges-and-support',
-      activeChallenges: toGroupedChallengesPromise({ challenges, alnScreeners, active: true }),
-      archivedChallenges: toGroupedChallengesPromise({ challenges, alnScreeners, active: false }),
-      activeSupportStrategies: toGroupedSupportStrategiesPromise({ supportStrategies, active: true }),
-      archivedSupportStrategies: toGroupedSupportStrategiesPromise({ supportStrategies, active: false }),
+      activeChallengesAndSupport: toGroupedChallengesAndSupportPromise({
+        challenges,
+        alnScreeners,
+        supportStrategies,
+        active: true,
+      }),
+      archivedChallengesAndSupport: toGroupedChallengesAndSupportPromise({
+        challenges,
+        alnScreeners,
+        supportStrategies,
+        active: false,
+      }),
     }
     return res.render('pages/profile/challenges-and-support/index', viewRenderArgs)
   }

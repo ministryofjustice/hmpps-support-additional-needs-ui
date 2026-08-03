@@ -45,10 +45,8 @@ const templateParams = {
   prisonerSummary,
   userHasPermissionTo,
   tab: 'challenges-and-support',
-  activeChallenges: Result.fulfilled({}),
-  archivedChallenges: Result.fulfilled({}),
-  activeSupportStrategies: Result.fulfilled({}),
-  archivedSupportStrategies: Result.fulfilled({}),
+  activeChallengesAndSupport: Result.fulfilled({}),
+  archivedChallengesAndSupport: Result.fulfilled({}),
   prisonNamesById: Result.fulfilled(prisonNamesById),
   educationSupportPlanLifecycleStatus: Result.fulfilled(aPlanLifecycleStatusDto()),
   pageHasApiErrors: false,
@@ -60,12 +58,64 @@ describe('Profile challenges and support page', () => {
     userHasPermissionTo.mockReturnValue(true)
   })
 
-  it('should render the profile challenges and support page given the Challenges service API promise is not resolved', () => {
+  it.each([
+    {
+      activeChallengesAndSupport: [],
+      archivedChallengesAndSupport: [],
+      expectedActiveCount: 0,
+      expectedArchivedCount: 0,
+    },
+    {
+      activeChallengesAndSupport: ['SENSORY'],
+      archivedChallengesAndSupport: ['EMOTIONS_FEELINGS'],
+      expectedActiveCount: 1,
+      expectedArchivedCount: 1,
+    },
+    {
+      activeChallengesAndSupport: ['LITERACY_SKILLS', 'PHYSICAL_SKILLS', 'SENSORY'],
+      archivedChallengesAndSupport: ['EMOTIONS_FEELINGS', 'MEMORY'],
+      expectedActiveCount: 3,
+      expectedArchivedCount: 2,
+    },
+  ])('should render the profile challenges and support page with the correct tab heading counts', spec => {
     // Given
     const params = {
       ...templateParams,
-      activeChallenges: Result.rejected(new Error('Failed to get challenges')),
-      archivedChallenges: Result.rejected(new Error('Failed to get challenges')),
+      activeChallengesAndSupport: Result.fulfilled(
+        spec.activeChallengesAndSupport.reduce(
+          (acc, category) => {
+            acc[category] = {}
+            return acc
+          },
+          {} as Record<string, unknown>,
+        ),
+      ),
+      archivedChallengesAndSupport: Result.fulfilled(
+        spec.archivedChallengesAndSupport.reduce(
+          (acc, category) => {
+            acc[category] = {}
+            return acc
+          },
+          {} as Record<string, unknown>,
+        ),
+      ),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('.govuk-tabs__list-item').eq(0).text().trim()).toEqual(`Current (${spec.expectedActiveCount})`)
+    expect($('.govuk-tabs__list-item').eq(1).text().trim()).toEqual(`History (${spec.expectedArchivedCount})`)
+    expect($('[data-qa=api-error-banner]').length).toEqual(0)
+  })
+
+  it('should render the profile challenges and support page given the Active Challenges and Support promise is not resolved', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      activeChallengesAndSupport: Result.rejected(new Error('Failed to get active challenges and support')),
       pageHasApiErrors: true,
     }
 
@@ -78,32 +128,11 @@ describe('Profile challenges and support page', () => {
     expect($('[data-qa=api-error-banner]').length).toEqual(1)
   })
 
-  it('should render the profile challenges and support page given the Support Strategies service API promise is not resolved', () => {
+  it('should render the profile challenges and support page given the Archived Challenges and Support promise is not resolved', () => {
     // Given
     const params = {
       ...templateParams,
-      activeSupportStrategies: Result.rejected(new Error('Failed to get support strategies')),
-      archivedSupportStrategies: Result.rejected(new Error('Failed to get support strategies')),
-      pageHasApiErrors: true,
-    }
-
-    // When
-    const content = njkEnv.render(template, params)
-    const $ = cheerio.load(content)
-
-    // Then
-    expect($('[data-qa=no-challenges-and-support-summary-card]').length).toEqual(0)
-    expect($('[data-qa=api-error-banner]').length).toEqual(1)
-  })
-
-  it('should render the profile challenges and support page given both the Challenges and Support Strategies service APIs promises are not resolved', () => {
-    // Given
-    const params = {
-      ...templateParams,
-      activeChallenges: Result.rejected(new Error('Failed to get challenges')),
-      archivedChallenges: Result.rejected(new Error('Failed to get challenges')),
-      activeSupportStrategies: Result.rejected(new Error('Failed to get support strategies')),
-      archivedSupportStrategies: Result.rejected(new Error('Failed to get support strategies')),
+      archivedChallengesAndSupport: Result.rejected(new Error('Failed to get active challenges and support')),
       pageHasApiErrors: true,
     }
 

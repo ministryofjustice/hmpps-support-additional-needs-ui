@@ -47,31 +47,17 @@ describe('challengesAndSupportController', () => {
   it('should render the view', async () => {
     // Given
     const expectedViewTemplate = 'pages/profile/challenges-and-support/index'
-    const expectedActiveGroupedSupportStrategies = {
-      MEMORY: [memorySupportStrategy],
-    }
-    const expectedArchivedGroupedSupportStrategies = {
-      SENSORY: [sensorySupportStrategy],
-    }
 
     const expectedViewModel = {
       prisonNamesById,
       prisonerSummary,
       educationSupportPlanLifecycleStatus,
       tab: 'challenges-and-support',
-      activeChallenges: expect.objectContaining({
+      activeChallengesAndSupport: expect.objectContaining({
         status: 'fulfilled',
       }),
-      archivedChallenges: expect.objectContaining({
+      archivedChallengesAndSupport: expect.objectContaining({
         status: 'fulfilled',
-      }),
-      activeSupportStrategies: expect.objectContaining({
-        status: 'fulfilled',
-        value: expectedActiveGroupedSupportStrategies,
-      }),
-      archivedSupportStrategies: expect.objectContaining({
-        status: 'fulfilled',
-        value: expectedArchivedGroupedSupportStrategies,
       }),
     }
 
