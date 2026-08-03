@@ -1,4 +1,5 @@
 {% extends "../layout.njk" %}
+{% from "../components/actions-card/macro.njk" import actionsCard %}
 
 {% set pageId = 'profile-challenges-and-support' %}
 {% set pageTitle = "Support for additional needs - Challenges and support" %}
@@ -12,12 +13,29 @@
 
   <div class="govuk-grid-row">
 
+    {% set educationSupportPlanLifecycleStatusFulFilled = educationSupportPlanLifecycleStatus.isFulfilled() %}
+    {% set educationSupportPlanLifecycleStatus = educationSupportPlanLifecycleStatus.value if educationSupportPlanLifecycleStatusFulFilled else {} %}
+
     <div class="govuk-grid-column-two-thirds app-u-print-full-width">
-      {# Main page content to go here #}
+
+      {% if activeChallenges.isFulfilled() and archivedChallenges.isFulfilled() and activeSupportStrategies.isFulfilled() and archivedSupportStrategies.isFulfilled() %}
+        {# Main page content to go here #}
+
+
+      {% else %}
+        <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>
+        <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
+      {% endif %}
     </div>
 
     <div class="govuk-grid-column-one-third app-u-print-full-width">
-      {# Action bar componenent to go here #}
+      {{ actionsCard({
+        userHasPermissionTo: userHasPermissionTo,
+        prisonerSummary: prisonerSummary,
+        planStatus: educationSupportPlanLifecycleStatus.status,
+        planCreationDeadlineDate: educationSupportPlanLifecycleStatus.planCreationDeadlineDate,
+        planReviewDeadlineDate: educationSupportPlanLifecycleStatus.reviewDeadlineDate
+      }) }}
     </div>
   </div>
 {% endblock %}
