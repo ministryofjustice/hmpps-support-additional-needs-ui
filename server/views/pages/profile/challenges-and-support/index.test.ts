@@ -58,47 +58,29 @@ describe('Profile challenges and support page', () => {
     userHasPermissionTo.mockReturnValue(true)
   })
 
-  it.each([
-    {
-      activeChallengesAndSupport: [],
-      archivedChallengesAndSupport: [],
-      expectedActiveCount: 0,
-      expectedArchivedCount: 0,
-    },
-    {
-      activeChallengesAndSupport: ['SENSORY'],
-      archivedChallengesAndSupport: ['EMOTIONS_FEELINGS'],
-      expectedActiveCount: 1,
-      expectedArchivedCount: 1,
-    },
-    {
-      activeChallengesAndSupport: ['LITERACY_SKILLS', 'PHYSICAL_SKILLS', 'SENSORY'],
-      archivedChallengesAndSupport: ['EMOTIONS_FEELINGS', 'MEMORY'],
-      expectedActiveCount: 3,
-      expectedArchivedCount: 2,
-    },
-  ])('should render the profile challenges and support page with the correct tab heading counts', spec => {
+  it('should render the profile challenges and support page with the correct tab heading counts', () => {
     // Given
     const params = {
       ...templateParams,
-      activeChallengesAndSupport: Result.fulfilled(
-        spec.activeChallengesAndSupport.reduce(
-          (acc, category) => {
-            acc[category] = {}
-            return acc
-          },
-          {} as Record<string, unknown>,
-        ),
-      ),
-      archivedChallengesAndSupport: Result.fulfilled(
-        spec.archivedChallengesAndSupport.reduce(
-          (acc, category) => {
-            acc[category] = {}
-            return acc
-          },
-          {} as Record<string, unknown>,
-        ),
-      ),
+      activeChallengesAndSupport: Result.fulfilled({
+        dataGroupedByCategory: {
+          LITERACY_SKILLS: {/* Controller and mapper would populate this field - not required for this test */},
+          PHYSICAL_SKILLS: {/* Controller and mapper would populate this field - not required for this test */},
+          SENSORY: {/* Controller and mapper would populate this field - not required for this test */},
+        },
+        summary: {
+          categoryCount: 3,
+        },
+      }),
+      archivedChallengesAndSupport: Result.fulfilled({
+        dataGroupedByCategory: {
+          EMOTIONS_FEELINGS: {/* Controller and mapper would populate this field - not required for this test */},
+          MEMORY: {/* Controller and mapper would populate this field - not required for this test */},
+        },
+        summary: {
+          categoryCount: 2,
+        },
+      }),
     }
 
     // When
@@ -106,8 +88,106 @@ describe('Profile challenges and support page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('.govuk-tabs__list-item').eq(0).text().trim()).toEqual(`Current (${spec.expectedActiveCount})`)
-    expect($('.govuk-tabs__list-item').eq(1).text().trim()).toEqual(`History (${spec.expectedArchivedCount})`)
+    expect($('.govuk-tabs__list-item').eq(0).text().trim()).toEqual(`Current (3)`)
+    expect($('.govuk-tabs__list-item').eq(1).text().trim()).toEqual(`History (2)`)
+    expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
+    expect($('[data-qa=api-error-banner]').length).toEqual(0)
+  })
+
+  it('should render the profile challenges and support page given there are no active challenges', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      activeChallengesAndSupport: Result.fulfilled({
+        dataGroupedByCategory: {/* Controller and mapper would populate this field - not required for this test */},
+        summary: {
+          challengesCount: 0,
+          supportStrategiesCount: 1,
+        },
+      }),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=no-active-challenges-message]').length).toEqual(1)
+    expect($('[data-qa=no-active-support-strategies-message]').length).toEqual(0)
+    expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
+    expect($('[data-qa=api-error-banner]').length).toEqual(0)
+  })
+
+  it('should render the profile challenges and support page given there are no active support strategies', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      activeChallengesAndSupport: Result.fulfilled({
+        dataGroupedByCategory: {/* Controller and mapper would populate this field - not required for this test */},
+        summary: {
+          challengesCount: 1,
+          supportStrategiesCount: 0,
+        },
+      }),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('[data-qa=no-active-challenges-message]').length).toEqual(0)
+    expect($('[data-qa=no-active-support-strategies-message]').length).toEqual(1)
+    expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
+    expect($('[data-qa=api-error-banner]').length).toEqual(0)
+  })
+
+  it('should render the profile challenges and support page given there are some archived challenges or support strategies', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      archivedChallengesAndSupport: Result.fulfilled({
+        dataGroupedByCategory: {
+          EMOTIONS_FEELINGS: {/* Controller and mapper would populate this field - not required for this test */},
+          MEMORY: {/* Controller and mapper would populate this field - not required for this test */},
+        },
+        summary: {
+          categoryCount: 2,
+        },
+      }),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('.govuk-tabs__list-item').eq(1).text().trim()).toEqual(`History (2)`)
+    expect($('[data-qa=no-archived-challenges-or-support-message]').length).toEqual(0)
+    expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
+    expect($('[data-qa=api-error-banner]').length).toEqual(0)
+  })
+
+  it('should render the profile challenges and support page given there are no archived challenges or support strategies', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      archivedChallengesAndSupport: Result.fulfilled({
+        dataGroupedByCategory: {},
+        summary: {
+          categoryCount: 0,
+        },
+      }),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('.govuk-tabs__list-item').eq(1).text().trim()).toEqual(`History (0)`)
+    expect($('[data-qa=no-archived-challenges-or-support-message]').length).toEqual(1)
+    expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
@@ -142,6 +222,7 @@ describe('Profile challenges and support page', () => {
 
     // Then
     expect($('[data-qa=no-challenges-and-support-summary-card]').length).toEqual(0)
+    expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(1)
     expect($('[data-qa=api-error-banner]').length).toEqual(1)
   })
 })

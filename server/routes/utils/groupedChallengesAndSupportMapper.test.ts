@@ -104,52 +104,59 @@ describe('groupedChallengesAndSupportMapper', () => {
     it('should map active challenges and support to GroupedChallenges', () => {
       // Given
       const expectedGroupedChallengesAndSupport: GroupedChallengesAndSupport = {
-        ATTENTION_ORGANISING_TIME: {
-          nonAlnChallenges: [attentionChallenge],
-          latestAlnScreener: {
-            screenerDate,
-            createdAtPrison: prisonId,
-            challenges: [focussingChallenge, tidinessChallenge],
+        dataGroupedByCategory: {
+          ATTENTION_ORGANISING_TIME: {
+            nonAlnChallenges: [attentionChallenge],
+            latestAlnScreener: {
+              screenerDate,
+              createdAtPrison: prisonId,
+              challenges: [focussingChallenge, tidinessChallenge],
+            },
+            supportStrategies: [],
           },
-          supportStrategies: [],
-        },
-        LITERACY_SKILLS: {
-          nonAlnChallenges: [literacyChallenge],
-          latestAlnScreener: {
-            screenerDate,
-            createdAtPrison: prisonId,
-            challenges: [alphabetOrderingChallenge, readingChallenge, writingChallenge],
+          LITERACY_SKILLS: {
+            nonAlnChallenges: [literacyChallenge],
+            latestAlnScreener: {
+              screenerDate,
+              createdAtPrison: prisonId,
+              challenges: [alphabetOrderingChallenge, readingChallenge, writingChallenge],
+            },
+            supportStrategies: [],
           },
-          supportStrategies: [],
-        },
-        NUMERACY_SKILLS: {
-          nonAlnChallenges: [numeracy2Challenge, numeracyChallenge],
-          latestAlnScreener: {
-            screenerDate,
-            createdAtPrison: prisonId,
-            challenges: [arithmeticChallenge],
+          NUMERACY_SKILLS: {
+            nonAlnChallenges: [numeracy2Challenge, numeracyChallenge],
+            latestAlnScreener: {
+              screenerDate,
+              createdAtPrison: prisonId,
+              challenges: [arithmeticChallenge],
+            },
+            supportStrategies: [],
           },
-          supportStrategies: [],
+          LANGUAGE_COMM_SKILLS: {
+            nonAlnChallenges: [speakingChallenge],
+            latestAlnScreener: null,
+            supportStrategies: [],
+          },
+          MEMORY: {
+            nonAlnChallenges: [],
+            latestAlnScreener: null,
+            supportStrategies: [memoryActiveSupportStrategy],
+          },
+          GENERAL: {
+            nonAlnChallenges: [],
+            latestAlnScreener: null,
+            supportStrategies: [generalActiveSupportStrategy],
+          },
+          SENSORY: {
+            nonAlnChallenges: [],
+            latestAlnScreener: null,
+            supportStrategies: [recentActiveSensorySupportStrategy, oldestActiveSensorySupportStrategy],
+          },
         },
-        LANGUAGE_COMM_SKILLS: {
-          nonAlnChallenges: [speakingChallenge],
-          latestAlnScreener: null,
-          supportStrategies: [],
-        },
-        MEMORY: {
-          nonAlnChallenges: [],
-          latestAlnScreener: null,
-          supportStrategies: [memoryActiveSupportStrategy],
-        },
-        GENERAL: {
-          nonAlnChallenges: [],
-          latestAlnScreener: null,
-          supportStrategies: [generalActiveSupportStrategy],
-        },
-        SENSORY: {
-          nonAlnChallenges: [],
-          latestAlnScreener: null,
-          supportStrategies: [recentActiveSensorySupportStrategy, oldestActiveSensorySupportStrategy],
+        summary: {
+          supportStrategiesCount: 4,
+          challengesCount: 11,
+          categoryCount: 7,
         },
       }
       const expectedCategoryOrder = [
@@ -173,26 +180,33 @@ describe('groupedChallengesAndSupportMapper', () => {
       // Then
       expect(actual).toEqual(expected)
       const actualGroupedChallenges = actual.getOrThrow()
-      const actualCategoryOrder = Object.keys(actualGroupedChallenges)
+      const actualCategoryOrder = Object.keys(actualGroupedChallenges.dataGroupedByCategory)
       expect(actualCategoryOrder).toEqual(expectedCategoryOrder)
     })
 
     it('should map inactive challenges and support to GroupedChallenges', () => {
       // Given
       const expectedGroupedChallengesAndSupport: GroupedChallengesAndSupport = {
-        EMOTIONS_FEELINGS: {
-          nonAlnChallenges: [emotionsNonActiveChallenge],
-          latestAlnScreener: null,
-          supportStrategies: [],
-        },
-        LITERACY_SKILLS: {
-          nonAlnChallenges: [] as Array<ChallengeResponseDto>,
-          latestAlnScreener: {
-            screenerDate,
-            createdAtPrison: prisonId,
-            challenges: [wordFindingNonActiveChallenge],
+        dataGroupedByCategory: {
+          EMOTIONS_FEELINGS: {
+            nonAlnChallenges: [emotionsNonActiveChallenge],
+            latestAlnScreener: null,
+            supportStrategies: [],
           },
-          supportStrategies: [literacySkillsNonActiveSupportStrategy],
+          LITERACY_SKILLS: {
+            nonAlnChallenges: [] as Array<ChallengeResponseDto>,
+            latestAlnScreener: {
+              screenerDate,
+              createdAtPrison: prisonId,
+              challenges: [wordFindingNonActiveChallenge],
+            },
+            supportStrategies: [literacySkillsNonActiveSupportStrategy],
+          },
+        },
+        summary: {
+          supportStrategiesCount: 1,
+          challengesCount: 2,
+          categoryCount: 2,
         },
       }
       const expectedCategoryOrder = ['EMOTIONS_FEELINGS', 'LITERACY_SKILLS']
@@ -213,7 +227,7 @@ describe('groupedChallengesAndSupportMapper', () => {
       // Then
       expect(actual).toEqual(expected)
       const actualGroupedChallenges = actual.getOrThrow()
-      const actualCategoryOrder = Object.keys(actualGroupedChallenges)
+      const actualCategoryOrder = Object.keys(actualGroupedChallenges.dataGroupedByCategory)
       expect(actualCategoryOrder).toEqual(expectedCategoryOrder)
     })
 

@@ -20,36 +20,69 @@
 
       {% if activeChallengesAndSupport.isFulfilled() and archivedChallengesAndSupport.isFulfilled() %}
         {# The active and archived Challenges and Support Strategies are already grouped by category #}
-        {% set activeChallengesAndSupport = activeChallengesAndSupport.value %}
-        {% set archivedChallengesAndSupport = archivedChallengesAndSupport.value %}
+        {% set activeChallengesAndSupportByCategory = activeChallengesAndSupport.value.dataGroupedByCategory %}
+        {% set archivedChallengesAndSupportByCategory = archivedChallengesAndSupport.value.dataGroupedByCategory %}
 
-        {# Get the count of active and archived Challenges and Support Strategies groupings (ie. their categories) #}
-        {% set activeGroupCount = activeChallengesAndSupport | length %}
-        {% set archivedGroupCount = archivedChallengesAndSupport | length %}
+        {# Get the summary counts  #}
+        {% set activeCategoriesCount = activeChallengesAndSupport.value.summary.categoryCount %}
+        {% set activeChallengesCount = activeChallengesAndSupport.value.summary.challengesCount %}
+        {% set activeSupportStrategiesCount = activeChallengesAndSupport.value.summary.supportStrategiesCount %}
+        {% set archivedCategoriesCount = archivedChallengesAndSupport.value.summary.categoryCount %}
+        {% set archivedChallengesCount = archivedChallengesAndSupport.value.summary.challengesCount %}
+        {% set archivedSupportStrategiesCount = archivedChallengesAndSupport.value.summary.supportStrategiesCount %}
 
         {% set prisonNamesById = prisonNamesById.value if prisonNamesById.isFulfilled() else {} %}
+
+        {% set activeChallengesAndSupportContent %}
+          {% if activeChallengesCount === 0 %}
+            <p class="govuk-body" data-qa="no-active-challenges-message">
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no current challenges.
+            </p>
+          {% endif %}
+
+          {% if activeSupportStrategiesCount === 0 %}
+            <p class="govuk-body" data-qa="no-active-support-strategies-message">
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no current support strategies.
+            </p>
+          {% endif %}
+
+          {% if activeCategoriesCount > 0 %}
+            {# tab content grouped by Category goes here #}
+          {% endif %}
+        {% endset %}
+
+        {% set archivedChallengesAndSupportContent %}
+          {% if archivedCategoriesCount > 0 %}
+            {# tab content grouped by Category goes here #}
+          {% else %}
+            <p class="govuk-body" data-qa="no-archived-challenges-or-support-message">
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no previous challenges or support strategies.
+            </p>
+          {% endif %}
+        {% endset %}
+
 
         {{ govukTabs({
           items: [
             {
-              label: 'Current (' + activeGroupCount + ')',
+              label: 'Current (' + activeCategoriesCount + ')',
               id: 'current-challenges-and-support',
               panel: {
-                html: ''
+                html: activeChallengesAndSupportContent
               }
             },
             {
-              label: 'History (' + archivedGroupCount + ')',
+              label: 'History (' + archivedCategoriesCount + ')',
               id: 'archived-challenges-and-support',
               panel: {
-                html: ''
+                html: archivedChallengesAndSupportContent
               }
             }
           ]
         }) }}
 
       {% else %}
-        <h3 class="govuk-heading-s" data-qa="challenges-unavailable-message">We cannot show these details right now</h3>
+        <h3 class="govuk-heading-s" data-qa="challenges-and-support-unavailable-message">We cannot show these details right now</h3>
         <p class="govuk-body">Reload the page or try again later. Other parts of this service may still be available.</p>
       {% endif %}
     </div>
