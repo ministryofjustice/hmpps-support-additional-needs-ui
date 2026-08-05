@@ -169,6 +169,7 @@
     },
     "mocha": {
       "serialize-javascript": "^7.0.5"
-    }
+    },
+    "@opentelemetry/core": "^2.8.0"
   }
 }
