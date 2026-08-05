@@ -1,5 +1,6 @@
 {% extends "../layout.njk" %}
 {% from "../components/actions-card/macro.njk" import actionsCard %}
+{% from "../../../components/challenges-and-support-summary-card/macro.njk" import challengesAndSupportSummaryCard %}
 
 {% set pageId = 'profile-challenges-and-support' %}
 {% set pageTitle = "Support for additional needs - Challenges and support" %}
@@ -38,16 +39,37 @@
             <p class="govuk-body" data-qa="no-active-challenges-message">
               {{ prisonerSummary | formatFirst_name_Last_name }} has no current challenges.
             </p>
+            {% if userHasPermissionTo('RECORD_CHALLENGES') %}
+              <p class="govuk-body">
+                <a class="govuk-link" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category" data-qa="add-challenge-button">Add a challenge</a>
+              </p>
+            {% endif %}
           {% endif %}
 
           {% if activeSupportStrategiesCount === 0 %}
             <p class="govuk-body" data-qa="no-active-support-strategies-message">
               {{ prisonerSummary | formatFirst_name_Last_name }} has no current support strategies.
             </p>
+            {% if userHasPermissionTo('RECORD_SUPPORT_STRATEGIES') %}
+              <p class="govuk-body">
+                <a class="govuk-link" href="/support-strategies/{{ prisonerSummary.prisonNumber }}/create/select-category" data-qa="add-support-strategy-button">Add support strategy</a>
+              </p>
+            {% endif %}
           {% endif %}
 
           {% if activeCategoriesCount > 0 %}
-            {# tab content grouped by Category goes here #}
+            {% for challengeAndSupportCategory, challengeAndSupportData in activeChallengesAndSupportByCategory %}
+              {{ challengesAndSupportSummaryCard({
+                challengeAndSupportData: challengeAndSupportData,
+                prisonNamesById: prisonNamesById,
+                prisonNumber: prisonerSummary.prisonNumber,
+                userHasPermissionTo: userHasPermissionTo,
+                title: challengeAndSupportCategory | formatChallengeCategoryScreenValue,
+                attributes: {
+                  'data-qa': 'active-challenges-and-support-summary-card-' + challengeCategory
+                }
+              }) }}
+            {% endfor %}
           {% endif %}
         {% endset %}
 

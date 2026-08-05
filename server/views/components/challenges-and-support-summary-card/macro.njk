@@ -1,0 +1,25 @@
+{# Challenges & Support Summary Card macro
+
+Data supplied to this macro:
+  params: {
+    challengeAndSupportData: {
+      nonAlnChallenges: Array<ChallengeResponseDto> - Array of non-ALN Screener challenges
+      latestAlnScreener: {
+        screenerDate: Date - the Date of the latest ALN Screener
+        createdAtPrison: string - the prisonId where the latest ALN Screener was recorded
+        challenges: Array<ChallengeResponseDto> - Array of challenges on the latest ALN Screener
+      }
+      supportStrategies: Array<SupportStrategyResponseDto> - Array of Support Strategies
+    }
+    prisonNamesById: Object of key value pairs, where the key is the prison ID, and the value is the prison name
+    prisonNumber: string - the prisoner's prison number, used to build action links
+    userHasPermissionTo: function that determines user permissions
+    title: string - Summary Card title
+    id: string
+    classes: string
+    attributes: Object of key value pairs of additonal attributes to add the to the component
+  }
+#}
+{% macro challengesAndSupportSummaryCard(params) %}
+  {%- include "./template.njk" -%}
+{% endmacro %}
