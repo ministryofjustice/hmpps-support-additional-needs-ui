@@ -5,7 +5,7 @@ import dateComparator from '../dateComparator'
 import enumComparator from '../enumComparator'
 import SupportStrategyType from '../../enums/supportStrategyType'
 
-export type GroupedChallengesAndSupport = Record<
+type ChallengesAndSupportGroupedByCategory = Record<
   string,
   {
     nonAlnChallenges: Array<ChallengeResponseDto>
@@ -17,6 +17,14 @@ export type GroupedChallengesAndSupport = Record<
     supportStrategies: Array<SupportStrategyResponseDto>
   }
 >
+export type GroupedChallengesAndSupport = {
+  dataGroupedByCategory: ChallengesAndSupportGroupedByCategory
+  summary: {
+    supportStrategiesCount: number
+    challengesCount: number
+    categoryCount: number
+  }
+}
 
 const toGroupedChallengesAndSupportPromise = (config: {
   challenges: Result<Array<ChallengeResponseDto>>
@@ -27,23 +35,39 @@ const toGroupedChallengesAndSupportPromise = (config: {
   const { challenges, alnScreeners, supportStrategies, active } = config
 
   if (alnScreeners.isFulfilled() && challenges.isFulfilled() && supportStrategies.isFulfilled()) {
-    const groupedChallengesAndSupport: GroupedChallengesAndSupport = {}
+    let groupedChallengesAndSupport: GroupedChallengesAndSupport = {
+      dataGroupedByCategory: {},
+      summary: { supportStrategiesCount: 0, challengesCount: 0, categoryCount: 0 },
+    }
 
-    processChallengesIntoGroupedChallengesAndSupport(groupedChallengesAndSupport, challenges, alnScreeners, active)
-    processSupportStrategiesIntoGroupedChallengesAndSupport(groupedChallengesAndSupport, supportStrategies, active)
+    groupedChallengesAndSupport = processChallengesIntoGroupedChallengesAndSupport(
+      groupedChallengesAndSupport,
+      challenges,
+      alnScreeners,
+      active,
+    )
+    groupedChallengesAndSupport = processSupportStrategiesIntoGroupedChallengesAndSupport(
+      groupedChallengesAndSupport,
+      supportStrategies,
+      active,
+    )
+
+    groupedChallengesAndSupport.summary.categoryCount = Object.keys(
+      groupedChallengesAndSupport.dataGroupedByCategory,
+    ).length
 
     // Finally we need to reduce into a new object in order to get the object keys sorted by category (with GENERAL always as the last), otherwise the order of the keys will be the order in which they were processed/added to the object
-    const groupedChallengesSortedByCategory = Object.keys(groupedChallengesAndSupport)
+    groupedChallengesAndSupport.dataGroupedByCategory = Object.keys(groupedChallengesAndSupport.dataGroupedByCategory)
       .toSorted((categoryA, categoryB) => {
         if (categoryA === 'GENERAL') return 1
         if (categoryB === 'GENERAL') return -1
         return categoryA.localeCompare(categoryB)
       })
       .reduce((acc, category) => {
-        acc[category] = groupedChallengesAndSupport[category]
+        acc[category] = groupedChallengesAndSupport.dataGroupedByCategory[category]
         return acc
-      }, {} as GroupedChallengesAndSupport)
-    return Result.fulfilled(groupedChallengesSortedByCategory)
+      }, {} as ChallengesAndSupportGroupedByCategory)
+    return Result.fulfilled(groupedChallengesAndSupport)
   }
 
   // At least one of the API calls has failed; we need data from all APIs in order to properly render the Challenges & Support page
@@ -57,7 +81,7 @@ const processChallengesIntoGroupedChallengesAndSupport = (
   challenges: Result<Array<ChallengeResponseDto>>,
   alnScreeners: Result<AlnScreenerList>,
   active: boolean,
-) => {
+): GroupedChallengesAndSupport => {
   const nonAlnChallenges = getNonAlnChallenges(challenges, active).toSorted((left, right) =>
     dateComparator(left.updatedAt, right.updatedAt, 'DESC'),
   )
@@ -68,9 +92,8 @@ const processChallengesIntoGroupedChallengesAndSupport = (
   const screenerDate = latestAlnScreener?.screenerDate
   const prisonScreenerConductedAt = latestAlnScreener?.createdAtPrison
 
-  addNonAlnChallengesToGroupedChallengesAndSupport(groupedChallengesAndSupport, nonAlnChallenges)
-  addAlnChallengesToGroupedChallengesAndSupport(
-    groupedChallengesAndSupport,
+  return addAlnChallengesToGroupedChallengesAndSupport(
+    addNonAlnChallengesToGroupedChallengesAndSupport(groupedChallengesAndSupport, nonAlnChallenges),
     challengesFromLatestAlnScreener,
     screenerDate,
     prisonScreenerConductedAt,
@@ -80,21 +103,32 @@ const processChallengesIntoGroupedChallengesAndSupport = (
 const addNonAlnChallengesToGroupedChallengesAndSupport = (
   groupedChallengesAndSupport: GroupedChallengesAndSupport,
   nonAlnChallenges: Array<ChallengeResponseDto>,
-) => {
-  nonAlnChallenges.reduce((acc, challenge) => {
-    const category = challenge.challengeCategory
-    const currentEntry = acc[category] ?? {
-      nonAlnChallenges: [],
-      latestAlnScreener: null,
-      supportStrategies: [],
-    }
-    currentEntry.nonAlnChallenges.push({
-      ...challenge,
-      howIdentified: challenge.howIdentified?.toSorted(enumComparator),
-    })
-    acc[category] = currentEntry
-    return acc
-  }, groupedChallengesAndSupport)
+): GroupedChallengesAndSupport => {
+  const dataGroupedByCategory = nonAlnChallenges.reduce(
+    (acc, challenge) => {
+      const category = challenge.challengeCategory
+      const currentEntry = acc[category] ?? {
+        nonAlnChallenges: [],
+        latestAlnScreener: null,
+        supportStrategies: [],
+      }
+      currentEntry.nonAlnChallenges.push({
+        ...challenge,
+        howIdentified: challenge.howIdentified?.toSorted(enumComparator),
+      })
+      acc[category] = currentEntry
+      return acc
+    },
+    { ...groupedChallengesAndSupport.dataGroupedByCategory },
+  )
+
+  return {
+    dataGroupedByCategory,
+    summary: {
+      ...groupedChallengesAndSupport.summary,
+      challengesCount: groupedChallengesAndSupport.summary.challengesCount + nonAlnChallenges.length,
+    },
+  }
 }
 
 const addAlnChallengesToGroupedChallengesAndSupport = (
@@ -102,45 +136,71 @@ const addAlnChallengesToGroupedChallengesAndSupport = (
   alnChallenges: Array<ChallengeResponseDto>,
   screenerDate: Date,
   createdAtPrison: string,
-) => {
-  alnChallenges.reduce((acc, challenge) => {
-    const category = challenge.challengeCategory
-    const currentEntry = acc[category] ?? {
-      nonAlnChallenges: [],
-      latestAlnScreener: null,
-      supportStrategies: [],
-    }
-    currentEntry.latestAlnScreener = currentEntry.latestAlnScreener || { screenerDate, createdAtPrison, challenges: [] }
-    currentEntry.latestAlnScreener.challenges.push(challenge)
-    acc[category] = currentEntry
-    return acc
-  }, groupedChallengesAndSupport)
+): GroupedChallengesAndSupport => {
+  const dataGroupedByCategory = alnChallenges.reduce(
+    (acc, challenge) => {
+      const category = challenge.challengeCategory
+      const currentEntry = acc[category] ?? {
+        nonAlnChallenges: [],
+        latestAlnScreener: null,
+        supportStrategies: [],
+      }
+      currentEntry.latestAlnScreener = currentEntry.latestAlnScreener || {
+        screenerDate,
+        createdAtPrison,
+        challenges: [],
+      }
+      currentEntry.latestAlnScreener.challenges.push(challenge)
+      acc[category] = currentEntry
+      return acc
+    },
+    { ...groupedChallengesAndSupport.dataGroupedByCategory },
+  )
+
+  return {
+    dataGroupedByCategory,
+    summary: {
+      ...groupedChallengesAndSupport.summary,
+      challengesCount: groupedChallengesAndSupport.summary.challengesCount + alnChallenges.length,
+    },
+  }
 }
 
 const processSupportStrategiesIntoGroupedChallengesAndSupport = (
   groupedChallengesAndSupport: GroupedChallengesAndSupport,
   supportStrategies: Result<Array<SupportStrategyResponseDto>>,
   active: boolean,
-) => {
+): GroupedChallengesAndSupport => {
   const supportStrategiesSortedByDate = (
     supportStrategies.getOrNull()?.filter(supportStrategy => supportStrategy.active === active) ?? []
   ).toSorted((left: SupportStrategyResponseDto, right: SupportStrategyResponseDto) =>
     dateComparator(left.updatedAt, right.updatedAt, 'DESC'),
   )
-  supportStrategiesSortedByDate.reduce((acc, supportStrategy) => {
-    const category =
-      supportStrategy.supportStrategyTypeCode === SupportStrategyType.GENERAL
-        ? supportStrategy.supportStrategyTypeCode
-        : supportStrategy.supportStrategyCategory
-    const currentEntry = acc[category] ?? {
-      nonAlnChallenges: [],
-      latestAlnScreener: null,
-      supportStrategies: [],
-    }
-    currentEntry.supportStrategies.push(supportStrategy)
-    acc[category] = currentEntry
-    return acc
-  }, groupedChallengesAndSupport)
+  const dataGroupedByCategory = supportStrategiesSortedByDate.reduce(
+    (acc, supportStrategy) => {
+      const category =
+        supportStrategy.supportStrategyTypeCode === SupportStrategyType.GENERAL
+          ? supportStrategy.supportStrategyTypeCode
+          : supportStrategy.supportStrategyCategory
+      const currentEntry = acc[category] ?? {
+        nonAlnChallenges: [],
+        latestAlnScreener: null,
+        supportStrategies: [],
+      }
+      currentEntry.supportStrategies.push(supportStrategy)
+      acc[category] = currentEntry
+      return acc
+    },
+    { ...groupedChallengesAndSupport.dataGroupedByCategory },
+  )
+
+  return {
+    dataGroupedByCategory,
+    summary: {
+      ...groupedChallengesAndSupport.summary,
+      supportStrategiesCount: supportStrategiesSortedByDate.length,
+    },
+  }
 }
 
 export default toGroupedChallengesAndSupportPromise
