@@ -3,8 +3,6 @@ import * as cheerio from 'cheerio'
 import { parseISO } from 'date-fns'
 import type { SupportStrategyResponseDto } from 'dto'
 import formatDateFilter from '../../../filters/formatDateFilter'
-import { formatStrengthTypeScreenValueFilter } from '../../../filters/formatStrengthTypeFilter'
-import formatStrengthIdentificationSourceScreenValueFilter from '../../../filters/formatStrengthIdentificationSourceFilter'
 import aValidSupportStrategyResponseDto from '../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
 
 const njkEnv = nunjucks.configure([
@@ -16,8 +14,6 @@ const njkEnv = nunjucks.configure([
 
 njkEnv //
   .addFilter('formatDate', formatDateFilter)
-  .addFilter('formatStrengthTypeScreenValue', formatStrengthTypeScreenValueFilter)
-  .addFilter('formatStrengthIdentificationSourceScreenValue', formatStrengthIdentificationSourceScreenValueFilter)
 
 const prisonNamesById = {
   BXI: 'Brixton (HMP)',
@@ -168,7 +164,7 @@ describe('Tests for Support Strategies Summary Card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('ARCHIVE_SUPPORT_STRATEGIES')
   })
 
-  it('should render edit strength action given the showActions flag is true and the user only has permission to edit support strategies', () => {
+  it('should render edit support strategy action given the showActions flag is true and the user only has permission to edit support strategies', () => {
     userHasPermissionTo.mockReturnValueOnce(true)
     userHasPermissionTo.mockReturnValueOnce(false)
 
@@ -191,7 +187,7 @@ describe('Tests for Support Strategies Summary Card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('ARCHIVE_SUPPORT_STRATEGIES')
   })
 
-  it('should render archive strength action given the showActions flag is true and the user only has permission to archive support strategies', () => {
+  it('should render archive support strategy action given the showActions flag is true and the user only has permission to archive support strategies', () => {
     userHasPermissionTo.mockReturnValueOnce(false)
     userHasPermissionTo.mockReturnValueOnce(true)
 
@@ -214,7 +210,7 @@ describe('Tests for Support Strategies Summary Card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('ARCHIVE_SUPPORT_STRATEGIES')
   })
 
-  it('should render both strength actions given the showActions flag is true and the user has permissions to edit and archive support strategies', () => {
+  it('should render both support strategy actions given the showActions flag is true and the user has permissions to edit and archive support strategies', () => {
     userHasPermissionTo.mockReturnValue(true)
 
     const params = {

@@ -1,0 +1,12 @@
+{% from "./macro.njk" import challengesAndSupportSummaryCard %}
+
+{{ challengesAndSupportSummaryCard({
+  challengeAndSupportData: challengeAndSupportData,
+  prisonNamesById: prisonNamesById,
+  showActions: showActions,
+  userHasPermissionTo: userHasPermissionTo,
+  title: title,
+  id: id,
+  classes: classes,
+  attributes: attributes
+}) }}

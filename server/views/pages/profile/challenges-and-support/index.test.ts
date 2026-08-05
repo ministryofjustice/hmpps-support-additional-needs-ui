@@ -94,8 +94,10 @@ describe('Profile challenges and support page', () => {
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
-  it('should render the profile challenges and support page given there are no active challenges', () => {
+  it('should render the profile challenges and support page given there are no active challenges and the user has permission to create challenges', () => {
     // Given
+    userHasPermissionTo.mockReturnValue(true)
+
     const params = {
       ...templateParams,
       activeChallengesAndSupport: Result.fulfilled({
@@ -112,14 +114,50 @@ describe('Profile challenges and support page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('[data-qa=no-active-challenges-message]').length).toEqual(1)
-    expect($('[data-qa=no-active-support-strategies-message]').length).toEqual(0)
+    const parentTab = $('#current-challenges-and-support')
+    expect(parentTab.find('[data-qa=no-active-challenges-message]').length).toEqual(1)
+    expect(parentTab.find('[data-qa=add-challenge-button]').length).toEqual(1)
+    expect(parentTab.find('[data-qa=no-active-support-strategies-message]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=add-support-strategy-button]').length).toEqual(0)
     expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
   })
 
-  it('should render the profile challenges and support page given there are no active support strategies', () => {
+  it('should render the profile challenges and support page given there are no active challenges and the user does not have permission to create challenges', () => {
     // Given
+    userHasPermissionTo.mockReturnValue(false)
+
+    const params = {
+      ...templateParams,
+      activeChallengesAndSupport: Result.fulfilled({
+        dataGroupedByCategory: {/* Controller and mapper would populate this field - not required for this test */},
+        summary: {
+          challengesCount: 0,
+          supportStrategiesCount: 1,
+        },
+      }),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    const parentTab = $('#current-challenges-and-support')
+    expect(parentTab.find('[data-qa=no-active-challenges-message]').length).toEqual(1)
+    expect(parentTab.find('[data-qa=add-challenge-button]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=no-active-support-strategies-message]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=add-support-strategy-button]').length).toEqual(0)
+    expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
+    expect($('[data-qa=api-error-banner]').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
+  })
+
+  it('should render the profile challenges and support page given there are no active support strategies and the user has permission to create support strategies', () => {
+    // Given
+    userHasPermissionTo.mockReturnValue(true)
+
     const params = {
       ...templateParams,
       activeChallengesAndSupport: Result.fulfilled({
@@ -136,10 +174,44 @@ describe('Profile challenges and support page', () => {
     const $ = cheerio.load(content)
 
     // Then
-    expect($('[data-qa=no-active-challenges-message]').length).toEqual(0)
-    expect($('[data-qa=no-active-support-strategies-message]').length).toEqual(1)
+    const parentTab = $('#current-challenges-and-support')
+    expect(parentTab.find('[data-qa=no-active-challenges-message]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=add-challenge-button]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=no-active-support-strategies-message]').length).toEqual(1)
+    expect(parentTab.find('[data-qa=add-support-strategy-button]').length).toEqual(1)
     expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
+  })
+
+  it('should render the profile challenges and support page given there are no active support strategies and the user does not have permission to create support strategies', () => {
+    // Given
+    userHasPermissionTo.mockReturnValue(false)
+
+    const params = {
+      ...templateParams,
+      activeChallengesAndSupport: Result.fulfilled({
+        dataGroupedByCategory: {/* Controller and mapper would populate this field - not required for this test */},
+        summary: {
+          challengesCount: 1,
+          supportStrategiesCount: 0,
+        },
+      }),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    const parentTab = $('#current-challenges-and-support')
+    expect(parentTab.find('[data-qa=no-active-challenges-message]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=add-challenge-button]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=no-active-support-strategies-message]').length).toEqual(1)
+    expect(parentTab.find('[data-qa=add-support-strategy-button]').length).toEqual(0)
+    expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
+    expect($('[data-qa=api-error-banner]').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
   })
 
   it('should render the profile challenges and support page given there are some archived challenges or support strategies', () => {
