@@ -1,0 +1,12 @@
+{% from "./macro.njk" import archivedChallengesAndSupportSummaryCard %}
+
+{{ archivedChallengesAndSupportSummaryCard({
+  archivedChallenges: archivedChallenges,
+  archivedSupportStrategies: archivedSupportStrategies,
+  prisonNamesById: prisonNamesById,
+  userHasPermissionTo: userHasPermissionTo,
+  title: title,
+  id: id,
+  classes: classes,
+  attributes: attributes
+}) }}

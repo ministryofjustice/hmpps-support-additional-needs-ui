@@ -1,6 +1,7 @@
 {% extends "../layout.njk" %}
 {% from "../components/actions-card/macro.njk" import actionsCard %}
 {% from "../../../components/challenges-and-support-summary-card/macro.njk" import challengesAndSupportSummaryCard %}
+{% from "../../../components/archived-challenges-and-support-summary-card/macro.njk" import archivedChallengesAndSupportSummaryCard %}
 
 {% set pageId = 'profile-challenges-and-support' %}
 {% set pageTitle = "Support for additional needs - Challenges and support" %}
@@ -64,9 +65,9 @@
                 prisonNamesById: prisonNamesById,
                 prisonNumber: prisonerSummary.prisonNumber,
                 userHasPermissionTo: userHasPermissionTo,
-                title: challengeAndSupportCategory | formatChallengeCategoryScreenValue,
+                title: challengeAndSupportCategory | formatChallengeCategoryScreenValue | default(challengeAndSupportCategory, true),
                 attributes: {
-                  'data-qa': 'active-challenges-and-support-summary-card-' + challengeCategory
+                  'data-qa': 'active-challenges-and-support-summary-card-' + challengeAndSupportCategory
                 }
               }) }}
             {% endfor %}
@@ -75,7 +76,20 @@
 
         {% set archivedChallengesAndSupportContent %}
           {% if archivedCategoriesCount > 0 %}
-            {# tab content grouped by Category goes here #}
+            {% for challengeAndSupportCategory, challengeAndSupportData in archivedChallengesAndSupportByCategory %}
+              {% set archivedChallenges = challengeAndSupportData.nonAlnChallenges %}
+              {% set archivedSupportStrategies = challengeAndSupportData.supportStrategies %}
+              {{ archivedChallengesAndSupportSummaryCard({
+                archivedChallenges: archivedChallenges,
+                archivedSupportStrategies: archivedSupportStrategies,
+                prisonNamesById: prisonNamesById,
+                userHasPermissionTo: userHasPermissionTo,
+                title: challengeAndSupportCategory | formatChallengeCategoryScreenValue | default(challengeAndSupportCategory, true),
+                attributes: {
+                  'data-qa': 'archived-challenges-and-support-summary-card_' + challengeCategory
+                }
+              }) }}
+            {% endfor %}
           {% else %}
             <p class="govuk-body" data-qa="no-archived-challenges-or-support-message">
               {{ prisonerSummary | formatFirst_name_Last_name }} has no previous challenges or support strategies.

@@ -1,0 +1,17 @@
+{# Archived Challenges & Support Summary Card macro
+
+Data supplied to this macro:
+  params: {
+    archivedChallenges: Array<ChallengeResponseDto> - Array of archived challenges
+    archivedSupportStrategies: Array<SupportStrategyResponseDto> - Array of Support Strategies
+    prisonNamesById: Object of key value pairs, where the key is the prison ID, and the value is the prison name
+    title: string - Summary Card title
+    userHasPermissionTo: function - RBAC helper function
+    id: string
+    classes: string
+    attributes: Object of key value pairs of additonal attributes to add the to the component
+  }
+#}
+{% macro archivedChallengesAndSupportSummaryCard(params) %}
+  {%- include "./template.njk" -%}
+{% endmacro %}
