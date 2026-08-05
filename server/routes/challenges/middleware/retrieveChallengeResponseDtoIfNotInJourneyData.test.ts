@@ -5,6 +5,9 @@ import retrieveChallengeResponseDtoIfNotInJourneyData from './retrieveChallengeR
 import aValidChallengeResponseDto from '../../../testsupport/challengeResponseDtoTestDataBuilder'
 
 jest.mock('../../../services/challengeService')
+jest.mock('../../../config', () => ({
+  featureToggles: { displayChallengesAndSupportStrategiesCombined: true },
+}))
 
 describe('retrieveChallengeResponseDtoIfNotInJourneyData', () => {
   const challengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
@@ -131,6 +134,6 @@ describe('retrieveChallengeResponseDtoIfNotInJourneyData', () => {
     expect(challengeService.getChallenge).toHaveBeenCalledWith(username, prisonNumber, challengeReference)
     expect(next).not.toHaveBeenCalled()
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
-    expect(res.redirect).toHaveBeenCalledWith(`/profile/${prisonNumber}/challenges`)
+    expect(res.redirect).toHaveBeenCalledWith(`/profile/${prisonNumber}/challenges-and-support`)
   })
 })

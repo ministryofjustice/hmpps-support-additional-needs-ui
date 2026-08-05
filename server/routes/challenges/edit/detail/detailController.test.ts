@@ -8,6 +8,9 @@ import AuditService from '../../../../services/auditService'
 
 jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/challengeService')
+jest.mock('../../../../config', () => ({
+  featureToggles: { displayChallengesAndSupportStrategiesCombined: true },
+}))
 
 describe('detailController', () => {
   const mockedChallengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
@@ -205,7 +208,7 @@ describe('detailController', () => {
       howIdentified: [ChallengeIdentificationSource.CONVERSATIONS, ChallengeIdentificationSource.OTHER],
       howIdentifiedOther: 'Other prisoners often mention this to me in passing',
     }
-    const expectedNextRoute = `/profile/${prisonNumber}/challenges`
+    const expectedNextRoute = `/profile/${prisonNumber}/challenges-and-support`
 
     // When
     await controller.submitDetailForm(req, res, next)

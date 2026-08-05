@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import type { ScreenerDeletionDto } from 'dto'
+import config from '../../../../config'
 
 export default class ReasonController {
   getReasonView = async (req: Request, res: Response, _next: NextFunction) => {
@@ -40,6 +41,9 @@ const resolveReturnTo = (req: Request): string => {
   const { prisonNumber } = req.params
   const from = typeof req.query.from === 'string' ? req.query.from : undefined
   if (from === 'strengths') return `/profile/${prisonNumber}/strengths`
-  if (from === 'challenges') return `/profile/${prisonNumber}/challenges`
+  if (from === 'challenges')
+    return config.featureToggles.displayChallengesAndSupportStrategiesCombined
+      ? `/profile/${prisonNumber}/challenges-and-support`
+      : `/profile/${prisonNumber}/challenges`
   return `/profile/${prisonNumber}/overview`
 }

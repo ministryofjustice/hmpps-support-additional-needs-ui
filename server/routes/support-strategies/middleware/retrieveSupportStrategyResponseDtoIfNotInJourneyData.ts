@@ -2,6 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from 'express'
 import createError from 'http-errors'
 import type { SupportStrategyResponseDto } from 'dto'
 import { SupportStrategyService } from '../../../services'
+import config from '../../../config'
 
 /**
  * Middleware function to check whether a [SupportStrategyResponseDto] exists in the journeyData for the prisoner and support strategy reference in the request URL.
@@ -35,7 +36,11 @@ const retrieveSupportStrategyResponseDtoIfNotInJourneyData = (
         }
       } catch {
         req.flash('pageHasApiErrors', 'true')
-        return res.redirect(`/profile/${prisonNumber}/support-strategies`)
+        return res.redirect(
+          config.featureToggles.displayChallengesAndSupportStrategiesCombined
+            ? `/profile/${prisonNumber}/challenges-and-support`
+            : `/profile/${prisonNumber}/support-strategies`,
+        )
       }
     }
 

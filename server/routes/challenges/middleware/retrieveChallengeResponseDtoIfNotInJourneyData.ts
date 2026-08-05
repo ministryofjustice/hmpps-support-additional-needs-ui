@@ -2,6 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from 'express'
 import createError from 'http-errors'
 import type { ChallengeResponseDto } from 'dto'
 import { ChallengeService } from '../../../services'
+import config from '../../../config'
 
 /**
  * Middleware function to check whether a [ChallengeResponseDto] exists in the journeyData for the prisoner and challenge reference in the request URL.
@@ -23,7 +24,11 @@ const retrieveChallengeResponseDtoIfNotInJourneyData = (challengeService: Challe
         }
       } catch {
         req.flash('pageHasApiErrors', 'true')
-        return res.redirect(`/profile/${prisonNumber}/challenges`)
+        return res.redirect(
+          config.featureToggles.displayChallengesAndSupportStrategiesCombined
+            ? `/profile/${prisonNumber}/challenges-and-support`
+            : `/profile/${prisonNumber}/challenges`,
+        )
       }
     }
 

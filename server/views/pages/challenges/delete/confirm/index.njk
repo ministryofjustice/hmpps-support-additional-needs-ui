@@ -44,9 +44,10 @@
             preventDoubleClick: true
           }) }}
 
+          {% set setNoButtonHref = "/profile/" + prisonerSummary.prisonNumber + ("/challenges-and-support" if featureToggles.displayChallengesAndSupportStrategiesCombined else "/challenges") + ("#archived-challenges" if mode == 'history' else "#current-challenges") %}
           {{ govukButton({
             text: "No, go back to overview",
-            href: "/profile/" + prisonerSummary.prisonNumber + "/challenges" + ("#archived-challenges" if mode == 'history' else "#current-challenges"),
+            href: setNoButtonHref,
             classes: "govuk-button--secondary",
             attributes: {"data-qa": "no-delete-link"}
           }) }}

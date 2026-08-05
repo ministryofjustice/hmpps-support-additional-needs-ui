@@ -4,6 +4,7 @@ import { SupportStrategyService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
 import AuditService, { BaseAuditData } from '../../../../services/auditService'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import config from '../../../../config'
 
 export default class DetailController {
   constructor(
@@ -49,7 +50,12 @@ export default class DetailController {
     const { prisonNumber } = supportStrategyDto
     req.journeyData.supportStrategyDto = undefined
     this.auditService.logEditSupportStrategy(this.editSupportStrategyAuditData(req, supportStrategyDto)) // no need to wait for response
-    return res.redirectWithSuccess(`/profile/${prisonNumber}/support-strategies`, 'Support strategy updated')
+    return res.redirectWithSuccess(
+      config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? `/profile/${prisonNumber}/challenges-and-support`
+        : `/profile/${prisonNumber}/support-strategies`,
+      'Support strategy updated',
+    )
   }
 
   private populateFormFromDto = (dto: SupportStrategyResponseDto) => {
