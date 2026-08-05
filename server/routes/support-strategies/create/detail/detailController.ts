@@ -3,6 +3,7 @@ import type { SupportStrategyDto } from 'dto'
 import { SupportStrategyService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
 import AuditService, { BaseAuditData } from '../../../../services/auditService'
+import config from '../../../../config'
 
 export default class DetailController {
   constructor(
@@ -42,7 +43,12 @@ export default class DetailController {
     const { prisonNumber } = supportStrategyDto
     req.journeyData.supportStrategyDto = undefined
     this.auditService.logCreateSupportStrategy(this.createSupportStrategyAuditData(req)) // no need to wait for response
-    return res.redirectWithSuccess(`/profile/${prisonNumber}/support-strategies`, 'Support strategy added')
+    return res.redirectWithSuccess(
+      config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? `/profile/${prisonNumber}/challenges-and-support`
+        : `/profile/${prisonNumber}/support-strategies`,
+      'Support strategy added',
+    )
   }
 
   private populateFormFromDto = (dto: SupportStrategyDto) => {

@@ -10,6 +10,7 @@ import {
 } from '../../../../utils/identificationSourceConsolidation'
 import { BaseAuditData } from '../../../../services/auditService'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import config from '../../../../config'
 
 export default class DetailController {
   constructor(
@@ -61,7 +62,12 @@ export default class DetailController {
     const { prisonNumber } = challengeResponseDto
     req.journeyData.challengeDto = undefined
     this.auditService.logEditChallenge(this.editChallengesAuditData(req, challengeResponseDto)) // no need to wait for response
-    return res.redirectWithSuccess(`/profile/${prisonNumber}/challenges`, 'Challenge updated')
+    return res.redirectWithSuccess(
+      config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? `/profile/${prisonNumber}/challenges-and-support`
+        : `/profile/${prisonNumber}/challenges`,
+      'Challenge updated',
+    )
   }
 
   private updateDtoFromForm = (

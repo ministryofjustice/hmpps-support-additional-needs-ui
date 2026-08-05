@@ -7,6 +7,9 @@ import aValidSupportStrategyResponseDto from '../../../../testsupport/supportStr
 
 jest.mock('../../../../services/supportStrategyService')
 jest.mock('../../../../services/auditService')
+jest.mock('../../../../config', () => ({
+  featureToggles: { displayChallengesAndSupportStrategiesCombined: true },
+}))
 
 describe('detailController', () => {
   const supportStrategyService = new SupportStrategyService(null) as jest.Mocked<SupportStrategyService>
@@ -134,7 +137,7 @@ describe('detailController', () => {
       prisonId,
       supportStrategyDetails: 'A description of the support strategy',
     }
-    const expectedNextRoute = `/profile/${prisonNumber}/support-strategies`
+    const expectedNextRoute = `/profile/${prisonNumber}/challenges-and-support`
 
     // When
     await controller.submitDetailForm(req, res, next)

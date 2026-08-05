@@ -5,6 +5,9 @@ import retrieveSupportStrategyResponseDtoIfNotInJourneyData from './retrieveSupp
 import aValidSupportStrategyResponseDto from '../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
 
 jest.mock('../../../services/supportStrategyService')
+jest.mock('../../../config', () => ({
+  featureToggles: { displayChallengesAndSupportStrategiesCombined: true },
+}))
 
 describe('retrieveSupportStrategyResponseDtoIfNotInJourneyData', () => {
   const supportStrategyService = new SupportStrategyService(null) as jest.Mocked<SupportStrategyService>
@@ -169,6 +172,6 @@ describe('retrieveSupportStrategyResponseDtoIfNotInJourneyData', () => {
     )
     expect(next).not.toHaveBeenCalled()
     expect(flash).toHaveBeenCalledWith('pageHasApiErrors', 'true')
-    expect(res.redirect).toHaveBeenCalledWith(`/profile/${prisonNumber}/support-strategies`)
+    expect(res.redirect).toHaveBeenCalledWith(`/profile/${prisonNumber}/challenges-and-support`)
   })
 })

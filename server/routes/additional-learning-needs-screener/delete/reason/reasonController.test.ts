@@ -4,6 +4,10 @@ import ReasonController from './reasonController'
 import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDataBuilder'
 import { aValidAlnScreenerResponseDto } from '../../../../testsupport/alnScreenerDtoTestDataBuilder'
 
+jest.mock('../../../../config', () => ({
+  featureToggles: { displayChallengesAndSupportStrategiesCombined: true },
+}))
+
 describe('delete/reason/reasonController (ALN screener)', () => {
   const controller = new ReasonController()
 
@@ -80,7 +84,7 @@ describe('delete/reason/reasonController (ALN screener)', () => {
       await controller.getReasonView(req, res, next)
 
       const renderedDto = (res.render as jest.Mock).mock.calls[0][1].dto as ScreenerDeletionDto
-      expect(renderedDto.returnTo).toEqual(`/profile/${prisonNumber}/challenges`)
+      expect(renderedDto.returnTo).toEqual(`/profile/${prisonNumber}/challenges-and-support`)
     })
 
     it('does not overwrite returnTo once it has been set', async () => {

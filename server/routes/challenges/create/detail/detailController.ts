@@ -5,6 +5,7 @@ import { Result } from '../../../../utils/result/result'
 import { AuditService, ChallengeService } from '../../../../services'
 import { asArray } from '../../../../utils/utils'
 import { BaseAuditData } from '../../../../services/auditService'
+import config from '../../../../config'
 
 export default class DetailController {
   constructor(
@@ -49,7 +50,12 @@ export default class DetailController {
     const { prisonNumber } = challengeDto
     req.journeyData.challengeDto = undefined
     this.auditService.logCreateChallenge(this.createChallengesAuditData(req)) // no need to wait for response
-    return res.redirectWithSuccess(`/profile/${prisonNumber}/challenges`, 'Challenge added')
+    return res.redirectWithSuccess(
+      config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? `/profile/${prisonNumber}/challenges-and-support`
+        : `/profile/${prisonNumber}/challenges`,
+      'Challenge added',
+    )
   }
 
   private updateDtoFromForm = (
