@@ -7,6 +7,7 @@ import { Result } from '../../../../utils/result/result'
 import formatChallengeCategoryScreenValueFilter from '../../../../filters/formatChallengeCategoryFilter'
 import formatChallengeIdentificationSourceScreenValueFilter from '../../../../filters/formatChallengeIdentificationSourceFilter'
 import { formatChallengeTypeScreenValueFilter } from '../../../../filters/formatChallengeTypeFilter'
+import { formatSupportStrategyTypeScreenValueFilter } from '../../../../filters/formatSupportStrategyTypeFilter'
 import aPlanLifecycleStatusDto from '../../../../testsupport/planLifecycleStatusDtoTestDataBuilder'
 import challengeStaffSupportTextLookupFilter from '../../../../filters/challengeStaffSupportTextLookupFilter'
 
@@ -28,6 +29,7 @@ njkEnv //
   .addFilter('formatChallengeCategoryScreenValue', formatChallengeCategoryScreenValueFilter)
   .addFilter('formatChallengeIdentificationSourceScreenValue', formatChallengeIdentificationSourceScreenValueFilter)
   .addFilter('formatChallengeTypeScreenValue', formatChallengeTypeScreenValueFilter)
+  .addFilter('formatSupportStrategyTypeScreenValue', formatSupportStrategyTypeScreenValueFilter)
   .addFilter('challengeSupportTextLookup', challengeStaffSupportTextLookupFilter)
 
 const prisonerSummary = aValidPrisonerSummary({

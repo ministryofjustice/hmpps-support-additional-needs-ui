@@ -60,12 +60,19 @@
 
           {% if activeCategoriesCount > 0 %}
             {% for challengeAndSupportCategory, challengeAndSupportData in activeChallengesAndSupportByCategory %}
+              {%- set summaryCardTitle -%}
+                {%- if challengeAndSupportCategory !== 'GENERAL' -%}
+                  {{ challengeAndSupportCategory | formatChallengeCategoryScreenValue | default(challengeAndSupportCategory, true) }}
+                {%- else -%}
+                  {{ challengeAndSupportCategory | formatSupportStrategyTypeScreenValue | default(challengeAndSupportCategory, true) }}
+                {%- endif -%}
+              {%- endset -%}
               {{ challengesAndSupportSummaryCard({
                 challengeAndSupportData: challengeAndSupportData,
                 prisonNamesById: prisonNamesById,
                 prisonNumber: prisonerSummary.prisonNumber,
                 userHasPermissionTo: userHasPermissionTo,
-                title: challengeAndSupportCategory | formatChallengeCategoryScreenValue | default(challengeAndSupportCategory, true),
+                title: summaryCardTitle,
                 attributes: {
                   'data-qa': 'active-challenges-and-support-summary-card-' + challengeAndSupportCategory
                 }
@@ -79,12 +86,19 @@
             {% for challengeAndSupportCategory, challengeAndSupportData in archivedChallengesAndSupportByCategory %}
               {% set archivedChallenges = challengeAndSupportData.nonAlnChallenges %}
               {% set archivedSupportStrategies = challengeAndSupportData.supportStrategies %}
+              {%- set summaryCardTitle -%}
+                {%- if challengeAndSupportCategory !== 'GENERAL' -%}
+                  {{ challengeAndSupportCategory | formatChallengeCategoryScreenValue | default(challengeAndSupportCategory, true) }}
+                {%- else -%}
+                  {{ challengeAndSupportCategory | formatSupportStrategyTypeScreenValue | default(challengeAndSupportCategory, true) }}
+                {%- endif -%}
+              {%- endset -%}
               {{ archivedChallengesAndSupportSummaryCard({
                 archivedChallenges: archivedChallenges,
                 archivedSupportStrategies: archivedSupportStrategies,
                 prisonNamesById: prisonNamesById,
                 userHasPermissionTo: userHasPermissionTo,
-                title: challengeAndSupportCategory | formatChallengeCategoryScreenValue | default(challengeAndSupportCategory, true),
+                title: summaryCardTitle,
                 attributes: {
                   'data-qa': 'archived-challenges-and-support-summary-card_' + challengeCategory
                 }
