@@ -623,4 +623,51 @@ describe('Tests for Challenges and Support Summary Card component', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('EDIT_SUPPORT_STRATEGIES')
     expect(userHasPermissionTo).toHaveBeenCalledWith('ARCHIVE_SUPPORT_STRATEGIES')
   })
+
+  it('should not render anything to do with Challenges given the Support Strategies are in the category GENERAL', () => {
+    // Given
+    const params = {
+      ...templateParams,
+      challengeAndSupportData: {
+        nonAlnChallenges: [] as Array<ChallengeResponseDto>,
+        latestAlnScreener: {},
+        supportStrategies: [
+          aValidSupportStrategyResponseDto({
+            supportStrategyCategoryTypeCode: SupportStrategyType.GENERAL,
+            details: 'John needs general help and support',
+            updatedByDisplayName: 'Person 4',
+            updatedAtPrison: 'BXI',
+            updatedAt: parseISO('2025-10-27'),
+          }),
+        ],
+      },
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    expect($('.govuk-summary-card__title').text().trim()).toEqual('Literacy skills')
+
+    // assert non-ALN challenges
+    const nonAlnChallenges = $('.govuk-summary-list__row.non-aln-challenge')
+    expect(nonAlnChallenges.length).toEqual(0)
+
+    // assert ALN challenges
+    const alnChallenges = $('.govuk-summary-list__row.aln-challenges li')
+    expect(alnChallenges.length).toEqual(0)
+
+    expect($('[data-qa=no-challenges]').length).toEqual(0)
+
+    // assert Support Strategies
+    const supportStrategies = $('.govuk-summary-list__row.support-strategy')
+    expect(supportStrategies.length).toEqual(1)
+    const firstSupportStrategy = supportStrategies.eq(0)
+    expect(firstSupportStrategy.find('p').eq(0).text().trim()).toEqual('John needs general help and support')
+    expect(firstSupportStrategy.find('[data-qa=support-strategy-audit]').text().trim()).toEqual(
+      'Last updated 27 Oct 2025 by Person 4, Brixton (HMP)',
+    )
+    expect($('[data-qa=no-support-strategies]').length).toEqual(0)
+  })
 })
