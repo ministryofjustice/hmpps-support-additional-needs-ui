@@ -44,7 +44,13 @@
             preventDoubleClick: true
           }) }}
 
-          {% set setNoButtonHref = "/profile/" + prisonerSummary.prisonNumber + ("/challenges-and-support" if featureToggles.displayChallengesAndSupportStrategiesCombined else "/challenges") + ("#archived-challenges" if mode == 'history' else "#current-challenges") %}
+          {%- set setNoButtonHref -%}
+            {%- if featureToggles.displayChallengesAndSupportStrategiesCombined -%}
+              /profile/{{ prisonerSummary.prisonNumber }}/challenges-and-support#{{ '#archived-challenges-and-support' if mode == 'history' else '#archived-challenges-and-support' }}
+            {%- else -%}
+              /profile/{{ prisonerSummary.prisonNumber }}/challenges#{{ 'archived-challenges' if mode == 'history' else 'current-challenges' }}
+            {%- endif -%}
+          {%- endset -%}
           {{ govukButton({
             text: "No, go back to overview",
             href: setNoButtonHref,

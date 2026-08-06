@@ -4,6 +4,7 @@ import { AuditService, ChallengeService } from '../../../../services'
 import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import config from '../../../../config'
 
 export default class ConfirmController {
   constructor(
@@ -41,7 +42,12 @@ export default class ConfirmController {
 
     req.journeyData.challengeDto = undefined
     this.auditService.logDeleteChallenge(this.deleteChallengeAuditData(req, dto))
-    return res.redirectWithSuccess(`/profile/${prisonNumber}/challenges#current-challenges`, 'Challenge deleted.')
+    return res.redirectWithSuccess(
+      config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? `/profile/${prisonNumber}/challenges-and-support#current-challenges-and-support`
+        : `/profile/${prisonNumber}/challenges#current-challenges`,
+      'Challenge deleted.',
+    )
   }
 
   private deleteChallengeAuditData = (req: Request, dto: ChallengeResponseDto): BaseAuditData => {

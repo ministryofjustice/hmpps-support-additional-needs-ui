@@ -4,6 +4,7 @@ import { AuditService, SupportStrategyService } from '../../../../services'
 import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import config from '../../../../config'
 
 export default class ReasonController {
   constructor(
@@ -53,7 +54,9 @@ export default class ReasonController {
     req.journeyData.supportStrategyDto = undefined
     this.auditService.logArchiveSupportStrategy(this.archiveSupportStrategyAuditData(req, supportStrategyDto)) // no need to wait for response
     return res.redirectWithSuccess(
-      `/profile/${prisonNumber}/support-strategies#archived-support-strategies`,
+      config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? `/profile/${prisonNumber}/challenges-and-support#archived-challenges-and-support`
+        : `/profile/${prisonNumber}/support-strategies#archived-support-strategies`,
       'Support strategy moved to History',
     )
   }

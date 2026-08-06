@@ -4,6 +4,7 @@ import { AuditService, ChallengeService } from '../../../../services'
 import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import config from '../../../../config'
 
 export default class ReasonController {
   constructor(
@@ -53,7 +54,9 @@ export default class ReasonController {
     req.journeyData.challengeDto = undefined
     this.auditService.logArchiveChallenge(this.archiveChallengeAuditData(req, challengeResponseDto)) // no need to wait for response
     return res.redirectWithSuccess(
-      `/profile/${prisonNumber}/challenges#archived-challenges`,
+      config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? `/profile/${prisonNumber}/challenges-and-support#archived-challenges-and-support`
+        : `/profile/${prisonNumber}/challenges#archived-challenges`,
       'Challenge moved to History',
     )
   }

@@ -8,6 +8,9 @@ import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDa
 
 jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/supportStrategyService')
+jest.mock('../../../../config', () => ({
+  featureToggles: { displayChallengesAndSupportStrategiesCombined: true },
+}))
 
 describe('delete/confirm/confirmController', () => {
   const supportStrategyService = new SupportStrategyService(null) as jest.Mocked<SupportStrategyService>
@@ -74,7 +77,7 @@ describe('delete/confirm/confirmController', () => {
     it('should delete support strategy, fire audit, clear journey data, and redirect with success on API success', async () => {
       supportStrategyService.deleteSupportStrategy.mockResolvedValue(null)
 
-      const expectedNextRoute = `/profile/${prisonNumber}/support-strategies#current-support-strategies`
+      const expectedNextRoute = `/profile/${prisonNumber}/challenges-and-support#current-challenges-and-support`
 
       await controller.submitConfirmForm(req, res, next)
 

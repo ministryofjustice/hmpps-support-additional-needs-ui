@@ -8,6 +8,9 @@ import aValidSupportStrategyResponseDto from '../../../../testsupport/supportStr
 
 jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/supportStrategyService')
+jest.mock('../../../../config', () => ({
+  featureToggles: { displayChallengesAndSupportStrategiesCombined: true },
+}))
 
 describe('reasonController', () => {
   const supportStrategyService = new SupportStrategyService(null) as jest.Mocked<SupportStrategyService>
@@ -114,7 +117,7 @@ describe('reasonController', () => {
       prisonId: 'BXI',
       archiveReason: 'SupportStrategy is not relevant and was recorded in error',
     }
-    const expectedNextRoute = `/profile/${prisonNumber}/support-strategies#archived-support-strategies`
+    const expectedNextRoute = `/profile/${prisonNumber}/challenges-and-support#archived-challenges-and-support`
 
     // When
     await controller.submitReasonForm(req, res, next)

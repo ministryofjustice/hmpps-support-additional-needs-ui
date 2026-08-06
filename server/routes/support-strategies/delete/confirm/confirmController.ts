@@ -4,6 +4,7 @@ import { AuditService, SupportStrategyService } from '../../../../services'
 import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import config from '../../../../config'
 
 export default class ConfirmController {
   constructor(
@@ -48,7 +49,9 @@ export default class ConfirmController {
     req.journeyData.supportStrategyDto = undefined
     this.auditService.logDeleteSupportStrategy(this.deleteSupportStrategyAuditData(req, dto))
     return res.redirectWithSuccess(
-      `/profile/${prisonNumber}/support-strategies#current-support-strategies`,
+      config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? `/profile/${prisonNumber}/challenges-and-support#current-challenges-and-support`
+        : `/profile/${prisonNumber}/support-strategies#current-support-strategies`,
       'Support strategy deleted.',
     )
   }

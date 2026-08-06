@@ -4,6 +4,7 @@ import { AuditService, ChallengeService } from '../../../../services'
 import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import config from '../../../../config'
 
 export default class HistoryConfirmController {
   constructor(
@@ -42,7 +43,9 @@ export default class HistoryConfirmController {
     req.journeyData.challengeDto = undefined
     this.auditService.logDeleteChallenge(this.deleteChallengeAuditData(req, dto))
     return res.redirectWithSuccess(
-      `/profile/${prisonNumber}/challenges#archived-challenges`,
+      config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? `/profile/${prisonNumber}/challenges-and-support#archived-challenges-and-support`
+        : `/profile/${prisonNumber}/challenges#archived-challenges`,
       'History challenge deleted.',
     )
   }
