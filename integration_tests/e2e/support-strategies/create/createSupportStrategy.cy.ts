@@ -5,7 +5,7 @@ import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
 import SelectSupportStrategyCategoryPage from '../../../pages/support-strategies/selectSupportStrategyCategoryPage'
 import SupportStrategyType from '../../../../server/enums/supportStrategyType'
-import SupportStrategiesPage from '../../../pages/profile/supportStrategiesPage'
+import ChallengesAndSupportPage from '../../../pages/profile/challengesAndSupportPage'
 import SupportStrategyDetailPage from '../../../pages/support-strategies/supportStrategyDetailPage'
 
 context('Create a Support Strategy', () => {
@@ -36,7 +36,7 @@ context('Create a Support Strategy', () => {
     // Given
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
-      .selectTab('Support strategies', SupportStrategiesPage)
+      .selectTab('Challenges and support', ChallengesAndSupportPage)
       .clickAddSupportStrategyButton()
 
     // When
@@ -59,10 +59,10 @@ context('Create a Support Strategy', () => {
       .enterDescription(
         `Chris needs help understanding other people's views and feelings. He needs to be able to show empathy when dealing with others.`,
       )
-      .submitPageTo(SupportStrategiesPage)
+      .submitPageTo(ChallengesAndSupportPage)
 
     // Then
-    Page.verifyOnPage(SupportStrategiesPage)
+    Page.verifyOnPage(ChallengesAndSupportPage)
 
     cy.wiremockVerify(
       postRequestedFor(urlEqualTo(`/support-additional-needs-api/profile/${prisonNumber}/support-strategies`)) //

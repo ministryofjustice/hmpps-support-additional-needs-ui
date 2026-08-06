@@ -29,7 +29,7 @@ generic-service:
     COMPONENT_API_URL: 'https://frontend-components-dev.hmpps.service.justice.gov.uk'
     DPR_UI_REPORT_URL: 'https://digital-prison-reporting-mi-ui-dev.hmpps.service.justice.gov.uk/dpr/request-report/report/dpr_san001/san-additional-needs-report/filters'
     SAN_DATA_DELETION_FEATURE_ENABLED: true
-    DISPLAY_CHALLENGES_AND_SUPPORT_STRATEGIES_COMBINED: false
+    DISPLAY_CHALLENGES_AND_SUPPORT_STRATEGIES_COMBINED: true
 
   allowlist:
     uservision-accessibility-testers: 5.181.59.114/32

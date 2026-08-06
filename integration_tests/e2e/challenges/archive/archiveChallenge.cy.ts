@@ -1,7 +1,7 @@
 import Page from '../../../pages/page'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
 import OverviewPage from '../../../pages/profile/overviewPage'
-import ChallengesPage from '../../../pages/profile/challengesPage'
+import ChallengesAndSupportPage from '../../../pages/profile/challengesAndSupportPage'
 import ArchiveChallengeReasonPage from '../../../pages/challenges/archiveChallengeReasonPage'
 import { putRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
@@ -28,7 +28,7 @@ context('Archive a Challenge', () => {
 
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
-      .selectTab('Challenges', ChallengesPage)
+      .selectTab('Challenges and support', ChallengesAndSupportPage)
       .clickToArchiveNthNonAlnChallenge(1)
 
     // When
@@ -40,10 +40,10 @@ context('Archive a Challenge', () => {
       .hasFieldInError('archiveReason')
       // Set a new answer
       .enterReason('Challenge added in error and is not relevant')
-      .submitPageTo(ChallengesPage)
+      .submitPageTo(ChallengesAndSupportPage)
 
     // Then
-    Page.verifyOnPage(ChallengesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .hasSuccessMessage('Challenge moved to History')
 
     cy.wiremockVerify(
@@ -92,7 +92,7 @@ context('Archive a Challenge', () => {
     cy.visit(`/challenges/${prisonNumber}/${challengeReference}/archive/reason`, { failOnStatusCode: false })
 
     // Then
-    Page.verifyOnPage(ChallengesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .apiErrorBannerIsDisplayed()
   })
 
