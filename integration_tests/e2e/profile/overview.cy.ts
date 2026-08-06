@@ -5,11 +5,10 @@
 import OverviewPage from '../../pages/profile/overviewPage'
 import Page from '../../pages/page'
 import Error404Page from '../../pages/error404'
-import SupportStrategiesPage from '../../pages/profile/supportStrategiesPage'
 import EducationSupportPlanPage from '../../pages/profile/educationSupportPlanPage'
 import ConditionsPage from '../../pages/profile/conditionsPage'
 import StrengthsPage from '../../pages/profile/strengthsPage'
-import ChallengesPage from '../../pages/profile/challengesPage'
+import ChallengesAndSupportPage from '../../pages/profile/challengesAndSupportPage'
 import aPlanActionStatus from '../../../server/testsupport/planActionStatusTestDataBuilder'
 import AuthSignInPage from '../../pages/authSignIn'
 
@@ -99,16 +98,14 @@ context('Profile Overview Page', () => {
 
     // When
     Page.verifyOnPage(OverviewPage) //
-      .selectTab('Support strategies', SupportStrategiesPage)
-      .activeTabIs('Support strategies')
       .selectTab('Education support plan', EducationSupportPlanPage)
       .activeTabIs('Education support plan')
       .selectTab('Conditions', ConditionsPage)
       .activeTabIs('Conditions')
       .selectTab('Strengths', StrengthsPage)
       .activeTabIs('Strengths')
-      .selectTab('Challenges', ChallengesPage)
-      .activeTabIs('Challenges')
+      .selectTab('Challenges and support', ChallengesAndSupportPage)
+      .activeTabIs('Challenges and support')
       .selectTab('Overview', OverviewPage)
 
     // Then

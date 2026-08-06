@@ -5,7 +5,7 @@ import { putRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilde
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
 import Error404Page from '../../../pages/error404'
-import SupportStrategiesPage from '../../../pages/profile/supportStrategiesPage'
+import ChallengesAndSupportPage from '../../../pages/profile/challengesAndSupportPage'
 import SupportStrategyDetailPage from '../../../pages/support-strategies/supportStrategyDetailPage'
 
 context('Edit a SupportStrategy', () => {
@@ -39,7 +39,7 @@ context('Edit a SupportStrategy', () => {
 
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
-      .selectTab('Support strategies', SupportStrategiesPage)
+      .selectTab('Challenges and support', ChallengesAndSupportPage)
       .clickToEditNthSupportStrategy(1)
 
     // When
@@ -53,10 +53,10 @@ context('Edit a SupportStrategy', () => {
       .hasFieldInError('description')
       // Set a new answer
       .enterDescription('The use of pictorial flash cards will help with retaining facts')
-      .submitPageTo(SupportStrategiesPage)
+      .submitPageTo(ChallengesAndSupportPage)
 
     // Then
-    Page.verifyOnPage(SupportStrategiesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .hasSuccessMessage('Support strategy updated')
 
     cy.wiremockVerify(
@@ -107,7 +107,7 @@ context('Edit a SupportStrategy', () => {
     cy.visit(`/support-strategies/${prisonNumber}/${supportStrategyReference}/edit/detail`, { failOnStatusCode: false })
 
     // Then
-    Page.verifyOnPage(SupportStrategiesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .apiErrorBannerIsDisplayed()
   })
 

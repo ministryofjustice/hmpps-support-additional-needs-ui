@@ -1,6 +1,6 @@
 import DeleteReason from '../../../../server/enums/deleteReason'
 import Page from '../../../pages/page'
-import ChallengesPage from '../../../pages/profile/challengesPage'
+import ChallengesAndSupportPage from '../../../pages/profile/challengesAndSupportPage'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
 import OverviewPage from '../../../pages/profile/overviewPage'
 import { deleteRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
@@ -29,7 +29,7 @@ context('Delete a Challenge (Current tab)', () => {
 
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
-      .selectTab('Challenges', ChallengesPage)
+      .selectTab('Challenges and support', ChallengesAndSupportPage)
       .clickToDeleteNthNonAlnChallenge(1)
 
     // When - submit reason page without selecting to trigger validation error
@@ -48,10 +48,10 @@ context('Delete a Challenge (Current tab)', () => {
 
     // Confirm page - click "Yes, delete"
     Page.verifyOnPage(DeleteChallengeConfirmPage) //
-      .submitPageTo(ChallengesPage)
+      .submitPageTo(ChallengesAndSupportPage)
 
     // Then - verify success banner
-    Page.verifyOnPage(ChallengesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .hasSuccessMessage('Challenge deleted.')
 
     // And verify the DELETE request was made with the correct query params
@@ -68,10 +68,10 @@ context('Delete a Challenge (Current tab)', () => {
     cy.signIn()
 
     // When
-    cy.visit(`/profile/${prisonNumber}/challenges`)
+    cy.visit(`/profile/${prisonNumber}/challenges-and-support`)
 
     // Then - no delete button should be visible
-    Page.verifyOnPage(ChallengesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .doesNotHaveDeleteChallengeButton()
   })
 
@@ -130,7 +130,7 @@ context('Delete a Challenge (Current tab)', () => {
       .clickNoGoBackToOverview()
 
     // Then - back on challenges overview, no DELETE request fired
-    Page.verifyOnPage(ChallengesPage)
+    Page.verifyOnPage(ChallengesAndSupportPage)
 
     cy.wiremockVerifyNoInteractions(
       deleteRequestedFor(

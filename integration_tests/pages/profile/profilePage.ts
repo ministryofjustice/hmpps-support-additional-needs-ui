@@ -31,7 +31,7 @@ export default abstract class ProfilePage extends Page {
   }
 
   clickAddChallengesButton(): ChallengeCategoryPage {
-    this.addChallengeButton().click()
+    this.addChallengeButton().eq(0).click()
     return Page.verifyOnPage(ChallengeCategoryPage)
   }
 

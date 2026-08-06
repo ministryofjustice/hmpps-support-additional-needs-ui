@@ -1,7 +1,7 @@
 import Page from '../../../pages/page'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
 import OverviewPage from '../../../pages/profile/overviewPage'
-import SupportStrategiesPage from '../../../pages/profile/supportStrategiesPage'
+import ChallengesAndSupportPage from '../../../pages/profile/challengesAndSupportPage'
 import ArchiveSupportStrategyReasonPage from '../../../pages/support-strategies/archiveSupportStrategyReasonPage'
 import { putRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
@@ -28,7 +28,7 @@ context('Archive a Support Strategy', () => {
 
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
-      .selectTab('Support strategies', SupportStrategiesPage)
+      .selectTab('Challenges and support', ChallengesAndSupportPage)
       .clickToArchiveNthSupportStrategy(1)
 
     // When
@@ -40,10 +40,10 @@ context('Archive a Support Strategy', () => {
       .hasFieldInError('archiveReason')
       // Set a new answer
       .enterReason('Support strategy added in error and is not relevant')
-      .submitPageTo(SupportStrategiesPage)
+      .submitPageTo(ChallengesAndSupportPage)
 
     // Then
-    Page.verifyOnPage(SupportStrategiesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .hasSuccessMessage('Support strategy moved to History')
 
     cy.wiremockVerify(
@@ -96,7 +96,7 @@ context('Archive a Support Strategy', () => {
     })
 
     // Then
-    Page.verifyOnPage(SupportStrategiesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .apiErrorBannerIsDisplayed()
   })
 

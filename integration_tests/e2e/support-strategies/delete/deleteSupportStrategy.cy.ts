@@ -1,6 +1,6 @@
 import DeleteReason from '../../../../server/enums/deleteReason'
 import Page from '../../../pages/page'
-import SupportStrategiesPage from '../../../pages/profile/supportStrategiesPage'
+import ChallengesAndSupportPage from '../../../pages/profile/challengesAndSupportPage'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
 import OverviewPage from '../../../pages/profile/overviewPage'
 import { deleteRequestedFor } from '../../../mockApis/wiremock/requestPatternBuilder'
@@ -28,7 +28,7 @@ context('Delete a Support Strategy (Current tab)', () => {
 
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
-      .selectTab('Support strategies', SupportStrategiesPage)
+      .selectTab('Challenges and support', ChallengesAndSupportPage)
       .clickToDeleteNthSupportStrategy(1)
 
     Page.verifyOnPage(DeleteSupportStrategyReasonPage) //
@@ -43,9 +43,9 @@ context('Delete a Support Strategy (Current tab)', () => {
       .submitPageTo(DeleteSupportStrategyConfirmPage)
 
     Page.verifyOnPage(DeleteSupportStrategyConfirmPage) //
-      .submitPageTo(SupportStrategiesPage)
+      .submitPageTo(ChallengesAndSupportPage)
 
-    Page.verifyOnPage(SupportStrategiesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .hasSuccessMessage('Support strategy deleted.')
 
     cy.wiremockVerify(
@@ -61,9 +61,9 @@ context('Delete a Support Strategy (Current tab)', () => {
     cy.task('stubSignIn', { roles: ['ROLE_SOME_OTHER_ROLE'] })
     cy.signIn()
 
-    cy.visit(`/profile/${prisonNumber}/support-strategies`)
+    cy.visit(`/profile/${prisonNumber}/challenges-and-support`)
 
-    Page.verifyOnPage(SupportStrategiesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .doesNotHaveDeleteSupportStrategyButton()
   })
 
@@ -113,7 +113,7 @@ context('Delete a Support Strategy (Current tab)', () => {
     Page.verifyOnPage(DeleteSupportStrategyConfirmPage) //
       .clickNoGoBackToOverview()
 
-    Page.verifyOnPage(SupportStrategiesPage)
+    Page.verifyOnPage(ChallengesAndSupportPage)
 
     cy.wiremockVerifyNoInteractions(
       deleteRequestedFor(

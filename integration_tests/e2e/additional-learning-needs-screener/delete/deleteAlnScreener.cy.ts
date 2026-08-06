@@ -1,7 +1,7 @@
 import DeleteReason from '../../../../server/enums/deleteReason'
 import Page from '../../../pages/page'
 import StrengthsPage from '../../../pages/profile/strengthsPage'
-import ChallengesPage from '../../../pages/profile/challengesPage'
+import ChallengesAndSupportPage from '../../../pages/profile/challengesAndSupportPage'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
 import OverviewPage from '../../../pages/profile/overviewPage'
 import DeleteAlnScreenerReasonPage from '../../../pages/additional-learning-needs-screener/deleteAlnScreenerReasonPage'
@@ -56,12 +56,12 @@ context('Delete an ALN Screener', () => {
     )
   })
 
-  it('should redirect back to the Challenges overview when the journey was entered from Challenges', () => {
+  it('should redirect back to the Challenges And Support overview when the journey was entered from Challenges And Support', () => {
     cy.signIn()
 
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
-      .selectTab('Challenges', ChallengesPage)
+      .selectTab('Challenges and support', ChallengesAndSupportPage)
       .clickToDeleteAlnScreener()
 
     Page.verifyOnPage(DeleteAlnScreenerReasonPage) //
@@ -72,9 +72,9 @@ context('Delete an ALN Screener', () => {
       .submitPageTo(DeleteAlnScreenerConfirmPage)
 
     Page.verifyOnPage(DeleteAlnScreenerConfirmPage) //
-      .submitPageTo(ChallengesPage)
+      .submitPageTo(ChallengesAndSupportPage)
 
-    Page.verifyOnPage(ChallengesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .hasSuccessMessage('Screener results deleted.')
 
     cy.wiremockVerify(
@@ -90,8 +90,8 @@ context('Delete an ALN Screener', () => {
     Page.verifyOnPage(StrengthsPage) //
       .doesNotHaveDeleteAlnScreenerButton()
 
-    cy.visit(`/profile/${prisonNumber}/challenges`)
-    Page.verifyOnPage(ChallengesPage) //
+    cy.visit(`/profile/${prisonNumber}/challenges-and-support`)
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .doesNotHaveDeleteAlnScreenerButton()
   })
 

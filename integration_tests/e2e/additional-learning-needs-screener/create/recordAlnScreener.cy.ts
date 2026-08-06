@@ -2,7 +2,7 @@ import { format, startOfToday, subDays } from 'date-fns'
 import Page from '../../../pages/page'
 import ScreenerDatePage from '../../../pages/additional-learning-needs-screener/screenerDatePage'
 import OverviewPage from '../../../pages/profile/overviewPage'
-import ChallengesPage from '../../../pages/profile/challengesPage'
+import ChallengesAndSupportPage from '../../../pages/profile/challengesAndSupportPage'
 import AddChallengesPage from '../../../pages/additional-learning-needs-screener/addChallengesPage'
 import AddStrengthsPage from '../../../pages/additional-learning-needs-screener/addStrengthsPage'
 import CheckYourAnswersPage from '../../../pages/additional-learning-needs-screener/checkYourAnswersPage'
@@ -42,7 +42,7 @@ context('Record an Additional Learning Needs screener for a prisoner', () => {
 
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
-      .selectTab('Challenges', ChallengesPage)
+      .selectTab('Challenges and support', ChallengesAndSupportPage)
       .clickRecordAlnScreenerButton()
 
     // When

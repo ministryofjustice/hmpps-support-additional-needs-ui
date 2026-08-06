@@ -1,6 +1,6 @@
 import Page from '../../../pages/page'
 import Error404Page from '../../../pages/error404'
-import ChallengesPage from '../../../pages/profile/challengesPage'
+import ChallengesAndSupportPage from '../../../pages/profile/challengesAndSupportPage'
 import AuthorisationErrorPage from '../../../pages/authorisationError'
 import ChallengeDetailPage from '../../../pages/challenges/challengeDetailPage'
 import OverviewPage from '../../../pages/profile/overviewPage'
@@ -41,7 +41,7 @@ context('Edit a Challenge', () => {
 
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
-      .selectTab('Challenges', ChallengesPage)
+      .selectTab('Challenges and support', ChallengesAndSupportPage)
       .clickToEditNthNonAlnChallenge(1)
 
     // When
@@ -63,10 +63,10 @@ context('Edit a Challenge', () => {
       .hasErrorCount(1)
       .hasFieldInError('howIdentifiedOther')
       .enterOtherHowChallengeIdentified('Chris has been observed by many people to struggle with empathy')
-      .submitPageTo(ChallengesPage)
+      .submitPageTo(ChallengesAndSupportPage)
 
     // Then
-    Page.verifyOnPage(ChallengesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .hasSuccessMessage('Challenge updated')
 
     cy.wiremockVerify(
@@ -130,9 +130,9 @@ context('Edit a Challenge', () => {
       .howChallengeIdentifiedIsSelected(ChallengeIdentificationSource.SELF_DISCLOSURE)
       // COLLEAGUE_INFO and OTHER_SCREENING_TOOL both -> FORMAL_PROCESSES (de-duped)
       .howChallengeIdentifiedIsSelected(ChallengeIdentificationSource.FORMAL_PROCESSES)
-      .submitPageTo(ChallengesPage)
+      .submitPageTo(ChallengesAndSupportPage)
 
-    Page.verifyOnPage(ChallengesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .hasSuccessMessage('Challenge updated')
 
     cy.wiremockVerify(
@@ -186,7 +186,7 @@ context('Edit a Challenge', () => {
     cy.visit(`/challenges/${prisonNumber}/${challengeReference}/edit/detail`, { failOnStatusCode: false })
 
     // Then
-    Page.verifyOnPage(ChallengesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .apiErrorBannerIsDisplayed()
   })
 

@@ -4,7 +4,7 @@ import { postRequestedFor } from '../../../mockApis/wiremock/requestPatternBuild
 import { urlEqualTo } from '../../../mockApis/wiremock/matchers/url'
 import { matchingJsonPath } from '../../../mockApis/wiremock/matchers/content'
 import ChallengeCategoryPage from '../../../pages/challenges/challengeCategoryPage'
-import ChallengesPage from '../../../pages/profile/challengesPage'
+import ChallengesAndSupportPage from '../../../pages/profile/challengesAndSupportPage'
 import ChallengeDetailPage from '../../../pages/challenges/challengeDetailPage'
 import ChallengeIdentificationSource from '../../../../server/enums/challengeIdentificationSource'
 import ChallengeType from '../../../../server/enums/challengeType'
@@ -35,7 +35,7 @@ context('Create a Challenge', () => {
     // Given
     cy.visit(`/profile/${prisonNumber}/overview`)
     Page.verifyOnPage(OverviewPage) //
-      .selectTab('Challenges', ChallengesPage)
+      .selectTab('Challenges and support', ChallengesAndSupportPage)
       .clickAddChallengesButton()
 
     // When
@@ -68,10 +68,10 @@ context('Create a Challenge', () => {
       .hasFieldInError('howIdentifiedOther')
       // enter the detail for Other and submit
       .enterOtherHowChallengeIdentified('Chris has been observed by may people to struggle with empathy')
-      .submitPageTo(ChallengesPage)
+      .submitPageTo(ChallengesAndSupportPage)
 
     // Then
-    Page.verifyOnPage(ChallengesPage) //
+    Page.verifyOnPage(ChallengesAndSupportPage) //
       .hasSuccessMessage('Challenge added')
 
     cy.wiremockVerify(
