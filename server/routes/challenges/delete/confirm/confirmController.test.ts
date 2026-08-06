@@ -8,6 +8,9 @@ import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDa
 
 jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/challengeService')
+jest.mock('../../../../config', () => ({
+  featureToggles: { displayChallengesAndSupportStrategiesCombined: true },
+}))
 
 describe('delete/confirm/confirmController', () => {
   const challengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
@@ -78,7 +81,7 @@ describe('delete/confirm/confirmController', () => {
       // Given
       challengeService.deleteChallenge.mockResolvedValue(null)
 
-      const expectedNextRoute = `/profile/${prisonNumber}/challenges#current-challenges`
+      const expectedNextRoute = `/profile/${prisonNumber}/challenges-and-support#current-challenges-and-support`
 
       // When
       await controller.submitConfirmForm(req, res, next)

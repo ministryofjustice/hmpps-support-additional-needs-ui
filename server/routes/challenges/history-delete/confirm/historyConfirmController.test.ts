@@ -8,6 +8,9 @@ import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDa
 
 jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/challengeService')
+jest.mock('../../../../config', () => ({
+  featureToggles: { displayChallengesAndSupportStrategiesCombined: true },
+}))
 
 describe('history-delete/confirm/historyConfirmController', () => {
   const challengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
@@ -79,7 +82,7 @@ describe('history-delete/confirm/historyConfirmController', () => {
       // Given
       challengeService.deleteChallenge.mockResolvedValue(null)
 
-      const expectedNextRoute = `/profile/${prisonNumber}/challenges#archived-challenges`
+      const expectedNextRoute = `/profile/${prisonNumber}/challenges-and-support#archived-challenges-and-support`
 
       // When
       await controller.submitConfirmForm(req, res, next)

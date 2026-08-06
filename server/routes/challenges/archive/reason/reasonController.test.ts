@@ -8,6 +8,9 @@ import { Result } from '../../../../utils/result/result'
 
 jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/challengeService')
+jest.mock('../../../../config', () => ({
+  featureToggles: { displayChallengesAndSupportStrategiesCombined: true },
+}))
 
 describe('reasonController', () => {
   const challengeService = new ChallengeService(null) as jest.Mocked<ChallengeService>
@@ -115,7 +118,7 @@ describe('reasonController', () => {
       prisonId: 'BXI',
       archiveReason: 'Challenge is not relevant and was recorded in error',
     }
-    const expectedNextRoute = `/profile/${prisonNumber}/challenges#archived-challenges`
+    const expectedNextRoute = `/profile/${prisonNumber}/challenges-and-support#archived-challenges-and-support`
 
     // When
     await controller.submitReasonForm(req, res, next)

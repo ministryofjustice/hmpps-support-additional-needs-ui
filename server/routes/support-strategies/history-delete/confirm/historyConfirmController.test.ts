@@ -8,6 +8,9 @@ import aValidPrisonerSummary from '../../../../testsupport/prisonerSummaryTestDa
 
 jest.mock('../../../../services/auditService')
 jest.mock('../../../../services/supportStrategyService')
+jest.mock('../../../../config', () => ({
+  featureToggles: { displayChallengesAndSupportStrategiesCombined: true },
+}))
 
 describe('history-delete/confirm/historyConfirmController', () => {
   const supportStrategyService = new SupportStrategyService(null) as jest.Mocked<SupportStrategyService>
@@ -75,7 +78,7 @@ describe('history-delete/confirm/historyConfirmController', () => {
     it('should delete history support strategy, fire audit with mode: history, clear journey data, and redirect with success', async () => {
       supportStrategyService.deleteSupportStrategy.mockResolvedValue(null)
 
-      const expectedNextRoute = `/profile/${prisonNumber}/support-strategies#archived-support-strategies`
+      const expectedNextRoute = `/profile/${prisonNumber}/challenges-and-support#archived-challenges-and-support`
 
       await controller.submitConfirmForm(req, res, next)
 
