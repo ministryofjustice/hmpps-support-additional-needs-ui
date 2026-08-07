@@ -27,6 +27,7 @@ import apiErrorMiddleware from './middleware/apiErrorMiddleware'
 import requestHelpersMiddleware from './middleware/requestHelpersMiddleware'
 import setupContentFragmentRoutes from './routes/content-fragments'
 import addUsernameAndCaseloadToTelemetry from './utils/appInsightsCustomTelemetry'
+import forAllGetRequests from './middleware/forAllGetRequests'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
@@ -35,7 +36,6 @@ export default function createApp(services: Services): express.Application {
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
 
-  app.use(addUsernameAndCaseloadToTelemetry())
   app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
@@ -55,14 +55,17 @@ export default function createApp(services: Services): express.Application {
   app.use(errorMessageMiddleware)
   app.use(requestHelpersMiddleware)
 
-  app.get(
-    /(.*)/,
-    getFrontendComponents({
-      componentApiConfig: config.apis.componentApi,
-      dpsUrl: config.newDpsUrl,
-      logger,
-      requestOptions: { useFallbacksByDefault: true },
-    }),
+  app.use(addUsernameAndCaseloadToTelemetry())
+
+  app.use(
+    forAllGetRequests(
+      getFrontendComponents({
+        componentApiConfig: config.apis.componentApi,
+        dpsUrl: config.newDpsUrl,
+        logger,
+        requestOptions: { useFallbacksByDefault: true },
+      }),
+    ),
   )
 
   app.use(auditMiddleware(services))

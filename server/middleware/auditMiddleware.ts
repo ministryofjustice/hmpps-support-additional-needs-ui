@@ -3,6 +3,7 @@ import { Services } from '../services'
 import { Page, BaseAuditData } from '../services/auditService'
 import asyncMiddleware from './asyncMiddleware'
 import logger from '../../logger'
+import forAllGetRequests from './forAllGetRequests'
 
 const pageViewEventMap: Record<string, Page> = {
   '/search': Page.SEARCH,
@@ -269,16 +270,18 @@ export default function auditMiddleware({ auditService }: Services) {
 
   const router = Router()
 
-  Object.keys(pageViewEventMap).forEach(route => router.get(route, auditPageView(route)))
+  Object.keys(pageViewEventMap).forEach(route => router.use(forAllGetRequests(auditPageView(route))))
 
   return router
 }
 
 // Checks page view has been audited, if no audit event has been raised router will be skipped
 export function checkPageViewAudited(router: Router) {
-  router.get(/(.*)/, (req: Request, res: Response, next: NextFunction) => {
-    if (res.locals.auditPageViewEvent || res.locals.auditPageViewEvent === null) return next()
-    logger.error(`No audit event found for route, "${req.path}". Skipping router.`)
-    return next('router')
-  })
+  router.use(
+    forAllGetRequests((req: Request, res: Response, next: NextFunction) => {
+      if (res.locals.auditPageViewEvent || res.locals.auditPageViewEvent === null) return next()
+      logger.error(`No audit event found for route, "${req.path}". Skipping router.`)
+      return next('router')
+    }),
+  )
 }
