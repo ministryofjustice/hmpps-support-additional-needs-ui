@@ -27,7 +27,7 @@ import apiErrorMiddleware from './middleware/apiErrorMiddleware'
 import requestHelpersMiddleware from './middleware/requestHelpersMiddleware'
 import setupContentFragmentRoutes from './routes/content-fragments'
 import addUsernameAndCaseloadToTelemetry from './utils/appInsightsCustomTelemetry'
-import forAllGetRequests from './middleware/forAllGetRequests'
+import { forAllGetRequests } from './middleware/requestMatchers'
 
 export default function createApp(services: Services): express.Application {
   const app = express()
