@@ -3,7 +3,7 @@ import { Services } from '../services'
 import { Page, BaseAuditData } from '../services/auditService'
 import asyncMiddleware from './asyncMiddleware'
 import logger from '../../logger'
-import { forAllGetRequests, forMatchingGetRequests } from './requestMatchers'
+import { forAllGetRequests } from './requestMatchers'
 
 const pageViewEventMap: Record<string, Page> = {
   '/search': Page.SEARCH,
@@ -270,7 +270,7 @@ export default function auditMiddleware({ auditService }: Services) {
 
   const router = Router()
 
-  Object.keys(pageViewEventMap).forEach(route => router.use(forMatchingGetRequests(auditPageView(route), [route])))
+  Object.keys(pageViewEventMap).forEach(route => router.use(route, auditPageView(route)))
 
   return router
 }
