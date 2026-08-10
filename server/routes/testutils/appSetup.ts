@@ -17,7 +17,7 @@ jest.mock('../../services/auditService')
 export const user: HmppsUser = {
   name: 'FIRST LAST',
   userId: 'id',
-  token: createUserToken([]),
+  token: createUserToken(['ROLE_SAN_EDUCATION_MANAGER']),
   username: 'user1',
   displayName: 'First Last',
   authSource: 'nomis',
