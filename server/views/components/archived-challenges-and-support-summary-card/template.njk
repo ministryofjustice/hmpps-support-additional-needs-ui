@@ -12,6 +12,7 @@
 
 {% set archivedChallenges = params.archivedChallenges %}
 {% set archivedSupportStrategies = params.archivedSupportStrategies %}
+{% set prisonerSummary = params.prisonerSummary %}
 {% set userHasPermissionTo = params.userHasPermissionTo %}
 
 {% if archivedChallenges | length or archivedSupportStrategies | length %}
@@ -24,54 +25,65 @@
       <div class="govuk-summary-list">
 
         {# Render archived challenges first #}
-        {% if archivedChallenges | length %}
+        {# If this component is being used to render one or more 'General' Support Strategies, there will be no Challenges and we should not render anything to do with Challenges #}
+        {# The 'General' category can only be used for Support Strategies. It not possible to create a 'General' Challenge #}
+        {% set isGeneralSupportStrategy = (archivedChallenges | length === 0 ) and archivedSupportStrategies[0].supportStrategyTypeCode === 'GENERAL' %}
+        {% if not isGeneralSupportStrategy %}
           <h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-2">Challenges</h3>
+          {% if archivedChallenges | length %}
 
-          {% for challenge in archivedChallenges %}
-            <div class="govuk-summary-list__row archived-challenge" data-qa="{{ challenge.challengeTypeCode }}">
-              <p class="govuk-body govuk-!-margin-top-3 app-u-multiline-text" data-qa="archived-symptoms">{{ challenge.symptoms }}</p>
+            {% for challenge in archivedChallenges %}
+              <div class="govuk-summary-list__row archived-challenge" data-qa="{{ challenge.challengeTypeCode }}">
+                <p class="govuk-body govuk-!-margin-top-3 app-u-multiline-text" data-qa="archived-symptoms">{{ challenge.symptoms }}</p>
 
-              {% set expanderContent %}
-                <ul class="govuk-list govuk-!-font-size-16">
-                  {% for challengeIdentificationSource in challenge.howIdentified %}
-                    <li>{{ challengeIdentificationSource | formatChallengeIdentificationSourceScreenValue if challengeIdentificationSource != 'OTHER' else challenge.howIdentifiedOther }}</li>
-                  {% endfor %}
-                </ul>
-              {% endset %}
-              {{ govukDetails({
-                summaryText: "How was this identified?",
-                html: expanderContent,
-                classes: "govuk-!-font-size-16",
-                attributes: {
-                  "data-qa": "archived-challenge-how-identified"
-                }
-              }) }}
+                {% set expanderContent %}
+                  <ul class="govuk-list govuk-!-font-size-16">
+                    {% for challengeIdentificationSource in challenge.howIdentified %}
+                      <li>{{ challengeIdentificationSource | formatChallengeIdentificationSourceScreenValue if challengeIdentificationSource != 'OTHER' else challenge.howIdentifiedOther }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endset %}
+                {{ govukDetails({
+                  summaryText: "How was this identified?",
+                  html: expanderContent,
+                  classes: "govuk-!-font-size-16",
+                  attributes: {
+                    "data-qa": "archived-challenge-how-identified"
+                  }
+                }) }}
 
-              <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Reason for moving to History</h3>
-              <p class="govuk-body app-u-multiline-text" data-qa="archived-challenge-reason">{{ challenge.archiveReason }}</p>
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Reason for moving to History</h3>
+                <p class="govuk-body app-u-multiline-text" data-qa="archived-challenge-reason">{{ challenge.archiveReason }}</p>
 
-              <div class="actions-wrapper">
-                <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="archived-challenge-audit">
-                  {% set prisonName = params.prisonNamesById[challenge.updatedAtPrison] | default(challenge.updatedAtPrison) %}
-                  Moved to history on {{ challenge.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ challenge.updatedByDisplayName }}, {{ prisonName }}</span>
-                </p>
+                <div class="actions-wrapper">
+                  <p class="govuk-hint govuk-body govuk-!-font-size-16" data-qa="archived-challenge-audit">
+                    {% set prisonName = params.prisonNamesById[challenge.updatedAtPrison] | default(challenge.updatedAtPrison) %}
+                    Moved to history on {{ challenge.updatedAt | formatDate('d MMM yyyy') }}<span class="govuk-!-display-none-print"> by {{ challenge.updatedByDisplayName }}, {{ prisonName }}</span>
+                  </p>
 
-                <ul class="govuk-summary-card__actions govuk-!-display-none-print">
-                  {% if featureToggles.sanDataDeletionEnabled and userHasPermissionTo('DELETE_CHALLENGES') %}
-                    <li class="govuk-summary-card__action">
-                      <a class="govuk-link govuk-!-font-weight-regular" href="/challenges/{{ challenge.prisonNumber }}/{{ challenge.reference }}/history-delete/reason" data-qa="delete-archived-challenge-button">Delete</a>
-                    </li>
-                  {% endif %}
-                </ul>
+                  <ul class="govuk-summary-card__actions govuk-!-display-none-print">
+                    {% if featureToggles.sanDataDeletionEnabled and userHasPermissionTo('DELETE_CHALLENGES') %}
+                      <li class="govuk-summary-card__action">
+                        <a class="govuk-link govuk-!-font-weight-regular" href="/challenges/{{ challenge.prisonNumber }}/{{ challenge.reference }}/history-delete/reason" data-qa="delete-archived-challenge-button">Delete</a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </div>
+
               </div>
-
+            {% endfor %}
+          {% else %}
+            <div class="govuk-summary-list__row" data-qa="no-challenges">
+              <p class="govuk-body govuk-!-margin-top-3">
+                {{ prisonerSummary | formatFirst_name_Last_name }} has no previous challenges.
+              </p>
             </div>
-          {% endfor %}
+          {% endif %}
         {% endif %}
 
         {# Render archived support strategies next #}
+        <h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-2">Support strategies</h3>
         {% if archivedSupportStrategies | length %}
-          <h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-2">Support strategies</h3>
 
           {% for supportStrategy in archivedSupportStrategies %}
             <div class="govuk-summary-list__row archived-support-strategy">
@@ -96,6 +108,12 @@
               </div>
             </div>
           {% endfor %}
+        {% else %}
+          <div class="govuk-summary-list__row" data-qa="no-support-strategies">
+            <p class="govuk-body govuk-!-margin-top-3">
+              {{ prisonerSummary | formatFirst_name_Last_name }} has no previous support strategies.
+            </p>
+          </div>
         {% endif %}
 
       </div>

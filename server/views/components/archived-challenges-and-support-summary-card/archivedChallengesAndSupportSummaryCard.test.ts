@@ -12,6 +12,8 @@ import formatChallengeIdentificationSourceScreenValueFilter from '../../../filte
 import aValidSupportStrategyResponseDto from '../../../testsupport/supportStrategyResponseDtoTestDataBuilder'
 import SupportStrategyType from '../../../enums/supportStrategyType'
 import SupportStrategyCategory from '../../../enums/supportStrategyCategory'
+import formatPrisonerNameFilter, { NameFormat } from '../../../filters/formatPrisonerNameFilter'
+import aValidPrisonerSummary from '../../../testsupport/prisonerSummaryTestDataBuilder'
 
 const njkEnv = nunjucks.configure([
   'node_modules/govuk-frontend/dist/',
@@ -24,6 +26,7 @@ njkEnv //
   .addFilter('formatDate', formatDateFilter)
   .addFilter('formatChallengeTypeScreenValue', formatChallengeTypeScreenValueFilter)
   .addFilter('formatChallengeIdentificationSourceScreenValue', formatChallengeIdentificationSourceScreenValueFilter)
+  .addFilter('formatFirst_name_Last_name', formatPrisonerNameFilter(NameFormat.First_name_Last_name))
   .addGlobal('featureToggles', { sanDataDeletionEnabled: true })
 
 const userHasPermissionTo = jest.fn()
@@ -36,6 +39,7 @@ const templateParams = {
   archivedChallenges: [aValidChallengeResponseDto()],
   archivedSupportStrategies: [aValidSupportStrategyResponseDto()],
   prisonNamesById,
+  prisonerSummary: aValidPrisonerSummary(),
   userHasPermissionTo,
 }
 
@@ -122,6 +126,7 @@ describe('Tests for Archived Challenges and Support Summary Card component', () 
 
     const archivedSupportStrategies = $('.govuk-summary-list__row.archived-support-strategy')
     expect(archivedSupportStrategies.length).toEqual(0)
+    expect($('[data-qa=no-support-strategies]').length).toEqual(1)
   })
 
   it('should render the component given only archived support strategies and no archived challenges', () => {
@@ -162,6 +167,7 @@ describe('Tests for Archived Challenges and Support Summary Card component', () 
 
     const archivedChallenges = $('.govuk-summary-list__row.archived-challenge')
     expect(archivedChallenges.length).toEqual(0)
+    expect($('[data-qa=no-challenges]').length).toEqual(1)
 
     const archivedSupportStrategies = $('.govuk-summary-list__row.archived-support-strategy')
     expect(archivedSupportStrategies.length).toEqual(2)
