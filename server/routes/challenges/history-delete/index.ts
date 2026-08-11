@@ -13,6 +13,8 @@ import deleteReasonSchema from '../validationSchemas/deleteReasonSchema'
 import HistoryReasonController from './reason/historyReasonController'
 import HistoryReviewController from './review/historyReviewController'
 import HistoryConfirmController from './confirm/historyConfirmController'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
+import config from '../../../config'
 
 const historyDeleteChallengeRoutes = (services: Services): Router => {
   const { auditService, challengeService, journeyDataService } = services
@@ -56,6 +58,12 @@ const historyDeleteChallengeRoutes = (services: Services): Router => {
     asyncMiddleware(confirmController.getConfirmView),
   ])
   router.post('/:journeyId/confirm', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Delete archived Challenge',
+      redirectTo: config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? '/profile/:prisonNumber/challenges-and-support#archived-challenges-and-support'
+        : '/profile/:prisonNumber/challenges#archived-challenges',
+    }),
     checkChallengeDtoExistsInJourneyData,
     asyncMiddleware(confirmController.submitConfirmForm),
   ])

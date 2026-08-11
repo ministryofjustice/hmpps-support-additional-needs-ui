@@ -12,6 +12,8 @@ import selectCategorySchema from '../validationSchemas/selectCategorySchema'
 import detailSchema from '../validationSchemas/detailSchema'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
+import config from '../../../config'
 
 const createChallengeRoutes = (services: Services): Router => {
   const { auditService, challengeService, journeyDataService } = services
@@ -43,6 +45,12 @@ const createChallengeRoutes = (services: Services): Router => {
   ])
 
   router.post('/:journeyId/detail', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Create Challenge',
+      redirectTo: config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? '/profile/:prisonNumber/challenges-and-support'
+        : '/profile/:prisonNumber/challenges',
+    }),
     checkChallengeDtoExistsInJourneyData,
     validate(detailSchema),
     asyncMiddleware(detailController.submitDetailForm),

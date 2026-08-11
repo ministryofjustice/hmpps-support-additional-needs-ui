@@ -6,6 +6,10 @@ import { AuditService, ChallengeService } from '../../../../services'
 import { asArray } from '../../../../utils/utils'
 import { BaseAuditData } from '../../../../services/auditService'
 import config from '../../../../config'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class DetailController {
   constructor(
@@ -23,6 +27,8 @@ export default class DetailController {
           howIdentified: asArray(invalidForm.howIdentified),
         }
       : this.populateFormFromDto(challengeDto)
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       form: detailForm,
@@ -50,6 +56,7 @@ export default class DetailController {
     const { prisonNumber } = challengeDto
     req.journeyData.challengeDto = undefined
     this.auditService.logCreateChallenge(this.createChallengesAuditData(req)) // no need to wait for response
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(
       config.featureToggles.displayChallengesAndSupportStrategiesCombined
         ? `/profile/${prisonNumber}/challenges-and-support`

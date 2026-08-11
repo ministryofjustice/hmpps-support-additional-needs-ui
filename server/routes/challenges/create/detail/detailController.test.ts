@@ -133,7 +133,7 @@ describe('detailController', () => {
     // Then
     expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Challenge added')
     expect(req.journeyData.challengeDto).toBeUndefined()
-    expect(flash).not.toHaveBeenCalled()
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     expect(mockedChallengeService.createChallenges).toHaveBeenCalledWith(username, [expectedChallengeDto])
     expect(auditService.logCreateChallenge).toHaveBeenCalledWith(
       expect.objectContaining({

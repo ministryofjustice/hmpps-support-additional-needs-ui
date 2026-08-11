@@ -5,6 +5,10 @@ import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
 import config from '../../../../config'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class HistoryConfirmController {
   constructor(
@@ -15,6 +19,8 @@ export default class HistoryConfirmController {
   getConfirmView = async (req: Request, res: Response, _next: NextFunction) => {
     const { prisonerSummary } = res.locals
     const challengeResponseDto = req.journeyData.challengeDto as ChallengeResponseDto
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       prisonerSummary,
@@ -42,6 +48,7 @@ export default class HistoryConfirmController {
 
     req.journeyData.challengeDto = undefined
     this.auditService.logDeleteChallenge(this.deleteChallengeAuditData(req, dto))
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(
       config.featureToggles.displayChallengesAndSupportStrategiesCombined
         ? `/profile/${prisonNumber}/challenges-and-support#archived-challenges-and-support`
