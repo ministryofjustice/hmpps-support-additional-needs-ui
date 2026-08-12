@@ -5,6 +5,10 @@ import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
 import config from '../../../../config'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class ReasonController {
   constructor(
@@ -17,6 +21,8 @@ export default class ReasonController {
     const challengeResponseDto = req.journeyData.challengeDto as ChallengeResponseDto
 
     const reasonForm = invalidForm ?? { archiveReason: '' }
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       prisonerSummary,
@@ -53,6 +59,7 @@ export default class ReasonController {
     const { prisonNumber } = challengeResponseDto
     req.journeyData.challengeDto = undefined
     this.auditService.logArchiveChallenge(this.archiveChallengeAuditData(req, challengeResponseDto)) // no need to wait for response
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(
       config.featureToggles.displayChallengesAndSupportStrategiesCombined
         ? `/profile/${prisonNumber}/challenges-and-support#archived-challenges-and-support`

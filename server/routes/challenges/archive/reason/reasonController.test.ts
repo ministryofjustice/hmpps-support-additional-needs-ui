@@ -126,7 +126,7 @@ describe('reasonController', () => {
     // Then
     expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Challenge moved to History')
     expect(req.journeyData.challengeDto).toBeUndefined()
-    expect(flash).not.toHaveBeenCalled()
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     expect(challengeService.archiveChallenge).toHaveBeenCalledWith(username, challengeReference, expectedChallengeDto)
     expect(auditService.logArchiveChallenge).toHaveBeenCalledWith(
       expect.objectContaining({

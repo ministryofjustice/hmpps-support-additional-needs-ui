@@ -11,6 +11,8 @@ import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import archiveReasonSchema from '../validationSchemas/archiveReasonSchema'
 import { validate } from '../../../middleware/validationMiddleware'
 import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
+import config from '../../../config'
 
 const archiveChallengeRoutes = (services: Services): Router => {
   const { auditService, challengeService, journeyDataService, prisonService } = services
@@ -33,6 +35,12 @@ const archiveChallengeRoutes = (services: Services): Router => {
     asyncMiddleware(reasonController.getReasonView),
   ])
   router.post('/:journeyId/reason', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Archive Challenge',
+      redirectTo: config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? '/profile/:prisonNumber/challenges-and-support#archived-challenges-and-support'
+        : '/profile/:prisonNumber/challenges#archived-challenges',
+    }),
     checkChallengeDtoExistsInJourneyData,
     validate(archiveReasonSchema),
     asyncMiddleware(reasonController.submitReasonForm),

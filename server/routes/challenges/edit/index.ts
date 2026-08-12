@@ -10,6 +10,8 @@ import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import checkChallengeDtoExistsInJourneyData from '../middleware/checkChallengeDtoExistsInJourneyData'
 import { validate } from '../../../middleware/validationMiddleware'
 import detailSchema from '../validationSchemas/detailSchema'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
+import config from '../../../config'
 
 const editChallengesRoutes = (services: Services): Router => {
   const { auditService, challengeService, journeyDataService } = services
@@ -28,6 +30,12 @@ const editChallengesRoutes = (services: Services): Router => {
     asyncMiddleware(detailController.getDetailView),
   ])
   router.post('/:journeyId/detail', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Edit Challenge',
+      redirectTo: config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? '/profile/:prisonNumber/challenges-and-support'
+        : '/profile/:prisonNumber/challenges',
+    }),
     checkChallengeDtoExistsInJourneyData,
     validate(detailSchema),
     asyncMiddleware(detailController.submitDetailForm),
