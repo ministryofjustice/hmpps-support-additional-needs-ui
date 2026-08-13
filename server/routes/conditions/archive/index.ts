@@ -11,6 +11,7 @@ import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
 import { validate } from '../../../middleware/validationMiddleware'
 import archiveReasonSchema from '../validationSchemas/archiveReasonSchema'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const archiveConditionRoutes = (services: Services): Router => {
   const { auditService, conditionService, journeyDataService, prisonService } = services
@@ -33,6 +34,10 @@ const archiveConditionRoutes = (services: Services): Router => {
     asyncMiddleware(reasonController.getReasonView),
   ])
   router.post('/:journeyId/reason', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Archive Condition',
+      redirectTo: '/profile/:prisonNumber/conditions#archived-conditions',
+    }),
     checkConditionDtoExistsInJourneyData,
     validate(archiveReasonSchema),
     asyncMiddleware(reasonController.submitReasonForm),

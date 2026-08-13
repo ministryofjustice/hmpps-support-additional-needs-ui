@@ -13,6 +13,7 @@ import deleteReasonSchema from '../validationSchemas/deleteReasonSchema'
 import HistoryReasonController from './reason/historyReasonController'
 import HistoryReviewController from './review/historyReviewController'
 import HistoryConfirmController from './confirm/historyConfirmController'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const historyDeleteConditionRoutes = (services: Services): Router => {
   const { auditService, conditionService, journeyDataService } = services
@@ -56,6 +57,10 @@ const historyDeleteConditionRoutes = (services: Services): Router => {
     asyncMiddleware(confirmController.getConfirmView),
   ])
   router.post('/:journeyId/confirm', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Delete archived Condition',
+      redirectTo: '/profile/:prisonNumber/conditions#archived-conditions',
+    }),
     checkConditionDtoExistsInJourneyData,
     asyncMiddleware(confirmController.submitConfirmForm),
   ])

@@ -4,6 +4,10 @@ import ConditionType from '../../../../enums/conditionType'
 import { ConditionService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
 import AuditService, { BaseAuditData } from '../../../../services/auditService'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class DetailsController {
   constructor(
@@ -16,6 +20,8 @@ export default class DetailsController {
     const { conditionsList } = req.journeyData
 
     const detailsForm = invalidForm ?? this.populateFormFromDto(conditionsList)
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       prisonerSummary,
@@ -44,6 +50,7 @@ export default class DetailsController {
     const { prisonNumber } = conditionsList
     req.journeyData.conditionsList = undefined
     this.auditService.logCreateCondition(this.createConditionsAuditData(req)) // no need to wait for response
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(`/profile/${prisonNumber}/conditions`, 'Condition(s) updated')
   }
 

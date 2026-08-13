@@ -157,7 +157,7 @@ describe('detailController', () => {
     // Then
     expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Condition updated')
     expect(req.journeyData.conditionDto).toBeUndefined()
-    expect(flash).not.toHaveBeenCalled()
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     expect(conditionService.updateCondition).toHaveBeenCalledWith(
       username,
       conditionDto.reference,

@@ -12,6 +12,7 @@ import DetailsController from './details/detailsController'
 import detailsSchema from '../validationSchemas/detailsSchema'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const createConditionsRoutes = (services: Services): Router => {
   const { auditService, conditionService, journeyDataService } = services
@@ -41,6 +42,10 @@ const createConditionsRoutes = (services: Services): Router => {
     asyncMiddleware(detailsController.getDetailsView),
   ])
   router.post('/:journeyId/details', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Create Condition',
+      redirectTo: '/profile/:prisonNumber/conditions',
+    }),
     checkConditionsListExistsInJourneyData,
     validate(detailsSchema),
     asyncMiddleware(detailsController.submitDetailsForm),
