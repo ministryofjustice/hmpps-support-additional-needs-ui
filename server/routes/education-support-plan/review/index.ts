@@ -46,6 +46,7 @@ import LearningNeedsSupportPractitionerSupportController from './learning-needs-
 import AdditionalInformationController from './additional-information/additionalInformationController'
 import ReviewSupportPlanController from './review-support-plan/reviewSupportPlanController'
 import CheckYourAnswersController from './check-your-answers/checkYourAnswersController'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const reviewEducationSupportPlanRoutes = (services: Services): Router => {
   const {
@@ -308,6 +309,10 @@ const reviewEducationSupportPlanRoutes = (services: Services): Router => {
     asyncMiddleware(checkYourAnswersController.getCheckYourAnswersView),
   ])
   router.post('/:journeyId/check-your-answers', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Review ELSP',
+      redirectTo: '/profile/:prisonNumber/overview',
+    }),
     checkEducationSupportPlanDtoExistsInJourneyData,
     checkReviewEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(checkYourAnswersController.submitCheckYourAnswersForm),

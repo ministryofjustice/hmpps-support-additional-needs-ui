@@ -156,7 +156,7 @@ describe('reasonController', () => {
       'Refusal of education support plan recorded',
     )
     expect(req.journeyData.refuseEducationSupportPlanDto).toBeUndefined()
-    expect(flash).not.toHaveBeenCalled()
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     expect(
       educationSupportPlanScheduleService.updateEducationSupportPlanCreationScheduleAsRefused,
     ).toHaveBeenCalledWith(username, expectedRefuseEducationSupportPlanDto)

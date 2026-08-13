@@ -4,6 +4,10 @@ import { EducationSupportPlanScheduleService } from '../../../../services'
 import PlanCreationScheduleExemptionReason from '../../../../enums/planCreationScheduleExemptionReason'
 import { Result } from '../../../../utils/result/result'
 import AuditService, { BaseAuditData } from '../../../../services/auditService'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class ReasonController {
   constructor(
@@ -16,6 +20,8 @@ export default class ReasonController {
     const { refuseEducationSupportPlanDto } = req.journeyData
 
     const refusePlanReasonForm = invalidForm ?? this.populateFormFromDto(refuseEducationSupportPlanDto)
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       prisonerSummary,
@@ -48,6 +54,7 @@ export default class ReasonController {
     this.auditService.logUpdateEducationLearnerSupportPlanAsRefused(
       this.refusedEducationLearnerSupportPlanAuditData(req, refuseEducationSupportPlanDto.reason),
     ) // no need to wait for response
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(`/profile/${prisonNumber}/overview`, 'Refusal of education support plan recorded')
   }
 

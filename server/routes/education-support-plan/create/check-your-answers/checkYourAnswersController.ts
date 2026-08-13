@@ -2,6 +2,10 @@ import { NextFunction, Request, RequestHandler, Response } from 'express'
 import { EducationSupportPlanService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
 import AuditService, { BaseAuditData } from '../../../../services/auditService'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class CheckYourAnswersController {
   constructor(
@@ -11,6 +15,8 @@ export default class CheckYourAnswersController {
 
   getCheckYourAnswersView: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
     const { educationSupportPlanDto } = req.journeyData
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       dto: educationSupportPlanDto,
@@ -34,7 +40,7 @@ export default class CheckYourAnswersController {
     }
     this.auditService.logCreateEducationLearnerSupportPlan(this.createEducationLearnerSupportPlanAuditData(req)) // no need to wait for response
     req.journeyData.educationSupportPlanDto = undefined
-
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(`/profile/${prisonNumber}/overview`, 'Education support plan created')
   }
 

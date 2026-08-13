@@ -90,7 +90,7 @@ describe('checkYourAnswersController', () => {
     // Then
     expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Education support plan created')
     expect(req.journeyData.educationSupportPlanDto).toBeUndefined()
-    expect(flash).not.toHaveBeenCalled()
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     expect(educationSupportPlanService.createEducationSupportPlan).toHaveBeenCalledWith(
       username,
       educationSupportPlanDto,
