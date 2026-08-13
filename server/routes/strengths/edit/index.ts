@@ -10,6 +10,7 @@ import { validate } from '../../../middleware/validationMiddleware'
 import detailSchema from '../validationSchemas/detailSchema'
 import retrieveStrengthResponseDtoIfNotInJourneyData from '../middleware/retrieveStrengthResponseDtoIfNotInJourneyData'
 import checkStrengthDtoExistsInJourneyData from '../middleware/checkStrengthDtoExistsInJourneyData'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const editStrengthRoutes = (services: Services): Router => {
   const { auditService, journeyDataService, strengthService } = services
@@ -28,6 +29,10 @@ const editStrengthRoutes = (services: Services): Router => {
     asyncMiddleware(detailController.getDetailView),
   ])
   router.post('/:journeyId/detail', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Edit Strength',
+      redirectTo: '/profile/:prisonNumber/strengths',
+    }),
     checkStrengthDtoExistsInJourneyData,
     validate(detailSchema),
     asyncMiddleware(detailController.submitDetailForm),

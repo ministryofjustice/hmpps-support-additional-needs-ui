@@ -5,6 +5,10 @@ import { AuditService, StrengthService } from '../../../../services'
 import { Result } from '../../../../utils/result/result'
 import { asArray } from '../../../../utils/utils'
 import { BaseAuditData } from '../../../../services/auditService'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class DetailController {
   constructor(
@@ -22,6 +26,8 @@ export default class DetailController {
           howIdentified: asArray(invalidForm.howIdentified),
         }
       : this.populateFormFromDto(strengthDto)
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       form: detailForm,
@@ -49,6 +55,7 @@ export default class DetailController {
     const { prisonNumber } = strengthDto
     req.journeyData.strengthDto = undefined
     this.auditService.logCreateStrength(this.createStrengthAuditData(req)) // no need to wait for response
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(`/profile/${prisonNumber}/strengths`, 'Strength or interest added')
   }
 

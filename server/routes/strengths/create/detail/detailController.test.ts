@@ -155,7 +155,7 @@ describe('detailController', () => {
     // Then
     expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Strength or interest added')
     expect(req.journeyData.strengthDto).toBeUndefined()
-    expect(flash).not.toHaveBeenCalled()
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     expect(strengthService.createStrengths).toHaveBeenCalledWith(username, [expectedStrengthDto])
     expect(auditService.logCreateStrength).toHaveBeenCalledWith(
       expect.objectContaining({
