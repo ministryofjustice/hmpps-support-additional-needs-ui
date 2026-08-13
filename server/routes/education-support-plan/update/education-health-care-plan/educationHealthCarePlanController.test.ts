@@ -116,6 +116,7 @@ describe('educationHealthCarePlanController', () => {
         who: username,
       }),
     )
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
   })
 
   it('should submit form and redirect to next route given calling API is not successful', async () => {

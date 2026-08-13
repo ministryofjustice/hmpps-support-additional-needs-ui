@@ -5,6 +5,10 @@ import { AuditService, EducationSupportPlanService } from '../../../../services'
 import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class EducationHealthCarePlanController {
   constructor(
@@ -17,6 +21,8 @@ export default class EducationHealthCarePlanController {
     const { educationSupportPlanDto } = req.journeyData
 
     const educationHealthCarePlanForm = invalidForm ?? this.populateFormFromDto(educationSupportPlanDto)
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = { prisonerSummary, form: educationHealthCarePlanForm, mode: 'edit' }
     return res.render('pages/education-support-plan/education-health-care-plan/index', viewRenderArgs)
@@ -43,7 +49,7 @@ export default class EducationHealthCarePlanController {
 
     this.auditService.logUpdateEducationLearnerSupportPlan(this.updateEducationLearnerSupportPlanAuditData(req)) // no need to wait for response
     req.journeyData.educationSupportPlanDto = undefined
-
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(`/profile/${prisonNumber}/education-support-plan`, 'Education support plan updated')
   }
 

@@ -4,6 +4,10 @@ import { AdditionalLearningNeedsScreenerService, AuditService } from '../../../.
 import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class ConfirmController {
   constructor(
@@ -14,6 +18,8 @@ export default class ConfirmController {
   getConfirmView = async (req: Request, res: Response, _next: NextFunction) => {
     const { prisonerSummary } = res.locals
     const dto = req.journeyData.screenerDeletionDto as ScreenerDeletionDto
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       prisonerSummary,
@@ -40,6 +46,7 @@ export default class ConfirmController {
 
     req.journeyData.screenerDeletionDto = undefined
     this.auditService.logDeleteAlnScreener(this.deleteAlnScreenerAuditData(req, dto))
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(returnTo ?? `/profile/${prisonNumber}/overview`, 'Screener results deleted.')
   }
 

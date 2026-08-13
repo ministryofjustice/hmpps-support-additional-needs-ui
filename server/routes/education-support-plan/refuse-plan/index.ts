@@ -10,6 +10,7 @@ import reasonSchema from './validationSchemas/reasonSchema'
 import ReasonController from './reason/reasonController'
 import ApplicationAction from '../../../enums/applicationAction'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const refuseEducationSupportPlanRoutes = (services: Services): Router => {
   const { auditService, educationSupportPlanScheduleService, journeyDataService } = services
@@ -28,6 +29,10 @@ const refuseEducationSupportPlanRoutes = (services: Services): Router => {
     asyncMiddleware(reasonController.getRefusePlanReasonView),
   ])
   router.post('/:journeyId/reason', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Record ELSP refusal',
+      redirectTo: '/profile/:prisonNumber/overview',
+    }),
     checkRefuseEducationSupportPlanDtoExistsInJourneyData,
     validate(reasonSchema),
     asyncMiddleware(reasonController.submitRefusePlanReasonView),

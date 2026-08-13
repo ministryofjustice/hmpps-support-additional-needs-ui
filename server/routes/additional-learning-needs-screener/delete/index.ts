@@ -13,6 +13,7 @@ import deleteReasonSchema from '../validationSchemas/deleteReasonSchema'
 import ReasonController from './reason/reasonController'
 import ReviewController from './review/reviewController'
 import ConfirmController from './confirm/confirmController'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const deleteAlnScreenerRoutes = (services: Services): Router => {
   const { auditService, additionalLearningNeedsService, journeyDataService } = services
@@ -56,6 +57,10 @@ const deleteAlnScreenerRoutes = (services: Services): Router => {
     asyncMiddleware(confirmController.getConfirmView),
   ])
   router.post('/:journeyId/confirm', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Delete ALN Screener',
+      redirectTo: '/profile/:prisonNumber/overview',
+    }),
     checkScreenerDeletionDtoExistsInJourneyData,
     asyncMiddleware(confirmController.submitConfirmForm),
   ])

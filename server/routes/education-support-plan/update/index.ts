@@ -10,6 +10,7 @@ import checkEducationSupportPlanDtoExistsInJourneyData from '../middleware/check
 import { validate } from '../../../middleware/validationMiddleware'
 import educationHealthCarePlanSchema from '../validationSchemas/educationHealthCarePlanSchema'
 import EducationHealthCarePlanController from './education-health-care-plan/educationHealthCarePlanController'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const updateEducationSupportPlanRoutes = (services: Services): Router => {
   const { auditService, educationSupportPlanService, journeyDataService } = services
@@ -32,6 +33,10 @@ const updateEducationSupportPlanRoutes = (services: Services): Router => {
     asyncMiddleware(educationHealthCarePlanController.getEhcpView),
   ])
   router.post('/:journeyId/education-health-care-plan', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Update EHCP',
+      redirectTo: '/profile/:prisonNumber/education-support-plan',
+    }),
     checkEducationSupportPlanDtoExistsInJourneyData,
     validate(educationHealthCarePlanSchema),
     asyncMiddleware(educationHealthCarePlanController.submitEhcpForm),

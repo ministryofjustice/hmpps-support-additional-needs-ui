@@ -34,6 +34,7 @@ import individualSupportRequirementsSchema from '../validationSchemas/individual
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
 import reviewExistingNeedsSchema from '../validationSchemas/reviewExistingNeedsSchema'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const createEducationSupportPlanRoutes = (services: Services): Router => {
   const { auditService, educationSupportPlanService, journeyDataService } = services
@@ -199,6 +200,10 @@ const createEducationSupportPlanRoutes = (services: Services): Router => {
     asyncMiddleware(checkYourAnswersController.getCheckYourAnswersView),
   ])
   router.post('/:journeyId/check-your-answers', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Create ELSP',
+      redirectTo: '/profile/:prisonNumber/overview',
+    }),
     checkEducationSupportPlanDtoExistsInJourneyData,
     asyncMiddleware(checkYourAnswersController.submitCheckYourAnswersForm),
   ])

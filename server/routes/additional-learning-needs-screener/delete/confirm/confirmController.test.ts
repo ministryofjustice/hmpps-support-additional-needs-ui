@@ -97,7 +97,7 @@ describe('delete/confirm/confirmController (ALN screener)', () => {
         `/profile/${prisonNumber}/strengths`,
         'Screener results deleted.',
       )
-      expect(flash).not.toHaveBeenCalled()
+      expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     })
 
     it('falls back to the overview when returnTo is missing', async () => {
