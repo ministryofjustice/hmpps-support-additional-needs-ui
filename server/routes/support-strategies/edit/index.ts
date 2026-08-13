@@ -10,6 +10,8 @@ import checkSupportStrategyDtoExistsInJourneyData from '../middleware/checkSuppo
 import { validate } from '../../../middleware/validationMiddleware'
 import DetailController from './detail/detailController'
 import detailSchema from '../validationSchemas/detailSchema'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
+import config from '../../../config'
 
 const editSupportStrategiesRoutes = (services: Services): Router => {
   const { auditService, journeyDataService, supportStrategyService } = services
@@ -28,6 +30,12 @@ const editSupportStrategiesRoutes = (services: Services): Router => {
     asyncMiddleware(detailController.getDetailView),
   ])
   router.post('/:journeyId/detail', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Edit Support Strategy',
+      redirectTo: config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? '/profile/:prisonNumber/challenges-and-support'
+        : '/profile/:prisonNumber/support-strategies',
+    }),
     checkSupportStrategyDtoExistsInJourneyData,
     validate(detailSchema),
     asyncMiddleware(detailController.submitDetailForm),
