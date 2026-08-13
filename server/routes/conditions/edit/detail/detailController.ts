@@ -6,6 +6,10 @@ import AuditService, { BaseAuditData } from '../../../../services/auditService'
 import conditionsThatRequireNaming from '../../conditionsThatRequireNaming'
 import ConditionSource from '../../../../enums/conditionSource'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class DetailController {
   constructor(
@@ -18,6 +22,8 @@ export default class DetailController {
     const { conditionDto } = req.journeyData
 
     const detailForm = invalidForm ?? this.populateFormFromDto(conditionDto)
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       prisonerSummary,
@@ -53,6 +59,7 @@ export default class DetailController {
     const { prisonNumber } = conditionDto
     req.journeyData.conditionDto = undefined
     this.auditService.logEditCondition(this.editConditionAuditData(req, conditionDto)) // no need to wait for response
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(`/profile/${prisonNumber}/conditions`, 'Condition updated')
   }
 

@@ -10,6 +10,7 @@ import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import checkConditionDtoExistsInJourneyData from '../middleware/checkConditionDtoExistsInJourneyData'
 import { validate } from '../../../middleware/validationMiddleware'
 import editDetailSchema from '../validationSchemas/editDetailSchema'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const editConditionRoutes = (services: Services): Router => {
   const { auditService, conditionService, journeyDataService } = services
@@ -31,6 +32,10 @@ const editConditionRoutes = (services: Services): Router => {
     asyncMiddleware(detailController.getDetailView),
   ])
   router.post('/:journeyId/detail', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Edit Condition',
+      redirectTo: '/profile/:prisonNumber/conditions',
+    }),
     checkConditionDtoExistsInJourneyData,
     validate(editDetailSchema),
     asyncMiddleware(detailController.submitDetailForm),

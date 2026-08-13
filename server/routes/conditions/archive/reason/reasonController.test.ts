@@ -122,7 +122,7 @@ describe('reasonController', () => {
     // Then
     expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Condition moved to History')
     expect(req.journeyData.conditionDto).toBeUndefined()
-    expect(flash).not.toHaveBeenCalled()
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     expect(conditionService.archiveCondition).toHaveBeenCalledWith(username, conditionReference, expectedConditionDto)
     expect(auditService.logArchiveCondition).toHaveBeenCalledWith(
       expect.objectContaining({

@@ -188,7 +188,7 @@ describe('detailsController', () => {
     // Then
     expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Condition(s) updated')
     expect(req.journeyData.conditionsList).toBeUndefined()
-    expect(flash).not.toHaveBeenCalled()
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     expect(conditionService.createConditions).toHaveBeenCalledWith(username, expectedConditionsList)
   })
 
@@ -246,7 +246,7 @@ describe('detailsController', () => {
     // Then
     expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Condition(s) updated')
     expect(req.journeyData.conditionsList).toBeUndefined()
-    expect(flash).not.toHaveBeenCalled()
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     expect(conditionService.createConditions).toHaveBeenCalledWith(username, expectedConditionsList)
     expect(auditService.logCreateCondition).toHaveBeenCalledWith(
       expect.objectContaining({

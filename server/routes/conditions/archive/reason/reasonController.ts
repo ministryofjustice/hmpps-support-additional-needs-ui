@@ -4,6 +4,10 @@ import { AuditService, ConditionService } from '../../../../services'
 import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class ReasonController {
   constructor(
@@ -16,6 +20,8 @@ export default class ReasonController {
     const { conditionDto } = req.journeyData
 
     const reasonForm = invalidForm ?? { archiveReason: '' }
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       prisonerSummary,
@@ -51,6 +57,7 @@ export default class ReasonController {
     const { prisonNumber } = conditionDto
     req.journeyData.conditionDto = undefined
     this.auditService.logArchiveCondition(this.archiveConditionAuditData(req, conditionDto)) // no need to wait for response
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(
       `/profile/${prisonNumber}/conditions#archived-conditions`,
       'Condition moved to History',

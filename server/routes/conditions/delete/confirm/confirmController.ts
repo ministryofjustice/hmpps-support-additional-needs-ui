@@ -4,6 +4,10 @@ import { AuditService, ConditionService } from '../../../../services'
 import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class ConfirmController {
   constructor(
@@ -14,6 +18,8 @@ export default class ConfirmController {
   getConfirmView = async (req: Request, res: Response, _next: NextFunction) => {
     const { prisonerSummary } = res.locals
     const conditionDto = req.journeyData.conditionDto as ConditionDto
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       prisonerSummary,
@@ -41,6 +47,7 @@ export default class ConfirmController {
 
     req.journeyData.conditionDto = undefined
     this.auditService.logDeleteCondition(this.deleteConditionAuditData(req, dto))
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(`/profile/${prisonNumber}/conditions#current-conditions`, 'Condition deleted.')
   }
 

@@ -105,7 +105,7 @@ describe('history-delete/confirm/historyConfirmController', () => {
         }),
       )
       expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'History condition deleted.')
-      expect(flash).not.toHaveBeenCalled()
+      expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     })
 
     it('should redirect back to confirm with API error flash on API failure', async () => {
