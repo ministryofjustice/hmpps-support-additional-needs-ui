@@ -145,7 +145,7 @@ describe('detailController', () => {
     // Then
     expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Support strategy added')
     expect(req.journeyData.supportStrategyDto).toBeUndefined()
-    expect(flash).not.toHaveBeenCalled()
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     expect(supportStrategyService.createSupportStrategies).toHaveBeenCalledWith(username, [expectedSupportStrategyDto])
     expect(auditService.logCreateSupportStrategy).toHaveBeenCalledWith(
       expect.objectContaining({

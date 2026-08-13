@@ -5,6 +5,10 @@ import { Result } from '../../../../utils/result/result'
 import AuditService, { BaseAuditData } from '../../../../services/auditService'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
 import config from '../../../../config'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class DetailController {
   constructor(
@@ -17,6 +21,8 @@ export default class DetailController {
     const supportStrategyDto = req.journeyData.supportStrategyDto as SupportStrategyResponseDto
 
     const detailForm = invalidForm ?? this.populateFormFromDto(supportStrategyDto)
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       form: detailForm,
@@ -50,6 +56,7 @@ export default class DetailController {
     const { prisonNumber } = supportStrategyDto
     req.journeyData.supportStrategyDto = undefined
     this.auditService.logEditSupportStrategy(this.editSupportStrategyAuditData(req, supportStrategyDto)) // no need to wait for response
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(
       config.featureToggles.displayChallengesAndSupportStrategiesCombined
         ? `/profile/${prisonNumber}/challenges-and-support`

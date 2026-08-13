@@ -12,6 +12,8 @@ import { validate } from '../../../middleware/validationMiddleware'
 import selectCategorySchema from '../validationSchemas/selectCategorySchema'
 import DetailController from './detail/detailController'
 import detailSchema from '../validationSchemas/detailSchema'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
+import config from '../../../config'
 
 const createSupportStrategiesRoutes = (services: Services): Router => {
   const { auditService, journeyDataService, supportStrategyService } = services
@@ -41,6 +43,12 @@ const createSupportStrategiesRoutes = (services: Services): Router => {
     asyncMiddleware(detailController.getDetailView),
   ])
   router.post('/:journeyId/detail', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Create Support Strategy',
+      redirectTo: config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? '/profile/:prisonNumber/challenges-and-support'
+        : '/profile/:prisonNumber/support-strategies',
+    }),
     checkSupportStrategyDtoExistsInJourneyData,
     validate(detailSchema),
     asyncMiddleware(detailController.submitDetailForm),

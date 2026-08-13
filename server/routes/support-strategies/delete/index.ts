@@ -13,6 +13,8 @@ import deleteReasonSchema from '../validationSchemas/deleteReasonSchema'
 import ReasonController from './reason/reasonController'
 import ReviewController from './review/reviewController'
 import ConfirmController from './confirm/confirmController'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
+import config from '../../../config'
 
 const deleteSupportStrategyRoutes = (services: Services): Router => {
   const { auditService, supportStrategyService, journeyDataService } = services
@@ -56,6 +58,12 @@ const deleteSupportStrategyRoutes = (services: Services): Router => {
     asyncMiddleware(confirmController.getConfirmView),
   ])
   router.post('/:journeyId/confirm', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Delete Support Strategy',
+      redirectTo: config.featureToggles.displayChallengesAndSupportStrategiesCombined
+        ? '/profile/:prisonNumber/challenges-and-support#current-challenges-and-support'
+        : '/profile/:prisonNumber/support-strategies#current-support-strategies',
+    }),
     checkSupportStrategyDtoExistsInJourneyData,
     asyncMiddleware(confirmController.submitConfirmForm),
   ])

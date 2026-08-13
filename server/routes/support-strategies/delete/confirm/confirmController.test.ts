@@ -101,7 +101,7 @@ describe('delete/confirm/confirmController', () => {
         }),
       )
       expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Support strategy deleted.')
-      expect(flash).not.toHaveBeenCalled()
+      expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     })
 
     it('should redirect back to confirm with API error flash on API failure', async () => {

@@ -125,7 +125,7 @@ describe('reasonController', () => {
     // Then
     expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Support strategy moved to History')
     expect(req.journeyData.supportStrategyDto).toBeUndefined()
-    expect(flash).not.toHaveBeenCalled()
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     expect(supportStrategyService.archiveSupportStrategy).toHaveBeenCalledWith(
       username,
       supportStrategyReference,
