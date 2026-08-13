@@ -12,6 +12,7 @@ import detailSchema from '../validationSchemas/detailSchema'
 import { validate } from '../../../middleware/validationMiddleware'
 import { checkUserHasPermissionTo } from '../../../middleware/roleBasedAccessControl'
 import ApplicationAction from '../../../enums/applicationAction'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const createStrengthRoutes = (services: Services): Router => {
   const { auditService, journeyDataService, strengthService } = services
@@ -41,6 +42,10 @@ const createStrengthRoutes = (services: Services): Router => {
     asyncMiddleware(detailController.getDetailView),
   ])
   router.post('/:journeyId/detail', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Create Strength',
+      redirectTo: '/profile/:prisonNumber/strengths',
+    }),
     checkStrengthDtoExistsInJourneyData,
     validate(detailSchema),
     asyncMiddleware(detailController.submitDetailForm),

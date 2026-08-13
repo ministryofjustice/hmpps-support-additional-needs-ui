@@ -13,6 +13,7 @@ import deleteReasonSchema from '../validationSchemas/deleteReasonSchema'
 import HistoryReasonController from './reason/historyReasonController'
 import HistoryReviewController from './review/historyReviewController'
 import HistoryConfirmController from './confirm/historyConfirmController'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const historyDeleteStrengthRoutes = (services: Services): Router => {
   const { auditService, strengthService, journeyDataService } = services
@@ -56,6 +57,10 @@ const historyDeleteStrengthRoutes = (services: Services): Router => {
     asyncMiddleware(confirmController.getConfirmView),
   ])
   router.post('/:journeyId/confirm', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Delete archived Strength',
+      redirectTo: '/profile/:prisonNumber/strengths#archived-strengths',
+    }),
     checkStrengthDtoExistsInJourneyData,
     asyncMiddleware(confirmController.submitConfirmForm),
   ])

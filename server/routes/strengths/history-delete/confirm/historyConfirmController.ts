@@ -4,6 +4,10 @@ import { AuditService, StrengthService } from '../../../../services'
 import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class HistoryConfirmController {
   constructor(
@@ -14,6 +18,8 @@ export default class HistoryConfirmController {
   getConfirmView = async (req: Request, res: Response, _next: NextFunction) => {
     const { prisonerSummary } = res.locals
     const strengthResponseDto = req.journeyData.strengthDto as StrengthResponseDto
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       prisonerSummary,
@@ -41,6 +47,7 @@ export default class HistoryConfirmController {
 
     req.journeyData.strengthDto = undefined
     this.auditService.logDeleteStrength(this.deleteStrengthAuditData(req, dto))
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(
       `/profile/${prisonNumber}/strengths#archived-strengths`,
       'History strength or interest deleted',

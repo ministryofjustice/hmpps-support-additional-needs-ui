@@ -123,7 +123,7 @@ describe('reasonController', () => {
     // Then
     expect(res.redirectWithSuccess).toHaveBeenCalledWith(expectedNextRoute, 'Strength or interest moved to History')
     expect(req.journeyData.strengthDto).toBeUndefined()
-    expect(flash).not.toHaveBeenCalled()
+    expect(flash).toHaveBeenCalledWith('pendingRedirectAtEndOfJourney', 'true')
     expect(strengthService.archiveStrength).toHaveBeenCalledWith(username, strengthReference, expectedStrengthDto)
     expect(auditService.logArchiveStrength).toHaveBeenCalledWith(
       expect.objectContaining({

@@ -13,6 +13,7 @@ import deleteReasonSchema from '../validationSchemas/deleteReasonSchema'
 import ReasonController from './reason/reasonController'
 import ReviewController from './review/reviewController'
 import ConfirmController from './confirm/confirmController'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const deleteStrengthRoutes = (services: Services): Router => {
   const { auditService, strengthService, journeyDataService } = services
@@ -56,6 +57,10 @@ const deleteStrengthRoutes = (services: Services): Router => {
     asyncMiddleware(confirmController.getConfirmView),
   ])
   router.post('/:journeyId/confirm', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Delete Strength',
+      redirectTo: '/profile/:prisonNumber/strengths#current-strengths',
+    }),
     checkStrengthDtoExistsInJourneyData,
     asyncMiddleware(confirmController.submitConfirmForm),
   ])

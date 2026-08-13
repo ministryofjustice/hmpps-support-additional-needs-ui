@@ -4,6 +4,10 @@ import { AuditService, StrengthService } from '../../../../services'
 import { BaseAuditData } from '../../../../services/auditService'
 import { Result } from '../../../../utils/result/result'
 import { PrisonUser } from '../../../../interfaces/hmppsUser'
+import {
+  clearRedirectPendingFlag,
+  setRedirectPendingFlag,
+} from '../../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 export default class ReasonController {
   constructor(
@@ -16,6 +20,8 @@ export default class ReasonController {
     const strengthResponseDto = req.journeyData.strengthDto as StrengthResponseDto
 
     const reasonForm = invalidForm ?? { archiveReason: '' }
+
+    clearRedirectPendingFlag(req)
 
     const viewRenderArgs = {
       prisonerSummary,
@@ -52,6 +58,7 @@ export default class ReasonController {
     const { prisonNumber } = strengthResponseDto
     req.journeyData.strengthDto = undefined
     this.auditService.logArchiveStrength(this.archiveStrengthAuditData(req, strengthResponseDto)) // no need to wait for response
+    setRedirectPendingFlag(req)
     return res.redirectWithSuccess(
       `/profile/${prisonNumber}/strengths#archived-strengths`,
       'Strength or interest moved to History',

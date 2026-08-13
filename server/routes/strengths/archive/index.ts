@@ -11,6 +11,7 @@ import asyncMiddleware from '../../../middleware/asyncMiddleware'
 import archiveReasonSchema from '../validationSchemas/archiveReasonSchema'
 import { validate } from '../../../middleware/validationMiddleware'
 import retrievePrisonsLookup from '../../middleware/retrievePrisonsLookup'
+import { checkRedirectAtEndOfJourneyIsNotPending } from '../../middleware/checkRedirectAtEndOfJourneyIsNotPending'
 
 const archiveStrengthRoutes = (services: Services): Router => {
   const { auditService, journeyDataService, prisonService, strengthService } = services
@@ -33,6 +34,10 @@ const archiveStrengthRoutes = (services: Services): Router => {
     asyncMiddleware(reasonController.getReasonView),
   ])
   router.post('/:journeyId/reason', [
+    checkRedirectAtEndOfJourneyIsNotPending({
+      journey: 'Archive Strength',
+      redirectTo: '/profile/:prisonNumber/strengths#archived-strengths',
+    }),
     checkStrengthDtoExistsInJourneyData,
     validate(archiveReasonSchema),
     asyncMiddleware(reasonController.submitReasonForm),
