@@ -79,6 +79,24 @@
               }) }}
             {% endfor %}
           {% endif %}
+
+          {% if activeChallengesCount > 0 or activeSupportStrategiesCount > 0 %}
+            <p class="govuk-body">
+              {% if userHasPermissionTo('RECORD_CHALLENGES') %}
+                <a class="govuk-link govuk-!-display-none-print" href="/challenges/{{ prisonerSummary.prisonNumber }}/create/select-category" data-qa="add-challenge-button-bottom">
+                  Add a challenge
+                </a>
+              {% endif %}
+            </p>
+            
+            <p class="govuk-body">
+              {% if userHasPermissionTo('RECORD_SUPPORT_STRATEGIES') %}
+                <a class="govuk-link govuk-!-display-none-print" href="/support-strategies/{{ prisonerSummary.prisonNumber }}/create/select-category" data-qa="add-support-strategy-button-bottom">
+                  Add a support strategy
+                </a>
+              {% endif %}
+            </p>
+          {% endif %}
         {% endset %}
 
         {% set archivedChallengesAndSupportContent %}
