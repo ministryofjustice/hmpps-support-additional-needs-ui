@@ -122,7 +122,9 @@ describe('Profile challenges and support page', () => {
     expect(parentTab.find('[data-qa=no-active-support-strategies-message]').length).toEqual(0)
     expect(parentTab.find('[data-qa=add-support-strategy-button]').length).toEqual(0)
     expect(parentTab.find('[data-qa=add-challenge-button-bottom]').text().trim()).toEqual('Add a challenge')
-    expect(parentTab.find('[data-qa=add-support-strategy-button-bottom]').text().trim()).toEqual('Add a support strategy')
+    expect(parentTab.find('[data-qa=add-support-strategy-button-bottom]').text().trim()).toEqual(
+      'Add a support strategy',
+    )
     expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
@@ -188,7 +190,9 @@ describe('Profile challenges and support page', () => {
     expect(parentTab.find('[data-qa=no-active-support-strategies-message]').length).toEqual(1)
     expect(parentTab.find('[data-qa=add-support-strategy-button]').length).toEqual(1)
     expect(parentTab.find('[data-qa=add-challenge-button-bottom]').text().trim()).toEqual('Add a challenge')
-    expect(parentTab.find('[data-qa=add-support-strategy-button-bottom]').text().trim()).toEqual('Add a support strategy')
+    expect(parentTab.find('[data-qa=add-support-strategy-button-bottom]').text().trim()).toEqual(
+      'Add a support strategy',
+    )
     expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
@@ -260,7 +264,6 @@ describe('Profile challenges and support page', () => {
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
   })
-
 
   it('should render the profile challenges and support page given there are some archived challenges or support strategies', () => {
     // Given
