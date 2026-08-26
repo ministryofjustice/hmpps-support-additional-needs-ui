@@ -118,7 +118,9 @@ describe('Profile challenges and support page', () => {
     // Then
     const parentTab = $('#current-challenges-and-support')
     expect(parentTab.find('[data-qa=no-active-challenges-message]').length).toEqual(1)
-    expect(parentTab.find('[data-qa=add-challenge-button]').length).toEqual(1)
+    const addChallengeButton = parentTab.find('[data-qa=add-challenge-button]')
+    expect(addChallengeButton.length).toEqual(1)
+    expect(addChallengeButton.text().trim()).toEqual(`Add a challenge`)
     expect(parentTab.find('[data-qa=no-active-support-strategies-message]').length).toEqual(0)
     expect(parentTab.find('[data-qa=add-support-strategy-button]').length).toEqual(0)
     expect(parentTab.find('[data-qa=add-challenge-button-bottom]').text().trim()).toEqual('Add a challenge')
@@ -188,7 +190,9 @@ describe('Profile challenges and support page', () => {
     expect(parentTab.find('[data-qa=no-active-challenges-message]').length).toEqual(0)
     expect(parentTab.find('[data-qa=add-challenge-button]').length).toEqual(0)
     expect(parentTab.find('[data-qa=no-active-support-strategies-message]').length).toEqual(1)
-    expect(parentTab.find('[data-qa=add-support-strategy-button]').length).toEqual(1)
+    const addSupportStrategyButton = parentTab.find('[data-qa=add-support-strategy-button]')
+    expect(addSupportStrategyButton.length).toEqual(1)
+    expect(addSupportStrategyButton.text().trim()).toEqual(`Add a support strategy`)
     expect(parentTab.find('[data-qa=add-challenge-button-bottom]').text().trim()).toEqual('Add a challenge')
     expect(parentTab.find('[data-qa=add-support-strategy-button-bottom]').text().trim()).toEqual(
       'Add a support strategy',
