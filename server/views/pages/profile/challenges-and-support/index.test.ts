@@ -96,7 +96,7 @@ describe('Profile challenges and support page', () => {
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
   })
 
-  it('should render the profile challenges and support page given there are no active challenges and the user has permission to create challenges', () => {
+  it('should render the profile challenges and support page given there are no active challenges and the user has permission to create challenges and support strategies', () => {
     // Given
     userHasPermissionTo.mockReturnValue(true)
 
@@ -123,12 +123,17 @@ describe('Profile challenges and support page', () => {
     expect(addChallengeButton.text().trim()).toEqual(`Add a challenge`)
     expect(parentTab.find('[data-qa=no-active-support-strategies-message]').length).toEqual(0)
     expect(parentTab.find('[data-qa=add-support-strategy-button]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=add-challenge-button-bottom]').text().trim()).toEqual('Add a challenge')
+    expect(parentTab.find('[data-qa=add-support-strategy-button-bottom]').text().trim()).toEqual(
+      'Add a support strategy',
+    )
     expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
   })
 
-  it('should render the profile challenges and support page given there are no active challenges and the user does not have permission to create challenges', () => {
+  it('should render the profile challenges and support page given there are no active challenges and the user does not have permission to create challenges or support strategies', () => {
     // Given
     userHasPermissionTo.mockReturnValue(false)
 
@@ -153,12 +158,15 @@ describe('Profile challenges and support page', () => {
     expect(parentTab.find('[data-qa=add-challenge-button]').length).toEqual(0)
     expect(parentTab.find('[data-qa=no-active-support-strategies-message]').length).toEqual(0)
     expect(parentTab.find('[data-qa=add-support-strategy-button]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=add-challenge-button-bottom]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=add-support-strategy-button-bottom]').length).toEqual(0)
     expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
   })
 
-  it('should render the profile challenges and support page given there are no active support strategies and the user has permission to create support strategies', () => {
+  it('should render the profile challenges and support page given there are no active support strategies and the user has permission to create support strategies and challenges', () => {
     // Given
     userHasPermissionTo.mockReturnValue(true)
 
@@ -185,12 +193,17 @@ describe('Profile challenges and support page', () => {
     const addSupportStrategyButton = parentTab.find('[data-qa=add-support-strategy-button]')
     expect(addSupportStrategyButton.length).toEqual(1)
     expect(addSupportStrategyButton.text().trim()).toEqual(`Add a support strategy`)
+    expect(parentTab.find('[data-qa=add-challenge-button-bottom]').text().trim()).toEqual('Add a challenge')
+    expect(parentTab.find('[data-qa=add-support-strategy-button-bottom]').text().trim()).toEqual(
+      'Add a support strategy',
+    )
     expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
   })
 
-  it('should render the profile challenges and support page given there are no active support strategies and the user does not have permission to create support strategies', () => {
+  it('should render the profile challenges and support page given there are no active support strategies and the user does not have permission to create support strategies or challenges', () => {
     // Given
     userHasPermissionTo.mockReturnValue(false)
 
@@ -215,8 +228,44 @@ describe('Profile challenges and support page', () => {
     expect(parentTab.find('[data-qa=add-challenge-button]').length).toEqual(0)
     expect(parentTab.find('[data-qa=no-active-support-strategies-message]').length).toEqual(1)
     expect(parentTab.find('[data-qa=add-support-strategy-button]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=add-challenge-button-bottom]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=add-support-strategy-button-bottom]').length).toEqual(0)
     expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
     expect($('[data-qa=api-error-banner]').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
+  })
+
+  it('should render the profile challenges and support page given there are no active challenges nor support strategies and the user has permission to create challenges and support strategies', () => {
+    // Given
+    userHasPermissionTo.mockReturnValue(true)
+
+    const params = {
+      ...templateParams,
+      activeChallengesAndSupport: Result.fulfilled({
+        dataGroupedByCategory: {/* Controller and mapper would populate this field - not required for this test */},
+        summary: {
+          challengesCount: 0,
+          supportStrategiesCount: 0,
+        },
+      }),
+    }
+
+    // When
+    const content = njkEnv.render(template, params)
+    const $ = cheerio.load(content)
+
+    // Then
+    const parentTab = $('#current-challenges-and-support')
+    expect(parentTab.find('[data-qa=no-active-challenges-message]').length).toEqual(1)
+    expect(parentTab.find('[data-qa=add-challenge-button]').length).toEqual(1)
+    expect(parentTab.find('[data-qa=no-active-support-strategies-message]').length).toEqual(1)
+    expect(parentTab.find('[data-qa=add-support-strategy-button]').length).toEqual(1)
+    expect(parentTab.find('[data-qa=add-challenge-button-bottom]').length).toEqual(0)
+    expect(parentTab.find('[data-qa=add-support-strategy-button-bottom]').length).toEqual(0)
+    expect($('[data-qa=challenges-and-support-unavailable-message]').length).toEqual(0)
+    expect($('[data-qa=api-error-banner]').length).toEqual(0)
+    expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_CHALLENGES')
     expect(userHasPermissionTo).toHaveBeenCalledWith('RECORD_SUPPORT_STRATEGIES')
   })
 
