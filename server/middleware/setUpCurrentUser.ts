@@ -1,12 +1,12 @@
 import { jwtDecode } from 'jwt-decode'
 import { Router } from 'express'
 import type { PrisonCaseload } from 'manageUsersApiClient'
+import { UUID } from 'crypto'
 import { convertToTitleCase } from '../utils/utils'
 import logger from '../../logger'
 import ApplicationAction from '../enums/applicationAction'
 import { userHasPermissionTo } from './roleBasedAccessControl'
 import { Services } from '../services'
-import { UUID } from 'crypto'
 
 export default function setUpCurrentUser(services: Services): Router {
   const router = Router({ mergeParams: true })
