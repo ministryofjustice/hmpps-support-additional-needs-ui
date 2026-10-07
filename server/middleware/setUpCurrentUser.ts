@@ -6,6 +6,7 @@ import logger from '../../logger'
 import ApplicationAction from '../enums/applicationAction'
 import { userHasPermissionTo } from './roleBasedAccessControl'
 import { Services } from '../services'
+import { UUID } from 'crypto'
 
 export default function setUpCurrentUser(services: Services): Router {
   const router = Router({ mergeParams: true })
@@ -15,12 +16,14 @@ export default function setUpCurrentUser(services: Services): Router {
       const {
         name,
         user_id: userId,
+        user_uuid: userUuid,
         user_name: username,
         auth_source: authSource,
         authorities: roles = [],
       } = jwtDecode(res.locals.user.token) as {
         name?: string
         user_id?: string
+        user_uuid?: UUID
         user_name?: string
         auth_source?: 'nomis' | 'delius' | 'external' | 'azuread'
         authorities?: string[]
@@ -29,6 +32,7 @@ export default function setUpCurrentUser(services: Services): Router {
       res.locals.user = {
         ...res.locals.user,
         userId,
+        userUuid,
         name,
         authSource: authSource as never,
         username,
