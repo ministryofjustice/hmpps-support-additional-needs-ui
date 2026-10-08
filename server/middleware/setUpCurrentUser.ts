@@ -1,6 +1,7 @@
 import { jwtDecode } from 'jwt-decode'
 import { Router } from 'express'
 import type { PrisonCaseload } from 'manageUsersApiClient'
+import { UUID } from 'crypto'
 import { convertToTitleCase } from '../utils/utils'
 import logger from '../../logger'
 import ApplicationAction from '../enums/applicationAction'
@@ -15,12 +16,14 @@ export default function setUpCurrentUser(services: Services): Router {
       const {
         name,
         user_id: userId,
+        user_uuid: userUuid,
         user_name: username,
         auth_source: authSource,
         authorities: roles = [],
       } = jwtDecode(res.locals.user.token) as {
         name?: string
         user_id?: string
+        user_uuid?: UUID
         user_name?: string
         auth_source?: 'nomis' | 'delius' | 'external' | 'azuread'
         authorities?: string[]
@@ -29,6 +32,7 @@ export default function setUpCurrentUser(services: Services): Router {
       res.locals.user = {
         ...res.locals.user,
         userId,
+        userUuid,
         name,
         authSource: authSource as never,
         username,
