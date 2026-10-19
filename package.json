@@ -172,6 +172,9 @@
     "@eslint/eslintrc": {
       "js-yaml": "4.3.2"
     },
+    "@istanbuljs/load-nyc-config": {
+      "js-yaml": "4.3.2"
+    },
     "mocha": {
       "js-yaml": "4.3.2",
       "serialize-javascript": "^7.1.0"
