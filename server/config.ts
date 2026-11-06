@@ -153,5 +153,6 @@ export default {
     displayChallengesAndSupportStrategiesCombined: toBoolean(
       get('DISPLAY_CHALLENGES_AND_SUPPORT_STRATEGIES_COMBINED', false, requiredInProduction),
     ),
+    displayCuriousOutageBanner: toBoolean(get('DISPLAY_CURIOUS_OUTAGE_BANNER', false, requiredInProduction)),
   },
 }
