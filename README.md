@@ -117,6 +117,7 @@ Features can be toggled by setting the relevant environment variable.
 | SOME_TOGGLE_ENABLED                                | false         | Boolean  | Example feature toggle, for demonstration purposes.                                                                                                                                         |
 | SAN_DATA_DELETION_FEATURE_ENABLED                  | false         | Boolean  | Set to true to enable the SAN data-deletion journeys (delete challenges/strengths/conditions/support strategies/screener results). Must remain false in prod until stakeholder comms ready. |
 | DISPLAY_CHALLENGES_AND_SUPPORT_STRATEGIES_COMBINED | true          | Boolean  | Set to true to enable the display of Challenges and Support Strategies in the combined layout.                                                                                              |
+| DISPLAY_CURIOUS_OUTAGE_BANNER                      | false         | Boolean  | Set to true when there is a prolonged Curious outage to enable the display of a Curious outage banner on all pages of the UI                                                                |
 
 ## Imported Types
 
